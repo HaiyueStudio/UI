@@ -9,6 +9,7 @@
   "workspaces": ["ui"],
   "scripts": {
     "build": "npm run build -w ./ui",
+    "examples": "npm run build && node scripts/serve-examples.mjs",
     "typecheck": "npm run typecheck -w ./ui",
     "test": "npm test -w ./ui",
     "pack:candidate": "node scripts/pack-candidate.mjs"

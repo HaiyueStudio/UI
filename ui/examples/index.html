@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Haiyue UI Web Components 示例与参数演示。" />
+  <title>Haiyue UI · Component Gallery</title>
+  <link rel="stylesheet" href="./examples.css" />
+</head>
+<body>
+  <a class="skip-link" href="#content">跳到组件示例</a>
+
+  <aside class="sidebar" aria-label="组件导航">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">HY</span>
+      <span><strong>Haiyue UI</strong><small>Component gallery</small></span>
+    </div>
+    <label class="component-search">
+      <span class="sr-only">筛选组件</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+      <input id="component-search" type="search" placeholder="筛选组件…" autocomplete="off" />
+      <kbd>/</kbd>
+    </label>
+    <nav id="component-nav">
+      <p class="nav-label">基础</p>
+      <a href="#button" data-name="button 按钮"><span>Button</span><code>ge-button</code></a>
+      <a href="#input" data-name="input 输入框"><span>Input</span><code>ge-input</code></a>
+      <a href="#checkbox" data-name="checkbox 复选框"><span>Checkbox</span><code>ge-checkbox</code></a>
+      <a href="#radio" data-name="radio 单选框"><span>Radio</span><code>ge-radio</code></a>
+      <p class="nav-label">选择与反馈</p>
+      <a href="#select" data-name="select 选择器"><span>Select</span><code>ge-select</code></a>
+      <a href="#tabs" data-name="tabs 标签页"><span>Tabs</span><code>ge-tabs</code></a>
+      <a href="#dropdown" data-name="dropdown 下拉菜单"><span>Dropdown</span><code>ge-dropdown</code></a>
+      <a href="#tooltip" data-name="tooltip 提示"><span>Tooltip</span><code>ge-tooltip</code></a>
+      <a href="#dialog" data-name="dialog 对话框"><span>Dialog</span><code>ge-dialog</code></a>
+      <a href="#context-menu" data-name="context menu 右键菜单"><span>Context Menu</span><code>ge-context-menu</code></a>
+      <p class="nav-label">布局与数据</p>
+      <a href="#split" data-name="split 分栏"><span>Split</span><code>ge-split</code></a>
+      <a href="#tree" data-name="tree 树"><span>Tree</span><code>ge-tree</code></a>
+    </nav>
+    <div class="sidebar-foot"><span class="status-dot"></span><span>12 components</span><span>·</span><span>v0.1.0</span></div>
+  </aside>
+
+  <main id="content">
+    <header class="hero">
+      <div class="eyebrow"><span>UI package</span><i></i><span>Web Components</span></div>
+      <h1>组件，<em>在真实状态里。</em></h1>
+      <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
+      <div class="hero-meta">
+        <span><b>12</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+      </div>
+    </header>
+
+    <section class="component-section" id="button" data-title="Button">
+      <div class="section-heading"><div><span class="index">01</span><h2>Button</h2><code>&lt;ge-button&gt;</code></div><p>执行即时操作；支持文本、图标、禁用和无障碍名称。</p></div>
+      <div class="demo-card">
+        <div class="preview centered" id="button-preview">
+          <ge-button id="button-live" label="Publish"></ge-button>
+          <ge-button label="Disabled" disabled></ge-button>
+          <ge-button icon-only aria-label="Add item" title="Add item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></ge-button>
+        </div>
+        <div class="controls">
+          <label>label<input id="button-label" value="Publish" /></label>
+          <label class="toggle"><input id="button-disabled" type="checkbox" /><span></span>disabled</label>
+          <output id="button-event">点击按钮查看事件</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;ge-button label="Publish"&gt;&lt;/ge-button&gt;
+&lt;ge-button disabled label="Disabled"&gt;&lt;/ge-button&gt;
+&lt;ge-button icon-only aria-label="Add item"&gt;…&lt;/ge-button&gt;</code></pre></details>
+    </section>
+
+    <section class="component-section" id="input" data-title="Input">
+      <div class="section-heading"><div><span class="index">02</span><h2>Input</h2><code>&lt;ge-input&gt;</code></div><p>文本、数字和颜色输入；原生校验状态会映射到组件外观与事件详情。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview form-preview">
+          <label class="field-label">Project name<ge-input id="input-text" type="text" value="Ocean scene" placeholder="Untitled project"></ge-input></label>
+          <label class="field-label">Exposure<ge-input id="input-number" type="number" value="1" min="0" max="4" step="0.1"></ge-input></label>
+          <label class="field-label">Accent<ge-input id="input-color" type="color" value="#68a8ff"></ge-input></label>
+        </div>
+        <div class="controls stacked">
+          <label>type<select id="input-type"><option>text</option><option>number</option><option>color</option></select></label>
+          <label>value<input id="input-value" value="Ocean scene" /></label>
+          <div class="toggle-row"><label class="toggle"><input id="input-disabled" type="checkbox" /><span></span>disabled</label><label class="toggle"><input id="input-readonly" type="checkbox" /><span></span>readonly</label><label class="toggle"><input id="input-required" type="checkbox" /><span></span>required</label></div>
+          <output id="input-event">修改后离开输入框触发 value-change</output>
+        </div>
+      </div>
+      <div class="parameter-strip"><code>type</code><code>value</code><code>min</code><code>max</code><code>step</code><code>placeholder</code><code>disabled</code><code>readonly</code><code>required</code><code>name</code><code>autocomplete</code></div>
+    </section>
+
+    <section class="component-section" id="checkbox" data-title="Checkbox">
+      <div class="section-heading"><div><span class="index">03</span><h2>Checkbox</h2><code>&lt;ge-checkbox&gt;</code></div><p>布尔选择，包含未选、选中、不确定和禁用四种状态。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview options-preview">
+          <ge-checkbox id="checkbox-live" label="Enable global illumination" value="gi" checked></ge-checkbox>
+          <ge-checkbox label="Use physics" value="physics"></ge-checkbox>
+          <ge-checkbox label="Partial selection" indeterminate></ge-checkbox>
+          <ge-checkbox label="Unavailable option" disabled></ge-checkbox>
+        </div>
+        <div class="controls stacked">
+          <label>label<input id="checkbox-label" value="Enable global illumination" /></label>
+          <div class="toggle-row"><label class="toggle"><input id="checkbox-checked" type="checkbox" checked /><span></span>checked</label><label class="toggle"><input id="checkbox-mixed" type="checkbox" /><span></span>indeterminate</label><label class="toggle"><input id="checkbox-disabled" type="checkbox" /><span></span>disabled</label></div>
+          <output id="checkbox-event">{ "checked": true, "value": "gi" }</output>
+        </div>
+      </div>
+    </section>
+
+    <section class="component-section" id="radio" data-title="Radio">
+      <div class="section-heading"><div><span class="index">04</span><h2>Radio</h2><code>&lt;ge-radio&gt;</code></div><p>通过相同的 name 形成互斥选项组，并在选择时返回 value 和 name。</p></div>
+      <div class="demo-card two-column">
+        <fieldset class="preview options-preview"><legend>Viewport mode</legend><ge-radio name="viewport" value="select" label="Select" checked></ge-radio><ge-radio name="viewport" value="orbit" label="Orbit"></ge-radio><ge-radio name="viewport" value="pan" label="Pan"></ge-radio><ge-radio name="viewport" value="locked" label="Locked" disabled></ge-radio></fieldset>
+        <div class="controls stacked"><p class="control-note">用 <code>name="viewport"</code> 连接一组单选项。</p><output id="radio-event">选择一个视口模式</output></div>
+      </div>
+    </section>
+
+    <section class="component-section" id="select" data-title="Select">
+      <div class="section-heading"><div><span class="index">05</span><h2>Select</h2><code>&lt;ge-select&gt;</code></div><p>由 options 属性或 JavaScript 属性提供选项，可开启搜索并禁用单项。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview narrow"><ge-select id="select-live" label="Render quality" searchable value="high"></ge-select></div>
+        <div class="controls stacked"><label>value<select id="select-value"><option value="low">Low</option><option value="medium">Medium</option><option value="high" selected>High</option><option value="ultra">Ultra</option></select></label><div class="toggle-row"><label class="toggle"><input id="select-searchable" type="checkbox" checked /><span></span>searchable</label><label class="toggle"><input id="select-disabled" type="checkbox" /><span></span>disabled</label></div><output id="select-event">选择渲染质量</output></div>
+      </div>
+    </section>
+
+    <section class="component-section" id="tabs" data-title="Tabs">
+      <div class="section-heading"><div><span class="index">06</span><h2>Tabs</h2><code>&lt;ge-tabs&gt;</code></div><p>键盘可访问的选项卡列表，面板通过与 value 同名的 slot 关联。</p></div>
+      <div class="demo-card">
+        <div class="preview flush"><ge-tabs id="tabs-live" value="scene"><div class="tab-panel" slot="scene"><span class="panel-icon">◇</span><div><b>Scene</b><p>3 objects · 2 lights · 1 camera</p></div></div><div class="tab-panel" slot="assets"><span class="panel-icon">▦</span><div><b>Assets</b><p>Browse models, materials and textures.</p></div></div><div class="tab-panel" slot="settings"><span class="panel-icon">⌁</span><div><b>Settings</b><p>Project-level render and runtime options.</p></div></div></ge-tabs></div>
+        <div class="controls inline-controls"><span>当前值</span><output id="tabs-event">scene</output></div>
+      </div>
+    </section>
+
+    <section class="component-section" id="dropdown" data-title="Dropdown">
+      <div class="section-heading"><div><span class="index">07</span><h2>Dropdown</h2><code>&lt;ge-dropdown&gt;</code></div><p>带触发器插槽的动作菜单，支持四种对齐方向、分隔线和禁用项。</p></div>
+      <div class="demo-card two-column overflow-visible">
+        <div class="preview centered overflow-visible"><ge-dropdown id="dropdown-live" placement="bottom-start"><button class="native-trigger">Export <span>⌄</span></button></ge-dropdown></div>
+        <div class="controls stacked"><label>placement<select id="dropdown-placement"><option>bottom-start</option><option>bottom-end</option><option>top-start</option><option>top-end</option></select></label><label class="toggle"><input id="dropdown-disabled" type="checkbox" /><span></span>disabled</label><output id="dropdown-event">打开菜单并选择格式</output></div>
+      </div>
+    </section>
+
+    <section class="component-section" id="tooltip" data-title="Tooltip">
+      <div class="section-heading"><div><span class="index">08</span><h2>Tooltip</h2><code>&lt;ge-tooltip&gt;</code></div><p>悬停或聚焦时展示辅助文本，支持 12 个方位、延迟和箭头控制。</p></div>
+      <div class="demo-card two-column overflow-visible">
+        <div class="preview centered tooltip-stage overflow-visible"><ge-tooltip id="tooltip-live" label="Frame selected object" placement="top" delay="120" arrow><button class="icon-trigger" aria-label="Frame selected object">⌗</button></ge-tooltip></div>
+        <div class="controls stacked"><label>placement<select id="tooltip-placement"><option>top</option><option>topLeft</option><option>topRight</option><option>bottom</option><option>bottomLeft</option><option>bottomRight</option><option>left</option><option>leftTop</option><option>leftBottom</option><option>right</option><option>rightTop</option><option>rightBottom</option></select></label><label>delay <span id="tooltip-delay-value">120 ms</span><input id="tooltip-delay" type="range" min="0" max="800" step="40" value="120" /></label><div class="toggle-row"><label class="toggle"><input id="tooltip-arrow" type="checkbox" checked /><span></span>arrow</label><label class="toggle"><input id="tooltip-disabled" type="checkbox" /><span></span>disabled</label></div></div>
+      </div>
+    </section>
+
+    <section class="component-section" id="dialog" data-title="Dialog">
+      <div class="section-heading"><div><span class="index">09</span><h2>Dialog</h2><code>&lt;ge-dialog&gt;</code></div><p>原生 modal dialog 封装，管理焦点恢复、Escape、背景点击和关闭原因。</p></div>
+      <div class="demo-card two-column"><div class="preview centered"><ge-button id="dialog-open" label="Open dialog"></ge-button><ge-dialog id="dialog-live" heading="Delete material?" dismissible><p>This action removes <b>Ocean Glass</b> from the project. You can’t undo it.</p><ge-button slot="footer" id="dialog-cancel" label="Cancel"></ge-button><ge-button slot="footer" id="dialog-confirm" label="Delete"></ge-button></ge-dialog></div><div class="controls stacked"><label>heading<input id="dialog-heading" value="Delete material?" /></label><label class="toggle"><input id="dialog-dismissible" type="checkbox" checked /><span></span>dismissible</label><output id="dialog-event">尚未打开</output></div></div>
+    </section>
+
+    <section class="component-section" id="context-menu" data-title="Context Menu">
+      <div class="section-heading"><div><span class="index">10</span><h2>Context Menu</h2><code>&lt;ge-context-menu&gt;</code></div><p>在指定视口坐标打开；支持鼠标、方向键、Enter、Escape 和焦点管理。</p></div>
+      <div class="demo-card two-column overflow-visible"><div class="preview context-target" id="context-target"><div><span>◇</span><b>Player.controller</b><small>在此区域右键，或点击下方按钮</small></div><button id="context-open" class="native-trigger">Open menu</button><ge-context-menu id="context-live"></ge-context-menu></div><div class="controls stacked"><p class="control-note"><code>openAt(x, y)</code> 会自动约束菜单在可视区域内。</p><output id="context-event">等待打开菜单</output></div></div>
+    </section>
+
+    <section class="component-section" id="split" data-title="Split">
+      <div class="section-heading"><div><span class="index">11</span><h2>Split</h2><code>&lt;ge-split&gt;</code></div><p>可拖拽、可键盘调整的双面板布局，支持方向、比例、最小尺寸和分隔条宽度。</p></div>
+      <div class="demo-card">
+        <div class="preview split-stage"><ge-split id="split-live" direction="horizontal" ratio="0.34" min-first="100" min-second="140" bar-size="6"><div class="split-pane pane-a" slot="first"><span>01</span><b>Hierarchy</b><small>First pane</small></div><div class="split-pane pane-b" slot="second"><span>02</span><b>Viewport</b><small>Second pane</small></div></ge-split></div>
+        <div class="controls split-controls"><label>direction<select id="split-direction"><option>horizontal</option><option>vertical</option></select></label><label>ratio <span id="split-ratio-value">0.34</span><input id="split-ratio" type="range" min="0" max="1" step="0.01" value="0.34" /></label><label>bar-size <span id="split-bar-value">6 px</span><input id="split-bar" type="range" min="1" max="18" value="6" /></label><output id="split-event">拖动分隔条或使用方向键</output></div>
+      </div>
+    </section>
+
+    <section class="component-section" id="tree" data-title="Tree">
+      <div class="section-heading"><div><span class="index">12</span><h2>Tree</h2><code>&lt;ge-tree&gt;</code></div><p>层级数据、展开、范围多选、键盘导航、剪贴板操作和拖放排序。</p></div>
+      <div class="demo-card tree-card">
+        <div class="preview tree-stage"><ge-tree id="tree-live" allow-drag></ge-tree></div>
+        <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-drag" type="checkbox" checked /><span></span>allow-drag</label></div><button id="tree-select" class="native-trigger">Select lights</button><button id="tree-reset" class="native-trigger secondary">Reset data</button><output id="tree-event">选择节点；Ctrl/⌘ 与 Shift 支持多选</output></div>
+      </div>
+    </section>
+
+    <footer class="page-footer"><span>Haiyue UI</span><p>Dependency-free interface primitives for creative tools.</p><a href="#content">回到顶部 ↑</a></footer>
+  </main>
+
+  <div class="command" id="command" hidden><div class="command-backdrop"></div><div class="command-panel" role="dialog" aria-modal="true" aria-label="快速跳转"><input id="command-input" placeholder="输入组件名称…" autocomplete="off" /><div id="command-results"></div><small><kbd>↑↓</kbd> Navigate <kbd>Enter</kbd> Open <kbd>Esc</kbd> Close</small></div></div>
+
+  <script type="module" src="./examples.js"></script>
+</body>
+</html>
