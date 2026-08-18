@@ -4,7 +4,7 @@ import { extname, resolve, sep } from 'node:path';
 
 const host = process.env.HAIYUE_EXAMPLES_HOST ?? '127.0.0.1';
 const port = Number(process.env.HAIYUE_EXAMPLES_PORT ?? 4173);
-const root = resolve('ui');
+const root = resolve('.');
 const mimeTypes = new Map([
   ['.css', 'text/css; charset=utf-8'],
   ['.html', 'text/html; charset=utf-8'],

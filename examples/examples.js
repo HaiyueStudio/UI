@@ -264,3 +264,12 @@ byId('tree-reset').addEventListener('click', () => { resetTree(); writeEvent(byI
 treeLive.addEventListener('selection-change', event => writeEvent(byId('tree-event'), 'selection-change', { selectedIds: event.detail.selectedIds }));
 treeLive.addEventListener('data-change', event => writeEvent(byId('tree-event'), 'data-change', { action: event.detail.action, sourceId: event.detail.sourceId, targetId: event.detail.targetId }));
 treeLive.addEventListener('node-context-menu', event => writeEvent(byId('tree-event'), 'node-context-menu', { id: event.detail.id, selectedIds: event.detail.selectedIds }));
+
+// History controls.
+const historyLive = byId('history-live');
+byId('history-can-undo').addEventListener('change', event => { historyLive.canUndo = event.target.checked; });
+byId('history-can-redo').addEventListener('change', event => { historyLive.canRedo = event.target.checked; });
+byId('history-busy').addEventListener('change', event => { historyLive.busy = event.target.checked; });
+byId('history-locale').addEventListener('change', event => { historyLive.setAttribute('locale', event.target.value); });
+historyLive.addEventListener('undo-request', () => writeEvent(byId('history-event'), 'undo-request', { label: historyLive.undoLabel }));
+historyLive.addEventListener('redo-request', () => writeEvent(byId('history-event'), 'redo-request', { label: historyLive.redoLabel }));

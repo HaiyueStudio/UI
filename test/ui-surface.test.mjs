@@ -12,6 +12,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'GEContextMenu',
     'GEDialog',
     'GEDropdown',
+    'GEHistoryControls',
     'GEInput',
     'GERadio',
     'GESelect',
@@ -20,10 +21,12 @@ test('UI root keeps the supported component surface importable', async () => {
     'GETooltip',
     'GETree',
     'GETreeNode',
+    'defineButtonComponents',
     'defineCheckboxComponents',
     'defineContextMenuComponents',
     'defineDialogComponents',
     'defineDropdownComponents',
+    'defineHistoryControlsComponents',
     'defineInputComponents',
     'defineHaiyueUI',
     'defineRadioComponents',
@@ -34,6 +37,16 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineTreeComponents',
   ];
   assert.deepEqual(Object.keys(ui).sort(), expected.sort());
+});
+
+test('history controls are controlled, accessible, and release click listeners', () => {
+  const history = readFileSync(new URL('../src/history-controls.ts', import.meta.url), 'utf8');
+  assert.match(history, /export class GEHistoryControls extends HTMLElement/);
+  assert.match(history, /'undo-request' \| 'redo-request'/);
+  assert.match(history, /bubbles: true, composed: true/);
+  assert.match(history, /role', 'toolbar'/);
+  assert.match(history, /removeEventListener\('click', this\._requestUndo\)/);
+  assert.doesNotMatch(history, /window\.addEventListener|\.undo\(\)|\.redo\(\)/);
 });
 
 test('tree orchestrator delegates DOM-free hierarchy ownership to tree-model', () => {

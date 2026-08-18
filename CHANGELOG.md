@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 独立 UI 仓库移除重复的 `ui/` workspace 层级，并为全部组件新增 `@haiyue/ui/<component>` 独立、无副作用的公开入口；根入口继续提供显式全量注册。
 - 0.1 首发正确性矩阵收敛为 Windows 10 22H2+ Chrome/Edge 与真实 GeForce/Radeon RX 独显；取消 Apple/Windows 集显的独立 required handoff，并将 Chrome/macOS 调整为 extended。软件与远程虚拟 adapter 继续禁止。
 - 将 `@haiyue/extensions` 纳入公共 npm 包；在首批 `/animation3d`、`/gltf`、`/gltf-animation3d` 后，经 feature-freeze 漏审纠偏将 `/animation`、`/hya-state-machine`、`/spine`、`/tilemap`、`/canvas-text`、`/tween`、`/grid` 转正。glTF/Spine worker transport 与 parser 底层分别保留在 `/experimental/gltf-worker`、`/experimental/spine-worker`。
 - 新增 stable `@haiyue/engine/extension-authoring` 窄 SPI，使独立渲染扩展不再依赖 engine experimental 声明；feature freeze 仍保持 active。

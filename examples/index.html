@@ -34,11 +34,12 @@
       <a href="#tooltip" data-name="tooltip 提示"><span>Tooltip</span><code>ge-tooltip</code></a>
       <a href="#dialog" data-name="dialog 对话框"><span>Dialog</span><code>ge-dialog</code></a>
       <a href="#context-menu" data-name="context menu 右键菜单"><span>Context Menu</span><code>ge-context-menu</code></a>
+      <a href="#history-controls" data-name="history controls undo redo 历史 撤销 重做"><span>History Controls</span><code>ge-history-controls</code></a>
       <p class="nav-label">布局与数据</p>
       <a href="#split" data-name="split 分栏"><span>Split</span><code>ge-split</code></a>
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>ge-tree</code></a>
     </nav>
-    <div class="sidebar-foot"><span class="status-dot"></span><span>12 components</span><span>·</span><span>v0.1.0</span></div>
+    <div class="sidebar-foot"><span class="status-dot"></span><span>13 components</span><span>·</span><span>v0.1.1</span></div>
   </aside>
 
   <main id="content">
@@ -47,7 +48,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>12</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>13</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -168,6 +169,14 @@
       <div class="demo-card tree-card">
         <div class="preview tree-stage"><ge-tree id="tree-live" allow-drag></ge-tree></div>
         <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-drag" type="checkbox" checked /><span></span>allow-drag</label></div><button id="tree-select" class="native-trigger">Select lights</button><button id="tree-reset" class="native-trigger secondary">Reset data</button><output id="tree-event">选择节点；Ctrl/⌘ 与 Shift 支持多选</output></div>
+      </div>
+    </section>
+
+    <section class="component-section" id="history-controls" data-title="History Controls">
+      <div class="section-heading"><div><span class="index">13</span><h2>History Controls</h2><code>&lt;ge-history-controls&gt;</code></div><p>受控的撤销与重做工具栏；宿主负责历史状态，组件只发送操作请求。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview centered"><ge-history-controls id="history-live" can-undo undo-label="Move Player" redo-label="Scale Player" locale="zh-CN"></ge-history-controls></div>
+        <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="history-can-undo" type="checkbox" checked /><span></span>can-undo</label><label class="toggle"><input id="history-can-redo" type="checkbox" /><span></span>can-redo</label><label class="toggle"><input id="history-busy" type="checkbox" /><span></span>busy</label></div><label>locale<select id="history-locale"><option value="zh-CN">zh-CN</option><option value="en">en</option></select></label><output id="history-event">点击撤销或重做按钮</output></div>
       </div>
     </section>
 

@@ -1,17 +1,111 @@
 {
-  "name": "@haiyue/ui-repository",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@haiyue/ui",
+  "version": "0.1.1",
+  "private": false,
+  "description": "Dependency-free Web Components for HaiyueStudio tools and products.",
   "license": "MIT",
-  "repository": "https://github.com/HaiyueStudio/UI.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HaiyueStudio/UI.git"
+  },
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./button": {
+      "source": "./src/button.ts",
+      "types": "./dist/button.d.ts",
+      "import": "./dist/button.js"
+    },
+    "./checkbox": {
+      "source": "./src/checkbox.ts",
+      "types": "./dist/checkbox.d.ts",
+      "import": "./dist/checkbox.js"
+    },
+    "./context-menu": {
+      "source": "./src/context-menu.ts",
+      "types": "./dist/context-menu.d.ts",
+      "import": "./dist/context-menu.js"
+    },
+    "./dialog": {
+      "source": "./src/dialog.ts",
+      "types": "./dist/dialog.d.ts",
+      "import": "./dist/dialog.js"
+    },
+    "./dropdown": {
+      "source": "./src/dropdown.ts",
+      "types": "./dist/dropdown.d.ts",
+      "import": "./dist/dropdown.js"
+    },
+    "./input": {
+      "source": "./src/input.ts",
+      "types": "./dist/input.d.ts",
+      "import": "./dist/input.js"
+    },
+    "./history-controls": {
+      "source": "./src/history-controls.ts",
+      "types": "./dist/history-controls.d.ts",
+      "import": "./dist/history-controls.js"
+    },
+    "./radio": {
+      "source": "./src/radio.ts",
+      "types": "./dist/radio.d.ts",
+      "import": "./dist/radio.js"
+    },
+    "./select": {
+      "source": "./src/select.ts",
+      "types": "./dist/select.d.ts",
+      "import": "./dist/select.js"
+    },
+    "./split": {
+      "source": "./src/split.ts",
+      "types": "./dist/split.d.ts",
+      "import": "./dist/split.js"
+    },
+    "./tabs": {
+      "source": "./src/tabs.ts",
+      "types": "./dist/tabs.d.ts",
+      "import": "./dist/tabs.js"
+    },
+    "./tooltip": {
+      "source": "./src/tooltip.ts",
+      "types": "./dist/tooltip.d.ts",
+      "import": "./dist/tooltip.js"
+    },
+    "./tree": {
+      "source": "./src/tree.ts",
+      "types": "./dist/tree.d.ts",
+      "import": "./dist/tree.js"
+    },
+    "./package.json": "./package.json"
+  },
   "engines": { "node": ">=22" },
-  "workspaces": ["ui"],
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "src/**/*"
+  ],
   "scripts": {
-    "build": "npm run build -w ./ui",
+    "build": "tsc -p tsconfig.json",
     "examples": "npm run build && node scripts/serve-examples.mjs",
-    "typecheck": "npm run typecheck -w ./ui",
-    "test": "npm test -w ./ui",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test \"test/**/*.test.mjs\"",
     "pack:candidate": "node scripts/pack-candidate.mjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.0"
   }
 }

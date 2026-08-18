@@ -12,8 +12,6 @@ if (!npmCli) throw new Error('npm_execpath is required to pack the UI candidate.
 const result = spawnSync(process.execPath, [
   npmCli,
   'pack',
-  '-w',
-  './ui',
   '--pack-destination',
   output,
   '--loglevel=error',
