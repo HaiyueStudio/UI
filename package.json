@@ -1,0 +1,16 @@
+{
+  "name": "@haiyue/ui-repository",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "repository": "https://github.com/HaiyueStudio/UI.git",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "workspaces": ["ui"],
+  "scripts": {
+    "build": "npm run build -w ./ui",
+    "typecheck": "npm run typecheck -w ./ui",
+    "test": "npm test -w ./ui",
+    "pack:candidate": "node scripts/pack-candidate.mjs"
+  }
+}

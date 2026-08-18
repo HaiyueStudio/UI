@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameEngine UI - Radio</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-content: start;
+      gap: 16px;
+      padding: 24px;
+      background: #0d1118;
+      color: #d8e2f2;
+      font-family: system-ui, sans-serif;
+    }
+    fieldset {
+      width: 280px;
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 14px;
+      border: 1px solid #2a3444;
+      border-radius: 6px;
+      background: #141a24;
+    }
+    legend {
+      padding: 0 6px;
+      color: #aebbd0;
+    }
+    pre {
+      width: 360px;
+      min-height: 88px;
+      margin: 0;
+      padding: 12px;
+      border: 1px solid #2a3444;
+      border-radius: 6px;
+      background: #141a24;
+      color: #b9c8df;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <fieldset>
+    <legend>Viewport mode</legend>
+    <ge-radio name="viewport" value="select" label="Select" checked></ge-radio>
+    <ge-radio name="viewport" value="orbit" label="Orbit"></ge-radio>
+    <ge-radio name="viewport" value="pan" label="Pan"></ge-radio>
+    <ge-radio name="viewport" value="locked" label="Locked" disabled></ge-radio>
+  </fieldset>
+  <pre id="log">Choose an option.</pre>
+
+  <script type="module">
+    import { defineHaiyueUI } from '../../dist/index.js';
+
+    defineHaiyueUI();
+
+    const log = document.getElementById('log');
+    document.addEventListener('checked-change', event => {
+      log.textContent = JSON.stringify(event.detail, null, 2);
+    });
+  </script>
+</body>
+</html>

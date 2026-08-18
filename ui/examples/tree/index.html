@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GameEngine UI - Tree</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
+      padding: 16px;
+      background: #0d1118;
+      color: #d8e2f2;
+      font-family: system-ui, sans-serif;
+    }
+    ge-tree {
+      align-self: start;
+      justify-self: stretch;
+      width: 100%;
+      height: calc(100vh - 32px);
+      border: 1px solid #2a3444;
+      border-radius: 6px;
+    }
+    .panel {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .toolbar {
+      display: flex;
+      gap: 8px;
+    }
+    button {
+      height: 30px;
+      padding: 0 10px;
+      border: 1px solid #3d4654;
+      border-radius: 4px;
+      background: #202733;
+      color: #eef3ff;
+      cursor: pointer;
+    }
+    pre {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      margin: 0;
+      padding: 12px;
+      border: 1px solid #2a3444;
+      border-radius: 6px;
+      background: #141a24;
+      color: #b9c8df;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <ge-tree id="tree" allow-drag></ge-tree>
+
+  <div class="panel">
+    <div class="toolbar">
+      <button id="update">Update JSON</button>
+      <button id="toggle-drag">Disable Drag</button>
+    </div>
+    <pre id="log"></pre>
+  </div>
+
+  <script type="module">
+    import { defineHaiyueUI } from '../../dist/index.js';
+
+    defineHaiyueUI();
+
+    class SceneNodeView extends HTMLElement {
+      set node(value) {
+        this._node = value;
+        this._render();
+      }
+
+      connectedCallback() {
+        this._render();
+      }
+
+      _render() {
+        if (!this._node) return;
+        this.innerHTML = `
+          <style>
+            :host {
+              display: flex;
+              align-items: center;
+              gap: 6px;
+              min-width: 0;
+              color: inherit;
+            }
+            .badge {
+              flex: 0 0 auto;
+              padding: 1px 5px;
+              border-radius: 3px;
+              background: #31405a;
+              color: #a8c9ff;
+              font-size: 10px;
+            }
+            .name {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          </style>
+          <span class="badge">${this._node.kind ?? 'node'}</span>
+          <span class="name">${this._node.label ?? this._node.id}</span>
+        `;
+      }
+    }
+    customElements.define('scene-node-view', SceneNodeView);
+
+    const initialData = [
+      {
+        id: 'scene',
+        label: 'Scene',
+        icon: '#',
+        expanded: true,
+        children: [
+          { id: 'camera', label: 'Main Camera', icon: 'C' },
+          {
+            id: 'lights',
+            label: 'Lights',
+            icon: 'L',
+            expanded: true,
+            children: [
+              { id: 'sun', label: 'Directional Light', icon: 'D' },
+              { id: 'fill', label: 'Fill Light', icon: 'P' },
+            ],
+          },
+          {
+            id: 'player',
+            label: 'Player',
+            renderer: 'scene-node-view',
+            kind: 'actor',
+            children: [
+              { id: 'weapon', label: 'Weapon', icon: 'W' },
+              { id: 'shadow', label: 'Shadow', icon: 'S' },
+            ],
+          },
+        ],
+      },
+      { id: 'environment', label: 'Environment', icon: 'E' },
+    ];
+
+    const tree = document.getElementById('tree');
+    const log = document.getElementById('log');
+    tree.data = structuredClone(initialData);
+
+    function writeLog(message) {
+      log.textContent = `${message}\n\n${JSON.stringify(tree.data, null, 2)}`;
+    }
+
+    tree.addEventListener('selection-change', event => {
+      writeLog(`Selected: ${event.detail.selectedIds.join(', ') || 'None'}`);
+    });
+
+    tree.addEventListener('data-change', () => {
+      writeLog('Tree data changed by drag/drop');
+    });
+
+    document.getElementById('update').addEventListener('click', () => {
+      tree.data = [
+        ...structuredClone(initialData),
+        {
+          id: `runtime-${Date.now()}`,
+          label: 'Runtime Added Node',
+          icon: '+',
+        },
+      ];
+      writeLog('JSON data replaced');
+    });
+
+    document.getElementById('toggle-drag').addEventListener('click', event => {
+      tree.allowDrag = !tree.allowDrag;
+      event.currentTarget.textContent = tree.allowDrag ? 'Disable Drag' : 'Enable Drag';
+      writeLog(`Drag ${tree.allowDrag ? 'enabled' : 'disabled'}`);
+    });
+
+    writeLog('Tree ready');
+  </script>
+</body>
+</html>
