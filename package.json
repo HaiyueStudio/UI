@@ -15,72 +15,58 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "source": "./src/index.ts",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
     "./button": {
-      "source": "./src/button.ts",
       "types": "./dist/button.d.ts",
       "import": "./dist/button.js"
     },
     "./checkbox": {
-      "source": "./src/checkbox.ts",
       "types": "./dist/checkbox.d.ts",
       "import": "./dist/checkbox.js"
     },
     "./context-menu": {
-      "source": "./src/context-menu.ts",
       "types": "./dist/context-menu.d.ts",
       "import": "./dist/context-menu.js"
     },
     "./dialog": {
-      "source": "./src/dialog.ts",
       "types": "./dist/dialog.d.ts",
       "import": "./dist/dialog.js"
     },
     "./dropdown": {
-      "source": "./src/dropdown.ts",
       "types": "./dist/dropdown.d.ts",
       "import": "./dist/dropdown.js"
     },
     "./input": {
-      "source": "./src/input.ts",
       "types": "./dist/input.d.ts",
       "import": "./dist/input.js"
     },
     "./history-controls": {
-      "source": "./src/history-controls.ts",
       "types": "./dist/history-controls.d.ts",
       "import": "./dist/history-controls.js"
     },
     "./radio": {
-      "source": "./src/radio.ts",
       "types": "./dist/radio.d.ts",
       "import": "./dist/radio.js"
     },
     "./select": {
-      "source": "./src/select.ts",
       "types": "./dist/select.d.ts",
       "import": "./dist/select.js"
     },
     "./split": {
-      "source": "./src/split.ts",
       "types": "./dist/split.d.ts",
       "import": "./dist/split.js"
     },
     "./tabs": {
-      "source": "./src/tabs.ts",
       "types": "./dist/tabs.d.ts",
       "import": "./dist/tabs.js"
     },
     "./tooltip": {
-      "source": "./src/tooltip.ts",
       "types": "./dist/tooltip.d.ts",
       "import": "./dist/tooltip.js"
     },
     "./tree": {
-      "source": "./src/tree.ts",
       "types": "./dist/tree.d.ts",
       "import": "./dist/tree.js"
     },
@@ -95,8 +81,7 @@
     "README.md",
     "LICENSE",
     "dist/**/*.js",
-    "dist/**/*.d.ts",
-    "src/**/*"
+    "dist/**/*.d.ts"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",

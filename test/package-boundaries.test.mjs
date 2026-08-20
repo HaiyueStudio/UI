@@ -20,11 +20,10 @@ test('package publishes one explicit side-effect-free subpath per component', ()
   for (const name of componentSubpaths) {
     const entry = packageJson.exports[`./${name}`];
     assert.deepEqual(entry, {
-      source: `./src/${name}.ts`,
       types: `./dist/${name}.d.ts`,
       import: `./dist/${name}.js`,
     });
-    assert.equal(existsSync(resolve(repositoryRoot, entry.source)), true, `${entry.source} must exist`);
+    assert.equal(entry.source, undefined, `${name} must not publish a source condition`);
     assert.equal(existsSync(resolve(repositoryRoot, entry.types)), true, `${entry.types} must exist`);
     assert.equal(existsSync(resolve(repositoryRoot, entry.import)), true, `${entry.import} must exist`);
   }
