@@ -1,13 +1,13 @@
-export type GESplitDirection = 'horizontal' | 'vertical';
+export type HYSplitDirection = 'horizontal' | 'vertical';
 
 const DEFAULT_BAR_SIZE = 6;
 
-export interface GESplitRatioChangeDetail {
+export interface HYSplitRatioChangeDetail {
   ratio: number;
-  direction: GESplitDirection;
+  direction: HYSplitDirection;
 }
 
-export class GESplit extends HTMLElement {
+export class HYSplit extends HTMLElement {
   private readonly _style = document.createElement('style');
   private readonly _first = document.createElement('div');
   private readonly _second = document.createElement('div');
@@ -33,28 +33,28 @@ export class GESplit extends HTMLElement {
         min-width: 0;
         min-height: 0;
         overflow: hidden;
-        color: var(--ge-split-text-color, var(--ge-text-color, #d8e2f2));
-        background: var(--ge-split-bg-color, var(--ge-surface-color, #121822));
+        color: var(--hy-split-text-color, var(--hy-text-color, #d8e2f2));
+        background: var(--hy-split-bg-color, var(--hy-surface-color, #121822));
       }
       .pane {
         min-width: 0;
         min-height: 0;
         overflow: auto;
-        background: var(--ge-split-pane-bg-color, transparent);
+        background: var(--hy-split-pane-bg-color, transparent);
       }
       .bar {
-        background: var(--ge-split-bar-color, var(--ge-border-strong-color, #273142));
+        background: var(--hy-split-bar-color, var(--hy-border-strong-color, #273142));
         position: relative;
         z-index: 1;
-        transition: background var(--ge-split-bar-transition-duration, 0.12s) ease;
+        transition: background var(--hy-split-bar-transition-duration, 0.12s) ease;
       }
       .bar:focus {
-        outline: var(--ge-split-focus-ring-width, 1px) solid var(--ge-split-focus-ring-color, var(--ge-focus-border-color, var(--ge-accent-color, #3d6fa8)));
+        outline: var(--hy-split-focus-ring-width, 1px) solid var(--hy-split-focus-ring-color, var(--hy-focus-border-color, var(--hy-accent-color, #3d6fa8)));
         outline-offset: -1px;
       }
       .bar:hover,
       .bar.dragging {
-        background: var(--ge-split-bar-active-color, var(--ge-accent-color, #3d6fa8));
+        background: var(--hy-split-bar-active-color, var(--hy-accent-color, #3d6fa8));
       }
       :host([direction="vertical"]) .bar {
         cursor: row-resize;
@@ -67,16 +67,16 @@ export class GESplit extends HTMLElement {
         position: absolute;
         left: 0;
         right: 0;
-        top: calc(var(--ge-split-bar-hit-outset, 3px) * -1);
-        bottom: calc(var(--ge-split-bar-hit-outset, 3px) * -1);
+        top: calc(var(--hy-split-bar-hit-outset, 3px) * -1);
+        bottom: calc(var(--hy-split-bar-hit-outset, 3px) * -1);
       }
       :host(:not([direction="vertical"])) .bar::before {
         content: "";
         position: absolute;
         top: 0;
         bottom: 0;
-        left: calc(var(--ge-split-bar-hit-outset, 3px) * -1);
-        right: calc(var(--ge-split-bar-hit-outset, 3px) * -1);
+        left: calc(var(--hy-split-bar-hit-outset, 3px) * -1);
+        right: calc(var(--hy-split-bar-hit-outset, 3px) * -1);
       }
     `;
 
@@ -120,11 +120,11 @@ export class GESplit extends HTMLElement {
     this._scheduleLayout();
   }
 
-  get direction(): GESplitDirection {
+  get direction(): HYSplitDirection {
     return this.getAttribute('direction') === 'vertical' ? 'vertical' : 'horizontal';
   }
 
-  set direction(value: GESplitDirection) {
+  set direction(value: HYSplitDirection) {
     this.setAttribute('direction', value);
   }
 
@@ -262,7 +262,7 @@ export class GESplit extends HTMLElement {
 
   private _emitRatioChange(): void {
     this._syncAria();
-    this.dispatchEvent(new CustomEvent<GESplitRatioChangeDetail>('ratio-change', {
+    this.dispatchEvent(new CustomEvent<HYSplitRatioChangeDetail>('ratio-change', {
       detail: { ratio: this.ratio, direction: this.direction },
       bubbles: true,
       composed: true,
@@ -300,7 +300,7 @@ export class GESplit extends HTMLElement {
 }
 
 export function defineSplitComponents(): void {
-  if (!customElements.get('ge-split')) {
-    customElements.define('ge-split', GESplit);
+  if (!customElements.get('hy-split')) {
+    customElements.define('hy-split', HYSplit);
   }
 }

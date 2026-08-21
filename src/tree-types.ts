@@ -1,43 +1,43 @@
-export interface GETreeNodeData {
+export interface HYTreeNodeData {
   id: string;
   label?: string;
   icon?: string;
   expanded?: boolean;
   renderer?: string;
-  children?: GETreeNodeData[];
+  children?: HYTreeNodeData[];
   [key: string]: unknown;
 }
 
-export type GETreeDropPosition = 'before' | 'after' | 'inside';
+export type HYTreeDropPosition = 'before' | 'after' | 'inside';
 
-export interface GETreeSelectionChangeDetail {
+export interface HYTreeSelectionChangeDetail {
   selectedId: string | null;
-  node: GETreeNodeData | null;
+  node: HYTreeNodeData | null;
   selectedIds: string[];
-  nodes: GETreeNodeData[];
+  nodes: HYTreeNodeData[];
 }
 
-export interface GETreeDataChangeDetail {
-  data: GETreeNodeData[];
+export interface HYTreeDataChangeDetail {
+  data: HYTreeNodeData[];
   action?: 'copy' | 'paste' | 'delete' | 'drop';
   sourceId?: string;
   targetId?: string | null;
-  dropPosition?: GETreeDropPosition;
-  pastedNodes?: GETreeNodeData[];
+  dropPosition?: HYTreeDropPosition;
+  pastedNodes?: HYTreeNodeData[];
   deletedIds?: string[];
 }
 
-export interface GETreeNodeContextMenuDetail {
+export interface HYTreeNodeContextMenuDetail {
   id: string;
-  node: GETreeNodeData;
+  node: HYTreeNodeData;
   selectedIds: string[];
   clientX: number;
   clientY: number;
 }
 
 export interface FlatTreeNode {
-  node: GETreeNodeData;
-  parent: GETreeNodeData | null;
+  node: HYTreeNodeData;
+  parent: HYTreeNodeData | null;
   depth: number;
 }
 

@@ -1,19 +1,19 @@
-export interface GETabOption {
+export interface HYTabOption {
   label: string;
   value: string;
   disabled?: boolean;
 }
 
-export interface GETabChangeDetail {
+export interface HYTabChangeDetail {
   value: string;
-  option: GETabOption | null;
+  option: HYTabOption | null;
 }
 
-export class GETabs extends HTMLElement {
+export class HYTabs extends HTMLElement {
   private readonly _style = document.createElement('style');
   private readonly _tabs = document.createElement('div');
   private readonly _panels = document.createElement('div');
-  private _options: GETabOption[] = [];
+  private _options: HYTabOption[] = [];
 
   static get observedAttributes(): string[] {
     return ['options', 'value'];
@@ -31,8 +31,8 @@ export class GETabs extends HTMLElement {
         height: 100%;
         min-width: 0;
         min-height: 0;
-        color: var(--ge-text-color, #d8e2f2);
-        background: var(--ge-panel-bg-color, #171d28);
+        color: var(--hy-text-color, #d8e2f2);
+        background: var(--hy-panel-bg-color, #171d28);
         font: 12px system-ui, sans-serif;
       }
       .tabs {
@@ -41,8 +41,8 @@ export class GETabs extends HTMLElement {
         gap: 2px;
         min-width: 0;
         padding: 4px 6px 0;
-        border-bottom: 1px solid var(--ge-border-color, #303746);
-        background: var(--ge-tabs-bar-bg-color, var(--ge-menu-bg-color, var(--ge-surface-elevated-color, #1b2230)));
+        border-bottom: 1px solid var(--hy-border-color, #303746);
+        background: var(--hy-tabs-bar-bg-color, var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #1b2230)));
       }
       button {
         height: 28px;
@@ -51,19 +51,19 @@ export class GETabs extends HTMLElement {
         border: 1px solid transparent;
         border-bottom: 0;
         border-radius: 4px 4px 0 0;
-        color: var(--ge-secondary-text-color, #8fa7c8);
+        color: var(--hy-secondary-text-color, #8fa7c8);
         background: transparent;
         font: inherit;
         cursor: pointer;
       }
       button:hover {
-        color: var(--ge-text-color, #d8e2f2);
-        background: var(--ge-hover-bg-color, #222b3a);
+        color: var(--hy-text-color, #d8e2f2);
+        background: var(--hy-hover-bg-color, #222b3a);
       }
       button.active {
-        color: var(--ge-active-text-color, #eef3ff);
-        border-color: var(--ge-border-color, #303746);
-        background: var(--ge-panel-bg-color, #171d28);
+        color: var(--hy-active-text-color, #eef3ff);
+        border-color: var(--hy-border-color, #303746);
+        background: var(--hy-panel-bg-color, #171d28);
       }
       button:disabled {
         opacity: 0.45;
@@ -97,11 +97,11 @@ export class GETabs extends HTMLElement {
     this._render();
   }
 
-  get options(): GETabOption[] {
+  get options(): HYTabOption[] {
     return this._options;
   }
 
-  set options(value: GETabOption[]) {
+  set options(value: HYTabOption[]) {
     this._options = Array.isArray(value) ? value : [];
     if (!this._options.some(item => item.value === this.value)) {
       this.value = this._options[0]?.value ?? '';
@@ -139,7 +139,7 @@ export class GETabs extends HTMLElement {
           }))
         : [];
     } catch (error) {
-      console.warn('Invalid ge-tabs options attribute.', error);
+      console.warn('Invalid hy-tabs options attribute.', error);
     }
   }
 
@@ -167,7 +167,7 @@ export class GETabs extends HTMLElement {
     if (value === this.value) return;
     this.setAttribute('value', value);
     const option = this._options.find(item => item.value === value) ?? null;
-    this.dispatchEvent(new CustomEvent<GETabChangeDetail>('tab-change', {
+    this.dispatchEvent(new CustomEvent<HYTabChangeDetail>('tab-change', {
       detail: { value, option },
       bubbles: true,
       composed: true,
@@ -176,7 +176,7 @@ export class GETabs extends HTMLElement {
 }
 
 export function defineTabsComponents(): void {
-  if (!customElements.get('ge-tabs')) {
-    customElements.define('ge-tabs', GETabs);
+  if (!customElements.get('hy-tabs')) {
+    customElements.define('hy-tabs', HYTabs);
   }
 }

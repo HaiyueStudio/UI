@@ -1,4 +1,4 @@
-export class GEButton extends HTMLElement {
+export class HYButton extends HTMLElement {
   private readonly _button = document.createElement('button');
   private readonly _slot = document.createElement('slot');
 
@@ -15,12 +15,20 @@ export class GEButton extends HTMLElement {
       button {
         min-height: 28px;
         padding: 0 10px;
-        border: 1px solid #3d4654;
+        border: 1px solid var(--hy-border-color, #3d4654);
         border-radius: 4px;
-        background: #202733;
-        color: #eef3ff;
+        background: var(--hy-surface-elevated-color, #202733);
+        color: var(--hy-text-color, #eef3ff);
         font: 12px system-ui, sans-serif;
         cursor: pointer;
+      }
+      button:hover:not(:disabled) {
+        border-color: var(--hy-hover-border-color, #536477);
+        background: var(--hy-hover-bg-color, #273241);
+      }
+      button:focus-visible {
+        outline: 2px solid var(--hy-focus-border-color, #79a8ff);
+        outline-offset: 1px;
       }
       button.icon-only {
         width: 28px;
@@ -72,7 +80,7 @@ export class GEButton extends HTMLElement {
 }
 
 export function defineButtonComponents(): void {
-  if (!customElements.get('ge-button')) {
-    customElements.define('ge-button', GEButton);
+  if (!customElements.get('hy-button')) {
+    customElements.define('hy-button', HYButton);
   }
 }

@@ -1,25 +1,25 @@
 import { GE_MENU_ITEM_STYLES, createMenuItemButton, createMenuSeparator } from './menu-shared.js';
 
-export interface GEDropdownItem {
+export interface HYDropdownItem {
   label?: string;
   value?: string;
   disabled?: boolean;
   separator?: boolean;
 }
 
-export interface GEDropdownSelectDetail {
+export interface HYDropdownSelectDetail {
   value: string;
-  item: GEDropdownItem;
+  item: HYDropdownItem;
 }
 
-export type GEDropdownPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
+export type HYDropdownPlacement = 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
 
-export class GEDropdown extends HTMLElement {
+export class HYDropdown extends HTMLElement {
   private readonly _root: ShadowRoot;
   private readonly _style = document.createElement('style');
   private readonly _triggerSlot = document.createElement('slot');
   private readonly _menu = document.createElement('div');
-  private _items: GEDropdownItem[] = [];
+  private _items: HYDropdownItem[] = [];
   private _documentListenerAbort: AbortController | null = null;
 
   static get observedAttributes(): string[] {
@@ -34,7 +34,7 @@ export class GEDropdown extends HTMLElement {
         display: inline-block;
         width: max-content;
         min-width: 0;
-        color: var(--ge-text-color, #d8e2f2);
+        color: var(--hy-text-color, #d8e2f2);
         font: 12px system-ui, sans-serif;
       }
       :host([disabled]) {
@@ -50,11 +50,11 @@ export class GEDropdown extends HTMLElement {
         overflow: auto;
         display: none;
         padding: 4px;
-        border: 1px solid var(--ge-border-color, #303746);
+        border: 1px solid var(--hy-border-color, #303746);
         border-radius: 4px;
-        color: var(--ge-text-color, #d8e2f2);
-        background: var(--ge-menu-bg-color, var(--ge-surface-elevated-color, #1b2230));
-        box-shadow: 0 10px 26px var(--ge-menu-shadow-color, rgba(0, 0, 0, 0.36));
+        color: var(--hy-text-color, #d8e2f2);
+        background: var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #1b2230));
+        box-shadow: 0 10px 26px var(--hy-menu-shadow-color, rgba(0, 0, 0, 0.36));
       }
       :host([open]) .menu {
         display: block;
@@ -90,11 +90,11 @@ ${GE_MENU_ITEM_STYLES}
     if (name === 'placement' && this.open) this._syncPosition();
   }
 
-  get items(): GEDropdownItem[] {
+  get items(): HYDropdownItem[] {
     return this._items;
   }
 
-  set items(value: GEDropdownItem[]) {
+  set items(value: HYDropdownItem[]) {
     this._items = Array.isArray(value) ? value : [];
     this._render();
   }
@@ -117,11 +117,11 @@ ${GE_MENU_ITEM_STYLES}
     else this.removeAttribute('disabled');
   }
 
-  get placement(): GEDropdownPlacement {
-    return (this.getAttribute('placement') as GEDropdownPlacement | null) ?? 'bottom-start';
+  get placement(): HYDropdownPlacement {
+    return (this.getAttribute('placement') as HYDropdownPlacement | null) ?? 'bottom-start';
   }
 
-  set placement(value: GEDropdownPlacement) {
+  set placement(value: HYDropdownPlacement) {
     this.setAttribute('placement', value);
   }
 
@@ -159,7 +159,7 @@ ${GE_MENU_ITEM_STYLES}
           }))
         : [];
     } catch (error) {
-      console.warn('Invalid ge-dropdown items attribute.', error);
+      console.warn('Invalid hy-dropdown items attribute.', error);
     }
   }
 
@@ -174,7 +174,7 @@ ${GE_MENU_ITEM_STYLES}
       button.addEventListener('click', (event) => {
         event.stopPropagation();
         if (!item.value || item.disabled) return;
-        this.dispatchEvent(new CustomEvent<GEDropdownSelectDetail>('item-select', {
+        this.dispatchEvent(new CustomEvent<HYDropdownSelectDetail>('item-select', {
           detail: { value: item.value, item },
           bubbles: true,
           composed: true,
@@ -243,7 +243,7 @@ function getVisualViewportRect(): { left: number; top: number; width: number; he
 }
 
 export function defineDropdownComponents(): void {
-  if (!customElements.get('ge-dropdown')) {
-    customElements.define('ge-dropdown', GEDropdown);
+  if (!customElements.get('hy-dropdown')) {
+    customElements.define('hy-dropdown', HYDropdown);
   }
 }

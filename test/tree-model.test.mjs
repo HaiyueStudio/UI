@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { GETreeModel } from '../dist/tree-model.js';
+import { HYTreeModel } from '../dist/tree-model.js';
 
 function fixture() {
   return [
@@ -17,7 +17,7 @@ function fixture() {
 
 test('tree model builds stable hierarchy and visible indexes', () => {
   const expanded = new Set(['root-a', 'child-b', 'missing']);
-  const model = new GETreeModel(expanded);
+  const model = new HYTreeModel(expanded);
   model.setData(fixture());
 
   assert.deepEqual([...model.index.keys()], ['root-a', 'child-a', 'child-b', 'grandchild', 'root-b']);
@@ -30,7 +30,7 @@ test('tree model builds stable hierarchy and visible indexes', () => {
 test('tree model invalidates visibility without rebuilding data ownership', () => {
   const expanded = new Set(['root-a']);
   const data = fixture();
-  const model = new GETreeModel(expanded);
+  const model = new HYTreeModel(expanded);
   model.setData(data);
   assert.deepEqual(model.getVisibleIds(), ['root-a', 'child-a', 'child-b', 'root-b']);
 
@@ -43,7 +43,7 @@ test('tree model invalidates visibility without rebuilding data ownership', () =
 test('tree model moves siblings and reparents subtrees atomically', () => {
   const expanded = new Set(['root-a']);
   const data = fixture();
-  const model = new GETreeModel(expanded);
+  const model = new HYTreeModel(expanded);
   model.setData(data);
 
   assert.equal(model.moveNode('child-b', 'child-a', 'before'), true);
@@ -59,7 +59,7 @@ test('tree model moves siblings and reparents subtrees atomically', () => {
 
 test('tree model updates moves incrementally without rebuilding unrelated index records', () => {
   const expanded = new Set(['root-a', 'child-b']);
-  const model = new GETreeModel(expanded);
+  const model = new HYTreeModel(expanded);
   model.setData(fixture());
   const unaffected = model.getIndexedNode('child-a');
   const moved = model.getIndexedNode('root-b');
@@ -71,7 +71,7 @@ test('tree model updates moves incrementally without rebuilding unrelated index 
 });
 
 test('tree model rejects cycles and collapses nested selections', () => {
-  const model = new GETreeModel(new Set(['root-a', 'child-b']));
+  const model = new HYTreeModel(new Set(['root-a', 'child-b']));
   const data = fixture();
   model.setData(data);
 
@@ -85,7 +85,7 @@ test('tree model rejects cycles and collapses nested selections', () => {
 
 test('tree model removes nodes and prunes stale expansion state', () => {
   const expanded = new Set(['root-a', 'child-b']);
-  const model = new GETreeModel(expanded);
+  const model = new HYTreeModel(expanded);
   const data = fixture();
   model.setData(data);
 

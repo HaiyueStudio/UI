@@ -7,20 +7,20 @@ globalThis.HTMLElement ??= class HTMLElement {};
 test('UI root keeps the supported component surface importable', async () => {
   const ui = await import('../dist/index.js');
   const expected = [
-    'GEButton',
-    'GECheckbox',
-    'GEContextMenu',
-    'GEDialog',
-    'GEDropdown',
-    'GEHistoryControls',
-    'GEInput',
-    'GERadio',
-    'GESelect',
-    'GESplit',
-    'GETabs',
-    'GETooltip',
-    'GETree',
-    'GETreeNode',
+    'HYButton',
+    'HYCheckbox',
+    'HYContextMenu',
+    'HYDialog',
+    'HYDropdown',
+    'HYHistoryControls',
+    'HYInput',
+    'HYRadio',
+    'HYSelect',
+    'HYSplit',
+    'HYTabs',
+    'HYTooltip',
+    'HYTree',
+    'HYTreeNode',
     'defineButtonComponents',
     'defineCheckboxComponents',
     'defineContextMenuComponents',
@@ -37,11 +37,12 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineTreeComponents',
   ];
   assert.deepEqual(Object.keys(ui).sort(), expected.sort());
+  assert.equal(Object.keys(ui).some(name => /^GE[A-Z]/u.test(name)), false);
 });
 
 test('history controls are controlled, accessible, and release click listeners', () => {
   const history = readFileSync(new URL('../src/history-controls.ts', import.meta.url), 'utf8');
-  assert.match(history, /export class GEHistoryControls extends HTMLElement/);
+  assert.match(history, /export class HYHistoryControls extends HTMLElement/);
   assert.match(history, /'undo-request' \| 'redo-request'/);
   assert.match(history, /bubbles: true, composed: true/);
   assert.match(history, /role', 'toolbar'/);
@@ -53,17 +54,17 @@ test('tree orchestrator delegates DOM-free hierarchy ownership to tree-model', (
   const tree = readFileSync(new URL('../src/tree.ts', import.meta.url), 'utf8');
   const model = readFileSync(new URL('../src/tree-model.ts', import.meta.url), 'utf8');
   const node = readFileSync(new URL('../src/tree-node.ts', import.meta.url), 'utf8');
-  assert.match(tree, /new GETreeModel\(this\._expandedIds\)/);
+  assert.match(tree, /new HYTreeModel\(this\._expandedIds\)/);
   assert.doesNotMatch(model, /\bdocument\b|\bHTMLElement\b|\bcustomElements\b/);
-  assert.match(node, /class GETreeNode extends HTMLElement/);
+  assert.match(node, /class HYTreeNode extends HTMLElement/);
   assert.ok(tree.split('\n').length <= 1050, 'tree.ts must remain an orchestrator, not absorb model/view ownership');
 });
 
 test('shared input keeps native constraints and emits one composed commit contract', () => {
   const input = readFileSync(new URL('../src/input.ts', import.meta.url), 'utf8');
-  assert.match(input, /export class GEInput extends HTMLElement/);
+  assert.match(input, /export class HYInput extends HTMLElement/);
   assert.match(input, /'text' \| 'number' \| 'color'/);
-  assert.match(input, /CustomEvent<GEInputChangeDetail>\('value-change'/);
+  assert.match(input, /CustomEvent<HYInputChangeDetail>\('value-change'/);
   assert.match(input, /bubbles: true,[\s\S]*composed: true/);
   assert.match(input, /this\._input\.validity\.valid/);
 });

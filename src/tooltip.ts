@@ -1,4 +1,4 @@
-export type GETooltipPlacement =
+export type HYTooltipPlacement =
   | 'top'
   | 'topLeft'
   | 'topRight'
@@ -17,7 +17,7 @@ const VIEWPORT_PADDING = 8;
 const TRIGGER_GAP = 8;
 const ARROW_SIZE = 8;
 const ARROW_OFFSET = 16;
-const TOOLTIP_PLACEMENTS = new Set<GETooltipPlacement>([
+const TOOLTIP_PLACEMENTS = new Set<HYTooltipPlacement>([
   'top',
   'topLeft',
   'topRight',
@@ -32,7 +32,7 @@ const TOOLTIP_PLACEMENTS = new Set<GETooltipPlacement>([
   'rightBottom',
 ]);
 
-export class GETooltip extends HTMLElement {
+export class HYTooltip extends HTMLElement {
   private readonly _root: ShadowRoot;
   private readonly _style = document.createElement('style');
   private readonly _slot = document.createElement('slot');
@@ -62,10 +62,10 @@ export class GETooltip extends HTMLElement {
         max-width: min(280px, calc(100vw - 16px));
         padding: 5px 8px;
         border-radius: 4px;
-        color: var(--ge-tooltip-text-color, #f4f7fb);
-        background: var(--ge-tooltip-bg-color, #0f141c);
-        border: 1px solid var(--ge-tooltip-border-color, rgba(255, 255, 255, 0.08));
-        box-shadow: 0 8px 24px var(--ge-tooltip-shadow-color, rgba(0, 0, 0, 0.35));
+        color: var(--hy-tooltip-text-color, #f4f7fb);
+        background: var(--hy-tooltip-bg-color, #0f141c);
+        border: 1px solid var(--hy-tooltip-border-color, rgba(255, 255, 255, 0.08));
+        box-shadow: 0 8px 24px var(--hy-tooltip-shadow-color, rgba(0, 0, 0, 0.35));
         font: 12px system-ui, sans-serif;
         line-height: 1.35;
         width: max-content;
@@ -80,8 +80,8 @@ export class GETooltip extends HTMLElement {
         position: absolute;
         width: ${ARROW_SIZE}px;
         height: ${ARROW_SIZE}px;
-        background: var(--ge-tooltip-bg-color, #0f141c);
-        border: solid var(--ge-tooltip-border-color, rgba(255, 255, 255, 0.08));
+        background: var(--hy-tooltip-bg-color, #0f141c);
+        border: solid var(--hy-tooltip-border-color, rgba(255, 255, 255, 0.08));
         border-width: 0 1px 1px 0;
         transform: rotate(45deg);
       }
@@ -137,11 +137,11 @@ export class GETooltip extends HTMLElement {
     else this.removeAttribute('label');
   }
 
-  get placement(): GETooltipPlacement {
+  get placement(): HYTooltipPlacement {
     return normalizePlacement(this.getAttribute('placement'));
   }
 
-  set placement(value: GETooltipPlacement) {
+  set placement(value: HYTooltipPlacement) {
     this.setAttribute('placement', value);
   }
 
@@ -239,7 +239,7 @@ export class GETooltip extends HTMLElement {
     tooltipRect: DOMRect,
     top: number,
     left: number,
-    placement: GETooltipPlacement,
+    placement: HYTooltipPlacement,
   ): void {
     const x = clamp(hostRect.left + hostRect.width / 2 - left - ARROW_SIZE / 2, ARROW_OFFSET, tooltipRect.width - ARROW_OFFSET - ARROW_SIZE);
     const y = clamp(hostRect.top + hostRect.height / 2 - top - ARROW_SIZE / 2, ARROW_OFFSET, tooltipRect.height - ARROW_OFFSET - ARROW_SIZE);
@@ -296,26 +296,26 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-function normalizePlacement(value: string | null): GETooltipPlacement {
-  return value && TOOLTIP_PLACEMENTS.has(value as GETooltipPlacement)
-    ? value as GETooltipPlacement
+function normalizePlacement(value: string | null): HYTooltipPlacement {
+  return value && TOOLTIP_PLACEMENTS.has(value as HYTooltipPlacement)
+    ? value as HYTooltipPlacement
     : 'top';
 }
 
-function getAlignedTop(hostRect: DOMRect, tooltipRect: DOMRect, placement: GETooltipPlacement): number {
+function getAlignedTop(hostRect: DOMRect, tooltipRect: DOMRect, placement: HYTooltipPlacement): number {
   if (placement.endsWith('Top')) return hostRect.top;
   if (placement.endsWith('Bottom')) return hostRect.bottom - tooltipRect.height;
   return hostRect.top + (hostRect.height - tooltipRect.height) / 2;
 }
 
-function getAlignedLeft(hostRect: DOMRect, tooltipRect: DOMRect, placement: GETooltipPlacement): number {
+function getAlignedLeft(hostRect: DOMRect, tooltipRect: DOMRect, placement: HYTooltipPlacement): number {
   if (placement.endsWith('Left')) return hostRect.left;
   if (placement.endsWith('Right')) return hostRect.right - tooltipRect.width;
   return hostRect.left + (hostRect.width - tooltipRect.width) / 2;
 }
 
 export function defineTooltipComponents(): void {
-  if (!customElements.get('ge-tooltip')) {
-    customElements.define('ge-tooltip', GETooltip);
+  if (!customElements.get('hy-tooltip')) {
+    customElements.define('hy-tooltip', HYTooltip);
   }
 }

@@ -1,9 +1,9 @@
-export interface GECheckboxChangeDetail {
+export interface HYCheckboxChangeDetail {
   checked: boolean;
   value: string;
 }
 
-export class GECheckbox extends HTMLElement {
+export class HYCheckbox extends HTMLElement {
   private readonly _input = document.createElement('input');
   private readonly _box = document.createElement('span');
   private readonly _label = document.createElement('span');
@@ -22,7 +22,7 @@ export class GECheckbox extends HTMLElement {
         display: inline-block;
         width: max-content;
         min-width: 0;
-        color: var(--ge-checkbox-text-color, var(--ge-text-color, #d8e2f2));
+        color: var(--hy-checkbox-text-color, var(--hy-text-color, #d8e2f2));
         font: 12px system-ui, sans-serif;
       }
       :host([disabled]) {
@@ -58,20 +58,20 @@ export class GECheckbox extends HTMLElement {
         flex: 0 0 14px;
         display: inline-grid;
         place-items: center;
-        border: 1px solid var(--ge-checkbox-border-color, var(--ge-border-color, #303746));
+        border: 1px solid var(--hy-checkbox-border-color, var(--hy-border-color, #303746));
         border-radius: 3px;
-        background: var(--ge-checkbox-bg-color, var(--ge-input-bg-color, #121822));
-        color: var(--ge-checkbox-mark-color, var(--ge-selected-text-color, #ffffff));
+        background: var(--hy-checkbox-bg-color, var(--hy-input-bg-color, #121822));
+        color: var(--hy-checkbox-mark-color, var(--hy-selected-text-color, #ffffff));
         transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
       }
       input:focus-visible + .box {
-        border-color: var(--ge-focus-border-color, #3d6fa8);
-        box-shadow: 0 0 0 2px var(--ge-focus-ring-color, rgba(61, 111, 168, 0.28));
+        border-color: var(--hy-focus-border-color, #3d6fa8);
+        box-shadow: 0 0 0 2px var(--hy-focus-ring-color, rgba(61, 111, 168, 0.28));
       }
       input:checked + .box,
       input:indeterminate + .box {
-        border-color: var(--ge-checkbox-checked-border-color, var(--ge-accent-color, #3d6fa8));
-        background: var(--ge-checkbox-checked-bg-color, var(--ge-accent-strong-color, #255a91));
+        border-color: var(--hy-checkbox-checked-border-color, var(--hy-accent-color, #3d6fa8));
+        background: var(--hy-checkbox-checked-bg-color, var(--hy-accent-strong-color, #255a91));
       }
       input:disabled + .box {
         cursor: default;
@@ -199,7 +199,7 @@ export class GECheckbox extends HTMLElement {
     if (this._input.checked) this.setAttribute('checked', '');
     else this.removeAttribute('checked');
     this.removeAttribute('indeterminate');
-    this.dispatchEvent(new CustomEvent<GECheckboxChangeDetail>('checked-change', {
+    this.dispatchEvent(new CustomEvent<HYCheckboxChangeDetail>('checked-change', {
       detail: { checked: this.checked, value: this.value },
       bubbles: true,
       composed: true,
@@ -209,7 +209,7 @@ export class GECheckbox extends HTMLElement {
 }
 
 export function defineCheckboxComponents(): void {
-  if (!customElements.get('ge-checkbox')) {
-    customElements.define('ge-checkbox', GECheckbox);
+  if (!customElements.get('hy-checkbox')) {
+    customElements.define('hy-checkbox', HYCheckbox);
   }
 }

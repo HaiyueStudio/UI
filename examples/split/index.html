@@ -14,7 +14,7 @@
       color: #d8e2f2;
       font-family: system-ui, sans-serif;
     }
-    ge-split {
+    hy-split {
       width: 100vw;
       height: 100vh;
     }
@@ -56,13 +56,13 @@
   </style>
 </head>
 <body>
-  <ge-split id="main" direction="horizontal" ratio="0.28" min-first="180" min-second="260">
+  <hy-split id="main" direction="horizontal" ratio="0.28" min-first="180" min-second="260">
     <div class="pane" slot="first">
       <h2 class="title">Left Pane</h2>
       <div class="box">Hierarchy / assets</div>
     </div>
 
-    <ge-split id="nested" slot="second" direction="vertical" ratio="0.68" min-first="180" min-second="140">
+    <hy-split id="nested" slot="second" direction="vertical" ratio="0.68" min-first="180" min-second="140">
       <div class="pane alt" slot="first">
         <h2 class="title">Viewport</h2>
         <div class="box">Drag the horizontal bar below</div>
@@ -71,8 +71,8 @@
         <h2 class="title">Console</h2>
         <div class="box">Logs / timeline</div>
       </div>
-    </ge-split>
-  </ge-split>
+    </hy-split>
+  </hy-split>
 
   <div id="status"></div>
 

@@ -1,13 +1,13 @@
 import type {
   FlatTreeNode,
-  GETreeDropPosition,
-  GETreeNodeData,
+  HYTreeDropPosition,
+  HYTreeNodeData,
   IndexedTreeNode,
 } from './tree-types.js';
 
-/** Mutable hierarchy model owned by ge-tree. It has no DOM dependency and is safe to unit test. */
-export class GETreeModel {
-  private _data: GETreeNodeData[] = [];
+/** Mutable hierarchy model owned by hy-tree. It has no DOM dependency and is safe to unit test. */
+export class HYTreeModel {
+  private _data: HYTreeNodeData[] = [];
   private readonly _expandedIds: Set<string>;
   private readonly _nodeIndex = new Map<string, IndexedTreeNode>();
   private readonly _visibleNodes: FlatTreeNode[] = [];
@@ -34,7 +34,7 @@ export class GETreeModel {
     return this._visibleDirty;
   }
 
-  setData(data: GETreeNodeData[]): void {
+  setData(data: HYTreeNodeData[]): void {
     this._data = data;
     this._indexDirty = true;
     this._visibleDirty = true;
@@ -50,7 +50,7 @@ export class GETreeModel {
     this._visibleNodes.length = 0;
     this._visibleIds.length = 0;
     this._visibleIndex.clear();
-    const visit = (nodes: GETreeNodeData[], parent: GETreeNodeData | null, depth: number): void => {
+    const visit = (nodes: HYTreeNodeData[], parent: HYTreeNodeData | null, depth: number): void => {
       for (const node of nodes) {
         this._visibleIndex.set(node.id, this._visibleIds.length);
         this._visibleNodes.push(this._nodeIndex.get(node.id) ?? { node, parent, depth });
@@ -75,7 +75,7 @@ export class GETreeModel {
     return this._nodeIndex.get(id) ?? null;
   }
 
-  findNode(id: string): { node: GETreeNodeData; parent: GETreeNodeData | null } | null {
+  findNode(id: string): { node: HYTreeNodeData; parent: HYTreeNodeData | null } | null {
     const found = this.getIndexedNode(id);
     return found ? { node: found.node, parent: found.parent } : null;
   }
@@ -101,7 +101,7 @@ export class GETreeModel {
     return true;
   }
 
-  moveNode(sourceId: string, targetId: string, position: GETreeDropPosition): boolean {
+  moveNode(sourceId: string, targetId: string, position: HYTreeDropPosition): boolean {
     this._ensureIndex();
     this.getVisibleNodes();
     const source = this._nodeIndex.get(sourceId);
@@ -124,8 +124,8 @@ export class GETreeModel {
     }
     sourceList.splice(sourceIndex, 1);
 
-    let nextParent: GETreeNodeData | null;
-    let targetList: GETreeNodeData[];
+    let nextParent: HYTreeNodeData | null;
+    let targetList: HYTreeNodeData[];
     let insertIndex: number;
     let expandedNextParent = false;
     if (position === 'inside') {
@@ -164,7 +164,7 @@ export class GETreeModel {
     return true;
   }
 
-  private _refreshSiblingIndexes(nodes: readonly GETreeNodeData[]): void {
+  private _refreshSiblingIndexes(nodes: readonly HYTreeNodeData[]): void {
     for (let index = 0; index < nodes.length; index++) {
       const item = nodes[index];
       const indexed = item ? this._nodeIndex.get(item.id) : null;
@@ -173,8 +173,8 @@ export class GETreeModel {
   }
 
   private _refreshSubtreeIndex(
-    node: GETreeNodeData,
-    parent: GETreeNodeData | null,
+    node: HYTreeNodeData,
+    parent: HYTreeNodeData | null,
     depth: number,
     ancestorIds: readonly string[],
   ): void {
@@ -194,10 +194,10 @@ export class GETreeModel {
   }
 
   private _moveVisibleSubtree(
-    source: GETreeNodeData,
+    source: HYTreeNodeData,
     previousStart: number,
     previousCount: number,
-    nextParent: GETreeNodeData | null,
+    nextParent: HYTreeNodeData | null,
     expandedNextParent: boolean,
   ): void {
     if (previousStart >= 0 && previousCount > 0) {
@@ -248,7 +248,7 @@ export class GETreeModel {
     this._refreshVisibleIndexes(insertAt);
   }
 
-  private _collectVisibleSubtree(node: GETreeNodeData, result: IndexedTreeNode[]): void {
+  private _collectVisibleSubtree(node: HYTreeNodeData, result: IndexedTreeNode[]): void {
     const indexed = this._nodeIndex.get(node.id);
     if (!indexed) return;
     result.push(indexed);
@@ -284,7 +284,7 @@ export class GETreeModel {
     if (!this._indexDirty) return;
     this._nodeIndex.clear();
     const ancestorIds: string[] = [];
-    const visit = (nodes: GETreeNodeData[], parent: GETreeNodeData | null, depth: number): void => {
+    const visit = (nodes: HYTreeNodeData[], parent: HYTreeNodeData | null, depth: number): void => {
       for (let index = 0; index < nodes.length; index++) {
         const node = nodes[index];
         if (!node) continue;

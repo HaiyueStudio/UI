@@ -1,6 +1,6 @@
-import type { GETreeNodeData } from './tree-types.js';
+import type { HYTreeNodeData } from './tree-types.js';
 
-export class GETreeNode extends HTMLElement {
+export class HYTreeNode extends HTMLElement {
   private readonly _icon = document.createElement('span');
   private readonly _label = document.createElement('span');
 
@@ -26,7 +26,7 @@ export class GETreeNode extends HTMLElement {
         flex: 0 0 16px;
         display: inline-grid;
         place-items: center;
-        color: var(--ge-tree-icon-color, var(--ge-secondary-text-color, #8fa7c8));
+        color: var(--hy-tree-icon-color, var(--hy-secondary-text-color, #8fa7c8));
         font-size: 12px;
       }
       .label {
@@ -36,7 +36,7 @@ export class GETreeNode extends HTMLElement {
         white-space: nowrap;
       }
       :host([selected]) .label {
-        color: var(--ge-selected-text-color, #ffffff);
+        color: var(--hy-selected-text-color, #ffffff);
       }
     `;
     this._icon.className = 'icon';
@@ -53,7 +53,7 @@ export class GETreeNode extends HTMLElement {
     this._sync();
   }
 
-  set node(value: GETreeNodeData) {
+  set node(value: HYTreeNodeData) {
     this.setAttribute('label', String(value.label ?? value.id));
     if (value.icon) this.setAttribute('icon', String(value.icon));
     else this.removeAttribute('icon');

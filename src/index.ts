@@ -14,104 +14,104 @@ import { defineHistoryControlsComponents } from './history-controls.js';
 
 export {
   defineButtonComponents,
-  GEButton,
+  HYButton,
 } from './button.js';
 export {
   defineTreeComponents,
-  GETree,
-  GETreeNode,
+  HYTree,
+  HYTreeNode,
 } from './tree.js';
 export {
   defineSplitComponents,
-  GESplit,
+  HYSplit,
 } from './split.js';
 export {
   defineSelectComponents,
-  GESelect,
+  HYSelect,
 } from './select.js';
 export {
   defineTabsComponents,
-  GETabs,
+  HYTabs,
 } from './tabs.js';
 export {
   defineContextMenuComponents,
-  GEContextMenu,
+  HYContextMenu,
 } from './context-menu.js';
 export {
   defineDropdownComponents,
-  GEDropdown,
+  HYDropdown,
 } from './dropdown.js';
 export {
   defineTooltipComponents,
-  GETooltip,
+  HYTooltip,
 } from './tooltip.js';
 export {
   defineCheckboxComponents,
-  GECheckbox,
+  HYCheckbox,
 } from './checkbox.js';
 export {
   defineRadioComponents,
-  GERadio,
+  HYRadio,
 } from './radio.js';
 export {
   defineDialogComponents,
-  GEDialog,
+  HYDialog,
 } from './dialog.js';
 export {
   defineInputComponents,
-  GEInput,
+  HYInput,
 } from './input.js';
 export {
   defineHistoryControlsComponents,
-  GEHistoryControls,
+  HYHistoryControls,
 } from './history-controls.js';
 export type {
-  GEHistoryEntry,
+  HYHistoryEntry,
 } from './history-controls.js';
 export type {
-  GESplitDirection,
-  GESplitRatioChangeDetail,
+  HYSplitDirection,
+  HYSplitRatioChangeDetail,
 } from './split.js';
 export type {
-  GESelectChangeDetail,
-  GESelectOption,
+  HYSelectChangeDetail,
+  HYSelectOption,
 } from './select.js';
 export type {
-  GETabChangeDetail,
-  GETabOption,
+  HYTabChangeDetail,
+  HYTabOption,
 } from './tabs.js';
 export type {
-  GEContextMenuItem,
-  GEContextMenuSelectDetail,
+  HYContextMenuItem,
+  HYContextMenuSelectDetail,
 } from './context-menu.js';
 export type {
-  GEDropdownItem,
-  GEDropdownPlacement,
-  GEDropdownSelectDetail,
+  HYDropdownItem,
+  HYDropdownPlacement,
+  HYDropdownSelectDetail,
 } from './dropdown.js';
 export type {
-  GETooltipPlacement,
+  HYTooltipPlacement,
 } from './tooltip.js';
 export type {
-  GECheckboxChangeDetail,
+  HYCheckboxChangeDetail,
 } from './checkbox.js';
 export type {
-  GERadioChangeDetail,
+  HYRadioChangeDetail,
 } from './radio.js';
 export type {
-  GEDialogCloseDetail,
-  GEDialogCloseReason,
+  HYDialogCloseDetail,
+  HYDialogCloseReason,
 } from './dialog.js';
 export type {
-  GEInputChangeDetail,
-  GEInputType,
+  HYInputChangeDetail,
+  HYInputType,
 } from './input.js';
 export type {
-  GETreeDataChangeDetail,
-  GETreeDropPosition,
-  GETreeNodeContextMenuDetail,
-  GETreeNodeData,
-  GETreeSelectionChangeDetail,
+  HYTreeDataChangeDetail,
+  HYTreeDropPosition,
+  HYTreeNodeContextMenuDetail,
+  HYTreeNodeData,
+  HYTreeSelectionChangeDetail,
 } from './tree.js';
 
 export function defineHaiyueUI(): void {

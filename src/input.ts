@@ -1,12 +1,12 @@
-export type GEInputType = 'text' | 'number' | 'color';
+export type HYInputType = 'text' | 'number' | 'color';
 
-export interface GEInputChangeDetail {
+export interface HYInputChangeDetail {
   value: string;
   valueAsNumber: number | null;
   valid: boolean;
 }
 
-export class GEInput extends HTMLElement {
+export class HYInput extends HTMLElement {
   private readonly _input = document.createElement('input');
 
   static get observedAttributes(): string[] {
@@ -29,26 +29,26 @@ export class GEInput extends HTMLElement {
       input {
         box-sizing: border-box;
         width: 100%;
-        height: var(--ge-input-height, 28px);
+        height: var(--hy-input-height, 28px);
         min-width: 0;
         padding: 0 8px;
-        border: 1px solid var(--ge-border-color, #303746);
+        border: 1px solid var(--hy-border-color, #303746);
         border-radius: 4px;
         outline: none;
-        color: var(--ge-text-color, #d8e2f2);
-        background: var(--ge-input-bg-color, var(--ge-surface-color, #121822));
-        font: var(--ge-input-font, 12px system-ui, sans-serif);
-        color-scheme: dark;
+        color: var(--hy-text-color, #d8e2f2);
+        background: var(--hy-input-bg-color, var(--hy-surface-color, #121822));
+        font: var(--hy-input-font, 12px system-ui, sans-serif);
+        color-scheme: inherit;
       }
       input:hover:not(:disabled):not(:read-only) {
-        border-color: var(--ge-hover-border-color, #435268);
+        border-color: var(--hy-hover-border-color, #435268);
       }
       input:focus {
-        border-color: var(--ge-focus-border-color, #3d6fa8);
-        box-shadow: 0 0 0 2px var(--ge-focus-ring-color, rgba(61, 111, 168, 0.24));
+        border-color: var(--hy-focus-border-color, #3d6fa8);
+        box-shadow: 0 0 0 2px var(--hy-focus-ring-color, rgba(61, 111, 168, 0.24));
       }
       input:invalid {
-        border-color: var(--ge-invalid-border-color, #b64f62);
+        border-color: var(--hy-invalid-border-color, #b64f62);
       }
       input:disabled,
       input:read-only {
@@ -83,8 +83,8 @@ export class GEInput extends HTMLElement {
     this._sync();
   }
 
-  get type(): GEInputType { return normalizedType(this.getAttribute('type')); }
-  set type(value: GEInputType) { this.setAttribute('type', normalizedType(value)); }
+  get type(): HYInputType { return normalizedType(this.getAttribute('type')); }
+  set type(value: HYInputType) { this.setAttribute('type', normalizedType(value)); }
 
   get value(): string { return this.getAttribute('value') ?? ''; }
   set value(value: string) {
@@ -133,7 +133,7 @@ export class GEInput extends HTMLElement {
     const number = this.type === 'number' && Number.isFinite(this._input.valueAsNumber)
       ? this._input.valueAsNumber
       : null;
-    this.dispatchEvent(new CustomEvent<GEInputChangeDetail>('value-change', {
+    this.dispatchEvent(new CustomEvent<HYInputChangeDetail>('value-change', {
       detail: { value: this._input.value, valueAsNumber: number, valid: this.valid },
       bubbles: true,
       composed: true,
@@ -142,9 +142,9 @@ export class GEInput extends HTMLElement {
 }
 
 export function defineInputComponents(): void {
-  if (!customElements.get('ge-input')) customElements.define('ge-input', GEInput);
+  if (!customElements.get('hy-input')) customElements.define('hy-input', HYInput);
 }
 
-function normalizedType(value: string | null): GEInputType {
+function normalizedType(value: string | null): HYInputType {
   return value === 'number' || value === 'color' ? value : 'text';
 }

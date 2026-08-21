@@ -1,19 +1,19 @@
-export interface GESelectOption {
+export interface HYSelectOption {
   label: string;
   value: string;
   disabled?: boolean;
 }
 
-export interface GESelectChangeDetail {
+export interface HYSelectChangeDetail {
   value: string;
-  option: GESelectOption | null;
+  option: HYSelectOption | null;
 }
 
-export class GESelect extends HTMLElement {
+export class HYSelect extends HTMLElement {
   private readonly _wrap = document.createElement('div');
   private readonly _search = document.createElement('input');
   private readonly _select = document.createElement('select');
-  private _options: GESelectOption[] = [];
+  private _options: HYSelectOption[] = [];
   private _filterText = '';
 
   static get observedAttributes(): string[] {
@@ -43,20 +43,20 @@ export class GESelect extends HTMLElement {
         height: 28px;
         min-width: 0;
         padding: 0 28px 0 8px;
-        border: 1px solid var(--ge-border-color, #303746);
+        border: 1px solid var(--hy-border-color, #303746);
         border-radius: 4px;
-        color: var(--ge-text-color, #d8e2f2);
-        background-color: var(--ge-input-bg-color, var(--ge-surface-color, #121822));
+        color: var(--hy-text-color, #d8e2f2);
+        background-color: var(--hy-input-bg-color, var(--hy-surface-color, #121822));
         font: 12px system-ui, sans-serif;
         outline: none;
-        color-scheme: dark;
+        color-scheme: inherit;
       }
       select {
         appearance: none;
         cursor: pointer;
         background-image:
-          linear-gradient(45deg, transparent 50%, var(--ge-select-arrow-color, var(--ge-secondary-text-color, #8fa7c8)) 50%),
-          linear-gradient(135deg, var(--ge-select-arrow-color, var(--ge-secondary-text-color, #8fa7c8)) 50%, transparent 50%);
+          linear-gradient(45deg, transparent 50%, var(--hy-select-arrow-color, var(--hy-secondary-text-color, #8fa7c8)) 50%),
+          linear-gradient(135deg, var(--hy-select-arrow-color, var(--hy-secondary-text-color, #8fa7c8)) 50%, transparent 50%);
         background-position:
           calc(100% - 15px) 11px,
           calc(100% - 10px) 11px;
@@ -64,23 +64,23 @@ export class GESelect extends HTMLElement {
         background-repeat: no-repeat;
       }
       select:hover:not(:disabled) {
-        border-color: var(--ge-hover-border-color, #435268);
-        background-color: var(--ge-select-hover-bg-color, var(--ge-input-bg-color, #151d2a));
+        border-color: var(--hy-hover-border-color, #435268);
+        background-color: var(--hy-select-hover-bg-color, var(--hy-input-bg-color, #151d2a));
       }
       option {
         min-height: 28px;
         padding: 6px 8px;
-        color: var(--ge-select-option-text-color, var(--ge-text-color, #d8e2f2));
-        background: var(--ge-select-option-bg-color, var(--ge-menu-bg-color, #1b2230));
+        color: var(--hy-select-option-text-color, var(--hy-text-color, #d8e2f2));
+        background: var(--hy-select-option-bg-color, var(--hy-menu-bg-color, #1b2230));
         font: 12px system-ui, sans-serif;
       }
       option:checked {
-        color: var(--ge-select-option-selected-text-color, var(--ge-selected-text-color, #ffffff));
-        background: var(--ge-select-option-selected-bg-color, var(--ge-selected-bg-color, #255a91));
+        color: var(--hy-select-option-selected-text-color, var(--hy-selected-text-color, #ffffff));
+        background: var(--hy-select-option-selected-bg-color, var(--hy-selected-bg-color, #255a91));
       }
       option:disabled {
-        color: var(--ge-disabled-text-color, #65738a);
-        background: var(--ge-select-option-bg-color, var(--ge-menu-bg-color, #1b2230));
+        color: var(--hy-disabled-text-color, #65738a);
+        background: var(--hy-select-option-bg-color, var(--hy-menu-bg-color, #1b2230));
       }
       input {
         display: none;
@@ -90,8 +90,8 @@ export class GESelect extends HTMLElement {
       }
       input:focus,
       select:focus {
-        border-color: var(--ge-focus-border-color, #3d6fa8);
-        box-shadow: 0 0 0 2px var(--ge-focus-ring-color, rgba(61, 111, 168, 0.24));
+        border-color: var(--hy-focus-border-color, #3d6fa8);
+        box-shadow: 0 0 0 2px var(--hy-focus-ring-color, rgba(61, 111, 168, 0.24));
       }
       input:disabled,
       select:disabled {
@@ -129,11 +129,11 @@ export class GESelect extends HTMLElement {
     if (name === 'options' || name === 'searchable') this._render();
   }
 
-  get options(): GESelectOption[] {
+  get options(): HYSelectOption[] {
     return this._options;
   }
 
-  set options(value: GESelectOption[]) {
+  set options(value: HYSelectOption[]) {
     this._options = Array.isArray(value) ? value : [];
     this._render();
   }
@@ -199,7 +199,7 @@ export class GESelect extends HTMLElement {
           }))
         : [];
     } catch (error) {
-      console.warn('Invalid ge-select options attribute.', error);
+      console.warn('Invalid hy-select options attribute.', error);
     }
   }
 
@@ -235,7 +235,7 @@ export class GESelect extends HTMLElement {
     }
   }
 
-  private _matchesFilter(option: GESelectOption, filter: string): boolean {
+  private _matchesFilter(option: HYSelectOption, filter: string): boolean {
     const haystack = `${option.label} ${option.value}`.toLowerCase();
     const needle = filter.trim().toLowerCase();
     if (!needle) return true;
@@ -251,7 +251,7 @@ export class GESelect extends HTMLElement {
   private _onChange = (): void => {
     this.value = this._select.value;
     const option = this._options.find(item => item.value === this.value) ?? null;
-    this.dispatchEvent(new CustomEvent<GESelectChangeDetail>('value-change', {
+    this.dispatchEvent(new CustomEvent<HYSelectChangeDetail>('value-change', {
       detail: { value: this.value, option },
       bubbles: true,
       composed: true,
@@ -265,7 +265,7 @@ export class GESelect extends HTMLElement {
 }
 
 export function defineSelectComponents(): void {
-  if (!customElements.get('ge-select')) {
-    customElements.define('ge-select', GESelect);
+  if (!customElements.get('hy-select')) {
+    customElements.define('hy-select', HYSelect);
   }
 }

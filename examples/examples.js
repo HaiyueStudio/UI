@@ -9,6 +9,15 @@ const writeEvent = (target, name, detail) => {
   target.title = target.textContent;
 };
 
+// Theme preview. Theme styles are independent package exports and flow into component shadow roots via tokens.
+const themeButtons = [...document.querySelectorAll('.theme-picker button')];
+function setTheme(theme) {
+  document.documentElement.dataset.hyTheme = theme;
+  document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#edf8ff' : '#080b21';
+  for (const button of themeButtons) button.setAttribute('aria-pressed', String(button.dataset.theme === theme));
+}
+for (const button of themeButtons) button.addEventListener('click', () => setTheme(button.dataset.theme));
+
 // Navigation, filtering and the quick component switcher.
 const navLinks = [...document.querySelectorAll('#component-nav a')];
 const sections = [...document.querySelectorAll('.component-section')];
@@ -65,7 +74,7 @@ function renderCommand() {
   commandResults.replaceChildren(...items.map((section, index) => {
     const button = document.createElement('button');
     button.classList.toggle('active', index === commandIndex);
-    button.innerHTML = `<span>${section.dataset.title}</span><code>ge-${section.id}</code>`;
+    button.innerHTML = `<span>${section.dataset.title}</span><code>hy-${section.id}</code>`;
     button.addEventListener('click', () => selectCommand(section));
     return button;
   }));

@@ -1,0 +1,46 @@
+/*
+ * Haiyue Moonlight — moon-white surfaces, pale ice blue and cyan highlights.
+ * Apply with data-hy-theme="light" on :root or on a component subtree.
+ */
+:root[data-hy-theme="light"],
+[data-hy-theme="light"] {
+  color-scheme: light;
+  --hy-theme-name: "Haiyue Moonlight";
+  --hy-canvas-color: #edf8ff;
+  --hy-surface-color: #f7fbff;
+  --hy-surface-elevated-color: #ffffff;
+  --hy-panel-bg-color: #f2f8fd;
+  --hy-input-bg-color: #ffffff;
+  --hy-menu-bg-color: #fbfdff;
+  --hy-text-color: #183247;
+  --hy-secondary-text-color: #5f7c92;
+  --hy-muted-color: #8aa3b6;
+  --hy-disabled-text-color: #9baebb;
+  --hy-border-color: #c7ddea;
+  --hy-border-strong-color: #a8cde0;
+  --hy-hover-border-color: #86bad3;
+  --hy-hover-bg-color: #e5f3fb;
+  --hy-menu-item-hover-bg-color: #dceff9;
+  --hy-accent-color: #55b4da;
+  --hy-accent-strong-color: #2c88b0;
+  --hy-selected-bg-color: #2f8cb5;
+  --hy-selected-text-color: #ffffff;
+  --hy-active-text-color: #153b54;
+  --hy-focus-border-color: #3aa6d1;
+  --hy-focus-ring-color: rgba(58, 166, 209, 0.24);
+  --hy-invalid-border-color: #d15f79;
+  --hy-menu-shadow-color: rgba(50, 91, 118, 0.18);
+  --hy-dialog-shadow-color: rgba(42, 82, 109, 0.22);
+  --hy-dialog-backdrop-color: rgba(55, 92, 116, 0.24);
+  --hy-dialog-bg-color: #ffffff;
+  --hy-dialog-body-color: #527187;
+  --hy-dialog-footer-bg-color: #f0f7fc;
+  --hy-tooltip-bg-color: #214d68;
+  --hy-tooltip-text-color: #f7fcff;
+  --hy-tooltip-border-color: rgba(255, 255, 255, 0.28);
+  --hy-tooltip-shadow-color: rgba(35, 75, 101, 0.2);
+  --hy-drop-indicator-color: #38a9d7;
+  --hy-drop-target-bg-color: #d9effa;
+  --hy-theme-glow-color: #b9e9fb;
+  --hy-theme-highlight-color: #a99bea;
+}

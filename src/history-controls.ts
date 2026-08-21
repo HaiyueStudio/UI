@@ -1,9 +1,9 @@
-export interface GEHistoryEntry {
+export interface HYHistoryEntry {
   readonly id: number;
   readonly label: string;
 }
 
-export class GEHistoryControls extends HTMLElement {
+export class HYHistoryControls extends HTMLElement {
   private readonly _undo = document.createElement('button');
   private readonly _redo = document.createElement('button');
   private _canUndo = false;
@@ -11,7 +11,7 @@ export class GEHistoryControls extends HTMLElement {
   private _undoLabel = '';
   private _redoLabel = '';
   private _busy = false;
-  private _entries: readonly GEHistoryEntry[] = Object.freeze([]);
+  private _entries: readonly HYHistoryEntry[] = Object.freeze([]);
   private _connected = false;
   private readonly _requestUndo = () => this._request('undo-request');
   private readonly _requestRedo = () => this._request('redo-request');
@@ -30,15 +30,16 @@ export class GEHistoryControls extends HTMLElement {
       button {
         width: 30px;
         min-height: 28px;
-        border: 1px solid #3d4654;
-        background: #202733;
-        color: #eef3ff;
+        border: 1px solid var(--hy-border-color, #3d4654);
+        background: var(--hy-surface-elevated-color, #202733);
+        color: var(--hy-text-color, #eef3ff);
         font: 600 15px system-ui, sans-serif;
         cursor: pointer;
       }
       button:first-child { border-radius: 4px 0 0 4px; }
       button:last-child { border-radius: 0 4px 4px 0; }
-      button:focus-visible { outline: 2px solid #79a8ff; outline-offset: 1px; }
+      button:hover:not(:disabled) { background: var(--hy-hover-bg-color, #273241); }
+      button:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: 1px; }
       button:disabled { opacity: 0.45; cursor: default; }
     `;
     const toolbar = document.createElement('div');
@@ -79,8 +80,8 @@ export class GEHistoryControls extends HTMLElement {
   set redoLabel(value: string) { this._redoLabel = String(value); this._reflectString('redo-label', this._redoLabel); this._render(); }
   get busy(): boolean { return this._busy; }
   set busy(value: boolean) { this._busy = Boolean(value); this._reflectBoolean('busy', this._busy); this._render(); }
-  get entries(): readonly GEHistoryEntry[] { return this._entries; }
-  set entries(value: readonly GEHistoryEntry[]) {
+  get entries(): readonly HYHistoryEntry[] { return this._entries; }
+  set entries(value: readonly HYHistoryEntry[]) {
     this._entries = Object.freeze(value.map(entry => Object.freeze({ id: entry.id, label: entry.label })));
   }
 
@@ -125,5 +126,5 @@ export class GEHistoryControls extends HTMLElement {
 }
 
 export function defineHistoryControlsComponents(): void {
-  if (!customElements.get('ge-history-controls')) customElements.define('ge-history-controls', GEHistoryControls);
+  if (!customElements.get('hy-history-controls')) customElements.define('hy-history-controls', HYHistoryControls);
 }

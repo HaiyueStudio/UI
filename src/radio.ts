@@ -1,10 +1,10 @@
-export interface GERadioChangeDetail {
+export interface HYRadioChangeDetail {
   checked: boolean;
   value: string;
   name: string;
 }
 
-export class GERadio extends HTMLElement {
+export class HYRadio extends HTMLElement {
   private readonly _input = document.createElement('input');
   private readonly _marker = document.createElement('span');
   private readonly _label = document.createElement('span');
@@ -23,7 +23,7 @@ export class GERadio extends HTMLElement {
         display: inline-block;
         width: max-content;
         min-width: 0;
-        color: var(--ge-radio-text-color, var(--ge-text-color, #d8e2f2));
+        color: var(--hy-radio-text-color, var(--hy-text-color, #d8e2f2));
         font: 12px system-ui, sans-serif;
       }
       :host([disabled]) {
@@ -59,19 +59,19 @@ export class GERadio extends HTMLElement {
         flex: 0 0 14px;
         display: inline-grid;
         place-items: center;
-        border: 1px solid var(--ge-radio-border-color, var(--ge-border-color, #303746));
+        border: 1px solid var(--hy-radio-border-color, var(--hy-border-color, #303746));
         border-radius: 50%;
-        background: var(--ge-radio-bg-color, var(--ge-input-bg-color, #121822));
-        color: var(--ge-radio-dot-color, var(--ge-selected-text-color, #ffffff));
+        background: var(--hy-radio-bg-color, var(--hy-input-bg-color, #121822));
+        color: var(--hy-radio-dot-color, var(--hy-selected-text-color, #ffffff));
         transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
       }
       input:focus-visible + .marker {
-        border-color: var(--ge-focus-border-color, #3d6fa8);
-        box-shadow: 0 0 0 2px var(--ge-focus-ring-color, rgba(61, 111, 168, 0.28));
+        border-color: var(--hy-focus-border-color, #3d6fa8);
+        box-shadow: 0 0 0 2px var(--hy-focus-ring-color, rgba(61, 111, 168, 0.28));
       }
       input:checked + .marker {
-        border-color: var(--ge-radio-checked-border-color, var(--ge-accent-color, #3d6fa8));
-        background: var(--ge-radio-checked-bg-color, var(--ge-accent-strong-color, #255a91));
+        border-color: var(--hy-radio-checked-border-color, var(--hy-accent-color, #3d6fa8));
+        background: var(--hy-radio-checked-bg-color, var(--hy-accent-strong-color, #255a91));
       }
       .marker::after {
         content: "";
@@ -183,7 +183,7 @@ export class GERadio extends HTMLElement {
     if (!this._input.checked) return;
     this.setAttribute('checked', '');
     this._uncheckNamedPeers();
-    this.dispatchEvent(new CustomEvent<GERadioChangeDetail>('checked-change', {
+    this.dispatchEvent(new CustomEvent<HYRadioChangeDetail>('checked-change', {
       detail: { checked: true, value: this.value, name: this.name },
       bubbles: true,
       composed: true,
@@ -195,7 +195,7 @@ export class GERadio extends HTMLElement {
     if (!this.name) return;
     const root = this.getRootNode();
     const peers = root instanceof Document || root instanceof ShadowRoot
-      ? root.querySelectorAll<GERadio>(`ge-radio[name="${cssEscape(this.name)}"]`)
+      ? root.querySelectorAll<HYRadio>(`hy-radio[name="${cssEscape(this.name)}"]`)
       : [];
     for (const peer of peers) {
       if (peer === this || peer.disabled) continue;
@@ -210,7 +210,7 @@ function cssEscape(value: string): string {
 }
 
 export function defineRadioComponents(): void {
-  if (!customElements.get('ge-radio')) {
-    customElements.define('ge-radio', GERadio);
+  if (!customElements.get('hy-radio')) {
+    customElements.define('hy-radio', HYRadio);
   }
 }

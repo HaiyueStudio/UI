@@ -1,11 +1,11 @@
-export interface GEMenuItemLike {
+export interface HYMenuItemLike {
   label?: string;
   value?: string;
   disabled?: boolean;
   separator?: boolean;
 }
 
-export interface GEMenuButtonOptions {
+export interface HYMenuButtonOptions {
   index?: number;
   role?: string;
   tabIndex?: number;
@@ -21,7 +21,7 @@ export const GE_MENU_ITEM_STYLES = `
         padding: 0 8px;
         border: 0;
         border-radius: 3px;
-        color: var(--ge-text-color, #d8e2f2);
+        color: var(--hy-text-color, #d8e2f2);
         background: transparent;
         font: inherit;
         text-align: left;
@@ -30,11 +30,11 @@ export const GE_MENU_ITEM_STYLES = `
       button:hover,
       button:focus,
       button.active {
-        background: var(--ge-menu-item-hover-bg-color, var(--ge-accent-strong-color, #255a91));
+        background: var(--hy-menu-item-hover-bg-color, var(--hy-accent-strong-color, #255a91));
         outline: none;
       }
       button:disabled {
-        color: var(--ge-muted-color, #66758b);
+        color: var(--hy-muted-color, #66758b);
         cursor: default;
       }
       button:disabled:hover {
@@ -43,7 +43,7 @@ export const GE_MENU_ITEM_STYLES = `
       .separator {
         height: 1px;
         margin: 4px 2px;
-        background: var(--ge-border-color, #303746);
+        background: var(--hy-border-color, #303746);
       }
 `;
 
@@ -53,7 +53,7 @@ export function createMenuSeparator(): HTMLDivElement {
   return separator;
 }
 
-export function createMenuItemButton(item: GEMenuItemLike, options: GEMenuButtonOptions = {}): HTMLButtonElement {
+export function createMenuItemButton(item: HYMenuItemLike, options: HYMenuButtonOptions = {}): HTMLButtonElement {
   const button = document.createElement('button');
   button.type = 'button';
   button.textContent = item.label ?? item.value ?? '';

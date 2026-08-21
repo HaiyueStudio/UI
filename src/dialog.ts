@@ -1,16 +1,16 @@
-export type GEDialogCloseReason = 'action' | 'backdrop' | 'escape' | 'programmatic';
+export type HYDialogCloseReason = 'action' | 'backdrop' | 'escape' | 'programmatic';
 
-export interface GEDialogCloseDetail {
-  readonly reason: GEDialogCloseReason | string;
+export interface HYDialogCloseDetail {
+  readonly reason: HYDialogCloseReason | string;
 }
 
 /** Accessible modal surface with slotted body/footer content and reflected open state. */
-export class GEDialog extends HTMLElement {
+export class HYDialog extends HTMLElement {
   private readonly _dialog = document.createElement('dialog');
   private readonly _title = document.createElement('h2');
   private readonly _closeButton = document.createElement('button');
   private _returnFocus: HTMLElement | null = null;
-  private _closeReason: GEDialogCloseDetail['reason'] = 'programmatic';
+  private _closeReason: HYDialogCloseDetail['reason'] = 'programmatic';
 
   static get observedAttributes(): string[] {
     return ['open', 'heading', 'dismissible'];
@@ -22,31 +22,31 @@ export class GEDialog extends HTMLElement {
     const style = document.createElement('style');
     style.textContent = `
       :host {
-        color: var(--ge-text-color, #e6edf7);
+        color: var(--hy-text-color, #e6edf7);
         font: 13px system-ui, sans-serif;
       }
       dialog {
-        width: min(var(--ge-dialog-width, 460px), calc(100vw - 32px));
+        width: min(var(--hy-dialog-width, 460px), calc(100vw - 32px));
         max-height: calc(100vh - 32px);
         margin: auto;
         padding: 0;
         overflow: hidden;
-        border: 1px solid var(--ge-border-color, #303746);
-        border-radius: var(--ge-dialog-radius, 8px);
+        border: 1px solid var(--hy-border-color, #303746);
+        border-radius: var(--hy-dialog-radius, 8px);
         color: inherit;
-        background: var(--ge-dialog-bg-color, var(--ge-surface-elevated-color, #171e2a));
-        box-shadow: 0 22px 70px var(--ge-dialog-shadow-color, rgba(0, 0, 0, 0.52));
+        background: var(--hy-dialog-bg-color, var(--hy-surface-elevated-color, #171e2a));
+        box-shadow: 0 22px 70px var(--hy-dialog-shadow-color, rgba(0, 0, 0, 0.52));
       }
       dialog::backdrop {
-        background: var(--ge-dialog-backdrop-color, rgba(3, 7, 12, 0.66));
-        backdrop-filter: blur(var(--ge-dialog-backdrop-blur, 2px));
+        background: var(--hy-dialog-backdrop-color, rgba(3, 7, 12, 0.66));
+        backdrop-filter: blur(var(--hy-dialog-backdrop-blur, 2px));
       }
       .header {
         display: flex;
         align-items: center;
         min-height: 49px;
         padding: 0 12px 0 16px;
-        border-bottom: 1px solid var(--ge-border-color, #303746);
+        border-bottom: 1px solid var(--hy-border-color, #303746);
       }
       h2 {
         flex: 1;
@@ -64,18 +64,18 @@ export class GEDialog extends HTMLElement {
         height: 28px;
         border: 0;
         border-radius: 5px;
-        color: var(--ge-secondary-text-color, #8b99ad);
+        color: var(--hy-secondary-text-color, #8b99ad);
         background: transparent;
         cursor: pointer;
         font: 20px/1 system-ui, sans-serif;
       }
       :host([dismissible]) .close { display: grid; place-items: center; }
-      .close:hover { color: inherit; background: var(--ge-hover-bg-color, #242d3b); }
+      .close:hover { color: inherit; background: var(--hy-hover-bg-color, #242d3b); }
       .body {
         max-height: calc(100vh - 160px);
         overflow: auto;
-        padding: var(--ge-dialog-body-padding, 16px);
-        color: var(--ge-dialog-body-color, var(--ge-secondary-text-color, #a8b4c5));
+        padding: var(--hy-dialog-body-padding, 16px);
+        color: var(--hy-dialog-body-color, var(--hy-secondary-text-color, #a8b4c5));
         line-height: 1.55;
       }
       .footer {
@@ -84,8 +84,8 @@ export class GEDialog extends HTMLElement {
         gap: 8px;
         min-height: 54px;
         padding: 10px 14px;
-        border-top: 1px solid var(--ge-border-color, #303746);
-        background: var(--ge-dialog-footer-bg-color, rgba(9, 13, 19, 0.22));
+        border-top: 1px solid var(--hy-border-color, #303746);
+        background: var(--hy-dialog-footer-bg-color, rgba(9, 13, 19, 0.22));
       }
       slot[name="footer"]::slotted(*) { margin: 0; }
     `;
@@ -142,7 +142,7 @@ export class GEDialog extends HTMLElement {
     this.open = true;
   }
 
-  close(reason: GEDialogCloseDetail['reason'] = 'programmatic'): void {
+  close(reason: HYDialogCloseDetail['reason'] = 'programmatic'): void {
     if (!this.open && !this._dialog.open) return;
     this._closeReason = reason;
     this.open = false;
@@ -180,7 +180,7 @@ export class GEDialog extends HTMLElement {
     this.removeAttribute('open');
     const reason = this._closeReason;
     this._closeReason = 'programmatic';
-    this.dispatchEvent(new CustomEvent<GEDialogCloseDetail>('dialog-close', {
+    this.dispatchEvent(new CustomEvent<HYDialogCloseDetail>('dialog-close', {
       detail: { reason },
       bubbles: true,
       composed: true,
@@ -191,5 +191,5 @@ export class GEDialog extends HTMLElement {
 }
 
 export function defineDialogComponents(): void {
-  if (!customElements.get('ge-dialog')) customElements.define('ge-dialog', GEDialog);
+  if (!customElements.get('hy-dialog')) customElements.define('hy-dialog', HYDialog);
 }

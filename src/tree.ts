@@ -1,21 +1,21 @@
-import { GETreeModel } from './tree-model.js';
-import { GETreeNode } from './tree-node.js';
+import { HYTreeModel } from './tree-model.js';
+import { HYTreeNode } from './tree-node.js';
 import type {
   FlatTreeNode,
-  GETreeDataChangeDetail,
-  GETreeDropPosition,
-  GETreeNodeContextMenuDetail,
-  GETreeNodeData,
-  GETreeSelectionChangeDetail,
+  HYTreeDataChangeDetail,
+  HYTreeDropPosition,
+  HYTreeNodeContextMenuDetail,
+  HYTreeNodeData,
+  HYTreeSelectionChangeDetail,
 } from './tree-types.js';
 
-export { GETreeNode } from './tree-node.js';
+export { HYTreeNode } from './tree-node.js';
 export type {
-  GETreeDataChangeDetail,
-  GETreeDropPosition,
-  GETreeNodeContextMenuDetail,
-  GETreeNodeData,
-  GETreeSelectionChangeDetail,
+  HYTreeDataChangeDetail,
+  HYTreeDropPosition,
+  HYTreeNodeContextMenuDetail,
+  HYTreeNodeData,
+  HYTreeSelectionChangeDetail,
 } from './tree-types.js';
 
 interface RenderedTreeRow {
@@ -23,7 +23,7 @@ interface RenderedTreeRow {
   toggle: HTMLButtonElement;
   content: HTMLElement;
   renderer: HTMLElement & {
-    node?: GETreeNodeData;
+    node?: HYTreeNodeData;
     depth?: number;
     selected?: boolean;
     expanded?: boolean;
@@ -65,7 +65,7 @@ function createTreeToggleIconSvg(): SVGSVGElement {
   return svg;
 }
 
-export class GETree extends HTMLElement {
+export class HYTree extends HTMLElement {
   private static readonly VIRTUALIZATION_THRESHOLD = 160;
   private static readonly ROW_HEIGHT = 28;
   private static readonly OVERSCAN_ROWS = 8;
@@ -73,14 +73,14 @@ export class GETree extends HTMLElement {
   private readonly _style = document.createElement('style');
   private readonly _list = document.createElement('div');
   private readonly _rowCache = new Map<string, RenderedTreeRow>();
-  private _clipboard: GETreeNodeData[] = [];
-  private _data: GETreeNodeData[] = [];
+  private _clipboard: HYTreeNodeData[] = [];
+  private _data: HYTreeNodeData[] = [];
   private _selectedId: string | null = null;
   private _selectedIds = new Set<string>();
   private _selectionAnchorId: string | null = null;
   private _activeId: string | null = null;
   private _expandedIds = new Set<string>();
-  private readonly _model = new GETreeModel(this._expandedIds);
+  private readonly _model = new HYTreeModel(this._expandedIds);
   private _dragNodeId: string | null = null;
   private _syncingSelectionAttributes = false;
   private _resizeObserver: ResizeObserver | null = null;
@@ -101,8 +101,8 @@ export class GETree extends HTMLElement {
         justify-content: flex-start;
         width: 100%;
         min-height: 0;
-        color: var(--ge-tree-text-color, var(--ge-text-color, #c8d3e4));
-        background: var(--ge-panel-bg-color, #171d28);
+        color: var(--hy-tree-text-color, var(--hy-text-color, #c8d3e4));
+        background: var(--hy-panel-bg-color, #171d28);
         font: 12px system-ui, sans-serif;
         text-align: left;
         user-select: none;
@@ -120,7 +120,7 @@ export class GETree extends HTMLElement {
         align-items: center;
         gap: 4px;
         border-radius: 4px;
-        color: var(--ge-tree-text-color, var(--ge-text-color, #c8d3e4));
+        color: var(--hy-tree-text-color, var(--hy-text-color, #c8d3e4));
         cursor: default;
       }
       .virtual-spacer {
@@ -128,18 +128,18 @@ export class GETree extends HTMLElement {
         pointer-events: none;
       }
       .row:hover {
-        background: var(--ge-hover-bg-color, #222b3a);
+        background: var(--hy-hover-bg-color, #222b3a);
       }
       .row.selected {
-        background: var(--ge-selected-bg-color, var(--ge-accent-strong-color, #255a91));
-        color: var(--ge-selected-text-color, #fff);
+        background: var(--hy-selected-bg-color, var(--hy-accent-strong-color, #255a91));
+        color: var(--hy-selected-text-color, #fff);
       }
       .row.active:not(.selected) {
-        background: var(--ge-tree-active-bg-color, var(--ge-hover-bg-color, #222b3a));
-        color: var(--ge-tree-active-text-color, var(--ge-tree-text-color, #dce8fb));
+        background: var(--hy-tree-active-bg-color, var(--hy-hover-bg-color, #222b3a));
+        color: var(--hy-tree-active-text-color, var(--hy-tree-text-color, #dce8fb));
       }
       .row.active {
-        outline: var(--ge-tree-active-ring-width, 1px) solid var(--ge-tree-active-ring-color, var(--ge-focus-border-color, #3d6fa8));
+        outline: var(--hy-tree-active-ring-width, 1px) solid var(--hy-tree-active-ring-color, var(--hy-focus-border-color, #3d6fa8));
         outline-offset: -1px;
       }
       .toggle {
@@ -149,7 +149,7 @@ export class GETree extends HTMLElement {
         border: 0;
         padding: 0;
         background: transparent;
-        color: var(--ge-tree-icon-color, var(--ge-secondary-text-color, #8fa7c8));
+        color: var(--hy-tree-icon-color, var(--hy-secondary-text-color, #8fa7c8));
         cursor: pointer;
         display: inline-grid;
         place-items: center;
@@ -161,29 +161,29 @@ export class GETree extends HTMLElement {
       .toggle-icon {
         width: 12px;
         height: 12px;
-        color: var(--ge-tree-icon-color, var(--ge-secondary-text-color, #8fa7c8));
+        color: var(--hy-tree-icon-color, var(--hy-secondary-text-color, #8fa7c8));
         transition: transform 0.16s ease, color 0.16s ease;
       }
       .toggle.expanded .toggle-icon {
         transform: rotate(90deg);
-        color: var(--ge-tree-icon-active-color, #b9d4ff);
+        color: var(--hy-tree-icon-active-color, #b9d4ff);
       }
       .row:hover .toggle-icon {
-        color: var(--ge-tree-icon-active-color, #b9d4ff);
+        color: var(--hy-tree-icon-active-color, #b9d4ff);
       }
       .content {
         min-width: 0;
         flex: 1 1 auto;
       }
       .row.drop-before {
-        box-shadow: inset 0 2px 0 var(--ge-drop-indicator-color, #62a8ff);
+        box-shadow: inset 0 2px 0 var(--hy-drop-indicator-color, #62a8ff);
       }
       .row.drop-after {
-        box-shadow: inset 0 -2px 0 var(--ge-drop-indicator-color, #62a8ff);
+        box-shadow: inset 0 -2px 0 var(--hy-drop-indicator-color, #62a8ff);
       }
       .row.drop-inside {
-        outline: 1px solid var(--ge-drop-indicator-color, #62a8ff);
-        background: var(--ge-drop-target-bg-color, #223650);
+        outline: 1px solid var(--hy-drop-indicator-color, #62a8ff);
+        background: var(--hy-drop-target-bg-color, #223650);
       }
     `;
     this._list.className = 'list';
@@ -234,11 +234,11 @@ export class GETree extends HTMLElement {
     this._render();
   }
 
-  get data(): GETreeNodeData[] {
+  get data(): HYTreeNodeData[] {
     return this._data;
   }
 
-  set data(value: GETreeNodeData[]) {
+  set data(value: HYTreeNodeData[]) {
     this._data = Array.isArray(value) ? value : [];
     this._seedExpanded(this._data);
     this._model.setData(this._data);
@@ -271,7 +271,7 @@ export class GETree extends HTMLElement {
     else this.removeAttribute('allow-drag');
   }
 
-  updateData(value: GETreeNodeData[]): void {
+  updateData(value: HYTreeNodeData[]): void {
     this.data = value;
   }
 
@@ -340,12 +340,12 @@ export class GETree extends HTMLElement {
       this._seedExpanded(this._data);
       this._model.setData(this._data);
     } catch (error) {
-      console.warn('Invalid ge-tree data attribute.', error);
+      console.warn('Invalid hy-tree data attribute.', error);
     }
   }
 
-  private _seedExpanded(nodes: GETreeNodeData[]): void {
-    const visit = (items: GETreeNodeData[]) => {
+  private _seedExpanded(nodes: HYTreeNodeData[]): void {
+    const visit = (items: HYTreeNodeData[]) => {
       for (const node of items) {
         if (node.expanded) this._expandedIds.add(node.id);
         if (node.children) visit(node.children);
@@ -360,7 +360,7 @@ export class GETree extends HTMLElement {
     const window = this._getRenderWindow(visible.length);
     const visibleIds = new Set<string>();
     const fragment = document.createDocumentFragment();
-    if (window.start > 0) fragment.append(this._createVirtualSpacer(window.start * GETree.ROW_HEIGHT));
+    if (window.start > 0) fragment.append(this._createVirtualSpacer(window.start * HYTree.ROW_HEIGHT));
     for (let index = window.start; index < window.end; index++) {
       const item = visible[index];
       if (!item) continue;
@@ -370,7 +370,7 @@ export class GETree extends HTMLElement {
       fragment.append(rendered.row);
     }
     if (window.end < visible.length) {
-      fragment.append(this._createVirtualSpacer((visible.length - window.end) * GETree.ROW_HEIGHT));
+      fragment.append(this._createVirtualSpacer((visible.length - window.end) * HYTree.ROW_HEIGHT));
     }
 
     for (const [id, rendered] of this._rowCache) {
@@ -383,12 +383,12 @@ export class GETree extends HTMLElement {
 
   private _getRenderWindow(itemCount: number): { start: number; end: number } {
     const viewportHeight = this.clientHeight;
-    if (itemCount < GETree.VIRTUALIZATION_THRESHOLD || viewportHeight <= 0) return { start: 0, end: itemCount };
-    const first = Math.floor(this.scrollTop / GETree.ROW_HEIGHT);
-    const last = Math.ceil((this.scrollTop + viewportHeight) / GETree.ROW_HEIGHT);
+    if (itemCount < HYTree.VIRTUALIZATION_THRESHOLD || viewportHeight <= 0) return { start: 0, end: itemCount };
+    const first = Math.floor(this.scrollTop / HYTree.ROW_HEIGHT);
+    const last = Math.ceil((this.scrollTop + viewportHeight) / HYTree.ROW_HEIGHT);
     return {
-      start: Math.max(0, first - GETree.OVERSCAN_ROWS),
-      end: Math.min(itemCount, last + GETree.OVERSCAN_ROWS),
+      start: Math.max(0, first - HYTree.OVERSCAN_ROWS),
+      end: Math.min(itemCount, last + HYTree.OVERSCAN_ROWS),
     };
   }
 
@@ -415,7 +415,7 @@ export class GETree extends HTMLElement {
     const row = document.createElement('div');
     const toggle = document.createElement('button');
     const content = document.createElement('div');
-    const renderer = document.createElement('ge-tree-node') as RenderedTreeRow['renderer'];
+    const renderer = document.createElement('hy-tree-node') as RenderedTreeRow['renderer'];
 
     row.className = 'row';
     row.dataset.id = id;
@@ -425,7 +425,7 @@ export class GETree extends HTMLElement {
     content.append(renderer);
     row.append(toggle, content);
 
-    const rendered = { row, toggle, content, renderer, rendererTag: 'ge-tree-node' };
+    const rendered = { row, toggle, content, renderer, rendererTag: 'hy-tree-node' };
     this._rowCache.set(id, rendered);
     return rendered;
   }
@@ -457,13 +457,13 @@ export class GETree extends HTMLElement {
     this._syncRenderer(rendered.renderer, node, depth, expanded, hasChildren, selected);
   }
 
-  private _getRendererTag(node: GETreeNodeData): string {
-    return typeof node.renderer === 'string' && node.renderer ? node.renderer : 'ge-tree-node';
+  private _getRendererTag(node: HYTreeNodeData): string {
+    return typeof node.renderer === 'string' && node.renderer ? node.renderer : 'hy-tree-node';
   }
 
   private _syncRenderer(
     el: RenderedTreeRow['renderer'],
-    node: GETreeNodeData,
+    node: HYTreeNodeData,
     depth: number,
     expanded: boolean,
     hasChildren: boolean,
@@ -549,8 +549,8 @@ export class GETree extends HTMLElement {
     const node = this._selectedId ? this._model.getIndexedNode(this._selectedId)?.node ?? null : null;
     const nodes = uniqueIds
       .map(id => this._model.getIndexedNode(id)?.node ?? null)
-      .filter((item): item is GETreeNodeData => item !== null);
-    this.dispatchEvent(new CustomEvent<GETreeSelectionChangeDetail>('selection-change', {
+      .filter((item): item is HYTreeNodeData => item !== null);
+    this.dispatchEvent(new CustomEvent<HYTreeSelectionChangeDetail>('selection-change', {
       detail: { selectedId: this._selectedId, node, selectedIds: uniqueIds, nodes },
       bubbles: true,
       composed: true,
@@ -590,7 +590,7 @@ export class GETree extends HTMLElement {
       this._selectionAnchorId = this._selectedId;
       this._activeId = this._selectedId;
     } catch (error) {
-      console.warn('Invalid ge-tree selected-ids attribute.', error);
+      console.warn('Invalid hy-tree selected-ids attribute.', error);
       this._setSelectionFromSelectedIdAttribute();
     }
   }
@@ -611,7 +611,7 @@ export class GETree extends HTMLElement {
     return row && this._list.contains(row) ? row : null;
   }
 
-  private _getRowNode(row: HTMLElement): GETreeNodeData | null {
+  private _getRowNode(row: HTMLElement): HYTreeNodeData | null {
     const id = row.dataset.id;
     return id ? this._model.getIndexedNode(id)?.node ?? null : null;
   }
@@ -645,7 +645,7 @@ export class GETree extends HTMLElement {
     this.focus();
     this._setActiveId(node.id, false);
     if (!this._selectedIds.has(node.id)) this._setSelection([node.id], node.id, true);
-    this.dispatchEvent(new CustomEvent<GETreeNodeContextMenuDetail>('node-context-menu', {
+    this.dispatchEvent(new CustomEvent<HYTreeNodeContextMenuDetail>('node-context-menu', {
       detail: {
         id: node.id,
         node,
@@ -709,7 +709,7 @@ export class GETree extends HTMLElement {
     const position = this._getDropPosition(event, row);
     if (measureHierarchyTreeStage('index-update', () => this._model.moveNode(sourceId, targetId, position))) {
       measureHierarchyTreeStage('tree-rebuild', () => this._render());
-      this.dispatchEvent(new CustomEvent<GETreeDataChangeDetail>('data-change', {
+      this.dispatchEvent(new CustomEvent<HYTreeDataChangeDetail>('data-change', {
         detail: { data: this._data, action: 'drop', sourceId, targetId, dropPosition: position },
         bubbles: true,
         composed: true,
@@ -856,7 +856,7 @@ export class GETree extends HTMLElement {
   }
 
   private _getTreeItemElementId(id: string): string {
-    return `ge-tree-item-${encodeURIComponent(id)}`;
+    return `hy-tree-item-${encodeURIComponent(id)}`;
   }
 
   private _scrollActiveIntoView(): void {
@@ -866,8 +866,8 @@ export class GETree extends HTMLElement {
       this._getVisibleFlatNodes();
       const index = this._model.visibleIndex.get(this._activeId);
       if (index !== undefined) {
-        const rowTop = index * GETree.ROW_HEIGHT;
-        const rowBottom = rowTop + GETree.ROW_HEIGHT;
+        const rowTop = index * HYTree.ROW_HEIGHT;
+        const rowBottom = rowTop + HYTree.ROW_HEIGHT;
         if (rowTop < this.scrollTop) this.scrollTop = rowTop;
         else if (rowBottom > this.scrollTop + this.clientHeight) this.scrollTop = rowBottom - this.clientHeight;
         this._render();
@@ -878,7 +878,7 @@ export class GETree extends HTMLElement {
   }
 
   private _onScroll = (): void => {
-    if (this._getVisibleFlatNodes().length >= GETree.VIRTUALIZATION_THRESHOLD) this._render();
+    if (this._getVisibleFlatNodes().length >= HYTree.VIRTUALIZATION_THRESHOLD) this._render();
   };
 
   private _isEditableTarget(target: EventTarget | null): boolean {
@@ -908,7 +908,7 @@ export class GETree extends HTMLElement {
     this._model.setData(this._data);
     const pastedIds = pastedNodes.map(node => node.id);
     this._setSelection(pastedIds, pastedIds[pastedIds.length - 1] ?? null, true);
-    this.dispatchEvent(new CustomEvent<GETreeDataChangeDetail>('data-change', {
+    this.dispatchEvent(new CustomEvent<HYTreeDataChangeDetail>('data-change', {
       detail: { data: this._data, action: 'paste', targetId: target?.node.id ?? null, pastedNodes },
       bubbles: true,
       composed: true,
@@ -927,7 +927,7 @@ export class GETree extends HTMLElement {
 
     this._model.setData(this._data);
     this._setSelection([], null, true);
-    this.dispatchEvent(new CustomEvent<GETreeDataChangeDetail>('data-change', {
+    this.dispatchEvent(new CustomEvent<HYTreeDataChangeDetail>('data-change', {
       detail: { data: this._data, action: 'delete', deletedIds },
       bubbles: true,
       composed: true,
@@ -935,15 +935,15 @@ export class GETree extends HTMLElement {
     return true;
   }
 
-  private _cloneNode(node: GETreeNodeData): GETreeNodeData {
+  private _cloneNode(node: HYTreeNodeData): HYTreeNodeData {
     return typeof structuredClone === 'function'
       ? structuredClone(node)
-      : JSON.parse(JSON.stringify(node)) as GETreeNodeData;
+      : JSON.parse(JSON.stringify(node)) as HYTreeNodeData;
   }
 
-  private _cloneNodeWithUniqueIds(node: GETreeNodeData, existingIds: Set<string>): GETreeNodeData {
+  private _cloneNodeWithUniqueIds(node: HYTreeNodeData, existingIds: Set<string>): HYTreeNodeData {
     const clone = this._cloneNode(node);
-    const assignIds = (item: GETreeNodeData) => {
+    const assignIds = (item: HYTreeNodeData) => {
       item.id = this._makeUniqueId(item.id, existingIds);
       existingIds.add(item.id);
       item.children?.forEach(assignIds);
@@ -960,17 +960,17 @@ export class GETree extends HTMLElement {
     return `${base}-${index}`;
   }
 
-  private _getSelectedTopLevelNodes(): GETreeNodeData[] {
+  private _getSelectedTopLevelNodes(): HYTreeNodeData[] {
     return this._getTopLevelSelectedIds()
       .map(id => this._model.getIndexedNode(id)?.node ?? null)
-      .filter((node): node is GETreeNodeData => node !== null);
+      .filter((node): node is HYTreeNodeData => node !== null);
   }
 
   private _getTopLevelSelectedIds(): string[] {
     return this._model.topLevelSelection(this._selectedIds);
   }
 
-  private _getDropPosition(event: DragEvent, row: HTMLElement): GETreeDropPosition {
+  private _getDropPosition(event: DragEvent, row: HTMLElement): HYTreeDropPosition {
     const rect = row.getBoundingClientRect();
     const y = event.clientY - rect.top;
     if (y < rect.height * 0.28) return 'before';
@@ -993,10 +993,10 @@ export class GETree extends HTMLElement {
 }
 
 export function defineTreeComponents(): void {
-  if (!customElements.get('ge-tree-node')) {
-    customElements.define('ge-tree-node', GETreeNode);
+  if (!customElements.get('hy-tree-node')) {
+    customElements.define('hy-tree-node', HYTreeNode);
   }
-  if (!customElements.get('ge-tree')) {
-    customElements.define('ge-tree', GETree);
+  if (!customElements.get('hy-tree')) {
+    customElements.define('hy-tree', HYTree);
   }
 }

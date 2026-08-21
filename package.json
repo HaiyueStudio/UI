@@ -12,7 +12,9 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "sideEffects": false,
+  "sideEffects": [
+    "./themes/*.css"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -70,6 +72,8 @@
       "types": "./dist/tree.d.ts",
       "import": "./dist/tree.js"
     },
+    "./themes/light.css": "./themes/haiyue-light.css",
+    "./themes/dark.css": "./themes/haiyue-dark.css",
     "./package.json": "./package.json"
   },
   "engines": { "node": ">=22" },
@@ -81,7 +85,8 @@
     "README.md",
     "LICENSE",
     "dist/**/*.js",
-    "dist/**/*.d.ts"
+    "dist/**/*.d.ts",
+    "themes/*.css"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",

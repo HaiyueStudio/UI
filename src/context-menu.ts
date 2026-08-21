@@ -1,22 +1,22 @@
 import { GE_MENU_ITEM_STYLES, createMenuItemButton, createMenuSeparator } from './menu-shared.js';
 
-export interface GEContextMenuItem {
+export interface HYContextMenuItem {
   label?: string;
   value?: string;
   disabled?: boolean;
   separator?: boolean;
 }
 
-export interface GEContextMenuSelectDetail {
+export interface HYContextMenuSelectDetail {
   value: string;
-  item: GEContextMenuItem;
+  item: HYContextMenuItem;
 }
 
-export class GEContextMenu extends HTMLElement {
+export class HYContextMenu extends HTMLElement {
   private readonly _root: ShadowRoot;
   private readonly _style = document.createElement('style');
   private readonly _menu = document.createElement('div');
-  private _items: GEContextMenuItem[] = [];
+  private _items: HYContextMenuItem[] = [];
   private _documentListenerAbort: AbortController | null = null;
   private _activeIndex = -1;
 
@@ -33,7 +33,7 @@ export class GEContextMenu extends HTMLElement {
         z-index: 10000;
         display: none;
         min-width: 132px;
-        color: var(--ge-text-color, #d8e2f2);
+        color: var(--hy-text-color, #d8e2f2);
         font: 12px system-ui, sans-serif;
       }
       :host([open]) {
@@ -43,10 +43,10 @@ export class GEContextMenu extends HTMLElement {
         box-sizing: border-box;
         min-width: 132px;
         padding: 4px;
-        border: 1px solid var(--ge-border-color, #303746);
+        border: 1px solid var(--hy-border-color, #303746);
         border-radius: 4px;
-        background: var(--ge-menu-bg-color, var(--ge-surface-elevated-color, #1b2230));
-        box-shadow: 0 10px 26px var(--ge-menu-shadow-color, rgba(0, 0, 0, 0.36));
+        background: var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #1b2230));
+        box-shadow: 0 10px 26px var(--hy-menu-shadow-color, rgba(0, 0, 0, 0.36));
       }
 ${GE_MENU_ITEM_STYLES}
     `;
@@ -73,11 +73,11 @@ ${GE_MENU_ITEM_STYLES}
     if (name === 'open') this._syncDocumentListeners();
   }
 
-  get items(): GEContextMenuItem[] {
+  get items(): HYContextMenuItem[] {
     return this._items;
   }
 
-  set items(value: GEContextMenuItem[]) {
+  set items(value: HYContextMenuItem[]) {
     this._items = Array.isArray(value) ? value : [];
     this._render();
   }
@@ -128,7 +128,7 @@ ${GE_MENU_ITEM_STYLES}
       const parsed = JSON.parse(raw);
       this._items = Array.isArray(parsed) ? parsed : [];
     } catch (error) {
-      console.warn('Invalid ge-context-menu items attribute.', error);
+      console.warn('Invalid hy-context-menu items attribute.', error);
     }
   }
 
@@ -190,7 +190,7 @@ ${GE_MENU_ITEM_STYLES}
   private _selectIndex(index: number): void {
     const item = this._items[index];
     if (!item || item.disabled || item.separator || !item.value) return;
-    this.dispatchEvent(new CustomEvent<GEContextMenuSelectDetail>('item-select', {
+    this.dispatchEvent(new CustomEvent<HYContextMenuSelectDetail>('item-select', {
       detail: { value: item.value, item },
       bubbles: true,
       composed: true,
@@ -242,7 +242,7 @@ function getVisualViewportRect(): { left: number; top: number; width: number; he
 }
 
 export function defineContextMenuComponents(): void {
-  if (!customElements.get('ge-context-menu')) {
-    customElements.define('ge-context-menu', GEContextMenu);
+  if (!customElements.get('hy-context-menu')) {
+    customElements.define('hy-context-menu', HYContextMenu);
   }
 }
