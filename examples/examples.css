@@ -354,6 +354,12 @@ fieldset.options-preview legend { margin-bottom: 12px; padding: 0; color: #68778
 .drawer-properties b { color: var(--ink); font-size: 11px; font-weight: 600; }
 .notification-actions { flex-direction: column; }
 .notification-actions .native-trigger { min-width: 160px; }
+.border-beam-stage { min-height: 300px; }
+.border-beam-stage hy-border-beam { width: min(390px, 100%); background: color-mix(in srgb, var(--panel-2) 88%, transparent); }
+.border-beam-content { display: grid; grid-template-columns: 46px 1fr; gap: 2px 14px; align-items: center; min-height: 170px; padding: 28px; box-sizing: border-box; }
+.border-beam-content > span { grid-row: 1 / 3; display: grid; width: 46px; height: 46px; place-items: center; border: 1px solid var(--line); border-radius: 12px; color: var(--accent); background: var(--hy-input-bg-color); font: 700 12px ui-monospace, monospace; }
+.border-beam-content b { align-self: end; color: var(--ink); font: 20px Georgia, serif; }
+.border-beam-content small { align-self: start; color: var(--muted); font: 9px ui-monospace, monospace; }
 
 .split-stage { height: 320px; padding: 18px; }
 .split-stage hy-split { border: 1px solid #2b3643; border-radius: 6px; }

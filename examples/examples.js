@@ -250,6 +250,22 @@ byId('notification-progress').addEventListener('change', event => { notification
 notificationLive.addEventListener('notification-open', event => writeEvent(byId('notification-event'), 'notification-open', event.detail));
 notificationLive.addEventListener('notification-close', event => writeEvent(byId('notification-event'), 'notification-close', event.detail));
 
+// Border beam.
+const borderBeamLive = byId('border-beam-live');
+byId('border-beam-thickness').addEventListener('input', event => {
+  borderBeamLive.thickness = Number(event.target.value);
+  byId('border-beam-thickness-value').textContent = `${Number(event.target.value).toFixed(1)} px`;
+});
+byId('border-beam-speed').addEventListener('input', event => {
+  borderBeamLive.speed = Number(event.target.value);
+  byId('border-beam-speed-value').textContent = `${Number(event.target.value).toFixed(1)}×`;
+});
+byId('border-beam-color').addEventListener('input', event => { borderBeamLive.color = event.target.value; });
+byId('border-beam-count').addEventListener('input', event => {
+  borderBeamLive.count = Number(event.target.value);
+  byId('border-beam-count-value').textContent = event.target.value;
+});
+
 // Context menu.
 const contextLive = byId('context-live');
 const contextTarget = byId('context-target');

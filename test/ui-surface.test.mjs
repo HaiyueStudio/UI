@@ -8,6 +8,7 @@ test('UI root keeps the supported component surface importable', async () => {
   const ui = await import('../dist/index.js');
   const expected = [
     'HYButton',
+    'HYBorderBeam',
     'HYCheckbox',
     'HYContextMenu',
     'HYDialog',
@@ -26,6 +27,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYVirtualList',
     'calculateVirtualListRange',
     'defineButtonComponents',
+    'defineBorderBeamComponents',
     'defineCheckboxComponents',
     'defineContextMenuComponents',
     'defineDialogComponents',
@@ -100,6 +102,18 @@ test('notification exposes typed timed stacks with optional progress and owned t
   assert.match(notification, /window\.setTimeout\(\(\) => this\._closeNotice\(notice, 'timeout'\)/);
   assert.match(notification, /window\.clearTimeout\(notice\.timer\)/);
   assert.match(notification, /CustomEvent<HYNotificationCloseDetail>\('notification-close'/);
+});
+
+test('border beam follows the live rounded border with configurable flow instances', () => {
+  const borderBeam = readFileSync(new URL('../src/border-beam.ts', import.meta.url), 'utf8');
+  assert.match(borderBeam, /export class HYBorderBeam extends HTMLElement/);
+  assert.match(borderBeam, /\['thickness', 'speed', 'color', 'count'\]/);
+  assert.match(borderBeam, /new ResizeObserver\(\(\) => this\.refresh\(\)\)/);
+  assert.match(borderBeam, /this\._resizeObserver\?\.disconnect\(\)/);
+  assert.match(borderBeam, /stroke-dasharray/);
+  assert.match(borderBeam, /animationDelay/);
+  assert.match(borderBeam, /hy-border-beam-flow/);
+  assert.match(borderBeam, /customElements\.define\('hy-border-beam'/);
 });
 
 test('history controls are controlled, accessible, and release click listeners', () => {

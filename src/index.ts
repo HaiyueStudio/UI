@@ -1,4 +1,5 @@
 import { defineButtonComponents } from './button.js';
+import { defineBorderBeamComponents } from './border-beam.js';
 import { defineTreeComponents } from './tree.js';
 import { defineSplitComponents } from './split.js';
 import { defineSelectComponents } from './select.js';
@@ -19,6 +20,10 @@ export {
   defineButtonComponents,
   HYButton,
 } from './button.js';
+export {
+  defineBorderBeamComponents,
+  HYBorderBeam,
+} from './border-beam.js';
 export {
   defineTreeComponents,
   HYTree,
@@ -152,6 +157,7 @@ export type {
 } from './tree.js';
 
 export function defineHaiyueUI(): void {
+  defineBorderBeamComponents();
   defineButtonComponents();
   defineTreeComponents();
   defineSplitComponents();

@@ -104,6 +104,22 @@ Types are `success`, `info`, `warning`, and `error`. Placements are `topLeft`, `
 progress visibility; duration `0` disables automatic closing. Notices at the same placement form a perspective
 stack and expand on hover or keyboard focus. Use `close(key)` for one notice or `destroy()` for all notices.
 
+## Border beam
+
+`<hy-border-beam>` wraps arbitrary content with an animated SVG beam that stays aligned to the element's live
+rounded border. Import it from `@haiyue/ui/border-beam` and register it explicitly:
+
+```ts
+import { defineBorderBeamComponents } from '@haiyue/ui/border-beam';
+
+defineBorderBeamComponents();
+```
+
+Use `thickness` for stroke width, `color` for any valid CSS color, and `count` for 1–12 evenly phased beams.
+`speed` is a multiplier: `1` completes the default loop in six seconds, while `2` runs twice as fast. The
+component observes its own size and keeps the SVG view box and corner radius synchronized automatically.
+Consumers may override `--hy-border-beam-radius` and `--hy-border-beam-track-color`.
+
 ## Themes
 
 Two optional CSS theme entries are provided. Import only the skin a product needs, or import both when the

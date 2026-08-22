@@ -20,6 +20,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./border-beam": {
+      "types": "./dist/border-beam.d.ts",
+      "import": "./dist/border-beam.js"
+    },
     "./button": {
       "types": "./dist/button.d.ts",
       "import": "./dist/button.js"
