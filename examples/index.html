@@ -32,6 +32,7 @@
       <p class="nav-label">基础</p>
       <a href="#button" data-name="button 按钮"><span>Button</span><code>hy-button</code></a>
       <a href="#input" data-name="input 输入框"><span>Input</span><code>hy-input</code></a>
+      <a href="#range" data-name="range slider 范围 数值 滑块"><span>Range</span><code>hy-range</code></a>
       <a href="#checkbox" data-name="checkbox 复选框"><span>Checkbox</span><code>hy-checkbox</code></a>
       <a href="#radio" data-name="radio 单选框"><span>Radio</span><code>hy-radio</code></a>
       <p class="nav-label">选择与反馈</p>
@@ -50,7 +51,7 @@
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><span class="status-dot"></span><span>17 components</span><span>·</span><span>v0.1.1</span></div>
+    <div class="sidebar-foot"><span class="status-dot"></span><span>18 components</span><span>·</span><span>v0.1.1</span></div>
   </aside>
 
   <main id="content">
@@ -59,7 +60,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>17</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>18</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -280,6 +281,33 @@ list.scrollToIndex(50_000, 'center');</code></pre></details>
         <div class="preview centered"><hy-history-controls id="history-live" can-undo undo-label="Move Player" redo-label="Scale Player" locale="zh-CN"></hy-history-controls></div>
         <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="history-can-undo" type="checkbox" checked /><span></span>can-undo</label><label class="toggle"><input id="history-can-redo" type="checkbox" /><span></span>can-redo</label><label class="toggle"><input id="history-busy" type="checkbox" /><span></span>busy</label></div><label>locale<select id="history-locale"><option value="zh-CN">zh-CN</option><option value="en">en</option></select></label><output id="history-event">点击撤销或重做按钮</output></div>
       </div>
+    </section>
+
+    <section class="component-section" id="range" data-title="Range">
+      <div class="section-heading"><div><span class="index">18</span><h2>Range</h2><code>&lt;hy-range&gt;</code></div><p>支持单值与双拖拽点区间；轨道、已选区间和拖拽点都可通过 CSS 变量或 part 定制。</p></div>
+      <div class="demo-card two-column range-card">
+        <div class="preview range-preview">
+          <div class="range-demo-row"><span>Single</span><hy-range id="range-single" min="0" max="100" step="1" value="42" aria-label="Volume" show-value></hy-range><output id="range-single-value">42</output></div>
+          <div class="range-demo-row"><span>Interval</span><hy-range id="range-live" min="0" max="100" step="1" range lower-value="22" upper-value="78" show-value></hy-range><output id="range-live-value">22 — 78</output></div>
+        </div>
+        <div class="controls stacked">
+          <label>handle-size <span id="range-handle-size-value">18 px</span><input id="range-handle-size" type="range" min="12" max="34" value="18" /></label>
+          <label>handle-radius <span id="range-handle-radius-value">50 %</span><input id="range-handle-radius" type="range" min="0" max="50" value="50" /></label>
+          <label>rail-height <span id="range-rail-height-value">5 px</span><input id="range-rail-height" type="range" min="2" max="14" value="5" /></label>
+          <label>track-color<input id="range-track-color" type="color" value="#69bff4" /></label>
+          <output id="range-event">拖拽、点击轨道或使用方向键调节</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML + CSS</span></summary><pre><code>&lt;hy-range min="0" max="100" step="1" value="42"&gt;&lt;/hy-range&gt;
+&lt;hy-range range lower-value="22" upper-value="78"&gt;&lt;/hy-range&gt;
+
+hy-range {
+  --hy-range-handle-size: 22px;
+  --hy-range-handle-radius: 6px;
+  --hy-range-track-color: #69bff4;
+  --hy-range-rail-height: 6px;
+}</code></pre></details>
+      <div class="parameter-strip"><code>min</code><code>max</code><code>step</code><code>value</code><code>range</code><code>lowerValue</code><code>upperValue</code><code>values</code><code>disabled</code><code>showValue</code><code>value-input</code><code>value-change</code></div>
     </section>
 
     <footer class="page-footer"><span>Haiyue UI</span><p>Dependency-free interface primitives for creative tools.</p><a href="#content">回到顶部 ↑</a></footer>

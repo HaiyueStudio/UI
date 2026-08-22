@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 新增可按需导入的 `HYRange` / `<hy-range>` 数值滑块，支持单值和双拖拽点区间、步进与键盘操作、实时/提交事件，以及拖拽点和轨道样式定制。
 - 新增可按需导入的 `HYBorderBeam` / `<hy-border-beam>` 响应式边框流光组件，支持粗细、速度倍率、颜色和多流光错相配置。
 - 新增可按需导入的 `HYNotification` / `<hy-notification>` 通知中心，提供 success/info/warning/error 语义配色和图标、六向 placement、自动关闭、Z 轴堆叠及可选倒计时进度条。
 - 新增可按需导入的 `HYDrawer` / `<hy-drawer>` 抽屉组件，支持四向 placement、可选蒙层、Esc/蒙层关闭、焦点管理及 `destroyOnHidden` 内容卸载。

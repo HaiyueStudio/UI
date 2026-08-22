@@ -68,6 +68,10 @@
       "types": "./dist/radio.d.ts",
       "import": "./dist/radio.js"
     },
+    "./range": {
+      "types": "./dist/range.d.ts",
+      "import": "./dist/range.js"
+    },
     "./select": {
       "types": "./dist/select.d.ts",
       "import": "./dist/select.js"

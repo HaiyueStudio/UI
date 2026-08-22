@@ -18,6 +18,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYInput',
     'HYNotification',
     'HYRadio',
+    'HYRange',
     'HYSelect',
     'HYSplit',
     'HYTabs',
@@ -38,6 +39,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineNotificationComponents',
     'defineHaiyueUI',
     'defineRadioComponents',
+    'defineRangeComponents',
     'defineSelectComponents',
     'defineSplitComponents',
     'defineTabsComponents',
@@ -114,6 +116,21 @@ test('border beam follows the live rounded border with configurable flow instanc
   assert.match(borderBeam, /animationDelay/);
   assert.match(borderBeam, /hy-border-beam-flow/);
   assert.match(borderBeam, /customElements\.define\('hy-border-beam'/);
+});
+
+test('range supports one or two accessible handles with themeable parts and owned drag cleanup', () => {
+  const range = readFileSync(new URL('../src/range.ts', import.meta.url), 'utf8');
+  assert.match(range, /export class HYRange extends HTMLElement/);
+  assert.match(range, /'lower-value', 'upper-value'/);
+  assert.match(range, /get values\(\): readonly \[number, number\]/);
+  assert.match(range, /set values\(value: readonly \[number, number\]\)/);
+  assert.match(range, /button\.setAttribute\('role', 'slider'\)/);
+  assert.match(range, /button\.part\.add\('handle', `handle-\$\{handle\}`\)/);
+  assert.match(range, /--hy-range-handle-size/);
+  assert.match(range, /--hy-range-rail-height/);
+  assert.match(range, /this\._dragAbort\?\.abort\(\)/);
+  assert.match(range, /'value-input' \| 'value-change'/);
+  assert.match(range, /bubbles: true,[\s\S]*composed: true/);
 });
 
 test('history controls are controlled, accessible, and release click listeners', () => {

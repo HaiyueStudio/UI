@@ -312,6 +312,11 @@ code { padding: 2px 5px; border-radius: 4px; color: #8fd3ee; background: rgba(64
 .parameter-strip code { color: #6f8090; background: #111820; }
 
 .form-preview { display: grid; gap: 14px; align-content: center; }
+.range-preview { display: grid; align-content: center; gap: 46px; min-height: 290px; padding-top: 52px; }
+.range-demo-row { display: grid; grid-template-columns: 58px minmax(130px, 1fr) 62px; gap: 14px; align-items: center; }
+.range-demo-row > span { color: var(--muted); font: 10px ui-monospace, monospace; }
+.range-demo-row > hy-range { width: 100%; }
+.range-demo-row > output { overflow: hidden; color: var(--accent-strong); font: 10px ui-monospace, monospace; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
 .field-label { display: grid; grid-template-columns: 110px minmax(0, 1fr); align-items: center; gap: 10px; color: #8e9cad; font-size: 11px; }
 .options-preview { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 13px; }
 fieldset.options-preview { margin: 0; border: 0; }

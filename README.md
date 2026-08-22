@@ -120,6 +120,25 @@ Use `thickness` for stroke width, `color` for any valid CSS color, and `count` f
 component observes its own size and keeps the SVG view box and corner radius synchronized automatically.
 Consumers may override `--hy-border-beam-radius` and `--hy-border-beam-track-color`.
 
+## Range
+
+Import the slider independently and opt into two-handle interval mode with the `range` attribute:
+
+```ts
+import { defineRangeComponents } from '@haiyue/ui/range';
+
+defineRangeComponents();
+const interval = document.querySelector('hy-range[range]');
+interval.values = [20, 80];
+interval.addEventListener('value-change', event => console.log(event.detail.value));
+```
+
+Single-value mode uses `value`; interval mode exposes `lowerValue`, `upperValue`, and `values`. Both modes honor
+`min`, `max`, and `step`, and support pointer dragging, track clicks, arrows, Page Up/Down, Home, and End. Use
+`--hy-range-handle-*`, `--hy-range-rail-*`, and `--hy-range-track-*` tokens for styling, or target the exported
+`rail`, `track`, `handle`, `handle-lower`, and `handle-upper` shadow parts. `value-input` reports live movement and
+`value-change` reports a committed pointer or keyboard change.
+
 ## Themes
 
 Two optional CSS theme entries are provided. Import only the skin a product needs, or import both when the

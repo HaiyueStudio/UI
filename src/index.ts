@@ -9,6 +9,7 @@ import { defineDropdownComponents } from './dropdown.js';
 import { defineTooltipComponents } from './tooltip.js';
 import { defineCheckboxComponents } from './checkbox.js';
 import { defineRadioComponents } from './radio.js';
+import { defineRangeComponents } from './range.js';
 import { defineDialogComponents } from './dialog.js';
 import { defineDrawerComponents } from './drawer.js';
 import { defineInputComponents } from './input.js';
@@ -61,6 +62,10 @@ export {
   defineRadioComponents,
   HYRadio,
 } from './radio.js';
+export {
+  defineRangeComponents,
+  HYRange,
+} from './range.js';
 export {
   defineDialogComponents,
   HYDialog,
@@ -127,6 +132,11 @@ export type {
   HYRadioChangeDetail,
 } from './radio.js';
 export type {
+  HYRangeChangeDetail,
+  HYRangeHandle,
+  HYRangeValue,
+} from './range.js';
+export type {
   HYDialogCloseDetail,
   HYDialogCloseReason,
 } from './dialog.js';
@@ -168,6 +178,7 @@ export function defineHaiyueUI(): void {
   defineTooltipComponents();
   defineCheckboxComponents();
   defineRadioComponents();
+  defineRangeComponents();
   defineDialogComponents();
   defineDrawerComponents();
   defineInputComponents();

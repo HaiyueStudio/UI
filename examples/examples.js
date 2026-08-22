@@ -134,6 +134,36 @@ for (const id of ['input-number', 'input-color']) {
   byId(id).addEventListener('value-change', event => writeEvent(byId('input-event'), 'value-change', event.detail));
 }
 
+// Range.
+const rangeSingle = byId('range-single');
+const rangeLive = byId('range-live');
+const writeRangeValue = (target, value) => {
+  target.textContent = Array.isArray(value) ? `${value[0]} — ${value[1]}` : String(value);
+};
+rangeSingle.addEventListener('value-input', event => writeRangeValue(byId('range-single-value'), event.detail.value));
+rangeSingle.addEventListener('value-change', event => writeEvent(byId('range-event'), 'value-change', event.detail));
+rangeLive.addEventListener('value-input', event => {
+  writeRangeValue(byId('range-live-value'), event.detail.value);
+  writeEvent(byId('range-event'), 'value-input', event.detail);
+});
+rangeLive.addEventListener('value-change', event => writeEvent(byId('range-event'), 'value-change', event.detail));
+byId('range-handle-size').addEventListener('input', event => {
+  rangeLive.style.setProperty('--hy-range-handle-size', `${event.target.value}px`);
+  byId('range-handle-size-value').textContent = `${event.target.value} px`;
+});
+byId('range-handle-radius').addEventListener('input', event => {
+  rangeLive.style.setProperty('--hy-range-handle-radius', `${event.target.value}%`);
+  byId('range-handle-radius-value').textContent = `${event.target.value} %`;
+});
+byId('range-rail-height').addEventListener('input', event => {
+  rangeLive.style.setProperty('--hy-range-rail-height', `${event.target.value}px`);
+  byId('range-rail-height-value').textContent = `${event.target.value} px`;
+});
+byId('range-track-color').addEventListener('input', event => {
+  rangeLive.style.setProperty('--hy-range-track-color', event.target.value);
+  rangeLive.style.setProperty('--hy-range-handle-border-color', event.target.value);
+});
+
 // Checkbox and radio.
 const checkboxLive = byId('checkbox-live');
 byId('checkbox-label').addEventListener('input', event => { checkboxLive.label = event.target.value; });
