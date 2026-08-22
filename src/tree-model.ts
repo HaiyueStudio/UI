@@ -5,6 +5,25 @@ import type {
   IndexedTreeNode,
 } from './tree-types.js';
 
+interface VisibleRange {
+  readonly start: number;
+  readonly count: number;
+}
+
+interface TreeMovePlan extends VisibleRange {
+  readonly source: IndexedTreeNode;
+  readonly target: IndexedTreeNode;
+  readonly sourceList: HYTreeNodeData[];
+  readonly sourceIndex: number;
+}
+
+interface TreeMoveDestination {
+  readonly nextParent: HYTreeNodeData | null;
+  readonly targetList: HYTreeNodeData[];
+  readonly insertIndex: number;
+  readonly expandedNextParent: boolean;
+}
+
 /** Mutable hierarchy model owned by hy-tree. It has no DOM dependency and is safe to unit test. */
 export class HYTreeModel {
   private _data: HYTreeNodeData[] = [];
@@ -104,64 +123,86 @@ export class HYTreeModel {
   moveNode(sourceId: string, targetId: string, position: HYTreeDropPosition): boolean {
     this._ensureIndex();
     this.getVisibleNodes();
+    const plan = this._createMovePlan(sourceId, targetId);
+    if (!plan) return false;
+    const destination = this._resolveMoveDestination(plan, position);
+    if (!destination) return false;
+
+    plan.sourceList.splice(plan.sourceIndex, 1);
+    destination.targetList.splice(destination.insertIndex, 0, plan.source.node);
+    this._refreshSiblingIndexes(plan.sourceList);
+    if (destination.targetList !== plan.sourceList) this._refreshSiblingIndexes(destination.targetList);
+    this._refreshMovedSubtree(plan.source.node, destination.nextParent);
+    this._moveVisibleSubtree(
+      plan.source.node,
+      plan.start,
+      plan.count,
+      destination.nextParent,
+      destination.expandedNextParent,
+    );
+    return true;
+  }
+
+  private _createMovePlan(sourceId: string, targetId: string): TreeMovePlan | null {
     const source = this._nodeIndex.get(sourceId);
     const target = this._nodeIndex.get(targetId);
-    if (!source || !target || sourceId === targetId) return false;
-    if (target.ancestorIds.includes(sourceId)) return false;
+    if (!source || !target || sourceId === targetId) return null;
+    if (target.ancestorIds.includes(sourceId)) return null;
 
     const sourceList = source.parent?.children ?? this._data;
     const sourceIndex = source.index;
-    if (sourceIndex < 0) return false;
-    const previousDepth = source.depth;
-    const visibleStart = this._visibleIndex.get(sourceId) ?? -1;
-    let visibleCount = 0;
-    if (visibleStart >= 0) {
-      visibleCount = 1;
-      while (visibleStart + visibleCount < this._visibleNodes.length
-        && (this._visibleNodes[visibleStart + visibleCount]?.depth ?? -1) > previousDepth) {
-        visibleCount++;
-      }
-    }
-    sourceList.splice(sourceIndex, 1);
+    if (sourceIndex < 0) return null;
+    return { source, target, sourceList, sourceIndex, ...this._visibleRange(source) };
+  }
 
-    let nextParent: HYTreeNodeData | null;
-    let targetList: HYTreeNodeData[];
-    let insertIndex: number;
-    let expandedNextParent = false;
-    if (position === 'inside') {
-      target.node.children ??= [];
-      nextParent = target.node;
-      targetList = target.node.children;
-      insertIndex = targetList.length;
-      expandedNextParent = !this._expandedIds.has(target.node.id);
-      this._expandedIds.add(target.node.id);
-    } else {
-      nextParent = target.parent;
-      targetList = target.parent?.children ?? this._data;
-      let targetIndex = target.index;
-      if (sourceList === targetList && sourceIndex < targetIndex) targetIndex--;
-      if (targetIndex < 0) return false;
-      insertIndex = position === 'before' ? targetIndex : targetIndex + 1;
+  private _visibleRange(source: IndexedTreeNode): VisibleRange {
+    const start = this._visibleIndex.get(source.node.id) ?? -1;
+    if (start < 0) return { start, count: 0 };
+    let count = 1;
+    while (start + count < this._visibleNodes.length
+      && (this._visibleNodes[start + count]?.depth ?? -1) > source.depth) {
+      count++;
     }
-    targetList.splice(insertIndex, 0, source.node);
-    this._refreshSiblingIndexes(sourceList);
-    if (targetList !== sourceList) this._refreshSiblingIndexes(targetList);
+    return { start, count };
+  }
+
+  private _resolveMoveDestination(
+    plan: TreeMovePlan,
+    position: HYTreeDropPosition,
+  ): TreeMoveDestination | null {
+    if (position === 'inside') {
+      plan.target.node.children ??= [];
+      const expandedNextParent = !this._expandedIds.has(plan.target.node.id);
+      this._expandedIds.add(plan.target.node.id);
+      return {
+        nextParent: plan.target.node,
+        targetList: plan.target.node.children,
+        insertIndex: plan.target.node.children.length,
+        expandedNextParent,
+      };
+    }
+
+    const targetList = plan.target.parent?.children ?? this._data;
+    let targetIndex = plan.target.index;
+    if (plan.sourceList === targetList && plan.sourceIndex < targetIndex) targetIndex--;
+    if (targetIndex < 0) return null;
+    return {
+      nextParent: plan.target.parent,
+      targetList,
+      insertIndex: position === 'before' ? targetIndex : targetIndex + 1,
+      expandedNextParent: false,
+    };
+  }
+
+  private _refreshMovedSubtree(source: HYTreeNodeData, nextParent: HYTreeNodeData | null): void {
     const parentIndex = nextParent ? this._nodeIndex.get(nextParent.id) : null;
-    const ancestorIds = parentIndex ? [...parentIndex.ancestorIds, nextParent!.id] : [];
+    const ancestorIds = parentIndex && nextParent ? [...parentIndex.ancestorIds, nextParent.id] : [];
     this._refreshSubtreeIndex(
-      source.node,
+      source,
       nextParent,
       parentIndex ? parentIndex.depth + 1 : 0,
       ancestorIds,
     );
-    this._moveVisibleSubtree(
-      source.node,
-      visibleStart,
-      visibleCount,
-      nextParent,
-      expandedNextParent,
-    );
-    return true;
   }
 
   private _refreshSiblingIndexes(nodes: readonly HYTreeNodeData[]): void {
@@ -200,48 +241,43 @@ export class HYTreeModel {
     nextParent: HYTreeNodeData | null,
     expandedNextParent: boolean,
   ): void {
-    if (previousStart >= 0 && previousCount > 0) {
-      this._visibleNodes.splice(previousStart, previousCount);
-      this._visibleIds.splice(previousStart, previousCount);
-      this._refreshVisibleIndexes(previousStart);
-    }
-
+    this._removeVisibleRange(previousStart, previousCount);
     if (expandedNextParent && nextParent) {
-      const parentVisible = this._visibleIndex.get(nextParent.id);
-      if (parentVisible === undefined) return;
-      const expandedChildren: IndexedTreeNode[] = [];
-      for (const child of nextParent.children ?? []) {
-        this._collectVisibleSubtree(child, expandedChildren);
-      }
-      if (expandedChildren.length === 0) return;
-      const insertAt = parentVisible + 1;
-      this._visibleNodes.splice(insertAt, 0, ...expandedChildren);
-      this._visibleIds.splice(insertAt, 0, ...expandedChildren.map(item => item.node.id));
-      this._refreshVisibleIndexes(insertAt);
+      this._insertExpandedChildren(nextParent);
       return;
     }
+    const insertAt = this._resolveVisibleInsertAt(source, nextParent);
+    if (insertAt >= 0) this._insertVisibleSubtrees(insertAt, [source]);
+  }
 
-    let insertAt = -1;
+  private _removeVisibleRange(start: number, count: number): void {
+    if (start < 0 || count <= 0) return;
+    this._visibleNodes.splice(start, count);
+    this._visibleIds.splice(start, count);
+    this._refreshVisibleIndexes(start);
+  }
+
+  private _insertExpandedChildren(parent: HYTreeNodeData): void {
+    const parentVisible = this._visibleIndex.get(parent.id);
+    if (parentVisible === undefined) return;
+    this._insertVisibleSubtrees(parentVisible + 1, parent.children ?? []);
+  }
+
+  private _resolveVisibleInsertAt(source: HYTreeNodeData, nextParent: HYTreeNodeData | null): number {
     const sourceIndex = this._nodeIndex.get(source.id)?.index ?? -1;
+    if (sourceIndex < 0) return -1;
     const siblings = nextParent?.children ?? this._data;
-    if (sourceIndex >= 0) {
-      if (nextParent) {
-        const parentVisible = this._visibleIndex.get(nextParent.id);
-        if (parentVisible !== undefined && this._expandedIds.has(nextParent.id)) {
-          insertAt = sourceIndex === 0
-            ? parentVisible + 1
-            : this._visibleSubtreeEnd(siblings[sourceIndex - 1]?.id);
-        }
-      } else {
-        insertAt = sourceIndex === 0
-          ? 0
-          : this._visibleSubtreeEnd(siblings[sourceIndex - 1]?.id);
-      }
-    }
-    if (insertAt < 0) return;
+    if (!nextParent) return sourceIndex === 0 ? 0 : this._visibleSubtreeEnd(siblings[sourceIndex - 1]?.id);
+    const parentVisible = this._visibleIndex.get(nextParent.id);
+    if (parentVisible === undefined || !this._expandedIds.has(nextParent.id)) return -1;
+    return sourceIndex === 0
+      ? parentVisible + 1
+      : this._visibleSubtreeEnd(siblings[sourceIndex - 1]?.id);
+  }
 
+  private _insertVisibleSubtrees(insertAt: number, roots: readonly HYTreeNodeData[]): void {
     const moved: IndexedTreeNode[] = [];
-    this._collectVisibleSubtree(source, moved);
+    for (const root of roots) this._collectVisibleSubtree(root, moved);
     if (moved.length === 0) return;
     this._visibleNodes.splice(insertAt, 0, ...moved);
     this._visibleIds.splice(insertAt, 0, ...moved.map(item => item.node.id));

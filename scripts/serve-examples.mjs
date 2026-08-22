@@ -15,7 +15,8 @@ const mimeTypes = new Map([
 ]);
 
 const server = createServer((request, response) => {
-  const requestUrl = new URL(request.url ?? '/', `http://${request.headers.host ?? `${host}:${port}`}`);
+  const authority = request.headers.host ?? `${host}:${port}`;
+  const requestUrl = new URL(request.url ?? '/', `http://${authority}`);
   if (requestUrl.pathname === '/') {
     response.writeHead(302, { Location: '/examples/' });
     response.end();

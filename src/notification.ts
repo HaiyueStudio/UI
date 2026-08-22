@@ -58,21 +58,7 @@ function isType(value: unknown): value is HYNotificationType {
   return value === 'success' || value === 'info' || value === 'warning' || value === 'error';
 }
 
-/** Imperative notification center with independently timed, stacked notices. */
-export class HYNotification extends HTMLElement {
-  private readonly _containers = new Map<HYNotificationPlacement, HTMLElement>();
-  private readonly _notices = new Map<string, HYNotificationRecord>();
-  private _sequence = 0;
-
-  static get observedAttributes(): string[] {
-    return ['placement', 'duration'];
-  }
-
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: 'open' });
-    const style = document.createElement('style');
-    style.textContent = `
+const NOTIFICATION_STYLES = `
       :host {
         position: fixed;
         z-index: var(--hy-notification-z-index, 1100);
@@ -196,6 +182,22 @@ export class HYNotification extends HTMLElement {
         .notice { animation-duration: 1ms; transition-duration: 1ms; }
       }
     `;
+
+/** Imperative notification center with independently timed, stacked notices. */
+export class HYNotification extends HTMLElement {
+  private readonly _containers = new Map<HYNotificationPlacement, HTMLElement>();
+  private readonly _notices = new Map<string, HYNotificationRecord>();
+  private _sequence = 0;
+
+  static get observedAttributes(): string[] {
+    return ['placement', 'duration'];
+  }
+
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: 'open' });
+    const style = document.createElement('style');
+    style.textContent = NOTIFICATION_STYLES;
     root.append(style);
     for (const placement of PLACEMENTS) {
       const container = document.createElement('div');

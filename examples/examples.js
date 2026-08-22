@@ -118,8 +118,11 @@ buttonLive.addEventListener('click', () => writeEvent(byId('button-event'), 'cli
 const inputText = byId('input-text');
 const inputValue = byId('input-value');
 byId('input-type').addEventListener('change', event => {
-  inputText.type = event.target.value;
-  inputText.value = event.target.value === 'color' ? '#68a8ff' : event.target.value === 'number' ? '1' : inputValue.value;
+  const type = event.target.value;
+  inputText.type = type;
+  if (type === 'color') inputText.value = '#68a8ff';
+  else if (type === 'number') inputText.value = '1';
+  else inputText.value = inputValue.value;
   inputValue.value = inputText.value;
 });
 inputValue.addEventListener('input', event => { inputText.value = event.target.value; });

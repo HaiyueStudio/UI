@@ -242,7 +242,12 @@ export class HYRange extends HTMLElement {
     this._upperBubble.textContent = this._formatValue(upper);
     const label = this.getAttribute('aria-label');
     this._syncHandle(this._lowerHandle, lower, label ? `${label} minimum` : 'Lower value');
-    this._syncHandle(this._upperHandle, upper, this.range ? (label ? `${label} maximum` : 'Upper value') : (label ?? 'Range value'));
+    this._syncHandle(this._upperHandle, upper, this._upperHandleLabel(label));
+  }
+
+  private _upperHandleLabel(label: string | null): string {
+    if (!this.range) return label ?? 'Range value';
+    return label ? `${label} maximum` : 'Upper value';
   }
 
   private _syncHandle(handle: HTMLButtonElement, value: number, fallbackLabel: string): void {
@@ -252,8 +257,7 @@ export class HYRange extends HTMLElement {
     handle.setAttribute('aria-valuemax', String(handle === this._lowerHandle && this.range ? this.upperValue : this.max));
     handle.setAttribute('aria-valuenow', String(value));
     handle.setAttribute('aria-valuetext', this._formatValue(value));
-    if (handle === this._lowerHandle) handle.setAttribute('aria-label', fallbackLabel);
-    else handle.setAttribute('aria-label', fallbackLabel);
+    handle.setAttribute('aria-label', fallbackLabel);
   }
 
   private _onPointerDown = (event: PointerEvent): void => {
@@ -261,11 +265,7 @@ export class HYRange extends HTMLElement {
     event.preventDefault();
     const target = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('.handle') : null;
     const pointerValue = this._valueFromClientX(event.clientX);
-    const handle = target?.dataset.handle === 'lower'
-      ? 'lower'
-      : target?.dataset.handle === 'upper'
-        ? (this.range ? 'upper' : 'single')
-        : this._nearestHandle(pointerValue);
+    const handle = this._resolvePointerHandle(target?.dataset.handle, pointerValue);
     this._activeHandle = handle;
     this._pointerId = event.pointerId;
     this._dragStartValue = this._serializedValue();
@@ -296,21 +296,39 @@ export class HYRange extends HTMLElement {
 
   private _onKeyDown = (event: KeyboardEvent): void => {
     if (this.disabled || !(event.target instanceof HTMLButtonElement)) return;
-    const rawHandle = event.target.dataset.handle;
-    const handle: HYRangeHandle = rawHandle === 'lower' ? 'lower' : this.range ? 'upper' : 'single';
-    let next: number | null = null;
-    const current = handle === 'lower' ? this.lowerValue : this.range ? this.upperValue : this.value;
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') next = current - this.step;
-    if (event.key === 'ArrowRight' || event.key === 'ArrowUp') next = current + this.step;
-    if (event.key === 'PageDown') next = current - this.step * 10;
-    if (event.key === 'PageUp') next = current + this.step * 10;
-    if (event.key === 'Home') next = this.min;
-    if (event.key === 'End') next = this.max;
+    const handle = this._resolveKeyboardHandle(event.target.dataset.handle);
+    const next = this._keyboardValue(event.key, this._valueForHandle(handle));
     if (next === null) return;
     event.preventDefault();
     this._commitValue(next, handle, true);
     this._dispatchValueEvent('value-change', handle);
   };
+
+  private _resolvePointerHandle(rawHandle: string | undefined, pointerValue: number): HYRangeHandle {
+    if (rawHandle === 'lower') return 'lower';
+    if (rawHandle === 'upper') return this.range ? 'upper' : 'single';
+    return this._nearestHandle(pointerValue);
+  }
+
+  private _resolveKeyboardHandle(rawHandle: string | undefined): HYRangeHandle {
+    if (rawHandle === 'lower') return 'lower';
+    return this.range ? 'upper' : 'single';
+  }
+
+  private _valueForHandle(handle: HYRangeHandle): number {
+    if (handle === 'lower') return this.lowerValue;
+    return this.range ? this.upperValue : this.value;
+  }
+
+  private _keyboardValue(key: string, current: number): number | null {
+    if (key === 'ArrowLeft' || key === 'ArrowDown') return current - this.step;
+    if (key === 'ArrowRight' || key === 'ArrowUp') return current + this.step;
+    if (key === 'PageDown') return current - this.step * 10;
+    if (key === 'PageUp') return current + this.step * 10;
+    if (key === 'Home') return this.min;
+    if (key === 'End') return this.max;
+    return null;
+  }
 
   private _setFromPointer(clientX: number, emit: boolean): void {
     this._commitValue(this._valueFromClientX(clientX), this._activeHandle, emit);

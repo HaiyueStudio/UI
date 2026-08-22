@@ -748,41 +748,32 @@ export class HYTree extends HTMLElement {
     const activeId = this._getActiveVisibleId() ?? visibleIds[0];
     if (activeId === undefined) return false;
     const activeIndex = this._model.visibleIndex.get(activeId) ?? 0;
-
-    if (event.key === 'ArrowDown') {
-      this._setActiveId(visibleIds[Math.min(activeIndex + 1, visibleIds.length - 1)] ?? activeId);
+    const linearTarget = this._linearNavigationTarget(event.key, activeIndex, visibleIds);
+    if (linearTarget) {
+      this._setActiveId(linearTarget);
       return true;
     }
+    return this._handleNavigationAction(event.key, activeId);
+  }
 
-    if (event.key === 'ArrowUp') {
-      this._setActiveId(visibleIds[Math.max(activeIndex - 1, 0)] ?? activeId);
-      return true;
-    }
+  private _linearNavigationTarget(
+    key: string,
+    activeIndex: number,
+    visibleIds: readonly string[],
+  ): string | null {
+    if (key === 'ArrowDown') return visibleIds[Math.min(activeIndex + 1, visibleIds.length - 1)] ?? null;
+    if (key === 'ArrowUp') return visibleIds[Math.max(activeIndex - 1, 0)] ?? null;
+    if (key === 'Home') return visibleIds[0] ?? null;
+    if (key === 'End') return visibleIds[visibleIds.length - 1] ?? null;
+    return null;
+  }
 
-    if (event.key === 'Home') {
-      this._setActiveId(visibleIds[0] ?? activeId);
-      return true;
-    }
-
-    if (event.key === 'End') {
-      this._setActiveId(visibleIds[visibleIds.length - 1] ?? activeId);
-      return true;
-    }
-
-    if (event.key === 'ArrowRight') {
-      return this._moveActiveRight(activeId);
-    }
-
-    if (event.key === 'ArrowLeft') {
-      return this._moveActiveLeft(activeId);
-    }
-
-    if (event.key === 'Enter' || event.key === ' ') {
-      this._setSelection([activeId], activeId, true);
-      return true;
-    }
-
-    return false;
+  private _handleNavigationAction(key: string, activeId: string): boolean {
+    if (key === 'ArrowRight') return this._moveActiveRight(activeId);
+    if (key === 'ArrowLeft') return this._moveActiveLeft(activeId);
+    if (key !== 'Enter' && key !== ' ') return false;
+    this._setSelection([activeId], activeId, true);
+    return true;
   }
 
   private _moveActiveRight(activeId: string): boolean {
@@ -897,7 +888,8 @@ export class HYTree extends HTMLElement {
   private _pasteClipboard(): boolean {
     if (this._clipboard.length === 0) return false;
     const target = this._selectedId ? this._model.findNode(this._selectedId) : null;
-    const targetList = target ? (target.node.children ??= []) : this._data;
+    if (target && !target.node.children) target.node.children = [];
+    const targetList = target?.node.children ?? this._data;
     if (target) {
       this._expandedIds.add(target.node.id);
     }

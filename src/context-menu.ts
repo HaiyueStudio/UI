@@ -209,7 +209,8 @@ ${GE_MENU_ITEM_STYLES}
 
   private _nextEnabledIndex(direction: 1 | -1): number {
     if (!this._items.length) return -1;
-    const start = this._activeIndex >= 0 ? this._activeIndex : direction > 0 ? -1 : this._items.length;
+    let start = this._activeIndex;
+    if (start < 0) start = direction > 0 ? -1 : this._items.length;
     for (let step = 1; step <= this._items.length; step++) {
       const index = (start + direction * step + this._items.length) % this._items.length;
       if (this._isEnabledItem(index)) return index;

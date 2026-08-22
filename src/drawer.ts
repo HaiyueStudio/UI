@@ -15,29 +15,7 @@ const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
-/** Sliding dialog surface with optional mask and hidden-content unmounting. */
-export class HYDrawer extends HTMLElement {
-  private readonly _panel = document.createElement('section');
-  private readonly _title = document.createElement('h2');
-  private readonly _closeButton = document.createElement('button');
-  private readonly _footer = document.createElement('footer');
-  private readonly _footerSlot = document.createElement('slot');
-  private readonly _detachedContent = document.createDocumentFragment();
-  private _documentListenerAbort: AbortController | null = null;
-  private _destroyTimer: number | null = null;
-  private _returnFocus: HTMLElement | null = null;
-  private _closeReason: HYDrawerCloseDetail['reason'] = 'programmatic';
-  private _wasOpen = false;
-
-  static get observedAttributes(): string[] {
-    return ['open', 'heading', 'placement', 'mask', 'destroy-on-hidden'];
-  }
-
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: 'open' });
-    const style = document.createElement('style');
-    style.textContent = `
+const DRAWER_STYLES = `
       :host {
         position: fixed;
         z-index: var(--hy-drawer-z-index, 1000);
@@ -172,6 +150,30 @@ export class HYDrawer extends HTMLElement {
         :host { --_duration: 1ms; }
       }
     `;
+
+/** Sliding dialog surface with optional mask and hidden-content unmounting. */
+export class HYDrawer extends HTMLElement {
+  private readonly _panel = document.createElement('section');
+  private readonly _title = document.createElement('h2');
+  private readonly _closeButton = document.createElement('button');
+  private readonly _footer = document.createElement('footer');
+  private readonly _footerSlot = document.createElement('slot');
+  private readonly _detachedContent = document.createDocumentFragment();
+  private _documentListenerAbort: AbortController | null = null;
+  private _destroyTimer: number | null = null;
+  private _returnFocus: HTMLElement | null = null;
+  private _closeReason: HYDrawerCloseDetail['reason'] = 'programmatic';
+  private _wasOpen = false;
+
+  static get observedAttributes(): string[] {
+    return ['open', 'heading', 'placement', 'mask', 'destroy-on-hidden'];
+  }
+
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: 'open' });
+    const style = document.createElement('style');
+    style.textContent = DRAWER_STYLES;
 
     const container = document.createElement('div');
     container.className = 'root';

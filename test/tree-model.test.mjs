@@ -70,6 +70,20 @@ test('tree model updates moves incrementally without rebuilding unrelated index 
   assert.deepEqual(model.getVisibleIds(), ['root-a', 'child-a', 'child-b', 'grandchild', 'root-b']);
 });
 
+test('tree model keeps visible indexes coherent when moving into a collapsed parent', () => {
+  const expanded = new Set(['root-a']);
+  const data = fixture();
+  const model = new HYTreeModel(expanded);
+  model.setData(data);
+
+  assert.equal(model.moveNode('root-b', 'child-b', 'inside'), true);
+  assert.deepEqual(model.getVisibleIds(), ['root-a', 'child-a', 'child-b', 'grandchild', 'root-b']);
+  assert.equal(model.visibleIndex.get('grandchild'), 3);
+  assert.equal(model.visibleIndex.get('root-b'), 4);
+  assert.equal(model.getIndexedNode('root-b')?.depth, 2);
+  assert.equal(expanded.has('child-b'), true);
+});
+
 test('tree model rejects cycles and collapses nested selections', () => {
   const model = new HYTreeModel(new Set(['root-a', 'child-b']));
   const data = fixture();
