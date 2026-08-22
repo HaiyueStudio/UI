@@ -11,6 +11,7 @@ import { defineRadioComponents } from './radio.js';
 import { defineDialogComponents } from './dialog.js';
 import { defineInputComponents } from './input.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
+import { defineVirtualListComponents } from './virtual-list.js';
 
 export {
   defineButtonComponents,
@@ -68,6 +69,18 @@ export {
 export type {
   HYHistoryEntry,
 } from './history-controls.js';
+export {
+  calculateVirtualListRange,
+  defineVirtualListComponents,
+  HYVirtualList,
+} from './virtual-list.js';
+export type {
+  HYVirtualListAlign,
+  HYVirtualListItemClickDetail,
+  HYVirtualListItemRenderer,
+  HYVirtualListRange,
+  HYVirtualListRangeChangeDetail,
+} from './virtual-list.js';
 export type {
   HYSplitDirection,
   HYSplitRatioChangeDetail,
@@ -128,4 +141,5 @@ export function defineHaiyueUI(): void {
   defineDialogComponents();
   defineInputComponents();
   defineHistoryControlsComponents();
+  defineVirtualListComponents();
 }

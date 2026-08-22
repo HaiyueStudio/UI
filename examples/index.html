@@ -45,8 +45,9 @@
       <p class="nav-label">布局与数据</p>
       <a href="#split" data-name="split 分栏"><span>Split</span><code>hy-split</code></a>
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
+      <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><span class="status-dot"></span><span>13 components</span><span>·</span><span>v0.1.1</span></div>
+    <div class="sidebar-foot"><span class="status-dot"></span><span>14 components</span><span>·</span><span>v0.1.1</span></div>
   </aside>
 
   <main id="content">
@@ -55,7 +56,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>13</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>14</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -179,8 +180,31 @@
       </div>
     </section>
 
+    <section class="component-section" id="virtual-list" data-title="Virtual List">
+      <div class="section-heading"><div><span class="index">13</span><h2>Virtual List</h2><code>&lt;hy-virtual-list&gt;</code></div><p>只为可视范围与缓冲区创建 DOM；完整列表保留为数据，并使用组件自己的滚动容器。</p></div>
+      <div class="demo-card virtual-list-card">
+        <div class="preview virtual-list-stage"><hy-virtual-list id="virtual-list-live" aria-label="Large asset list" item-height="44" height="360" overscan="3"></hy-virtual-list></div>
+        <div class="controls stacked">
+          <label>items<select id="virtual-list-count"><option value="1000">1,000</option><option value="10000">10,000</option><option value="100000" selected>100,000</option></select></label>
+          <label>item-height <span id="virtual-list-height-value">44 px</span><input id="virtual-list-height" type="range" min="28" max="72" value="44" /></label>
+          <label>overscan <span id="virtual-list-overscan-value">3</span><input id="virtual-list-overscan" type="range" min="0" max="12" value="3" /></label>
+          <label>scrollToIndex<input id="virtual-list-index" type="number" min="0" value="50000" /></label>
+          <button id="virtual-list-jump" class="native-trigger">Jump to item</button>
+          <output id="virtual-list-event">正在计算可视范围…</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineVirtualListComponents } from '@haiyue/ui/virtual-list';
+
+defineVirtualListComponents();
+const list = document.querySelector('hy-virtual-list');
+list.items = records;
+list.renderItem = (record, index) =&gt; `${index + 1} · ${record.name}`;
+list.scrollToIndex(50_000, 'center');</code></pre></details>
+      <div class="parameter-strip"><code>items</code><code>renderItem</code><code>item-height</code><code>height</code><code>overscan</code><code>scrollToIndex()</code><code>refresh()</code><code>visible-range-change</code><code>item-click</code></div>
+    </section>
+
     <section class="component-section" id="history-controls" data-title="History Controls">
-      <div class="section-heading"><div><span class="index">13</span><h2>History Controls</h2><code>&lt;hy-history-controls&gt;</code></div><p>受控的撤销与重做工具栏；宿主负责历史状态，组件只发送操作请求。</p></div>
+      <div class="section-heading"><div><span class="index">14</span><h2>History Controls</h2><code>&lt;hy-history-controls&gt;</code></div><p>受控的撤销与重做工具栏；宿主负责历史状态，组件只发送操作请求。</p></div>
       <div class="demo-card two-column">
         <div class="preview centered"><hy-history-controls id="history-live" can-undo undo-label="Move Player" redo-label="Scale Player" locale="zh-CN"></hy-history-controls></div>
         <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="history-can-undo" type="checkbox" checked /><span></span>can-undo</label><label class="toggle"><input id="history-can-redo" type="checkbox" /><span></span>can-redo</label><label class="toggle"><input id="history-busy" type="checkbox" /><span></span>busy</label></div><label>locale<select id="history-locale"><option value="zh-CN">zh-CN</option><option value="en">en</option></select></label><output id="history-event">点击撤销或重做按钮</output></div>

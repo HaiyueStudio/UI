@@ -274,6 +274,50 @@ treeLive.addEventListener('selection-change', event => writeEvent(byId('tree-eve
 treeLive.addEventListener('data-change', event => writeEvent(byId('tree-event'), 'data-change', { action: event.detail.action, sourceId: event.detail.sourceId, targetId: event.detail.targetId }));
 treeLive.addEventListener('node-context-menu', event => writeEvent(byId('tree-event'), 'node-context-menu', { id: event.detail.id, selectedIds: event.detail.selectedIds }));
 
+// Virtual list. The full array remains data; the renderer runs only for the current window.
+const virtualListLive = byId('virtual-list-live');
+const createVirtualItems = count => Array.from({ length: count }, (_, index) => ({
+  id: index + 1,
+  name: `Asset ${String(index + 1).padStart(6, '0')}`,
+  type: ['Mesh', 'Material', 'Texture', 'Animation'][index % 4],
+}));
+virtualListLive.renderItem = (item, index) => {
+  const row = document.createElement('div');
+  row.className = 'virtual-list-row';
+  const sequence = document.createElement('span');
+  sequence.textContent = String(index + 1).padStart(6, '0');
+  const name = document.createElement('b');
+  name.textContent = item.name;
+  const type = document.createElement('small');
+  type.textContent = item.type;
+  row.append(sequence, name, type);
+  return row;
+};
+const setVirtualItemCount = count => {
+  virtualListLive.items = createVirtualItems(count);
+  byId('virtual-list-index').max = String(count - 1);
+};
+setVirtualItemCount(100_000);
+byId('virtual-list-count').addEventListener('change', event => setVirtualItemCount(Number(event.target.value)));
+byId('virtual-list-height').addEventListener('input', event => {
+  virtualListLive.itemHeight = Number(event.target.value);
+  byId('virtual-list-height-value').textContent = `${event.target.value} px`;
+});
+byId('virtual-list-overscan').addEventListener('input', event => {
+  virtualListLive.overscan = Number(event.target.value);
+  byId('virtual-list-overscan-value').textContent = event.target.value;
+});
+byId('virtual-list-jump').addEventListener('click', () => {
+  virtualListLive.scrollToIndex(Number(byId('virtual-list-index').value), 'center');
+});
+virtualListLive.addEventListener('visible-range-change', event => {
+  writeEvent(byId('virtual-list-event'), 'visible-range-change', event.detail);
+});
+virtualListLive.addEventListener('item-click', event => {
+  writeEvent(byId('virtual-list-event'), 'item-click', { index: event.detail.index, id: event.detail.item.id });
+});
+virtualListLive.refresh();
+
 // History controls.
 const historyLive = byId('history-live');
 byId('history-can-undo').addEventListener('change', event => { historyLive.canUndo = event.target.checked; });

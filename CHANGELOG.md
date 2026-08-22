@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 新增可按需导入的 `HYVirtualList` / `<hy-virtual-list>` 固定行高虚拟列表，仅渲染可视区与 overscan 缓冲项，并提供内部滚动条、范围事件、点击事件和 `scrollToIndex()`。
 - 组件品牌前缀从 `GE/ge` 原子迁移为 `HY/hy`，不保留旧标签、类名或 CSS token alias；新增可独立导入的 Moonlight 淡蓝亮色和 Nightfall 深蓝紫暗色皮肤。
 - 独立 UI 仓库移除重复的 `ui/` workspace 层级，并为全部组件新增 `@haiyue/ui/<component>` 独立、无副作用的公开入口；根入口继续提供显式全量注册。
 - 0.1 首发正确性矩阵收敛为 Windows 10 22H2+ Chrome/Edge 与真实 GeForce/Radeon RX 独显；取消 Apple/Windows 集显的独立 required handoff，并将 Chrome/macOS 调整为 extended。软件与远程虚拟 adapter 继续禁止。

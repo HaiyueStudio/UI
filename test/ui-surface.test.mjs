@@ -21,6 +21,8 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYTooltip',
     'HYTree',
     'HYTreeNode',
+    'HYVirtualList',
+    'calculateVirtualListRange',
     'defineButtonComponents',
     'defineCheckboxComponents',
     'defineContextMenuComponents',
@@ -35,9 +37,38 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineTabsComponents',
     'defineTooltipComponents',
     'defineTreeComponents',
+    'defineVirtualListComponents',
   ];
   assert.deepEqual(Object.keys(ui).sort(), expected.sort());
   assert.equal(Object.keys(ui).some(name => /^GE[A-Z]/u.test(name)), false);
+});
+
+test('virtual list calculates a buffered, exclusive render range', async () => {
+  const { calculateVirtualListRange } = await import('../dist/virtual-list.js');
+  assert.deepEqual(calculateVirtualListRange(10_000, 40, 320, 4_000, 3), {
+    startIndex: 97,
+    endIndex: 111,
+    visibleStartIndex: 100,
+    visibleEndIndex: 108,
+  });
+  assert.deepEqual(calculateVirtualListRange(4, 40, 320, 0, 3), {
+    startIndex: 0,
+    endIndex: 4,
+    visibleStartIndex: 0,
+    visibleEndIndex: 4,
+  });
+});
+
+test('virtual list keeps data off-DOM and cleans up owned observers and listeners', () => {
+  const source = readFileSync(new URL('../src/virtual-list.ts', import.meta.url), 'utf8');
+  assert.match(source, /for \(let index = range\.startIndex; index < range\.endIndex/);
+  assert.match(source, /this\._items\[index\]/);
+  assert.match(source, /itemSlot\.name = 'items'/);
+  assert.match(source, /data-hy-virtual-list-generated/);
+  assert.match(source, /this\._resizeObserver\?\.disconnect\(\)/);
+  assert.match(source, /removeEventListener\('scroll', this\._onScroll\)/);
+  assert.match(source, /'visible-range-change'/);
+  assert.match(source, /'item-click'/);
 });
 
 test('history controls are controlled, accessible, and release click listeners', () => {

@@ -22,9 +22,11 @@ helpers, and registration stays explicit:
 ```ts
 import { defineButtonComponents } from '@haiyue/ui/button';
 import { defineTreeComponents } from '@haiyue/ui/tree';
+import { defineVirtualListComponents } from '@haiyue/ui/virtual-list';
 
 defineButtonComponents();
 defineTreeComponents();
+defineVirtualListComponents();
 ```
 
 Component JavaScript does not register custom elements during module evaluation, and every component subpath
@@ -41,6 +43,27 @@ defineHaiyueUI();
 
 Because `defineHaiyueUI()` references the complete component set, prefer focused subpaths in bundle-sensitive
 product entry points.
+
+## Virtual list
+
+`<hy-virtual-list>` renders only the visible fixed-height rows plus a configurable overscan buffer. The full
+collection stays in the `items` property, while `renderItem` is called only for rows that currently need DOM:
+
+```ts
+import { defineVirtualListComponents } from '@haiyue/ui/virtual-list';
+
+defineVirtualListComponents();
+const list = document.querySelector('hy-virtual-list');
+list.items = records;
+list.itemHeight = 40;
+list.overscan = 3;
+list.renderItem = (record, index) => `${index + 1}. ${record.name}`;
+list.scrollToIndex(50_000, 'center');
+```
+
+Use the `height` property (or `height` attribute) for the internal viewport. `visible-range-change` reports
+exclusive `endIndex` / `visibleEndIndex` values, and `item-click` reports the source item and absolute index.
+The scrollbar can be themed with inherited semantic tokens and `--hy-virtual-list-scrollbar-size`.
 
 ## Themes
 

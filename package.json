@@ -48,6 +48,10 @@
       "types": "./dist/history-controls.d.ts",
       "import": "./dist/history-controls.js"
     },
+    "./virtual-list": {
+      "types": "./dist/virtual-list.d.ts",
+      "import": "./dist/virtual-list.js"
+    },
     "./radio": {
       "types": "./dist/radio.d.ts",
       "import": "./dist/radio.js"
