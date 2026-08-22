@@ -113,6 +113,7 @@
     "examples": "npm run build && node scripts/serve-examples.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --test \"test/**/*.test.mjs\"",
+    "prepack": "npm run typecheck && npm test",
     "pack:candidate": "node scripts/pack-candidate.mjs"
   },
   "devDependencies": {

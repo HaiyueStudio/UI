@@ -10,6 +10,6 @@ bundle.js
 bundle.js.map
 bundle.meta.json
 examples/page-turn-book/pdf.worker.min.mjs
-artifacts/
+.artifacts/
 animation-spec/corpus/.cache/
 .DS_Store
