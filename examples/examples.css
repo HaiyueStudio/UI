@@ -352,6 +352,8 @@ fieldset.options-preview legend { margin-bottom: 12px; padding: 0; color: #68778
 .drawer-properties p { display: flex; justify-content: space-between; margin: 0; padding: 10px 0; border-bottom: 1px solid var(--line-soft); }
 .drawer-properties span { color: var(--muted); }
 .drawer-properties b { color: var(--ink); font-size: 11px; font-weight: 600; }
+.notification-actions { flex-direction: column; }
+.notification-actions .native-trigger { min-width: 160px; }
 
 .split-stage { height: 320px; padding: 18px; }
 .split-stage hy-split { border: 1px solid #2b3643; border-radius: 6px; }

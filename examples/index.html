@@ -41,6 +41,7 @@
       <a href="#tooltip" data-name="tooltip 提示"><span>Tooltip</span><code>hy-tooltip</code></a>
       <a href="#dialog" data-name="dialog 对话框"><span>Dialog</span><code>hy-dialog</code></a>
       <a href="#drawer" data-name="drawer 抽屉 侧边栏"><span>Drawer</span><code>hy-drawer</code></a>
+      <a href="#notification" data-name="notification 通知 提醒"><span>Notification</span><code>hy-notification</code></a>
       <a href="#context-menu" data-name="context menu 右键菜单"><span>Context Menu</span><code>hy-context-menu</code></a>
       <a href="#history-controls" data-name="history controls undo redo 历史 撤销 重做"><span>History Controls</span><code>hy-history-controls</code></a>
       <p class="nav-label">布局与数据</p>
@@ -48,7 +49,7 @@
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><span class="status-dot"></span><span>15 components</span><span>·</span><span>v0.1.1</span></div>
+    <div class="sidebar-foot"><span class="status-dot"></span><span>16 components</span><span>·</span><span>v0.1.1</span></div>
   </aside>
 
   <main id="content">
@@ -57,7 +58,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>15</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>16</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -182,13 +183,37 @@
       <div class="parameter-strip"><code>open</code><code>heading</code><code>placement</code><code>mask</code><code>destroyOnHidden</code><code>show()</code><code>close()</code><code>drawer-close</code></div>
     </section>
 
+    <section class="component-section" id="notification" data-title="Notification">
+      <div class="section-heading"><div><span class="index">11</span><h2>Notification</h2><code>&lt;hy-notification&gt;</code></div><p>四种语义通知、六个显示位置和独立倒计时；连续通知以 Z 轴层叠，悬停后展开。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview centered notification-actions"><button id="notification-show" class="native-trigger">Show notification</button><button id="notification-stack" class="native-trigger secondary">Stack all types</button></div>
+        <div class="controls stacked">
+          <label>type<select id="notification-type"><option>success</option><option selected>info</option><option>warning</option><option>error</option></select></label>
+          <label>placement<select id="notification-placement"><option>topLeft</option><option>top</option><option selected>topRight</option><option>bottomLeft</option><option>bottom</option><option>bottomRight</option></select></label>
+          <label>duration <span id="notification-duration-value">4.0 s</span><input id="notification-duration" type="range" min="0" max="10" step="0.5" value="4" /></label>
+          <label class="toggle"><input id="notification-progress" type="checkbox" checked /><span></span>showProgress</label>
+          <output id="notification-event">创建通知后查看事件</output>
+        </div>
+      </div>
+      <hy-notification id="notification-live" placement="topRight" duration="4" show-progress></hy-notification>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>const center = document.querySelector('hy-notification');
+center.success({
+  message: 'Export complete',
+  description: 'The project package is ready.',
+  placement: 'topRight',
+  duration: 4,
+  showProgress: true,
+});</code></pre></details>
+      <div class="parameter-strip"><code>type</code><code>message</code><code>description</code><code>placement</code><code>duration</code><code>showProgress</code><code>open()</code><code>success()</code><code>info()</code><code>warning()</code><code>error()</code></div>
+    </section>
+
     <section class="component-section" id="context-menu" data-title="Context Menu">
-      <div class="section-heading"><div><span class="index">11</span><h2>Context Menu</h2><code>&lt;hy-context-menu&gt;</code></div><p>在指定视口坐标打开；支持鼠标、方向键、Enter、Escape 和焦点管理。</p></div>
+      <div class="section-heading"><div><span class="index">12</span><h2>Context Menu</h2><code>&lt;hy-context-menu&gt;</code></div><p>在指定视口坐标打开；支持鼠标、方向键、Enter、Escape 和焦点管理。</p></div>
       <div class="demo-card two-column overflow-visible"><div class="preview context-target" id="context-target"><div><span>◇</span><b>Player.controller</b><small>在此区域右键，或点击下方按钮</small></div><button id="context-open" class="native-trigger">Open menu</button><hy-context-menu id="context-live"></hy-context-menu></div><div class="controls stacked"><p class="control-note"><code>openAt(x, y)</code> 会自动约束菜单在可视区域内。</p><output id="context-event">等待打开菜单</output></div></div>
     </section>
 
     <section class="component-section" id="split" data-title="Split">
-      <div class="section-heading"><div><span class="index">12</span><h2>Split</h2><code>&lt;hy-split&gt;</code></div><p>可拖拽、可键盘调整的双面板布局，支持方向、比例、最小尺寸和分隔条宽度。</p></div>
+      <div class="section-heading"><div><span class="index">13</span><h2>Split</h2><code>&lt;hy-split&gt;</code></div><p>可拖拽、可键盘调整的双面板布局，支持方向、比例、最小尺寸和分隔条宽度。</p></div>
       <div class="demo-card">
         <div class="preview split-stage"><hy-split id="split-live" direction="horizontal" ratio="0.34" min-first="100" min-second="140" bar-size="6"><div class="split-pane pane-a" slot="first"><span>01</span><b>Hierarchy</b><small>First pane</small></div><div class="split-pane pane-b" slot="second"><span>02</span><b>Viewport</b><small>Second pane</small></div></hy-split></div>
         <div class="controls split-controls"><label>direction<select id="split-direction"><option>horizontal</option><option>vertical</option></select></label><label>ratio <span id="split-ratio-value">0.34</span><input id="split-ratio" type="range" min="0" max="1" step="0.01" value="0.34" /></label><label>bar-size <span id="split-bar-value">6 px</span><input id="split-bar" type="range" min="1" max="18" value="6" /></label><output id="split-event">拖动分隔条或使用方向键</output></div>
@@ -196,7 +221,7 @@
     </section>
 
     <section class="component-section" id="tree" data-title="Tree">
-      <div class="section-heading"><div><span class="index">13</span><h2>Tree</h2><code>&lt;hy-tree&gt;</code></div><p>层级数据、展开、范围多选、键盘导航、剪贴板操作和拖放排序。</p></div>
+      <div class="section-heading"><div><span class="index">14</span><h2>Tree</h2><code>&lt;hy-tree&gt;</code></div><p>层级数据、展开、范围多选、键盘导航、剪贴板操作和拖放排序。</p></div>
       <div class="demo-card tree-card">
         <div class="preview tree-stage"><hy-tree id="tree-live" allow-drag></hy-tree></div>
         <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-drag" type="checkbox" checked /><span></span>allow-drag</label></div><button id="tree-select" class="native-trigger">Select lights</button><button id="tree-reset" class="native-trigger secondary">Reset data</button><output id="tree-event">选择节点；Ctrl/⌘ 与 Shift 支持多选</output></div>
@@ -204,7 +229,7 @@
     </section>
 
     <section class="component-section" id="virtual-list" data-title="Virtual List">
-      <div class="section-heading"><div><span class="index">14</span><h2>Virtual List</h2><code>&lt;hy-virtual-list&gt;</code></div><p>只为可视范围与缓冲区创建 DOM；完整列表保留为数据，并使用组件自己的滚动容器。</p></div>
+      <div class="section-heading"><div><span class="index">15</span><h2>Virtual List</h2><code>&lt;hy-virtual-list&gt;</code></div><p>只为可视范围与缓冲区创建 DOM；完整列表保留为数据，并使用组件自己的滚动容器。</p></div>
       <div class="demo-card virtual-list-card">
         <div class="preview virtual-list-stage"><hy-virtual-list id="virtual-list-live" aria-label="Large asset list" item-height="44" height="360" overscan="3"></hy-virtual-list></div>
         <div class="controls stacked">
@@ -227,7 +252,7 @@ list.scrollToIndex(50_000, 'center');</code></pre></details>
     </section>
 
     <section class="component-section" id="history-controls" data-title="History Controls">
-      <div class="section-heading"><div><span class="index">15</span><h2>History Controls</h2><code>&lt;hy-history-controls&gt;</code></div><p>受控的撤销与重做工具栏；宿主负责历史状态，组件只发送操作请求。</p></div>
+      <div class="section-heading"><div><span class="index">16</span><h2>History Controls</h2><code>&lt;hy-history-controls&gt;</code></div><p>受控的撤销与重做工具栏；宿主负责历史状态，组件只发送操作请求。</p></div>
       <div class="demo-card two-column">
         <div class="preview centered"><hy-history-controls id="history-live" can-undo undo-label="Move Player" redo-label="Scale Player" locale="zh-CN"></hy-history-controls></div>
         <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="history-can-undo" type="checkbox" checked /><span></span>can-undo</label><label class="toggle"><input id="history-can-redo" type="checkbox" /><span></span>can-redo</label><label class="toggle"><input id="history-busy" type="checkbox" /><span></span>busy</label></div><label>locale<select id="history-locale"><option value="zh-CN">zh-CN</option><option value="en">en</option></select></label><output id="history-event">点击撤销或重做按钮</output></div>

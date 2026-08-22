@@ -11,6 +11,7 @@ import { defineRadioComponents } from './radio.js';
 import { defineDialogComponents } from './dialog.js';
 import { defineDrawerComponents } from './drawer.js';
 import { defineInputComponents } from './input.js';
+import { defineNotificationComponents } from './notification.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
 import { defineVirtualListComponents } from './virtual-list.js';
 
@@ -67,6 +68,10 @@ export {
   defineInputComponents,
   HYInput,
 } from './input.js';
+export {
+  defineNotificationComponents,
+  HYNotification,
+} from './notification.js';
 export {
   defineHistoryControlsComponents,
   HYHistoryControls,
@@ -130,6 +135,15 @@ export type {
   HYInputType,
 } from './input.js';
 export type {
+  HYNotificationCloseDetail,
+  HYNotificationCloseReason,
+  HYNotificationMethodOptions,
+  HYNotificationOpenDetail,
+  HYNotificationOptions,
+  HYNotificationPlacement,
+  HYNotificationType,
+} from './notification.js';
+export type {
   HYTreeDataChangeDetail,
   HYTreeDropPosition,
   HYTreeNodeContextMenuDetail,
@@ -151,6 +165,7 @@ export function defineHaiyueUI(): void {
   defineDialogComponents();
   defineDrawerComponents();
   defineInputComponents();
+  defineNotificationComponents();
   defineHistoryControlsComponents();
   defineVirtualListComponents();
 }

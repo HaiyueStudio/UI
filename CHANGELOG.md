@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 新增可按需导入的 `HYNotification` / `<hy-notification>` 通知中心，提供 success/info/warning/error 语义配色和图标、六向 placement、自动关闭、Z 轴堆叠及可选倒计时进度条。
 - 新增可按需导入的 `HYDrawer` / `<hy-drawer>` 抽屉组件，支持四向 placement、可选蒙层、Esc/蒙层关闭、焦点管理及 `destroyOnHidden` 内容卸载。
 - 新增可按需导入的 `HYVirtualList` / `<hy-virtual-list>` 固定行高虚拟列表，仅渲染可视区与 overscan 缓冲项，并提供内部滚动条、范围事件、点击事件和 `scrollToIndex()`。
 - 组件品牌前缀从 `GE/ge` 原子迁移为 `HY/hy`，不保留旧标签、类名或 CSS token alias；新增可独立导入的 Moonlight 淡蓝亮色和 Nightfall 深蓝紫暗色皮肤。

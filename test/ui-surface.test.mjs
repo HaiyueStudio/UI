@@ -15,6 +15,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYDropdown',
     'HYHistoryControls',
     'HYInput',
+    'HYNotification',
     'HYRadio',
     'HYSelect',
     'HYSplit',
@@ -32,6 +33,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineDropdownComponents',
     'defineHistoryControlsComponents',
     'defineInputComponents',
+    'defineNotificationComponents',
     'defineHaiyueUI',
     'defineRadioComponents',
     'defineSelectComponents',
@@ -84,6 +86,20 @@ test('drawer exposes directional placement, mask, Escape, and hidden-content des
   assert.match(drawer, /this\._detachedContent\.append/);
   assert.match(drawer, /this\._documentListenerAbort\?\.abort\(\)/);
   assert.match(drawer, /CustomEvent<HYDrawerCloseDetail>\('drawer-close'/);
+});
+
+test('notification exposes typed timed stacks with optional progress and owned timer cleanup', () => {
+  const notification = readFileSync(new URL('../src/notification.ts', import.meta.url), 'utf8');
+  assert.match(notification, /'success' \| 'info' \| 'warning' \| 'error'/);
+  assert.match(notification, /'topLeft'[\s\S]*'bottomRight'/);
+  assert.match(notification, /open\(options: HYNotificationOptions\): string/);
+  assert.match(notification, /success\(options:/);
+  assert.match(notification, /showProgress \?\? this\.showProgress/);
+  assert.match(notification, /hy-notification-progress/);
+  assert.match(notification, /translate3d/);
+  assert.match(notification, /window\.setTimeout\(\(\) => this\._closeNotice\(notice, 'timeout'\)/);
+  assert.match(notification, /window\.clearTimeout\(notice\.timer\)/);
+  assert.match(notification, /CustomEvent<HYNotificationCloseDetail>\('notification-close'/);
 });
 
 test('history controls are controlled, accessible, and release click listeners', () => {

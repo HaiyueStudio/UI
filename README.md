@@ -81,6 +81,29 @@ button, and mask clicks close the drawer and emit `drawer-close` with an `action
 `programmatic` reason. With `destroy-on-hidden`, slotted children are unmounted after the exit transition and
 restored when the drawer opens again, allowing nested custom elements to run their disconnect/connect cleanup.
 
+## Notification
+
+`<hy-notification>` is an imperative notification center with isolated package entry `@haiyue/ui/notification`:
+
+```ts
+import { defineNotificationComponents } from '@haiyue/ui/notification';
+
+defineNotificationComponents();
+const center = document.querySelector('hy-notification');
+center.success({
+  message: 'Export complete',
+  description: 'The project package is ready.',
+  placement: 'topRight',
+  duration: 4,
+  showProgress: true,
+});
+```
+
+Types are `success`, `info`, `warning`, and `error`. Placements are `topLeft`, `top`, `topRight`, `bottomLeft`,
+`bottom`, and `bottomRight`. Each notice may override the host defaults for placement, duration in seconds, and
+progress visibility; duration `0` disables automatic closing. Notices at the same placement form a perspective
+stack and expand on hover or keyboard focus. Use `close(key)` for one notice or `destroy()` for all notices.
+
 ## Themes
 
 Two optional CSS theme entries are provided. Import only the skin a product needs, or import both when the

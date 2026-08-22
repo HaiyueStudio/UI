@@ -48,6 +48,10 @@
       "types": "./dist/input.d.ts",
       "import": "./dist/input.js"
     },
+    "./notification": {
+      "types": "./dist/notification.d.ts",
+      "import": "./dist/notification.js"
+    },
     "./history-controls": {
       "types": "./dist/history-controls.d.ts",
       "import": "./dist/history-controls.js"

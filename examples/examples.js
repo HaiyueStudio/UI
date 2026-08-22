@@ -220,6 +220,36 @@ drawerLive.addEventListener('drawer-close', event => {
   }), drawerLive.destroyOnHidden ? 230 : 0);
 });
 
+// Notification.
+const notificationLive = byId('notification-live');
+const notificationMessages = {
+  success: ['Export complete', 'The project package is ready to download.'],
+  info: ['Build started', 'Shaders and assets are being processed.'],
+  warning: ['Texture budget', 'The current scene is close to its memory budget.'],
+  error: ['Upload failed', 'The remote asset service did not respond.'],
+};
+let notificationSequence = 0;
+const showNotification = type => {
+  const [message, description] = notificationMessages[type];
+  return notificationLive.open({
+    type,
+    message: `${message} · ${++notificationSequence}`,
+    description,
+  });
+};
+byId('notification-show').addEventListener('click', () => showNotification(byId('notification-type').value));
+byId('notification-stack').addEventListener('click', () => {
+  ['success', 'info', 'warning', 'error'].forEach(type => showNotification(type));
+});
+byId('notification-placement').addEventListener('change', event => { notificationLive.placement = event.target.value; });
+byId('notification-duration').addEventListener('input', event => {
+  notificationLive.duration = Number(event.target.value);
+  byId('notification-duration-value').textContent = `${Number(event.target.value).toFixed(1)} s`;
+});
+byId('notification-progress').addEventListener('change', event => { notificationLive.showProgress = event.target.checked; });
+notificationLive.addEventListener('notification-open', event => writeEvent(byId('notification-event'), 'notification-open', event.detail));
+notificationLive.addEventListener('notification-close', event => writeEvent(byId('notification-event'), 'notification-close', event.detail));
+
 // Context menu.
 const contextLive = byId('context-live');
 const contextTarget = byId('context-target');
