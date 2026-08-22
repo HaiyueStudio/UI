@@ -8,6 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/HaiyueStudio/UI.git"
   },
+  "homepage": "https://haiyuestudio.github.io/UI/",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -110,6 +111,8 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "build:pages": "npm run build && node scripts/build-pages.mjs",
+    "check:pages": "npm run build:pages && node scripts/verify-pages.mjs",
     "examples": "npm run build && node scripts/serve-examples.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "npm run build && node --test \"test/**/*.test.mjs\"",

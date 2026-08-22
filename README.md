@@ -163,6 +163,8 @@ All theme tokens use the `--hy-` prefix and may be overridden by consuming produ
 
 ## Component examples
 
+Browse the published gallery at <https://haiyuestudio.github.io/UI/>.
+
 Run the interactive component gallery locally:
 
 ```bash
