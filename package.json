@@ -36,6 +36,10 @@
       "types": "./dist/dialog.d.ts",
       "import": "./dist/dialog.js"
     },
+    "./drawer": {
+      "types": "./dist/drawer.d.ts",
+      "import": "./dist/drawer.js"
+    },
     "./dropdown": {
       "types": "./dist/dropdown.d.ts",
       "import": "./dist/dropdown.js"

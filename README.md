@@ -65,6 +65,22 @@ Use the `height` property (or `height` attribute) for the internal viewport. `vi
 exclusive `endIndex` / `visibleEndIndex` values, and `item-click` reports the source item and absolute index.
 The scrollbar can be themed with inherited semantic tokens and `--hy-virtual-list-scrollbar-size`.
 
+## Drawer
+
+Import and register the drawer independently when a product needs an off-canvas panel:
+
+```ts
+import { defineDrawerComponents } from '@haiyue/ui/drawer';
+
+defineDrawerComponents();
+```
+
+`<hy-drawer>` supports `top`, `right`, `bottom`, and `left` placement. The mask defaults to enabled; set
+`mask="false"` or `drawer.mask = false` to keep the underlying page visible and interactive. Escape, the close
+button, and mask clicks close the drawer and emit `drawer-close` with an `action`, `mask`, `escape`, or
+`programmatic` reason. With `destroy-on-hidden`, slotted children are unmounted after the exit transition and
+restored when the drawer opens again, allowing nested custom elements to run their disconnect/connect cleanup.
+
 ## Themes
 
 Two optional CSS theme entries are provided. Import only the skin a product needs, or import both when the

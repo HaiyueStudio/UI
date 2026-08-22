@@ -9,6 +9,7 @@ import { defineTooltipComponents } from './tooltip.js';
 import { defineCheckboxComponents } from './checkbox.js';
 import { defineRadioComponents } from './radio.js';
 import { defineDialogComponents } from './dialog.js';
+import { defineDrawerComponents } from './drawer.js';
 import { defineInputComponents } from './input.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
 import { defineVirtualListComponents } from './virtual-list.js';
@@ -58,6 +59,10 @@ export {
   defineDialogComponents,
   HYDialog,
 } from './dialog.js';
+export {
+  defineDrawerComponents,
+  HYDrawer,
+} from './drawer.js';
 export {
   defineInputComponents,
   HYInput,
@@ -116,6 +121,11 @@ export type {
   HYDialogCloseReason,
 } from './dialog.js';
 export type {
+  HYDrawerCloseDetail,
+  HYDrawerCloseReason,
+  HYDrawerPlacement,
+} from './drawer.js';
+export type {
   HYInputChangeDetail,
   HYInputType,
 } from './input.js';
@@ -139,6 +149,7 @@ export function defineHaiyueUI(): void {
   defineCheckboxComponents();
   defineRadioComponents();
   defineDialogComponents();
+  defineDrawerComponents();
   defineInputComponents();
   defineHistoryControlsComponents();
   defineVirtualListComponents();

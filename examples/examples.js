@@ -204,6 +204,22 @@ byId('dialog-heading').addEventListener('input', event => { dialogLive.heading =
 byId('dialog-dismissible').addEventListener('change', event => { dialogLive.dismissible = event.target.checked; });
 dialogLive.addEventListener('dialog-close', event => writeEvent(byId('dialog-event'), 'dialog-close', event.detail));
 
+// Drawer.
+const drawerLive = byId('drawer-live');
+byId('drawer-open').addEventListener('click', () => drawerLive.show());
+byId('drawer-placement').addEventListener('change', event => { drawerLive.placement = event.target.value; });
+byId('drawer-mask').addEventListener('change', event => { drawerLive.mask = event.target.checked; });
+byId('drawer-destroy').addEventListener('change', event => { drawerLive.destroyOnHidden = event.target.checked; });
+drawerLive.addEventListener('click', event => {
+  if (event.composedPath().some(target => target instanceof Element && target.id === 'drawer-close')) drawerLive.close('action');
+});
+drawerLive.addEventListener('drawer-close', event => {
+  window.setTimeout(() => writeEvent(byId('drawer-event'), 'drawer-close', {
+    ...event.detail,
+    mountedChildren: drawerLive.childElementCount,
+  }), drawerLive.destroyOnHidden ? 230 : 0);
+});
+
 // Context menu.
 const contextLive = byId('context-live');
 const contextTarget = byId('context-target');

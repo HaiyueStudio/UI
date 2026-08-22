@@ -11,6 +11,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYCheckbox',
     'HYContextMenu',
     'HYDialog',
+    'HYDrawer',
     'HYDropdown',
     'HYHistoryControls',
     'HYInput',
@@ -27,6 +28,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineCheckboxComponents',
     'defineContextMenuComponents',
     'defineDialogComponents',
+    'defineDrawerComponents',
     'defineDropdownComponents',
     'defineHistoryControlsComponents',
     'defineInputComponents',
@@ -69,6 +71,19 @@ test('virtual list keeps data off-DOM and cleans up owned observers and listener
   assert.match(source, /removeEventListener\('scroll', this\._onScroll\)/);
   assert.match(source, /'visible-range-change'/);
   assert.match(source, /'item-click'/);
+});
+
+test('drawer exposes directional placement, mask, Escape, and hidden-content destruction', () => {
+  const drawer = readFileSync(new URL('../src/drawer.ts', import.meta.url), 'utf8');
+  assert.match(drawer, /export class HYDrawer extends HTMLElement/);
+  assert.match(drawer, /'top' \| 'right' \| 'bottom' \| 'left'/);
+  assert.match(drawer, /get mask\(\): boolean/);
+  assert.match(drawer, /get destroyOnHidden\(\): boolean/);
+  assert.match(drawer, /event\.key === 'Escape'/);
+  assert.match(drawer, /this\.close\('mask'\)/);
+  assert.match(drawer, /this\._detachedContent\.append/);
+  assert.match(drawer, /this\._documentListenerAbort\?\.abort\(\)/);
+  assert.match(drawer, /CustomEvent<HYDrawerCloseDetail>\('drawer-close'/);
 });
 
 test('history controls are controlled, accessible, and release click listeners', () => {
