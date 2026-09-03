@@ -41,7 +41,12 @@ export function calculateVirtualListRange(
   const count = Math.max(0, Math.floor(finiteNumber(itemCount, 0)));
   const rowHeight = Math.max(1, finiteNumber(itemHeight, DEFAULT_ITEM_HEIGHT));
   const visibleHeight = Math.max(0, finiteNumber(viewportHeight, 0));
-  const offset = Math.max(0, finiteNumber(scrollTop, 0));
+  const requestedOffset = Math.max(0, finiteNumber(scrollTop, 0));
+  const maximumOffset = Math.max(0, count * rowHeight - visibleHeight);
+  // Layout and ResizeObserver notifications can briefly observe a stale
+  // scrollTop after the viewport or item count changes. Keep the calculated
+  // window inside the collection instead of emitting an empty render range.
+  const offset = Math.min(requestedOffset, maximumOffset);
   const buffer = Math.max(0, Math.floor(finiteNumber(overscan, DEFAULT_OVERSCAN)));
   const visibleStartIndex = Math.min(count, Math.floor(offset / rowHeight));
   const visibleEndIndex = Math.min(count, Math.ceil((offset + visibleHeight) / rowHeight));
@@ -113,7 +118,7 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
       .viewport::-webkit-scrollbar-thumb:hover { background: var(--hy-accent-color, #79a8ff); }
       .spacer { position: relative; width: 100%; }
       .window { position: absolute; inset: 0 0 auto; will-change: transform; }
-      ::slotted(.hy-virtual-list-item) {
+      .hy-virtual-list-item {
         display: flex;
         align-items: center;
         width: 100%;
@@ -122,7 +127,7 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
         background: var(--hy-surface-color, #171d27);
         box-sizing: border-box;
       }
-      ::slotted(.hy-virtual-list-item:hover) { background: var(--hy-hover-bg-color, #273241); }
+      .hy-virtual-list-item:hover { background: var(--hy-hover-bg-color, #273241); }
       .empty {
         display: grid;
         height: 100%;
@@ -139,9 +144,6 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
     this._viewport.setAttribute('role', 'list');
     this._spacer.className = 'spacer';
     this._window.className = 'window';
-    const itemSlot = document.createElement('slot');
-    itemSlot.name = 'items';
-    this._window.append(itemSlot);
     this._spacer.append(this._window);
     this._empty.className = 'empty';
     this._empty.hidden = true;
@@ -316,7 +318,6 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
       const item = this._items[index] as T;
       const row = document.createElement('div');
       row.className = 'hy-virtual-list-item';
-      row.slot = 'items';
       row.dataset.hyVirtualListGenerated = '';
       row.dataset.index = String(index);
       row.style.height = `${this._itemHeight}px`;
@@ -355,8 +356,10 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
   }
 
   private _replaceRows(rows: readonly HTMLElement[]): void {
-    for (const row of this.querySelectorAll<HTMLElement>(':scope > [data-hy-virtual-list-generated]')) row.remove();
-    this.append(...rows);
+    // Keep the recycled window entirely inside the shadow tree. Slotted light
+    // DOM rows can be redistributed asynchronously while a host application is
+    // also updating, which may briefly paint rows from the previous range.
+    this._window.replaceChildren(...rows);
   }
 }
 

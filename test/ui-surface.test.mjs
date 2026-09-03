@@ -65,14 +65,21 @@ test('virtual list calculates a buffered, exclusive render range', async () => {
     visibleStartIndex: 0,
     visibleEndIndex: 4,
   });
+  assert.deepEqual(calculateVirtualListRange(20, 40, 120, 99_999, 0), {
+    startIndex: 17,
+    endIndex: 20,
+    visibleStartIndex: 17,
+    visibleEndIndex: 20,
+  });
 });
 
 test('virtual list keeps data off-DOM and cleans up owned observers and listeners', () => {
   const source = readFileSync(new URL('../src/virtual-list.ts', import.meta.url), 'utf8');
   assert.match(source, /for \(let index = range\.startIndex; index < range\.endIndex/);
   assert.match(source, /this\._items\[index\]/);
-  assert.match(source, /itemSlot\.name = 'items'/);
-  assert.match(source, /data-hy-virtual-list-generated/);
+  assert.match(source, /row\.dataset\.hyVirtualListGenerated/);
+  assert.match(source, /this\._window\.replaceChildren\(\.\.\.rows\)/);
+  assert.doesNotMatch(source, /row\.slot = 'items'/);
   assert.match(source, /this\._resizeObserver\?\.disconnect\(\)/);
   assert.match(source, /removeEventListener\('scroll', this\._onScroll\)/);
   assert.match(source, /'visible-range-change'/);
