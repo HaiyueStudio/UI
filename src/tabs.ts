@@ -16,7 +16,7 @@ export class HYTabs extends HTMLElement {
   private _options: HYTabOption[] = [];
 
   static get observedAttributes(): string[] {
-    return ['options', 'value'];
+    return ['options', 'value', 'aria-label'];
   }
 
   constructor() {
@@ -79,7 +79,10 @@ export class HYTabs extends HTMLElement {
       }
     `;
     this._tabs.className = 'tabs';
+    this._tabs.setAttribute('role', 'tablist');
     this._panels.className = 'panels';
+    this._panels.id = 'panel';
+    this._panels.setAttribute('role', 'tabpanel');
     root.append(this._style, this._tabs, this._panels);
   }
 
@@ -89,6 +92,7 @@ export class HYTabs extends HTMLElement {
   }
 
   attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): void {
+    if (_oldValue === newValue) return;
     if (name === 'options') this._readOptionsAttribute();
     if (name === 'value' && newValue === null && this._options[0]) {
       this.setAttribute('value', this._options[0].value);
@@ -115,11 +119,10 @@ export class HYTabs extends HTMLElement {
 
   set value(value: string) {
     this.setAttribute('value', value);
-    this._render();
   }
 
   private _syncFromAttributes(): void {
-    this._readOptionsAttribute();
+    if (this.hasAttribute('options')) this._readOptionsAttribute();
     if (!this.value && this._options[0]) this.setAttribute('value', this._options[0].value);
   }
 
@@ -144,27 +147,54 @@ export class HYTabs extends HTMLElement {
   }
 
   private _render(): void {
+    const focusedValue = (this.shadowRoot?.activeElement as HTMLElement | null)?.dataset.value;
     this._tabs.replaceChildren();
     this._panels.replaceChildren();
+    this._tabs.setAttribute('aria-label', this.getAttribute('aria-label') ?? 'Tabs');
 
     const value = this.value || this._options[0]?.value || '';
-    for (const option of this._options) {
+    const enabled = this._options.filter(option => !option.disabled);
+    const focusValue = enabled.some(option => option.value === value) ? value : enabled[0]?.value;
+    this._options.forEach((option, index) => {
       const button = document.createElement('button');
       button.type = 'button';
+      button.id = `tab-${index}`;
+      button.dataset.value = option.value;
+      button.setAttribute('role', 'tab');
+      button.setAttribute('aria-selected', String(option.value === value));
+      button.setAttribute('aria-controls', this._panels.id);
+      button.tabIndex = option.value === focusValue && !option.disabled ? 0 : -1;
       button.textContent = option.label;
       button.disabled = Boolean(option.disabled);
       button.classList.toggle('active', option.value === value);
       button.addEventListener('click', () => this._select(option.value));
+      button.addEventListener('keydown', event => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) || !enabled.length) return;
+        event.preventDefault();
+        const position = enabled.findIndex(item => item.value === option.value);
+        const next = event.key === 'Home' ? 0 : event.key === 'End' ? enabled.length - 1
+          : (position + (event.key === 'ArrowLeft' ? -1 : 1) + enabled.length) % enabled.length;
+        this._select(enabled[next]!.value);
+        this._focusTab(enabled[next]!.value);
+      });
       this._tabs.append(button);
-    }
+      if (option.value === value) this._panels.setAttribute('aria-labelledby', button.id);
+    });
+    if (!this._options.some(option => option.value === value)) this._panels.removeAttribute('aria-labelledby');
 
     const slot = document.createElement('slot');
     slot.name = value;
     this._panels.append(slot);
+    if (focusedValue !== undefined) this._focusTab(focusedValue);
+  }
+
+  private _focusTab(value: string): void {
+    [...this._tabs.querySelectorAll<HTMLButtonElement>('button')].find(button => button.dataset.value === value)?.focus();
   }
 
   private _select(value: string): void {
     if (value === this.value) return;
+    if (!this._options.some(option => option.value === value && !option.disabled)) return;
     this.setAttribute('value', value);
     const option = this._options.find(item => item.value === value) ?? null;
     this.dispatchEvent(new CustomEvent<HYTabChangeDetail>('tab-change', {

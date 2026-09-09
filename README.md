@@ -46,6 +46,19 @@ defineHaiyueUI();
 Because `defineHaiyueUI()` references the complete component set, prefer focused subpaths in bundle-sensitive
 product entry points.
 
+## Tabs
+
+`@haiyue/ui/tabs` retains its existing `HYTabs`, `HYTabOption`, `HYTabChangeDetail`, and
+`defineTabsComponents` exports; the 0.1.3 fix adds no new public exports. Assign `options`
+and `value`, provide children with matching `slot` names, and listen for `tab-change`.
+Property-assigned options and the selected value survive reconnection. Set `aria-label`
+to name the tablist. Arrow keys, Home and End select enabled tabs with roving focus;
+the active tab labels the panel within the component's shadow tree.
+
+The existing `@haiyue/ui/border-beam` exports are also unchanged. Its constructor only
+builds shadow content; host appearance is applied after creation, avoiding browser
+custom-element construction errors during repeated `document.createElement` calls.
+
 ## Virtual list
 
 `<hy-virtual-list>` renders only the visible fixed-height rows plus a configurable overscan buffer. The full
