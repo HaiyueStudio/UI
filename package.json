@@ -95,9 +95,15 @@
     },
     "./themes/light.css": "./themes/haiyue-light.css",
     "./themes/dark.css": "./themes/haiyue-dark.css",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./expandable": {
+      "types": "./dist/expandable.d.ts",
+      "import": "./dist/expandable.js"
+    }
   },
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "publishConfig": {
     "access": "public",
     "tag": "latest"

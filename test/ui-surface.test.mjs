@@ -7,6 +7,8 @@ globalThis.HTMLElement ??= class HTMLElement {};
 test('UI root keeps the supported component surface importable', async () => {
   const ui = await import('../dist/index.js');
   const expected = [
+    'HYExpandable',
+    'defineExpandableComponents',
     'HYButton',
     'HYBorderBeam',
     'HYCheckbox',

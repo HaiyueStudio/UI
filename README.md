@@ -175,3 +175,31 @@ npm run examples
 
 Then open <http://localhost:4173/>. The gallery provides a left-side component index and live examples for
 every exported component, including editable parameters and event output.
+
+## Expandable container
+
+Explicit export: `@haiyue/ui/expandable` → `HYExpandable`, `defineExpandableComponents`,
+`HYExpandableButtonPosition`, `HYExpandableChangeDetail`. Also included in `defineHaiyueUI()`.
+
+```html
+<hy-expandable expanded-width="1200px" expanded-height="90dvh"
+  button-position="top-right" expand-label="放大" restore-label="还原">
+  <div>Your graph, editor, or other stateful content</div>
+  <!-- Optional SVG elements: slot="expand-icon" / slot="restore-icon" -->
+</hy-expandable>
+```
+
+`expanded` is a reflected boolean attribute/property; `toggle()` switches it.
+`expandedWidth` / `expandedHeight` accept CSS lengths (defaults `90vw` / `90dvh`).
+Sizes are clamped to the viewport with a margin; the normal size belongs to the host's layout/CSS.
+`buttonPosition` supports `top-right`, `top-left`, `bottom-right`, `bottom-left`.
+`expanded-change` bubbles with `{ expanded: boolean }`. `expand-icon` / `restore-icon` slots
+replace the built-in SVG icons without accepting HTML strings. Labels also become tooltips.
+Style through inherited `--hy-surface-color`, `--hy-border-color`, `--hy-text-color`,
+`--hy-accent-color` and `--hy-expandable-{margin,padding,radius,shadow,button-size,button-offset}`;
+`panel` and `toggle` are CSS parts.
+
+Requires a browser supporting the Popover API. Expansion is non-modal and uses a fixed top-layer
+panel so transformed/overflow ancestors cannot clip it. The same slotted DOM stays mounted;
+normal-flow height is preserved while expanded. Keyboard activation uses the native button;
+Escape restores the focused container. Disconnect closes the panel and releases document listeners.

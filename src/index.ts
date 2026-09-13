@@ -1,3 +1,6 @@
+import { defineExpandableComponents } from './expandable.js';
+export { defineExpandableComponents, HYExpandable } from './expandable.js';
+export type { HYExpandableButtonPosition, HYExpandableChangeDetail } from './expandable.js';
 import { defineButtonComponents } from './button.js';
 import { defineBorderBeamComponents } from './border-beam.js';
 import { defineTreeComponents } from './tree.js';
@@ -167,6 +170,7 @@ export type {
 } from './tree.js';
 
 export function defineHaiyueUI(): void {
+  defineExpandableComponents();
   defineBorderBeamComponents();
   defineButtonComponents();
   defineTreeComponents();
