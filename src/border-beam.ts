@@ -77,6 +77,7 @@ export class HYBorderBeam extends HTMLElement {
   connectedCallback(): void {
     if (this._connected) return;
     this._connected = true;
+    this._updateAppearance();
     if (typeof ResizeObserver !== 'undefined') {
       this._resizeObserver = new ResizeObserver(() => this.refresh());
       this._resizeObserver.observe(this);
@@ -157,7 +158,8 @@ export class HYBorderBeam extends HTMLElement {
       beams.push(beam);
     }
     this._beamLayer.replaceChildren(...beams);
-    this._updateAppearance();
+    // Construction may populate the shadow tree, but must not add host attributes.
+    // Host styles are applied by the connection/attribute lifecycle instead.
   }
 
   private _updateAppearance(): void {
