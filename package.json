@@ -104,9 +104,6 @@
   "engines": {
     "node": ">=22"
   },
-  "engines": {
-    "node": ">=22"
-  },
   "publishConfig": {
     "access": "public",
     "tag": "latest"

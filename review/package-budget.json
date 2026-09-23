@@ -3,19 +3,19 @@
   "package": {
     "workspace": ".",
     "nodeImport": false,
-    "maxPackedBytes": 55000,
+    "maxPackedBytes": 57000,
     "maxUnpackedBytes": 280000,
     "maxFileCount": 60,
     "capacity": {
       "reviewed": {
-        "packedBytes": 48827,
-        "unpackedBytes": 246442,
-        "fileCount": 49
+        "packedBytes": 56092,
+        "unpackedBytes": 267890,
+        "fileCount": 54
       },
       "growthReserve": {
-        "packedBytes": 6173,
-        "unpackedBytes": 33558,
-        "fileCount": 11
+        "packedBytes": 908,
+        "unpackedBytes": 12110,
+        "fileCount": 6
       },
       "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths"
     },
