@@ -130,4 +130,17 @@ test('tabs keep per-instance panel ids and normalize disabled selections', () =>
   assert.equal(normalizedPanels[0].hidden, true);
   assert.equal(normalizedPanels[1].hidden, false);
   assert.equal(normalizedButtons[1].getAttribute('aria-controls'), normalizedPanels[1].id);
+
+  const allDisabled = new HYTabs();
+  allDisabled.options = [
+    { label: 'Disabled A', value: 'a', disabled: true },
+    { label: 'Disabled B', value: 'b', disabled: true },
+  ];
+  allDisabled.value = 'a';
+  allDisabled.connectedCallback();
+
+  const allDisabledButtons = allDisabled.shadowRoot.children[1].children;
+  assert.equal(allDisabled.getAttribute('value'), '');
+  assert.equal(allDisabledButtons[0].getAttribute('aria-selected'), 'false');
+  assert.equal(allDisabledButtons[1].getAttribute('aria-selected'), 'false');
 });

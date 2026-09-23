@@ -199,7 +199,10 @@ export class HYTabs extends HTMLElement {
       this._tabs.append(button);
       this._panels.append(panel);
     });
-    if (focusedValue !== undefined) this._focusTab(focusedValue);
+    if (focusedValue !== undefined) {
+      const restoreValue = enabled.some(option => option.value === focusedValue) ? focusedValue : focusValue;
+      if (restoreValue) this._focusTab(restoreValue);
+    }
   }
 
   private _focusTab(value: string): void {
@@ -209,8 +212,7 @@ export class HYTabs extends HTMLElement {
   private _resolveValue(enabled = this._options.filter(option => !option.disabled)): string {
     if (enabled.some(option => option.value === this.value)) return this.value;
     if (enabled[0]) return enabled[0].value;
-    if (this._options.some(option => option.value === this.value)) return this.value;
-    return this._options[0]?.value ?? '';
+    return '';
   }
 
   private _select(value: string): void {
