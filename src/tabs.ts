@@ -9,14 +9,13 @@ export interface HYTabChangeDetail {
   option: HYTabOption | null;
 }
 
-let tabsInstanceId = 0;
-
 export class HYTabs extends HTMLElement {
   private readonly _style = document.createElement('style');
   private readonly _tabs = document.createElement('div');
   private readonly _panels = document.createElement('div');
-  private readonly _instanceId = `hy-tabs-${tabsInstanceId++}`;
+  private readonly _instanceId = `hy-tabs-${globalThis.crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2)}`;
   private _options: HYTabOption[] = [];
+  private _pendingFocusValue: string | null = null;
 
   static get observedAttributes(): string[] {
     return ['options', 'value', 'aria-label'];
@@ -116,9 +115,8 @@ export class HYTabs extends HTMLElement {
 
   set options(value: HYTabOption[]) {
     this._options = Array.isArray(value) ? value : [];
-    if (!this._options.some(item => item.value === this.value)) {
-      this.value = this._options[0]?.value ?? '';
-    }
+    const resolved = this._resolveValue();
+    if (resolved !== this.value) this.value = resolved;
     this._render();
   }
 
@@ -157,7 +155,10 @@ export class HYTabs extends HTMLElement {
   }
 
   private _render(): void {
-    const focusedValue = (this.shadowRoot?.activeElement as HTMLElement | null)?.dataset.value;
+    const focusedValue = this._pendingFocusValue
+      ?? [...this._tabs.querySelectorAll<HTMLButtonElement>('button')].find(button => button === this.shadowRoot?.activeElement)?.dataset.value
+      ?? null;
+    this._pendingFocusValue = null;
     this._tabs.replaceChildren();
     this._panels.replaceChildren();
     this._tabs.setAttribute('aria-label', this.getAttribute('aria-label') ?? 'Tabs');
@@ -193,8 +194,8 @@ export class HYTabs extends HTMLElement {
         const position = enabled.findIndex(item => item.value === option.value);
         const next = event.key === 'Home' ? 0 : event.key === 'End' ? enabled.length - 1
           : (position + (event.key === 'ArrowLeft' ? -1 : 1) + enabled.length) % enabled.length;
+        this._pendingFocusValue = enabled[next]!.value;
         this._select(enabled[next]!.value);
-        this._focusTab(enabled[next]!.value);
       });
       const slot = document.createElement('slot');
       slot.name = option.value;
@@ -202,7 +203,7 @@ export class HYTabs extends HTMLElement {
       this._tabs.append(button);
       this._panels.append(panel);
     });
-    if (focusedValue !== undefined) {
+    if (focusedValue) {
       const restoreValue = enabled.some(option => option.value === focusedValue) ? focusedValue : focusValue;
       if (restoreValue) this._focusTab(restoreValue);
     }

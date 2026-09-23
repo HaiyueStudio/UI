@@ -52,8 +52,10 @@ product entry points.
 `defineTabsComponents` exports; the 0.1.3 fix adds no new public exports. Assign `options`
 and `value`, provide children with matching `slot` names, and listen for `tab-change`.
 Property-assigned options and the selected value survive reconnection. Set `aria-label`
-to name the tablist. Arrow keys, Home and End select enabled tabs with roving focus;
-the active tab labels the panel within the component's shadow tree.
+to name the tablist. Arrow keys, Home and End both move focus and activate the next
+enabled tab with roving focus; the active tab labels its panel within the component's
+shadow tree. The generated `aria-controls` and tabpanel ids are per-instance opaque
+values and should not be treated as stable application selectors.
 
 The existing `@haiyue/ui/border-beam` exports are also unchanged. Its constructor only
 builds shadow content; host appearance is applied after creation, avoiding browser
