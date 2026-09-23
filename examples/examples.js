@@ -421,3 +421,9 @@ byId('history-busy').addEventListener('change', event => { historyLive.busy = ev
 byId('history-locale').addEventListener('change', event => { historyLive.setAttribute('locale', event.target.value); });
 historyLive.addEventListener('undo-request', () => writeEvent(byId('history-event'), 'undo-request', { label: historyLive.undoLabel }));
 historyLive.addEventListener('redo-request', () => writeEvent(byId('history-event'), 'redo-request', { label: historyLive.redoLabel }));
+
+const expandable = byId('expandable-live');
+byId('expandable-width').addEventListener('change',event => { expandable.expandedWidth = event.target.value; });
+byId('expandable-height').addEventListener('change',event => { expandable.expandedHeight = event.target.value; });
+byId('expandable-position').addEventListener('change',event => { expandable.buttonPosition = event.target.value; });
+expandable.addEventListener('expanded-change',event => writeEvent(byId('expandable-event'), 'expanded-change', event.detail));

@@ -202,4 +202,17 @@ Style through inherited `--hy-surface-color`, `--hy-border-color`, `--hy-text-co
 Requires a browser supporting the Popover API. Expansion is non-modal and uses a fixed top-layer
 panel so transformed/overflow ancestors cannot clip it. The same slotted DOM stays mounted;
 normal-flow height is preserved while expanded. Keyboard activation uses the native button;
-Escape restores the focused container. Disconnect closes the panel and releases document listeners.
+Escape restores the focused container. Disconnect closes the panel and releases event listeners.
+
+## Independent release checks
+
+UI releases independently of Engine.
+
+```bash
+npm ci
+npx playwright install chromium
+npm run release:check
+```
+
+Candidates: `.artifacts/packages/`. Review API changes before `npm run api:update`.
+See [release review](review/release-0.1.2.md).

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN" data-hy-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Expandable · Haiyue UI</title>
+<link rel="stylesheet" href="../../themes/haiyue-light.css"><link rel="stylesheet" href="../../themes/haiyue-dark.css">
+<style>body{max-width:960px;margin:40px auto;padding:0 24px;background:var(--hy-surface-color);color:var(--hy-text-color);font:16px/1.6 system-ui}hy-expandable{display:block;height:240px;border:1px solid var(--hy-border-color);border-radius:12px}textarea{box-sizing:border-box;width:100%;height:100%;resize:none;background:transparent;color:inherit;border:0;padding:24px;font:inherit}fieldset{margin:24px 0;display:flex;gap:16px;flex-wrap:wrap}label{display:grid;gap:4px}output{display:block;white-space:pre-wrap}</style></head>
+<body><a href="../">← 所有组件</a><h1>Expandable 展开容器</h1><p>编辑内容后点击右上角放大。在输入框中按 Escape 还原，内容会保留。下面同时展示普通容器和嵌套 Shadow DOM 的行为。</p>
+<fieldset><legend>参数</legend><label>展开宽度<input id="width" value="80vw"></label><label>展开高度<input id="height" value="75dvh"></label><label>按钮位置<select id="position"><option>top-right</option><option>top-left</option><option>bottom-right</option><option>bottom-left</option></select></label><label>主题<select id="theme"><option value="light">明亮</option><option value="dark">深色</option></select></label></fieldset>
+<h2>普通容器</h2><hy-expandable expanded-width="80vw" expanded-height="75dvh" expand-label="放大" restore-label="还原"><textarea aria-label="可编辑内容">这段内容在展开和还原时保持原位。</textarea></hy-expandable>
+<h2>Shadow DOM 中的容器</h2><div id="nested"></div><h2>事件记录</h2><output id="events">等待操作…</output>
+<script type="module">
+import { defineExpandableComponents } from '../../dist/expandable.js';
+defineExpandableComponents();
+const root=document.querySelector('#nested').attachShadow({mode:'open'});
+root.innerHTML='<style>hy-expandable{display:block;height:180px;border:1px solid var(--hy-border-color)}textarea{width:90%;height:80%;background:transparent;color:inherit;font:inherit}</style><hy-expandable expanded-width="80vw" expanded-height="75dvh" expand-label="放大嵌套容器" restore-label="还原嵌套容器"><textarea aria-label="嵌套容器内容">在这里输入内容，展开后按 Escape。</textarea></hy-expandable>';
+const panels=[document.querySelector('hy-expandable'),root.querySelector('hy-expandable')];
+for(const [id,property] of [['width','expandedWidth'],['height','expandedHeight'],['position','buttonPosition']])document.getElementById(id).addEventListener('input',e=>panels.forEach(panel=>panel[property]=e.target.value));
+document.querySelector('#theme').onchange=e=>document.documentElement.dataset.hyTheme=e.target.value;
+document.addEventListener('expanded-change',e=>document.querySelector('#events').textContent=JSON.stringify(e.detail));
+</script></body></html>

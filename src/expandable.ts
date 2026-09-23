@@ -59,9 +59,10 @@ export class HYExpandable extends HTMLElement {
   toggle(): void { this.expanded = !this.expanded; }
   connectedCallback(): void {
     this.lifetime?.abort(); this.lifetime = new AbortController();
-    this.ownerDocument.addEventListener('keydown', event => {
-      // Let nested popovers/menus handle Escape first. Independent expanded containers only close when focused.
-      if (event.key === 'Escape' && !event.defaultPrevented && this.active && (this.contains(this.ownerDocument.activeElement) || this.ownerDocument.activeElement === this)) {
+    this.addEventListener('keydown', event => {
+      // Bubbling follows the composed tree across shadow roots. Child menus and
+      // expanded containers consume Escape before it reaches their ancestors.
+      if (event.key === 'Escape' && !event.defaultPrevented && this.active) {
         event.preventDefault(); this.expanded = false; this.button.focus({ preventScroll: true });
       }
     }, { signal: this.lifetime.signal });

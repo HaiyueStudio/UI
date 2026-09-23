@@ -20,7 +20,7 @@ test('package publishes one explicit side-effect-free subpath per component', ()
   assert.equal(packageJson.name, '@haiyue/ui');
   assert.deepEqual(packageJson.sideEffects, ['./themes/*.css']);
   assert.equal(packageJson.workspaces, undefined);
-  assert.equal(packageJson.scripts.prepack, 'npm run typecheck && npm test');
+  assert.equal(packageJson.scripts.prepack, 'npm run typecheck && npm test && npm run api:check');
 
   for (const name of componentSubpaths) {
     const entry = packageJson.exports[`./${name}`];

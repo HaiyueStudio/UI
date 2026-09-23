@@ -10,6 +10,7 @@ const examplePages = [
   'examples/radio/index.html',
   'examples/split/index.html',
   'examples/tree/index.html',
+  'examples/expandable/index.html',
 ];
 
 function resolveLocalReference(pagePath, reference) {
