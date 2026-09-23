@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "package": {
+    "workspace": ".",
+    "nodeImport": false,
+    "maxPackedBytes": 55000,
+    "maxUnpackedBytes": 280000,
+    "maxFileCount": 60,
+    "capacity": {
+      "reviewed": {
+        "packedBytes": 48827,
+        "unpackedBytes": 246442,
+        "fileCount": 49
+      },
+      "growthReserve": {
+        "packedBytes": 6173,
+        "unpackedBytes": 33558,
+        "fileCount": 11
+      },
+      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths"
+    },
+    "sideEffects": [
+      "./themes/*.css"
+    ],
+    "declaredFiles": [
+      "README.md",
+      "CHANGELOG.md",
+      "LICENSE",
+      "dist/**/*.js",
+      "dist/**/*.d.ts",
+      "themes/*.css"
+    ],
+    "allowedFilePatterns": [
+      "package.json",
+      "README.md",
+      "CHANGELOG.md",
+      "LICENSE",
+      "dist/**/*.js",
+      "dist/**/*.d.ts",
+      "themes/*.css"
+    ]
+  },
+  "buttonConsumerMaxGzipBytes": 5000
+}

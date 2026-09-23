@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><title>Expandable regression fixture</title>
+<style>hy-expandable{display:block;height:150px;margin:20px;border:1px solid #aaa} body{font:16px sans-serif}</style>
+<hy-expandable id="plain" expand-label="Expand plain" restore-label="Restore plain"><input aria-label="Plain content" value="preserved"></hy-expandable>
+<div id="shadow-host"></div>
+<hy-expandable id="outer" expand-label="Expand outer" restore-label="Restore outer"><hy-expandable id="inner" expand-label="Expand inner" restore-label="Restore inner"><input aria-label="Inner content"></hy-expandable></hy-expandable>
+<button id="detach">Detach nested</button><button id="reconnect">Reconnect nested</button>
+<label><input id="consume" type="checkbox">Inner menu consumes Escape</label>
+<output id="events"></output>
+<script type="module">
+import { defineExpandableComponents } from '../../dist/expandable.js';
+defineExpandableComponents();
+const root=document.querySelector('#shadow-host').attachShadow({mode:'open'});
+root.innerHTML='<style>hy-expandable{display:block;height:150px;border:1px solid #aaa}</style><hy-expandable id="nested" expanded-width="420px" expanded-height="200px" expand-label="Expand nested" restore-label="Restore nested"><input aria-label="Nested content" value="preserved"></hy-expandable>';
+const nested=root.querySelector('hy-expandable');
+nested.querySelector('input').addEventListener('keydown',e=>{if(e.key==='Escape'&&document.querySelector('#consume').checked)e.preventDefault();});
+document.querySelector('#detach').onclick=()=>nested.remove();
+document.querySelector('#reconnect').onclick=()=>root.append(nested);
+document.addEventListener('expanded-change',e=>{document.querySelector('#events').textContent+=`${e.composedPath()[0].id}:${e.detail.expanded}\n`;});
+</script>
