@@ -100,9 +100,12 @@ export class HYTabs extends HTMLElement {
   attributeChangedCallback(name: string, _oldValue: string | null, newValue: string | null): void {
     if (_oldValue === newValue) return;
     if (name === 'options') this._readOptionsAttribute();
-    if (name === 'value' && newValue === null && this._options[0]) {
-      this.setAttribute('value', this._options[0].value);
-      return;
+    if (name === 'value' && newValue === null) {
+      const value = this._resolveValue();
+      if (value) {
+        this.setAttribute('value', value);
+        return;
+      }
     }
     this._render();
   }

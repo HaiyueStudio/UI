@@ -8,13 +8,13 @@
     "maxFileCount": 60,
     "capacity": {
       "reviewed": {
-        "packedBytes": 56222,
-        "unpackedBytes": 268578,
+        "packedBytes": 56227,
+        "unpackedBytes": 268636,
         "fileCount": 54
       },
       "growthReserve": {
-        "packedBytes": 778,
-        "unpackedBytes": 11422,
+        "packedBytes": 773,
+        "unpackedBytes": 11364,
         "fileCount": 6
       },
       "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths"
