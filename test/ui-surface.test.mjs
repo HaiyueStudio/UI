@@ -176,3 +176,11 @@ test('shared select preserves options assigned before connection', () => {
   assert.match(select, /if \(this\.hasAttribute\('options'\)\) this\._readOptionsAttribute\(\)/);
   assert.doesNotMatch(select, /private _syncFromAttributes\(\): void \{\s*this\._readOptionsAttribute\(\)/);
 });
+
+test('tabs scope ARIA ids per component instance', () => {
+  const tabs = readFileSync(new URL('../src/tabs.ts', import.meta.url), 'utf8');
+  assert.match(tabs, /let tabsInstanceId = 0;/);
+  assert.match(tabs, /private readonly _instanceId = `hy-tabs-\$\{tabsInstanceId\+\+\}`;/);
+  assert.match(tabs, /this\._panels\.id = `\$\{this\._instanceId\}-panel`;/);
+  assert.match(tabs, /button\.id = `\$\{this\._instanceId\}-tab-\$\{index\}`;/);
+});

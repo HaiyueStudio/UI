@@ -9,10 +9,13 @@ export interface HYTabChangeDetail {
   option: HYTabOption | null;
 }
 
+let tabsInstanceId = 0;
+
 export class HYTabs extends HTMLElement {
   private readonly _style = document.createElement('style');
   private readonly _tabs = document.createElement('div');
   private readonly _panels = document.createElement('div');
+  private readonly _instanceId = `hy-tabs-${tabsInstanceId++}`;
   private _options: HYTabOption[] = [];
 
   static get observedAttributes(): string[] {
@@ -86,7 +89,7 @@ export class HYTabs extends HTMLElement {
     this._tabs.className = 'tabs';
     this._tabs.setAttribute('role', 'tablist');
     this._panels.className = 'panels';
-    this._panels.id = 'panel';
+    this._panels.id = `${this._instanceId}-panel`;
     this._panels.setAttribute('role', 'tabpanel');
     root.append(this._style, this._tabs, this._panels);
   }
@@ -163,7 +166,7 @@ export class HYTabs extends HTMLElement {
     this._options.forEach((option, index) => {
       const button = document.createElement('button');
       button.type = 'button';
-      button.id = `tab-${index}`;
+      button.id = `${this._instanceId}-tab-${index}`;
       button.dataset.value = option.value;
       button.setAttribute('role', 'tab');
       button.setAttribute('aria-selected', String(option.value === value));
