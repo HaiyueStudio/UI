@@ -65,7 +65,8 @@ test('component gallery demonstrates breadcrumb parameters without page errors',
   await page.locator('#breadcrumb-depth').selectOption('5');
   await expect(breadcrumb.locator('li')).toHaveCount(5);
   await expect(breadcrumb.locator('[aria-current="page"]')).toHaveText('Lighting');
-  await page.locator('#breadcrumb-disabled').check({ force: true });
+  await page.locator('label.toggle', { hasText: 'disable Scenes' }).click();
+  await expect(page.locator('#breadcrumb-disabled')).toBeChecked();
   await expect(breadcrumb.locator('[aria-disabled="true"]')).toHaveText('Scenes');
   expect(errors).toEqual([]);
 });
