@@ -19,6 +19,9 @@ import { defineInputComponents } from './input.js';
 import { defineNotificationComponents } from './notification.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
 import { defineVirtualListComponents } from './virtual-list.js';
+import { defineVirtualMouseComponents } from './virtual-mouse.js';
+import { defineTableComponents } from './table.js';
+import { defineBreadcrumbComponents } from './breadcrumb.js';
 
 export {
   defineButtonComponents,
@@ -104,6 +107,44 @@ export type {
   HYVirtualListRange,
   HYVirtualListRangeChangeDetail,
 } from './virtual-list.js';
+export {
+  defineVirtualMouseComponents,
+  HYVirtualMouse,
+} from './virtual-mouse.js';
+export {
+  defineTableComponents,
+  HYTable,
+} from './table.js';
+export {
+  defineBreadcrumbComponents,
+  HYBreadcrumb,
+} from './breadcrumb.js';
+export type {
+  HYBreadcrumbClickDetail,
+  HYBreadcrumbItem,
+  HYBreadcrumbItemRenderer,
+} from './breadcrumb.js';
+export type {
+  HYTableAlign,
+  HYTableChangeDetail,
+  HYTableChangeReason,
+  HYTableColumn,
+  HYTableFilterOption,
+  HYTableFilterState,
+  HYTableRowClickDetail,
+  HYTableSortDirection,
+  HYTableSortState,
+} from './table.js';
+export type {
+  HYVirtualMouseButton,
+  HYVirtualMouseButtonDetail,
+  HYVirtualMouseClickOptions,
+  HYVirtualMouseImages,
+  HYVirtualMouseMoveDetail,
+  HYVirtualMouseMoveOptions,
+  HYVirtualMousePosition,
+  HYVirtualMouseState,
+} from './virtual-mouse.js';
 export type {
   HYSplitDirection,
   HYSplitRatioChangeDetail,
@@ -189,4 +230,7 @@ export function defineHaiyueUI(): void {
   defineNotificationComponents();
   defineHistoryControlsComponents();
   defineVirtualListComponents();
+  defineVirtualMouseComponents();
+  defineTableComponents();
+  defineBreadcrumbComponents();
 }

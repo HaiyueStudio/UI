@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- 新增可按需导入的 `HYBreadcrumb` / `<hy-breadcrumb>` 面包屑导航，兼容 `title` / `label` 项文本，支持链接、动作项、禁用项、当前页语义、自定义分隔符与内容渲染，以及可取消的 `breadcrumb-click` 事件。
+- 新增可按需导入的 `HYTable` / `<hy-table>` 数据表格，支持本地分页、标题旁漏斗过滤菜单、全局与列级过滤入口显隐、稳定排序、自定义单元格渲染，以及 `table-change` / `row-click` 组合事件。
+- 新增可按需导入的 `HYVirtualMouse` / `<hy-virtual-mouse>` 固定定位虚拟鼠标，支持状态图片与 CSS 定制、动画移动、按下/抬起、左中右键点击 API，以及组合事件和生命周期清理。
+
 ## 0.1.2 - 2026-09-03
 
 - 修复 `<hy-virtual-list>` 快速滚动时 light DOM slot 异步分发旧行的问题；虚拟窗口现在完全在 Shadow DOM 内同步替换，避免上一范围的条目再次闪现。

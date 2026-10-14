@@ -38,12 +38,14 @@
       <p class="nav-label">选择与反馈</p>
       <a href="#select" data-name="select 选择器"><span>Select</span><code>hy-select</code></a>
       <a href="#tabs" data-name="tabs 标签页"><span>Tabs</span><code>hy-tabs</code></a>
+      <a href="#breadcrumb" data-name="breadcrumb 面包屑 导航 路径"><span>Breadcrumb</span><code>hy-breadcrumb</code></a>
       <a href="#dropdown" data-name="dropdown 下拉菜单"><span>Dropdown</span><code>hy-dropdown</code></a>
       <a href="#tooltip" data-name="tooltip 提示"><span>Tooltip</span><code>hy-tooltip</code></a>
       <a href="#dialog" data-name="dialog 对话框"><span>Dialog</span><code>hy-dialog</code></a>
       <a href="#drawer" data-name="drawer 抽屉 侧边栏"><span>Drawer</span><code>hy-drawer</code></a>
       <a href="#notification" data-name="notification 通知 提醒"><span>Notification</span><code>hy-notification</code></a>
       <a href="#border-beam" data-name="border beam 边框 流光 特效"><span>Border Beam</span><code>hy-border-beam</code></a>
+      <a href="#virtual-mouse" data-name="virtual mouse cursor 虚拟 鼠标 光标 演示"><span>Virtual Mouse</span><code>hy-virtual-mouse</code></a>
       <a href="#context-menu" data-name="context menu 右键菜单"><span>Context Menu</span><code>hy-context-menu</code></a>
       <a href="#history-controls" data-name="history controls undo redo 历史 撤销 重做"><span>History Controls</span><code>hy-history-controls</code></a>
       <p class="nav-label">布局与数据</p>
@@ -51,8 +53,9 @@
       <a href="#split" data-name="split 分栏"><span>Split</span><code>hy-split</code></a>
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
+      <a href="#table" data-name="table 表格 分页 过滤 排序"><span>Table</span><code>hy-table</code></a>
     </nav>
-    <div class="sidebar-foot"><span class="status-dot"></span><span>19 components</span><span>·</span><span>v0.1.2</span></div>
+    <div class="sidebar-foot"><span class="status-dot"></span><span>22 components</span><span>·</span><span>v0.1.2</span></div>
   </aside>
 
   <main id="content">
@@ -61,7 +64,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>18</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>22</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -141,6 +144,30 @@
         <div class="preview flush"><hy-tabs id="tabs-live" value="scene"><div class="tab-panel" slot="scene"><span class="panel-icon">◇</span><div><b>Scene</b><p>3 objects · 2 lights · 1 camera</p></div></div><div class="tab-panel" slot="assets"><span class="panel-icon">▦</span><div><b>Assets</b><p>Browse models, materials and textures.</p></div></div><div class="tab-panel" slot="settings"><span class="panel-icon">⌁</span><div><b>Settings</b><p>Project-level render and runtime options.</p></div></div></hy-tabs></div>
         <div class="controls inline-controls"><span>当前值</span><output id="tabs-event">scene</output></div>
       </div>
+    </section>
+
+    <section class="component-section" id="breadcrumb" data-title="Breadcrumb">
+      <div class="section-heading"><div><h2>Breadcrumb</h2><code>&lt;hy-breadcrumb&gt;</code></div><p>展示当前页面在信息层级中的位置；支持链接、动作项、禁用项、自定义分隔符与内容渲染。</p></div>
+      <div class="demo-card two-column breadcrumb-card">
+        <div class="preview breadcrumb-stage"><div class="breadcrumb-surface"><hy-breadcrumb id="breadcrumb-live" aria-label="Scene location" separator="›"></hy-breadcrumb></div></div>
+        <div class="controls stacked">
+          <label>separator<select id="breadcrumb-separator"><option value="/">/</option><option value="›" selected>›</option><option value="→">→</option><option value="•">•</option></select></label>
+          <label>depth<select id="breadcrumb-depth"><option value="3">3 items</option><option value="4" selected>4 items</option><option value="5">5 items</option></select></label>
+          <label class="toggle"><input id="breadcrumb-disabled" type="checkbox" /><span></span>disable Scenes</label>
+          <output id="breadcrumb-event">点击路径中的链接或动作项</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineBreadcrumbComponents } from '@haiyue/ui/breadcrumb';
+
+defineBreadcrumbComponents();
+const breadcrumb = document.querySelector('hy-breadcrumb');
+breadcrumb.items = [
+  { title: 'Projects', href: '/projects' },
+  { title: 'Ocean World' },
+  { title: 'Lighting' }
+];
+breadcrumb.separator = '›';</code></pre></details>
+      <div class="parameter-strip"><code>items</code><code>separator</code><code>renderItem</code><code>title</code><code>label</code><code>href</code><code>target</code><code>disabled</code><code>ariaLabel</code><code>breadcrumb-click</code></div>
     </section>
 
     <section class="component-section" id="dropdown" data-title="Dropdown">
@@ -232,6 +259,42 @@ center.success({
       <div class="parameter-strip"><code>thickness</code><code>speed</code><code>color</code><code>count</code><code>refresh()</code></div>
     </section>
 
+    <section class="component-section" id="virtual-mouse" data-title="Virtual Mouse">
+      <div class="section-heading"><div><h2>Virtual Mouse</h2><code>&lt;hy-virtual-mouse&gt;</code></div><p>固定定位的可编程虚拟鼠标；支持状态图片、CSS 皮肤、动画移动和左中右键动作。</p></div>
+      <div class="demo-card two-column virtual-mouse-card">
+        <div class="preview virtual-mouse-stage" id="virtual-mouse-stage">
+          <div class="virtual-mouse-route"><i></i><span>API-controlled route</span><i></i><span>fixed viewport coordinates</span><i></i></div>
+          <hy-virtual-mouse id="virtual-mouse-live" animated duration="520" hidden></hy-virtual-mouse>
+        </div>
+        <div class="controls stacked">
+          <button id="virtual-mouse-play" class="native-trigger">Play movement</button>
+          <div class="virtual-mouse-actions"><button id="virtual-mouse-left" class="native-trigger secondary">Left click</button><button id="virtual-mouse-right" class="native-trigger secondary">Right click</button></div>
+          <label class="toggle"><input id="virtual-mouse-animated" type="checkbox" checked /><span></span>animated</label>
+          <label>duration <span id="virtual-mouse-duration-value">520 ms</span><input id="virtual-mouse-duration" type="range" min="0" max="1200" step="20" value="520" /></label>
+          <label>state color<input id="virtual-mouse-color" type="color" value="#78d7ff" /></label>
+          <label class="toggle"><input id="virtual-mouse-images" type="checkbox" /><span></span>state images</label>
+          <button id="virtual-mouse-hide" class="native-trigger secondary">Hide cursor</button>
+          <output id="virtual-mouse-event">运行移动或点击 API</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript + CSS</span></summary><pre><code>const mouse = document.querySelector('hy-virtual-mouse');
+mouse.images = {
+  idle: '/cursor-idle.png',
+  'left-down': '/cursor-left.png',
+  'right-down': '/cursor-right.png',
+};
+mouse.show();
+await mouse.moveTo(420, 280, { animate: true, duration: 600 });
+await mouse.leftClick();
+await mouse.rightClick();
+
+hy-virtual-mouse {
+  --hy-virtual-mouse-idle-background: #78d7ff;
+  --hy-virtual-mouse-right-down-background: #b778ff;
+}</code></pre></details>
+      <div class="parameter-strip"><code>x</code><code>y</code><code>animated</code><code>duration</code><code>easing</code><code>images</code><code>moveTo()</code><code>moveBy()</code><code>press()</code><code>release()</code><code>leftClick()</code><code>rightClick()</code></div>
+    </section>
+
     <section class="component-section" id="context-menu" data-title="Context Menu">
       <div class="section-heading"><div><span class="index">13</span><h2>Context Menu</h2><code>&lt;hy-context-menu&gt;</code></div><p>在指定视口坐标打开；支持鼠标、方向键、Enter、Escape 和焦点管理。</p></div>
       <div class="demo-card two-column overflow-visible"><div class="preview context-target" id="context-target"><div><span>◇</span><b>Player.controller</b><small>在此区域右键，或点击下方按钮</small></div><button id="context-open" class="native-trigger">Open menu</button><hy-context-menu id="context-live"></hy-context-menu></div><div class="controls stacked"><p class="control-note"><code>openAt(x, y)</code> 会自动约束菜单在可视区域内。</p><output id="context-event">等待打开菜单</output></div></div>
@@ -282,6 +345,32 @@ list.items = records;
 list.renderItem = (record, index) =&gt; `${index + 1} · ${record.name}`;
 list.scrollToIndex(50_000, 'center');</code></pre></details>
       <div class="parameter-strip"><code>items</code><code>renderItem</code><code>item-height</code><code>height</code><code>overscan</code><code>scrollToIndex()</code><code>refresh()</code><code>visible-range-change</code><code>item-click</code></div>
+    </section>
+
+    <section class="component-section" id="table" data-title="Table">
+      <div class="section-heading"><div><h2>Table</h2><code>&lt;hy-table&gt;</code></div><p>面向本地数据的表格；过滤、稳定排序与分页可以组合使用，当前页之外的数据不会生成行 DOM。</p></div>
+      <div class="demo-card table-card">
+        <div class="preview table-stage"><hy-table id="table-live" aria-label="Project assets" page-size="5" page-size-options="5,10,20"></hy-table></div>
+        <div class="controls stacked">
+          <label>page-size<select id="table-page-size"><option value="5">5</option><option value="10">10</option><option value="20">20</option></select></label>
+          <label>status filter<select id="table-status"><option value="">All</option><option value="Ready">Ready</option><option value="Review">Review</option><option value="Blocked">Blocked</option></select></label>
+          <label class="toggle"><input id="table-show-filters" type="checkbox" checked /><span></span>show filters</label>
+          <div class="table-actions"><button id="table-sort" class="native-trigger">Sort progress</button><button id="table-clear" class="native-trigger secondary">Clear state</button></div>
+          <output id="table-event">点击表头、过滤器、分页或数据行</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineTableComponents } from '@haiyue/ui/table';
+
+defineTableComponents();
+const table = document.querySelector('hy-table');
+table.columns = [
+  { key: 'name', title: 'Name', sortable: true, filterable: true },
+  { key: 'status', title: 'Status', filterOptions: statusOptions },
+  { key: 'progress', title: 'Progress', sortable: true, filterable: true, showFilter: false }
+];
+table.dataSource = records;
+table.pageSize = 10;</code></pre></details>
+      <div class="parameter-strip"><code>columns</code><code>dataSource</code><code>page</code><code>pageSize</code><code>pagination</code><code>showFilters</code><code>showFilter</code><code>filters</code><code>sort</code><code>setFilter()</code><code>sortBy()</code><code>table-change</code><code>row-click</code></div>
     </section>
 
     <section class="component-section" id="history-controls" data-title="History Controls">

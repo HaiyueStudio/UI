@@ -29,6 +29,10 @@
       "types": "./dist/button.d.ts",
       "import": "./dist/button.js"
     },
+    "./breadcrumb": {
+      "types": "./dist/breadcrumb.d.ts",
+      "import": "./dist/breadcrumb.js"
+    },
     "./checkbox": {
       "types": "./dist/checkbox.d.ts",
       "import": "./dist/checkbox.js"
@@ -64,6 +68,14 @@
     "./virtual-list": {
       "types": "./dist/virtual-list.d.ts",
       "import": "./dist/virtual-list.js"
+    },
+    "./virtual-mouse": {
+      "types": "./dist/virtual-mouse.d.ts",
+      "import": "./dist/virtual-mouse.js"
+    },
+    "./table": {
+      "types": "./dist/table.d.ts",
+      "import": "./dist/table.js"
     },
     "./radio": {
       "types": "./dist/radio.d.ts",

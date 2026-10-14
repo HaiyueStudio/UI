@@ -11,6 +11,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineExpandableComponents',
     'HYButton',
     'HYBorderBeam',
+    'HYBreadcrumb',
     'HYCheckbox',
     'HYContextMenu',
     'HYDialog',
@@ -28,9 +29,12 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYTree',
     'HYTreeNode',
     'HYVirtualList',
+    'HYVirtualMouse',
+    'HYTable',
     'calculateVirtualListRange',
     'defineButtonComponents',
     'defineBorderBeamComponents',
+    'defineBreadcrumbComponents',
     'defineCheckboxComponents',
     'defineContextMenuComponents',
     'defineDialogComponents',
@@ -48,9 +52,40 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineTooltipComponents',
     'defineTreeComponents',
     'defineVirtualListComponents',
+    'defineVirtualMouseComponents',
+    'defineTableComponents',
   ];
   assert.deepEqual(Object.keys(ui).sort(), expected.sort());
   assert.equal(Object.keys(ui).some(name => /^GE[A-Z]/u.test(name)), false);
+});
+
+test('breadcrumb renders accessible navigation, separators, actions, and a cancelable click contract', () => {
+  const breadcrumb = readFileSync(new URL('../src/breadcrumb.ts', import.meta.url), 'utf8');
+  assert.match(breadcrumb, /export class HYBreadcrumb extends HTMLElement/);
+  assert.match(breadcrumb, /this\._nav\.setAttribute\('aria-label'/);
+  assert.match(breadcrumb, /element\.setAttribute\('aria-current', 'page'\)/);
+  assert.match(breadcrumb, /separator\.setAttribute\('aria-hidden', 'true'\)/);
+  assert.match(breadcrumb, /CustomEvent<HYBreadcrumbClickDetail>\('breadcrumb-click'/);
+  assert.match(breadcrumb, /cancelable: true/);
+  assert.match(breadcrumb, /customElements\.define\('hy-breadcrumb'/);
+});
+
+test('table composes filtering, stable sorting, pagination, and accessible controls', () => {
+  const table = readFileSync(new URL('../src/table.ts', import.meta.url), 'utf8');
+  assert.match(table, /export class HYTable.*extends HTMLElement/);
+  assert.match(table, /this\._dataSource\.map\(\(record, index\) => \(\{ record, index \}\)\)/);
+  assert.match(table, /records\.sort\(\(left, right\) =>/);
+  assert.match(table, /slice\(start, start \+ this\._pageSize\)/);
+  assert.match(table, /setFilter\(key: string, value: string\)/);
+  assert.match(table, /sortBy\(key: string, direction\?: HYTableSortDirection\)/);
+  assert.match(table, /goToPage\(value: number\)/);
+  assert.match(table, /aria-sort/);
+  assert.match(table, /get showFilters\(\): boolean/);
+  assert.match(table, /column\.showFilter !== false/);
+  assert.match(table, /className = 'filter-trigger'/);
+  assert.match(table, /CustomEvent<HYTableChangeDetail<T>>\('table-change'/);
+  assert.match(table, /CustomEvent<HYTableRowClickDetail<T>>\('row-click'/);
+  assert.match(table, /customElements\.define\('hy-table'/);
 });
 
 test('virtual list calculates a buffered, exclusive render range', async () => {
@@ -86,6 +121,24 @@ test('virtual list keeps data off-DOM and cleans up owned observers and listener
   assert.match(source, /removeEventListener\('scroll', this\._onScroll\)/);
   assert.match(source, /'visible-range-change'/);
   assert.match(source, /'item-click'/);
+});
+
+test('virtual mouse exposes fixed visuals, state images, movement, and owned interaction cleanup', () => {
+  const virtualMouse = readFileSync(new URL('../src/virtual-mouse.ts', import.meta.url), 'utf8');
+  assert.match(virtualMouse, /export class HYVirtualMouse extends HTMLElement/);
+  assert.match(virtualMouse, /position: fixed !important/);
+  assert.match(virtualMouse, /pointer-events: none !important/);
+  assert.match(virtualMouse, /moveTo\(x: number, y: number/);
+  assert.match(virtualMouse, /moveBy\(deltaX: number, deltaY: number/);
+  assert.match(virtualMouse, /press\(button: HYVirtualMouseButton = 'left'\)/);
+  assert.match(virtualMouse, /release\(button: HYVirtualMouseButton = 'left'\)/);
+  assert.match(virtualMouse, /rightClick\(options:/);
+  assert.match(virtualMouse, /idle-image.*left-down-image.*middle-down-image.*right-down-image/s);
+  assert.match(virtualMouse, /--hy-virtual-mouse-right-down-background/);
+  assert.match(virtualMouse, /this\._cancelMove\(\)/);
+  assert.match(virtualMouse, /for \(const cancel of this\._delays\.values\(\)\) cancel\(\)/);
+  assert.match(virtualMouse, /CustomEvent<HYVirtualMouseMoveDetail>\('virtual-mouse-move-end'/);
+  assert.match(virtualMouse, /CustomEvent<HYVirtualMouseButtonDetail>\(name/);
 });
 
 test('drawer exposes directional placement, mask, Escape, and hidden-content destruction', () => {

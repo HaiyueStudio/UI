@@ -3,21 +3,21 @@
   "package": {
     "workspace": ".",
     "nodeImport": false,
-    "maxPackedBytes": 57000,
-    "maxUnpackedBytes": 280000,
-    "maxFileCount": 60,
+    "maxPackedBytes": 72698,
+    "maxUnpackedBytes": 343445,
+    "maxFileCount": 64,
     "capacity": {
       "reviewed": {
-        "packedBytes": 56378,
-        "unpackedBytes": 269046,
-        "fileCount": 54
+        "packedBytes": 70698,
+        "unpackedBytes": 335445,
+        "fileCount": 60
       },
       "growthReserve": {
-        "packedBytes": 622,
-        "unpackedBytes": 10954,
-        "fileCount": 6
+        "packedBytes": 2000,
+        "unpackedBytes": 8000,
+        "fileCount": 4
       },
-      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths"
+      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths, including the virtual mouse visual API, local-data table, and accessible breadcrumb navigation"
     },
     "sideEffects": [
       "./themes/*.css"

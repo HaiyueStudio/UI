@@ -14,6 +14,10 @@
       "types": "./dist/button.d.ts",
       "import": "./dist/button.js"
     },
+    "./breadcrumb": {
+      "types": "./dist/breadcrumb.d.ts",
+      "import": "./dist/breadcrumb.js"
+    },
     "./checkbox": {
       "types": "./dist/checkbox.d.ts",
       "import": "./dist/checkbox.js"
@@ -49,6 +53,14 @@
     "./virtual-list": {
       "types": "./dist/virtual-list.d.ts",
       "import": "./dist/virtual-list.js"
+    },
+    "./virtual-mouse": {
+      "types": "./dist/virtual-mouse.d.ts",
+      "import": "./dist/virtual-mouse.js"
+    },
+    "./table": {
+      "types": "./dist/table.d.ts",
+      "import": "./dist/table.js"
     },
     "./radio": {
       "types": "./dist/radio.d.ts",
@@ -94,6 +106,10 @@
       },
       {
         "name": "defineBorderBeamComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineBreadcrumbComponents",
         "kind": "value"
       },
       {
@@ -157,6 +173,10 @@
         "kind": "value"
       },
       {
+        "name": "defineTableComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineTabsComponents",
         "kind": "value"
       },
@@ -173,8 +193,28 @@
         "kind": "value"
       },
       {
+        "name": "defineVirtualMouseComponents",
+        "kind": "value"
+      },
+      {
         "name": "HYBorderBeam",
         "kind": "value"
+      },
+      {
+        "name": "HYBreadcrumb",
+        "kind": "value"
+      },
+      {
+        "name": "HYBreadcrumbClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYBreadcrumbItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYBreadcrumbItemRenderer",
+        "kind": "type"
       },
       {
         "name": "HYButton",
@@ -361,6 +401,46 @@
         "kind": "type"
       },
       {
+        "name": "HYTable",
+        "kind": "value"
+      },
+      {
+        "name": "HYTableAlign",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableChangeReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableColumn",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableFilterOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableFilterState",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableRowClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableSortDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableSortState",
+        "kind": "type"
+      },
+      {
         "name": "HYTabOption",
         "kind": "type"
       },
@@ -427,6 +507,42 @@
       {
         "name": "HYVirtualListRangeChangeDetail",
         "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouse",
+        "kind": "value"
+      },
+      {
+        "name": "HYVirtualMouseButton",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseButtonDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseClickOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseImages",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseMoveDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseMoveOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMousePosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseState",
+        "kind": "type"
       }
     ],
     "./border-beam": [
@@ -447,6 +563,28 @@
       {
         "name": "HYButton",
         "kind": "value"
+      }
+    ],
+    "./breadcrumb": [
+      {
+        "name": "defineBreadcrumbComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYBreadcrumb",
+        "kind": "value"
+      },
+      {
+        "name": "HYBreadcrumbClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYBreadcrumbItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYBreadcrumbItemRenderer",
+        "kind": "type"
       }
     ],
     "./checkbox": [
@@ -644,6 +782,94 @@
       },
       {
         "name": "HYVirtualListRangeChangeDetail",
+        "kind": "type"
+      }
+    ],
+    "./virtual-mouse": [
+      {
+        "name": "defineVirtualMouseComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYVirtualMouse",
+        "kind": "value"
+      },
+      {
+        "name": "HYVirtualMouseButton",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseButtonDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseClickOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseImages",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseMoveDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseMoveOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMousePosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseState",
+        "kind": "type"
+      }
+    ],
+    "./table": [
+      {
+        "name": "defineTableComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYTable",
+        "kind": "value"
+      },
+      {
+        "name": "HYTableAlign",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableChangeReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableColumn",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableFilterOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableFilterState",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableRowClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableSortDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableSortState",
         "kind": "type"
       }
     ],

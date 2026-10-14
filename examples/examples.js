@@ -206,6 +206,30 @@ tabsLive.options = [
 ];
 tabsLive.addEventListener('tab-change', event => writeEvent(byId('tabs-event'), 'tab-change', event.detail));
 
+// Breadcrumb.
+const breadcrumbLive = byId('breadcrumb-live');
+const breadcrumbItems = [
+  { key: 'projects', title: 'Projects', href: '#projects' },
+  { key: 'ocean', title: 'Ocean World' },
+  { key: 'scenes', title: 'Scenes', href: '#scenes' },
+  { key: 'temple', title: 'Moon Temple', href: '#moon-temple' },
+  { key: 'lighting', title: 'Lighting' },
+];
+const renderBreadcrumb = () => {
+  const depth = Number(byId('breadcrumb-depth').value);
+  breadcrumbLive.items = breadcrumbItems.slice(0, depth).map(item => (
+    item.key === 'scenes' ? { ...item, disabled: byId('breadcrumb-disabled').checked } : item
+  ));
+};
+byId('breadcrumb-separator').addEventListener('change', event => { breadcrumbLive.separator = event.target.value; });
+byId('breadcrumb-depth').addEventListener('change', renderBreadcrumb);
+byId('breadcrumb-disabled').addEventListener('change', renderBreadcrumb);
+breadcrumbLive.addEventListener('breadcrumb-click', event => {
+  event.preventDefault();
+  writeEvent(byId('breadcrumb-event'), 'breadcrumb-click', { index: event.detail.index, key: event.detail.item.key });
+});
+renderBreadcrumb();
+
 // Dropdown.
 const dropdownLive = byId('dropdown-live');
 dropdownLive.items = [
@@ -298,6 +322,58 @@ byId('border-beam-count').addEventListener('input', event => {
   borderBeamLive.count = Number(event.target.value);
   byId('border-beam-count-value').textContent = event.target.value;
 });
+
+// Virtual mouse. It visualizes actions and emits events without synthesizing input on page elements.
+const virtualMouseLive = byId('virtual-mouse-live');
+const virtualMouseStage = byId('virtual-mouse-stage');
+const virtualMouseEvent = byId('virtual-mouse-event');
+const virtualMouseImage = (fill, label) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38"><path d="M3 2 31 25l-12 2 7 9-6 1-7-10-9 8Z" fill="${fill}" stroke="white" stroke-width="2"/><text x="22" y="14" fill="white" font-size="8" font-family="sans-serif">${label}</text></svg>`)}`;
+const virtualMouseImages = {
+  idle: virtualMouseImage('#397da6', ''),
+  'left-down': virtualMouseImage('#35a9cc', 'L'),
+  'middle-down': virtualMouseImage('#7654e8', 'M'),
+  'right-down': virtualMouseImage('#9b55ce', 'R'),
+};
+const showVirtualMouseAtStage = async (animate = false) => {
+  const rect = virtualMouseStage.getBoundingClientRect();
+  virtualMouseLive.show();
+  await virtualMouseLive.moveTo(rect.left + 55, rect.top + 72, { animate });
+  return rect;
+};
+byId('virtual-mouse-play').addEventListener('click', async () => {
+  const rect = await showVirtualMouseAtStage(false);
+  const points = [
+    [rect.right - 72, rect.top + 72],
+    [rect.left + rect.width * 0.52, rect.bottom - 70],
+    [rect.left + 70, rect.top + rect.height * 0.55],
+  ];
+  for (const [x, y] of points) await virtualMouseLive.moveTo(x, y);
+  await virtualMouseLive.leftClick();
+});
+byId('virtual-mouse-left').addEventListener('click', async () => {
+  await showVirtualMouseAtStage(false);
+  await virtualMouseLive.leftClick();
+});
+byId('virtual-mouse-right').addEventListener('click', async () => {
+  await showVirtualMouseAtStage(false);
+  await virtualMouseLive.rightClick();
+});
+byId('virtual-mouse-hide').addEventListener('click', () => virtualMouseLive.hide());
+byId('virtual-mouse-animated').addEventListener('change', event => { virtualMouseLive.animated = event.target.checked; });
+byId('virtual-mouse-duration').addEventListener('input', event => {
+  virtualMouseLive.duration = Number(event.target.value);
+  byId('virtual-mouse-duration-value').textContent = `${event.target.value} ms`;
+});
+byId('virtual-mouse-color').addEventListener('input', event => {
+  virtualMouseLive.style.setProperty('--hy-virtual-mouse-idle-background', event.target.value);
+  virtualMouseLive.style.setProperty('--hy-virtual-mouse-left-down-background', `color-mix(in srgb, ${event.target.value} 72%, white)`);
+});
+byId('virtual-mouse-images').addEventListener('change', event => {
+  virtualMouseLive.images = event.target.checked ? virtualMouseImages : {};
+});
+for (const name of ['virtual-mouse-move-end', 'virtual-mouse-down', 'virtual-mouse-up', 'virtual-mouse-click']) {
+  virtualMouseLive.addEventListener(name, event => writeEvent(virtualMouseEvent, name, event.detail));
+}
 
 // Context menu.
 const contextLive = byId('context-live');
@@ -412,6 +488,41 @@ virtualListLive.addEventListener('item-click', event => {
   writeEvent(byId('virtual-list-event'), 'item-click', { index: event.detail.index, id: event.detail.item.id });
 });
 virtualListLive.refresh();
+
+// Table. Local filtering is applied before stable sorting and pagination.
+const tableLive = byId('table-live');
+const tableStatuses = ['Ready', 'Review', 'Blocked'];
+tableLive.columns = [
+  { key: 'name', title: 'Asset', width: '40%', sortable: true, filterable: true, filterPlaceholder: 'Filter assets' },
+  { key: 'type', title: 'Type', sortable: true, filterable: true, showFilter: false },
+  { key: 'status', title: 'Status', filterOptions: tableStatuses.map(value => ({ label: value, value })) },
+  { key: 'progress', title: 'Progress', sortable: true, align: 'right', render: value => `${value}%` },
+];
+tableLive.dataSource = Array.from({ length: 37 }, (_, index) => ({
+  name: `Scene Asset ${String(index + 1).padStart(2, '0')}`,
+  type: ['Mesh', 'Texture', 'Material', 'Animation'][index % 4],
+  status: tableStatuses[index % tableStatuses.length],
+  progress: (index * 17 + 23) % 101,
+}));
+byId('table-page-size').addEventListener('change', event => { tableLive.pageSize = Number(event.target.value); });
+byId('table-status').addEventListener('change', event => { tableLive.setFilter('status', event.target.value); });
+byId('table-show-filters').addEventListener('change', event => { tableLive.showFilters = event.target.checked; });
+byId('table-sort').addEventListener('click', () => tableLive.sortBy('progress'));
+byId('table-clear').addEventListener('click', () => {
+  tableLive.clearFilters();
+  tableLive.clearSort();
+  byId('table-status').value = '';
+});
+tableLive.addEventListener('table-change', event => writeEvent(byId('table-event'), 'table-change', {
+  reason: event.detail.reason,
+  page: event.detail.page,
+  filteredTotal: event.detail.filteredTotal,
+  sort: event.detail.sort,
+}));
+tableLive.addEventListener('row-click', event => writeEvent(byId('table-event'), 'row-click', {
+  name: event.detail.record.name,
+  index: event.detail.index,
+}));
 
 // History controls.
 const historyLive = byId('history-live');

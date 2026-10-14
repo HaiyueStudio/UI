@@ -82,6 +82,62 @@ Use the `height` property (or `height` attribute) for the internal viewport. `vi
 exclusive `endIndex` / `visibleEndIndex` values, and `item-click` reports the source item and absolute index.
 The scrollbar can be themed with inherited semantic tokens and `--hy-virtual-list-scrollbar-size`.
 
+## Breadcrumb
+
+Import and register breadcrumb navigation independently:
+
+```ts
+import { defineBreadcrumbComponents } from '@haiyue/ui/breadcrumb';
+
+defineBreadcrumbComponents();
+const breadcrumb = document.querySelector('hy-breadcrumb');
+breadcrumb.items = [
+  { key: 'projects', title: 'Projects', href: '/projects' },
+  { key: 'scene', title: 'Ocean World' },
+  { key: 'lighting', title: 'Lighting' },
+];
+breadcrumb.separator = '›';
+```
+
+Item text may use the Ant Design-compatible `title` field or its `label` alias. The final item is exposed as
+the current page with `aria-current="page"`. Earlier items render as links when
+they provide `href`, or as action buttons otherwise; disabled items remain readable but cannot be activated.
+Listen for the composed, cancelable `breadcrumb-click` event to handle actions or prevent link navigation.
+Use `renderItem` for custom item content, and `ariaLabel` when rendered content needs an explicit accessible
+name. Styling hooks include the `nav`, `list`, `item`, `link`, `button`, `current`, `disabled`, and `separator`
+shadow parts plus the `--hy-breadcrumb-*` CSS variables.
+
+## Table
+
+Import the data table from its focused entry. It applies local filters first, then stable sorting, and finally
+pagination, so only the current page is rendered as rows:
+
+```ts
+import { defineTableComponents } from '@haiyue/ui/table';
+
+defineTableComponents();
+const table = document.querySelector('hy-table');
+table.columns = [
+  { key: 'name', title: 'Name', sortable: true, filterable: true },
+  { key: 'role', title: 'Role', filterOptions: roles },
+  { key: 'score', title: 'Score', sortable: true, align: 'right' },
+];
+table.dataSource = records;
+table.pageSize = 20;
+```
+
+Use `page`, `pageSize`, `pageSizeOptions`, and `pagination` for paging; `filters`, `setFilter()`, and
+`clearFilters()` for filtering; and `sort`, `sortBy()`, and `clearSort()` for ordering. Columns may provide a
+custom `filter`, `sorter`, or `render` function. `table-change` reports the complete processed state after a
+user or API change, while `row-click` returns the source record and its original absolute index. The `empty`
+slot, semantic theme tokens, and exported shadow parts support content and visual customization.
+
+Filterable columns show a funnel control beside the title. Set `table.showFilters = false` or
+`show-filters="false"` to hide all filter controls while keeping programmatic filtering active. Set
+`showFilter: false` on an individual column to hide only that column's funnel. The filter menu, trigger, panel,
+input, and clear action are exposed through the `filter-menu`, `filter-trigger`, `filter-panel`, `filter`, and
+`filter-clear` shadow parts.
+
 ## Drawer
 
 Import and register the drawer independently when a product needs an off-canvas panel:
@@ -155,6 +211,35 @@ Single-value mode uses `value`; interval mode exposes `lowerValue`, `upperValue`
 `--hy-range-handle-*`, `--hy-range-rail-*`, and `--hy-range-track-*` tokens for styling, or target the exported
 `rail`, `track`, `handle`, `handle-lower`, and `handle-upper` shadow parts. `value-input` reports live movement and
 `value-change` reports a committed pointer or keyboard change.
+
+## Virtual mouse
+
+Import the fixed-position cursor visual independently. It never intercepts pointer input or synthesizes clicks on
+page elements; host applications receive composed events and decide how actions map to product behavior:
+
+```ts
+import { defineVirtualMouseComponents } from '@haiyue/ui/virtual-mouse';
+
+defineVirtualMouseComponents();
+const mouse = document.querySelector('hy-virtual-mouse');
+mouse.images = {
+  idle: '/cursor-idle.png',
+  'left-down': '/cursor-left.png',
+  'right-down': '/cursor-right.png',
+};
+mouse.show();
+await mouse.moveTo(420, 280, { animate: true, duration: 600 });
+await mouse.leftClick();
+await mouse.rightClick();
+```
+
+Use `moveTo()` / `moveBy()` for coordinates, `press()` / `release()` for held-button states, and
+`leftClick()` / `middleClick()` / `rightClick()` for timed click feedback. `animated`, `duration`, and `easing`
+provide host defaults; every move may override them. State images may also be supplied through `idle-image`,
+`left-down-image`, `middle-down-image`, and `right-down-image`. Style the exported `cursor`, `shape`, `image`,
+and `indicator` parts or the `--hy-virtual-mouse-*` CSS variables. Events include `virtual-mouse-move-start`,
+`virtual-mouse-move`, `virtual-mouse-move-end`, `virtual-mouse-down`, `virtual-mouse-up`, and
+`virtual-mouse-click`.
 
 ## Themes
 

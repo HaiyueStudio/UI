@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Table test</title></head>
+<body>
+  <hy-table id="table" aria-label="Team members" page-size="2" page-size-options="2,4"></hy-table>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineTableComponents } from '../../dist/table.js';
+    defineTableComponents();
+    const table = document.querySelector('#table');
+    const output = document.querySelector('#events');
+    table.columns = [
+      { key: 'name', title: 'Name', sortable: true, filterable: true, filterPlaceholder: 'Find a name' },
+      { key: 'role', title: 'Role', filterOptions: [{ label: 'Artist', value: 'Artist' }, { label: 'Engineer', value: 'Engineer' }] },
+      { key: 'score', title: 'Score', sortable: true, filterable: true, showFilter: false, align: 'right' },
+    ];
+    table.dataSource = [
+      { name: 'Luna', role: 'Artist', score: 82 },
+      { name: 'Mira', role: 'Engineer', score: 96 },
+      { name: 'Nova', role: 'Artist', score: 91 },
+      { name: 'Aster', role: 'Engineer', score: 88 },
+      { name: 'Sora', role: 'Artist', score: 88 },
+      { name: 'Vega', role: 'Engineer', score: 79 },
+    ];
+    table.addEventListener('table-change', event => {
+      output.textContent += `change:${event.detail.reason}:${event.detail.page}:${event.detail.filteredTotal}\n`;
+    });
+    table.addEventListener('row-click', event => {
+      output.textContent += `row:${event.detail.record.name}:${event.detail.index}\n`;
+    });
+  </script>
+</body>
+</html>
