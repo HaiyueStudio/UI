@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Divider test</title></head>
+<body>
+  <hy-divider id="plain" aria-label="Section divider"></hy-divider>
+  <hy-divider id="labelled" line-style="dashed" text-placement="start" thickness="2">Scene settings</hy-divider>
+  <div style="height:120px"><hy-divider id="vertical" orientation="vertical" label="or" line-style="dotted"></hy-divider></div>
+  <script type="module">
+    import { defineDividerComponents } from '../../dist/divider.js';
+    defineDividerComponents();
+  </script>
+</body>
+</html>

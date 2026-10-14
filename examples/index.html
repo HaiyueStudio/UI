@@ -31,12 +31,25 @@
     <nav id="component-nav">
       <p class="nav-label">基础</p>
       <a href="#button" data-name="button 按钮"><span>Button</span><code>hy-button</code></a>
+      <a href="#badge" data-name="badge count dot status 徽标 数量 状态"><span>Badge</span><code>hy-badge</code></a>
       <a href="#input" data-name="input 输入框"><span>Input</span><code>hy-input</code></a>
       <a href="#range" data-name="range slider 范围 数值 滑块"><span>Range</span><code>hy-range</code></a>
       <a href="#checkbox" data-name="checkbox 复选框"><span>Checkbox</span><code>hy-checkbox</code></a>
       <a href="#radio" data-name="radio 单选框"><span>Radio</span><code>hy-radio</code></a>
+      <a href="#rate" data-name="rate rating stars 星星 评分 半星"><span>Rate</span><code>hy-rate</code></a>
+      <a href="#divider" data-name="divider separator 分割线 分隔线 文字"><span>Divider</span><code>hy-divider</code></a>
       <p class="nav-label">选择与反馈</p>
       <a href="#select" data-name="select 选择器"><span>Select</span><code>hy-select</code></a>
+      <a href="#cascader" data-name="cascader cascade 级联 下拉 选择器"><span>Cascader</span><code>hy-cascader</code></a>
+      <a href="#date-picker" data-name="date picker 日期 日历 选择器"><span>Date Picker</span><code>hy-date-picker</code></a>
+      <a href="#time-picker" data-name="time picker 时间 时分秒 选择器"><span>Time Picker</span><code>hy-time-picker</code></a>
+      <a href="#skeleton" data-name="skeleton loading 骨架屏 加载 占位"><span>Skeleton</span><code>hy-skeleton</code></a>
+      <a href="#watermark" data-name="watermark 水印 文字 图片 覆盖"><span>Watermark</span><code>hy-watermark</code></a>
+      <a href="#timeline" data-name="timeline 时间轴 历史 流程 事件"><span>Timeline</span><code>hy-timeline</code></a>
+      <a href="#steps" data-name="steps stepper 步骤条 流程 横向 纵向"><span>Steps</span><code>hy-steps</code></a>
+      <a href="#collapse" data-name="collapse accordion 折叠 面板 手风琴"><span>Collapse</span><code>hy-collapse</code></a>
+      <a href="#affix" data-name="affix sticky 固钉 吸附 固定"><span>Affix</span><code>hy-affix</code></a>
+      <a href="#tour" data-name="tour guided walkthrough 漫游 引导 新手"><span>Tour</span><code>hy-tour</code></a>
       <a href="#tabs" data-name="tabs 标签页"><span>Tabs</span><code>hy-tabs</code></a>
       <a href="#breadcrumb" data-name="breadcrumb 面包屑 导航 路径"><span>Breadcrumb</span><code>hy-breadcrumb</code></a>
       <a href="#dropdown" data-name="dropdown 下拉菜单"><span>Dropdown</span><code>hy-dropdown</code></a>
@@ -55,7 +68,7 @@
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
       <a href="#table" data-name="table 表格 分页 过滤 排序"><span>Table</span><code>hy-table</code></a>
     </nav>
-    <div class="sidebar-foot"><span class="status-dot"></span><span>22 components</span><span>·</span><span>v0.1.2</span></div>
+    <div class="sidebar-foot"><span class="status-dot"></span><span>35 components</span><span>·</span><span>v0.1.2</span></div>
   </aside>
 
   <main id="content">
@@ -64,7 +77,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>22</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>35</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -85,6 +98,35 @@
       <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-button label="Publish"&gt;&lt;/hy-button&gt;
 &lt;hy-button disabled label="Disabled"&gt;&lt;/hy-button&gt;
 &lt;hy-button icon-only aria-label="Add item"&gt;…&lt;/hy-button&gt;</code></pre></details>
+    </section>
+
+    <section class="component-section" id="badge" data-title="Badge">
+      <div class="section-heading"><div><h2>Badge</h2><code>&lt;hy-badge&gt;</code></div><p>在内容角落展示数量或圆点提醒，也可独立表达成功、处理中、警告和错误状态。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview badge-stage">
+          <hy-badge id="badge-live" count="8" overflow-count="99"><button type="button" class="badge-asset"><span>◇</span><b>Moon Temple</b><small>Scene package</small></button></hy-badge>
+          <div class="badge-statuses" aria-label="Status badge examples">
+            <hy-badge status="success" text="Synced"></hy-badge>
+            <hy-badge status="processing" text="Rendering"></hy-badge>
+            <hy-badge status="warning" text="Review"></hy-badge>
+            <hy-badge status="error" text="Failed"></hy-badge>
+          </div>
+        </div>
+        <div class="controls stacked">
+          <label>count<input id="badge-count" type="number" value="8" min="0" max="9999" /></label>
+          <label>overflow count<input id="badge-overflow" type="number" value="99" min="0" max="9999" /></label>
+          <label>status<select id="badge-status"><option value="" selected>count</option><option value="success">success</option><option value="processing">processing</option><option value="warning">warning</option><option value="error">error</option><option value="default">default</option></select></label>
+          <label>color<input id="badge-color" type="color" value="#ef5b72" /></label>
+          <div class="toggle-row"><label class="toggle"><input id="badge-dot" type="checkbox" /><span></span>dot</label><label class="toggle"><input id="badge-zero" type="checkbox" /><span></span>show zero</label><label class="toggle"><input id="badge-small" type="checkbox" /><span></span>small</label></div>
+          <output id="badge-state">count · 8</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-badge count="8" overflow-count="99"&gt;
+  &lt;button&gt;Notifications&lt;/button&gt;
+&lt;/hy-badge&gt;
+
+&lt;hy-badge status="processing" text="Rendering"&gt;&lt;/hy-badge&gt;</code></pre></details>
+      <div class="parameter-strip"><code>count</code><code>overflow-count</code><code>show-zero</code><code>dot</code><code>status</code><code>color</code><code>text</code><code>offset</code><code>offset-x</code><code>offset-y</code><code>size</code><code>title</code></div>
     </section>
 
     <section class="component-section" id="input" data-title="Input">
@@ -130,12 +172,270 @@
       </div>
     </section>
 
+    <section class="component-section" id="rate" data-title="Rate">
+      <div class="section-heading"><div><h2>Rate</h2><code>&lt;hy-rate&gt;</code></div><p>星级评分输入；支持半星、清空、自定义字符、提示文字、只读和键盘操作。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview rate-stage">
+          <div><span class="field-label">Scene quality</span><hy-rate id="rate-live" value="3.5" allow-half aria-label="Scene quality rating"></hy-rate><output id="rate-value">3.5 / 5</output></div>
+          <div><span class="field-label">Read-only score</span><hy-rate value="4" readonly aria-label="Read-only score"></hy-rate></div>
+        </div>
+        <div class="controls stacked">
+          <label>count<select id="rate-count"><option value="3">3</option><option value="5" selected>5</option><option value="7">7</option><option value="10">10</option></select></label>
+          <label>character<select id="rate-character"><option value="★" selected>★ star</option><option value="❤">❤ heart</option><option value="●">● circle</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="rate-half" type="checkbox" checked /><span></span>allowHalf</label><label class="toggle"><input id="rate-clear" type="checkbox" checked /><span></span>allowClear</label><label class="toggle"><input id="rate-disabled" type="checkbox" /><span></span>disabled</label><label class="toggle"><input id="rate-readonly" type="checkbox" /><span></span>readonly</label></div>
+          <output id="rate-event">选择星级查看 value-change</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-rate value="3.5" allow-half aria-label="Scene rating"&gt;&lt;/hy-rate&gt;</code></pre></details>
+      <div class="parameter-strip"><code>value</code><code>count</code><code>allowHalf</code><code>allowClear</code><code>disabled</code><code>readOnly</code><code>character</code><code>tooltips</code><code>value-change</code><code>hover-change</code></div>
+    </section>
+
+    <section class="component-section" id="divider" data-title="Divider">
+      <div class="section-heading"><div><h2>Divider</h2><code>&lt;hy-divider&gt;</code></div><p>分隔内容区域；支持多种线型、横纵方向，以及位于起始、居中或末尾的说明文字。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview divider-stage">
+          <div class="divider-document"><b>Scene settings</b><p>Configure lighting, physics and runtime behavior.</p><hy-divider id="divider-live" line-style="solid" text-placement="center" label="Rendering"></hy-divider><p>Ray tracing and post-processing options.</p></div>
+          <div class="divider-inline"><span>Local</span><hy-divider orientation="vertical" aria-label="Local and cloud separator"></hy-divider><span>Cloud</span></div>
+        </div>
+        <div class="controls stacked">
+          <label>text<input id="divider-label" value="Rendering" /></label>
+          <label>line style<select id="divider-style"><option value="solid" selected>solid</option><option value="dashed">dashed</option><option value="dotted">dotted</option><option value="double">double</option></select></label>
+          <label>text placement<select id="divider-placement"><option value="start">start</option><option value="center" selected>center</option><option value="end">end</option></select></label>
+          <label>thickness<input id="divider-thickness" type="range" min="1" max="8" value="1" /><output id="divider-thickness-value">1 px</output></label>
+          <label>color<input id="divider-color" type="color" value="#53627a" /></label>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-divider line-style="dashed" text-placement="start"&gt;Rendering&lt;/hy-divider&gt;
+&lt;hy-divider orientation="vertical"&gt;&lt;/hy-divider&gt;</code></pre></details>
+      <div class="parameter-strip"><code>orientation</code><code>lineStyle</code><code>textPlacement</code><code>label</code><code>thickness</code><code>color</code><code>spacing</code><code>line</code><code>text</code></div>
+    </section>
+
     <section class="component-section" id="select" data-title="Select">
       <div class="section-heading"><div><span class="index">05</span><h2>Select</h2><code>&lt;hy-select&gt;</code></div><p>由 options 属性或 JavaScript 属性提供选项，可开启搜索并禁用单项。</p></div>
       <div class="demo-card two-column">
         <div class="preview narrow"><hy-select id="select-live" label="Render quality" searchable value="high"></hy-select></div>
         <div class="controls stacked"><label>value<select id="select-value"><option value="low">Low</option><option value="medium">Medium</option><option value="high" selected>High</option><option value="ultra">Ultra</option></select></label><div class="toggle-row"><label class="toggle"><input id="select-searchable" type="checkbox" checked /><span></span>searchable</label><label class="toggle"><input id="select-disabled" type="checkbox" /><span></span>disabled</label></div><output id="select-event">选择渲染质量</output></div>
       </div>
+    </section>
+
+    <section class="component-section" id="cascader" data-title="Cascader">
+      <div class="section-heading"><div><h2>Cascader</h2><code>&lt;hy-cascader&gt;</code></div><p>从树形选项中逐级定位并选择路径；支持禁用节点、父级选择、清空和完整键盘操作。</p></div>
+      <div class="demo-card two-column overflow-visible cascader-card">
+        <div class="preview cascader-stage overflow-visible"><hy-cascader id="cascader-live" aria-label="Asset location" placeholder="Select asset location"></hy-cascader></div>
+        <div class="controls stacked">
+          <label>display separator<select id="cascader-separator"><option value=" / " selected>/</option><option value=" › ">›</option><option value=" → ">→</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="cascader-clearable" type="checkbox" checked /><span></span>clearable</label><label class="toggle"><input id="cascader-parent" type="checkbox" /><span></span>changeOnSelect</label><label class="toggle"><input id="cascader-disabled" type="checkbox" /><span></span>disabled</label></div>
+          <button id="cascader-reset" class="native-trigger secondary">Select Moon Temple</button>
+          <output id="cascader-event">打开下拉并逐级选择路径</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineCascaderComponents } from '@haiyue/ui/cascader';
+
+defineCascaderComponents();
+const cascader = document.querySelector('hy-cascader');
+cascader.options = [
+  { label: 'Scenes', value: 'scenes', children: [
+    { label: 'Moon Temple', value: 'temple' }
+  ] }
+];
+cascader.value = ['scenes', 'temple'];</code></pre></details>
+      <div class="parameter-strip"><code>options</code><code>value</code><code>open</code><code>placeholder</code><code>displaySeparator</code><code>clearable</code><code>changeOnSelect</code><code>disabled</code><code>value-change</code><code>open-change</code></div>
+    </section>
+
+    <section class="component-section" id="date-picker" data-title="Date Picker">
+      <div class="section-heading"><div><h2>Date Picker</h2><code>&lt;hy-date-picker&gt;</code></div><p>通过月历选择日期，输出稳定的 YYYY-MM-DD；支持范围限制、周起始日、清空和完整键盘操作。</p></div>
+      <div class="demo-card two-column overflow-visible picker-card">
+        <div class="preview picker-stage overflow-visible"><hy-date-picker id="date-picker-live" aria-label="Scene date" value="2026-10-14" min="2026-10-01" max="2026-11-30" locale="en-US"></hy-date-picker></div>
+        <div class="controls stacked">
+          <label>week start<select id="date-picker-week"><option value="1" selected>Monday</option><option value="0">Sunday</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="date-picker-clearable" type="checkbox" checked /><span></span>clearable</label><label class="toggle"><input id="date-picker-disabled" type="checkbox" /><span></span>disabled</label></div>
+          <button id="date-picker-reset" class="native-trigger secondary">Reset to 2026-10-14</button>
+          <output id="date-picker-event">选择一个日期</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-date-picker value="2026-10-14" min="2026-10-01" max="2026-11-30"&gt;&lt;/hy-date-picker&gt;</code></pre></details>
+      <div class="parameter-strip"><code>value</code><code>min</code><code>max</code><code>locale</code><code>weekStart</code><code>open</code><code>clearable</code><code>disabled</code><code>value-change</code><code>open-change</code></div>
+    </section>
+
+    <section class="component-section" id="time-picker" data-title="Time Picker">
+      <div class="section-heading"><div><h2>Time Picker</h2><code>&lt;hy-time-picker&gt;</code></div><p>从独立时、分、秒列选择时间，支持步长与范围限制，并输出稳定的 24 小时时间字符串。</p></div>
+      <div class="demo-card two-column overflow-visible picker-card">
+        <div class="preview picker-stage overflow-visible"><hy-time-picker id="time-picker-live" aria-label="Scene time" value="10:30" minute-step="5" min="08:00" max="20:00"></hy-time-picker></div>
+        <div class="controls stacked">
+          <label>minute step<select id="time-picker-step"><option value="1">1</option><option value="5" selected>5</option><option value="10">10</option><option value="15">15</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="time-picker-seconds" type="checkbox" /><span></span>showSeconds</label><label class="toggle"><input id="time-picker-clearable" type="checkbox" checked /><span></span>clearable</label><label class="toggle"><input id="time-picker-disabled" type="checkbox" /><span></span>disabled</label></div>
+          <button id="time-picker-reset" class="native-trigger secondary">Reset to 10:30</button>
+          <output id="time-picker-event">选择时间后按 OK</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-time-picker value="10:30" minute-step="5" min="08:00" max="20:00"&gt;&lt;/hy-time-picker&gt;</code></pre></details>
+      <div class="parameter-strip"><code>value</code><code>min</code><code>max</code><code>showSeconds</code><code>minuteStep</code><code>secondStep</code><code>open</code><code>clearable</code><code>disabled</code><code>value-change</code><code>open-change</code></div>
+    </section>
+
+    <section class="component-section" id="skeleton" data-title="Skeleton">
+      <div class="section-heading"><div><h2>Skeleton</h2><code>&lt;hy-skeleton&gt;</code></div><p>数据加载期间展示结构占位；结束加载后直接切换到默认插槽中的真实内容。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview skeleton-stage">
+          <hy-skeleton id="skeleton-live" loading="true" active avatar rows="4" title-width="42%" aria-label="Loading scene summary">
+            <article class="skeleton-content"><span class="panel-icon">◇</span><div><b>Moon Temple</b><p>8 objects · 3 lights · Ready to edit</p></div></article>
+          </hy-skeleton>
+        </div>
+        <div class="controls stacked">
+          <label>rows<input id="skeleton-rows" type="range" min="0" max="8" value="4" /><output id="skeleton-rows-value">4</output></label>
+          <label>size<select id="skeleton-size"><option value="small">small</option><option value="medium" selected>medium</option><option value="large">large</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="skeleton-loading" type="checkbox" checked /><span></span>loading</label><label class="toggle"><input id="skeleton-active" type="checkbox" checked /><span></span>active</label><label class="toggle"><input id="skeleton-avatar" type="checkbox" checked /><span></span>avatar</label><label class="toggle"><input id="skeleton-round" type="checkbox" /><span></span>round</label></div>
+          <output id="skeleton-state">skeleton · 4 rows · medium</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-skeleton active avatar rows="4"&gt;
+  &lt;article&gt;加载完成后的真实内容&lt;/article&gt;
+&lt;/hy-skeleton&gt;</code></pre></details>
+      <div class="parameter-strip"><code>loading</code><code>active</code><code>avatar</code><code>avatarShape</code><code>avatarSize</code><code>showTitle</code><code>titleWidth</code><code>showParagraph</code><code>rows</code><code>paragraphWidths</code><code>round</code><code>size</code></div>
+    </section>
+
+    <section class="component-section" id="watermark" data-title="Watermark">
+      <div class="section-heading"><div><h2>Watermark</h2><code>&lt;hy-watermark&gt;</code></div><p>在内容上方重复绘制文字或图片标识；覆盖层不接收指针事件，不会阻挡内部交互。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview watermark-stage">
+          <hy-watermark id="watermark-live" content="HAIYUE&#10;PREVIEW" rotate="-22" gap-x="80" gap-y="64" opacity="0.18" aria-label="Preview watermark">
+            <article class="watermark-content"><span class="panel-icon">◇</span><div><b>Moon Temple</b><p>Scene preview · Internal build</p><button class="native-trigger secondary" type="button">Interactive action</button></div></article>
+          </hy-watermark>
+        </div>
+        <div class="controls stacked">
+          <label>content<input id="watermark-content" value="HAIYUE PREVIEW" /></label>
+          <label>rotate<input id="watermark-rotate" type="range" min="-90" max="90" value="-22" /><output id="watermark-rotate-value">-22°</output></label>
+          <label>gap<input id="watermark-gap" type="range" min="20" max="180" value="80" /><output id="watermark-gap-value">80 px</output></label>
+          <label>opacity<input id="watermark-opacity" type="range" min="0.04" max="0.5" step="0.01" value="0.18" /><output id="watermark-opacity-value">0.18</output></label>
+          <label>color<input id="watermark-color" type="color" value="#7998c9" /></label>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-watermark content="HAIYUE PREVIEW" rotate="-22" opacity="0.18"&gt;
+  &lt;article&gt;需要添加水印的内容&lt;/article&gt;
+&lt;/hy-watermark&gt;</code></pre></details>
+      <div class="parameter-strip"><code>content</code><code>image</code><code>rotate</code><code>gapX</code><code>gapY</code><code>offsetX</code><code>offsetY</code><code>markWidth</code><code>markHeight</code><code>fontSize</code><code>fontFamily</code><code>fontWeight</code><code>color</code><code>opacity</code><code>zIndex</code></div>
+    </section>
+
+    <section class="component-section" id="timeline" data-title="Timeline">
+      <div class="section-heading"><div><h2>Timeline</h2><code>&lt;hy-timeline&gt;</code></div><p>按时间顺序展示事件和流程状态；支持左右、交替、倒序布局和持续进行中的节点。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview timeline-stage"><hy-timeline id="timeline-live" aria-label="Scene activity" pending="Rendering next frame"></hy-timeline></div>
+        <div class="controls stacked">
+          <label>mode<select id="timeline-mode"><option value="left" selected>left</option><option value="right">right</option><option value="alternate">alternate</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="timeline-reverse" type="checkbox" /><span></span>reverse</label><label class="toggle"><input id="timeline-pending" type="checkbox" checked /><span></span>pending</label></div>
+          <label>items<select id="timeline-count"><option value="3">3 items</option><option value="4" selected>4 items</option><option value="5">5 items</option></select></label>
+          <output id="timeline-state">4 events · left</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineTimelineComponents } from '@haiyue/ui/timeline';
+
+defineTimelineComponents();
+timeline.items = [
+  { label: '10:24', title: 'Scene saved', status: 'success' },
+  { label: '10:26', title: 'Build completed', status: 'info' }
+];</code></pre></details>
+      <div class="parameter-strip"><code>items</code><code>mode</code><code>reverse</code><code>pending</code><code>pendingDot</code><code>renderItem</code><code>renderDot</code><code>status</code><code>color</code><code>position</code></div>
+    </section>
+
+    <section class="component-section" id="steps" data-title="Steps">
+      <div class="section-heading"><div><h2>Steps</h2><code>&lt;hy-steps&gt;</code></div><p>展示任务或表单的阶段进度；支持横向、纵向、状态覆盖、点击导航和禁用步骤。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview steps-stage"><hy-steps id="steps-live" current="1" clickable aria-label="Scene publish steps"></hy-steps></div>
+        <div class="controls stacked">
+          <label>direction<select id="steps-direction"><option value="horizontal" selected>horizontal</option><option value="vertical">vertical</option></select></label>
+          <label>current<select id="steps-current"><option value="0">Scene</option><option value="1" selected>Build</option><option value="2">Review</option><option value="3">Publish</option></select></label>
+          <label>size<select id="steps-size"><option value="medium" selected>medium</option><option value="small">small</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="steps-clickable" type="checkbox" checked /><span></span>clickable</label><label class="toggle"><input id="steps-error" type="checkbox" /><span></span>Review error</label></div>
+          <output id="steps-state">Build · step 2 of 4</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineStepsComponents } from '@haiyue/ui/steps';
+
+defineStepsComponents();
+steps.items = [
+  { title: 'Scene', description: 'Prepare content' },
+  { title: 'Build', description: 'Compile assets' },
+  { title: 'Publish', description: 'Upload release' }
+];</code></pre></details>
+      <div class="parameter-strip"><code>items</code><code>current</code><code>direction</code><code>size</code><code>clickable</code><code>status</code><code>icon</code><code>disabled</code><code>step-change</code></div>
+    </section>
+
+    <section class="component-section" id="affix" data-title="Affix">
+      <div class="section-heading"><div><h2>Affix</h2><code>&lt;hy-affix&gt;</code></div><p>在页面或指定滚动容器越过阈值后固定内容，同时保留原有布局占位。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview affix-stage">
+          <div class="affix-scroll" id="affix-scroll">
+            <div class="affix-spacer">Scroll this panel</div>
+            <hy-affix id="affix-live" offset-top="8"><div class="affix-toolbar"><b>Scene actions</b><button type="button">Publish</button></div></hy-affix>
+            <div class="affix-document"><b>Moon Temple</b><p>Continue scrolling to see the toolbar stay inside this viewport.</p></div>
+          </div>
+        </div>
+        <div class="controls stacked">
+          <label>position<select id="affix-position"><option value="top" selected>top</option><option value="bottom">bottom</option></select></label>
+          <label>offset <input id="affix-offset" type="range" min="0" max="40" value="8" /><output id="affix-offset-value">8 px</output></label>
+          <label class="toggle"><input id="affix-disabled" type="checkbox" /><span></span>disabled</label>
+          <button class="native-trigger" id="affix-reset" type="button">Reset scroll</button>
+          <output id="affix-state">not affixed</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineAffixComponents } from '@haiyue/ui/affix';
+
+defineAffixComponents();
+affix.target = document.querySelector('.scroll-container');
+affix.topOffset = 12;
+affix.addEventListener('affix-change', event =&gt; console.log(event.detail.affixed));</code></pre></details>
+      <div class="parameter-strip"><code>offset-top</code><code>offset-bottom</code><code>target</code><code>disabled</code><code>z-index</code><code>affixed</code><code>refresh()</code><code>affix-change</code></div>
+    </section>
+
+    <section class="component-section" id="tour" data-title="Tour">
+      <div class="section-heading"><div><h2>Tour</h2><code>&lt;hy-tour&gt;</code></div><p>用聚光遮罩和步骤浮层引导用户漫游界面；支持目标定位、自动滚动和完整生命周期事件。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview tour-stage">
+          <div class="tour-workspace">
+            <button type="button" id="tour-target-scene"><span>01</span><b>Scene tree</b><small>Select objects</small></button>
+            <button type="button" id="tour-target-light"><span>02</span><b>Lighting</b><small>Tune the mood</small></button>
+            <button type="button" id="tour-target-publish"><span>03</span><b>Publish</b><small>Share the build</small></button>
+          </div>
+        </div>
+        <div class="controls stacked">
+          <label>placement<select id="tour-placement"><option value="bottom" selected>bottom</option><option value="top">top</option><option value="right">right</option><option value="left">left</option><option value="center">center</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="tour-mask" type="checkbox" checked /><span></span>mask</label><label class="toggle"><input id="tour-mask-close" type="checkbox" checked /><span></span>close on mask</label></div>
+          <button class="native-trigger" id="tour-launch" type="button">Start guided tour</button>
+          <output id="tour-state">ready · 3 steps</output>
+        </div>
+      </div>
+      <hy-tour id="tour-live" close-on-mask></hy-tour>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineTourComponents } from '@haiyue/ui/tour';
+
+defineTourComponents();
+tour.steps = [
+  { title: 'Choose a scene', target: '#scene-tree' },
+  { title: 'Publish', target: publishButton, placement: 'left' }
+];
+tour.start();</code></pre></details>
+      <div class="parameter-strip"><code>steps</code><code>open</code><code>current</code><code>placement</code><code>mask</code><code>close-on-mask</code><code>close-on-escape</code><code>scroll-into-view</code><code>gap</code><code>start()</code><code>next()</code><code>previous()</code><code>close()</code></div>
+    </section>
+
+    <section class="component-section" id="collapse" data-title="Collapse">
+      <div class="section-heading"><div><h2>Collapse</h2><code>&lt;hy-collapse&gt;</code></div><p>按需展开分组内容；支持多项展开、手风琴模式、禁用面板和内容销毁策略。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview collapse-stage"><hy-collapse id="collapse-live" default-active-keys='["scene"]' aria-label="Project settings"></hy-collapse></div>
+        <div class="controls stacked">
+          <label>icon position<select id="collapse-icon-position"><option value="start" selected>start</option><option value="end">end</option></select></label>
+          <label>collapsible<select id="collapse-trigger"><option value="header" selected>header</option><option value="icon">icon only</option><option value="disabled">disabled</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="collapse-accordion" type="checkbox" /><span></span>accordion</label><label class="toggle"><input id="collapse-bordered" type="checkbox" checked /><span></span>bordered</label></div>
+          <div class="toggle-row"><label class="toggle"><input id="collapse-ghost" type="checkbox" /><span></span>ghost</label><label class="toggle"><input id="collapse-destroy" type="checkbox" /><span></span>destroy hidden</label></div>
+          <output id="collapse-state">active · scene</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineCollapseComponents } from '@haiyue/ui/collapse';
+
+defineCollapseComponents();
+collapse.items = [
+  { key: 'scene', title: 'Scene settings', content: 'Camera and environment' },
+  { key: 'assets', title: 'Asset pipeline', content: 'Models and textures' }
+];
+collapse.activeKeys = ['scene'];</code></pre></details>
+      <div class="parameter-strip"><code>items</code><code>active-keys</code><code>default-active-keys</code><code>accordion</code><code>bordered</code><code>ghost</code><code>icon-position</code><code>collapsible</code><code>destroy-on-hidden</code><code>toggle()</code><code>collapse-change</code></div>
     </section>
 
     <section class="component-section" id="tabs" data-title="Tabs">

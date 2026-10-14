@@ -21,6 +21,14 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./badge": {
+      "types": "./dist/badge.d.ts",
+      "import": "./dist/badge.js"
+    },
+    "./affix": {
+      "types": "./dist/affix.d.ts",
+      "import": "./dist/affix.js"
+    },
     "./border-beam": {
       "types": "./dist/border-beam.d.ts",
       "import": "./dist/border-beam.js"
@@ -37,6 +45,18 @@
       "types": "./dist/checkbox.d.ts",
       "import": "./dist/checkbox.js"
     },
+    "./collapse": {
+      "types": "./dist/collapse.d.ts",
+      "import": "./dist/collapse.js"
+    },
+    "./cascader": {
+      "types": "./dist/cascader.d.ts",
+      "import": "./dist/cascader.js"
+    },
+    "./date-picker": {
+      "types": "./dist/date-picker.d.ts",
+      "import": "./dist/date-picker.js"
+    },
     "./context-menu": {
       "types": "./dist/context-menu.d.ts",
       "import": "./dist/context-menu.js"
@@ -44,6 +64,10 @@
     "./dialog": {
       "types": "./dist/dialog.d.ts",
       "import": "./dist/dialog.js"
+    },
+    "./divider": {
+      "types": "./dist/divider.d.ts",
+      "import": "./dist/divider.js"
     },
     "./drawer": {
       "types": "./dist/drawer.d.ts",
@@ -73,6 +97,10 @@
       "types": "./dist/virtual-mouse.d.ts",
       "import": "./dist/virtual-mouse.js"
     },
+    "./watermark": {
+      "types": "./dist/watermark.d.ts",
+      "import": "./dist/watermark.js"
+    },
     "./table": {
       "types": "./dist/table.d.ts",
       "import": "./dist/table.js"
@@ -80,6 +108,10 @@
     "./radio": {
       "types": "./dist/radio.d.ts",
       "import": "./dist/radio.js"
+    },
+    "./rate": {
+      "types": "./dist/rate.d.ts",
+      "import": "./dist/rate.js"
     },
     "./range": {
       "types": "./dist/range.d.ts",
@@ -89,9 +121,17 @@
       "types": "./dist/select.d.ts",
       "import": "./dist/select.js"
     },
+    "./skeleton": {
+      "types": "./dist/skeleton.d.ts",
+      "import": "./dist/skeleton.js"
+    },
     "./split": {
       "types": "./dist/split.d.ts",
       "import": "./dist/split.js"
+    },
+    "./steps": {
+      "types": "./dist/steps.d.ts",
+      "import": "./dist/steps.js"
     },
     "./tabs": {
       "types": "./dist/tabs.d.ts",
@@ -100,6 +140,18 @@
     "./tooltip": {
       "types": "./dist/tooltip.d.ts",
       "import": "./dist/tooltip.js"
+    },
+    "./tour": {
+      "types": "./dist/tour.d.ts",
+      "import": "./dist/tour.js"
+    },
+    "./time-picker": {
+      "types": "./dist/time-picker.d.ts",
+      "import": "./dist/time-picker.js"
+    },
+    "./timeline": {
+      "types": "./dist/timeline.d.ts",
+      "import": "./dist/timeline.js"
     },
     "./tree": {
       "types": "./dist/tree.d.ts",

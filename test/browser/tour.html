@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>body { min-height: 900px; } #target-one { margin: 120px; } #target-two { position: absolute; top: 420px; right: 120px; }</style>
+</head>
+<body>
+  <button id="launch">Start tour</button>
+  <button id="target-one">Scene tree</button>
+  <button id="target-two">Inspector</button>
+  <hy-tour id="tour" close-on-mask></hy-tour>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineTourComponents } from '../../dist/tour.js';
+    defineTourComponents();
+    tour.steps = [
+      { title: 'Scene tree', description: 'Choose an object.', target: '#target-one' },
+      { title: 'Inspector', description: 'Edit its properties.', target: '#target-two', placement: 'left' },
+      { title: 'Ready', description: 'The workspace is ready.', placement: 'center' },
+    ];
+    for (const name of ['tour-change', 'tour-close', 'tour-finish', 'tour-open-change']) tour.addEventListener(name, event => { events.textContent += `${name}:${JSON.stringify(event.detail)}\n`; });
+    launch.addEventListener('click', () => tour.start());
+  </script>
+</body>
+</html>

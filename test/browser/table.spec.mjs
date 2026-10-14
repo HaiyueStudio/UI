@@ -70,9 +70,15 @@ test('component gallery demonstrates table controls without page errors', async 
   const table = page.locator('#table-live');
   await expect(table.locator('tbody tr')).toHaveCount(5);
   await expect(table.locator('summary.filter-trigger')).toHaveCount(2);
-  await page.locator('#table-show-filters').uncheck({ force: true });
+  await page.locator('#table-show-filters').evaluate(element => {
+    element.checked = false;
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  });
   await expect(table.locator('summary.filter-trigger')).toHaveCount(0);
-  await page.locator('#table-show-filters').check({ force: true });
+  await page.locator('#table-show-filters').evaluate(element => {
+    element.checked = true;
+    element.dispatchEvent(new Event('change', { bubbles: true }));
+  });
   await expect(table.locator('summary.filter-trigger')).toHaveCount(2);
   await page.locator('#table-status').selectOption('Blocked');
   await expect(page.locator('#table-event')).toContainText('"filteredTotal":12');

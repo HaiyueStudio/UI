@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><style>body { padding: 40px; background: #0d121a; } hy-collapse { width: 520px; }</style></head>
+<body>
+  <hy-collapse id="collapse" default-active-keys='["scene"]' aria-label="Project details"></hy-collapse>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineCollapseComponents } from '../../dist/collapse.js';
+    defineCollapseComponents();
+    collapse.items = [
+      { key: 'scene', title: 'Scene settings', content: 'Camera, environment, and render target.', extra: '3 fields' },
+      { key: 'assets', title: 'Asset pipeline', content: 'Models, textures, and materials.' },
+      { key: 'publish', title: 'Publish access', content: 'Only project owners can publish.', disabled: true },
+    ];
+    collapse.addEventListener('collapse-change', event => { events.textContent += JSON.stringify(event.detail) + '\n'; });
+  </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Time picker test</title></head>
+<body>
+  <hy-time-picker id="picker" aria-label="Publish time" value="10:30:15" show-seconds minute-step="5" second-step="15" min="09:00:00" max="18:00:00"></hy-time-picker>
+  <button id="outside">Outside</button><pre id="events"></pre>
+  <script type="module">
+    import { defineTimePickerComponents } from '../../dist/time-picker.js';
+    defineTimePickerComponents();
+    const picker = document.querySelector('#picker'); const output = document.querySelector('#events');
+    picker.addEventListener('value-change', event => { output.textContent += `value:${event.detail.value}\n`; });
+    picker.addEventListener('open-change', event => { output.textContent += `open:${event.detail.open}\n`; });
+  </script>
+</body>
+</html>

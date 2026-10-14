@@ -3,21 +3,21 @@
   "package": {
     "workspace": ".",
     "nodeImport": false,
-    "maxPackedBytes": 72698,
-    "maxUnpackedBytes": 343445,
-    "maxFileCount": 64,
+    "maxPackedBytes": 114009,
+    "maxUnpackedBytes": 545816,
+    "maxFileCount": 90,
     "capacity": {
       "reviewed": {
-        "packedBytes": 70698,
-        "unpackedBytes": 335445,
-        "fileCount": 60
+        "packedBytes": 111009,
+        "unpackedBytes": 533816,
+        "fileCount": 86
       },
       "growthReserve": {
-        "packedBytes": 2000,
-        "unpackedBytes": 8000,
+        "packedBytes": 3000,
+        "unpackedBytes": 12000,
         "fileCount": 4
       },
-      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths, including the virtual mouse visual API, local-data table, and accessible breadcrumb navigation"
+      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths, including virtual mouse, local-data table, breadcrumb navigation, hierarchical cascader selection, date/time pickers, loading skeletons, text/image watermarks, timelines, half-step ratings, count/status badges, accessible collapse panels, styled text dividers, horizontal/vertical progress steps, viewport affixing, and guided spotlight tours"
     },
     "sideEffects": [
       "./themes/*.css"

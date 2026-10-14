@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Timeline test</title></head>
+<body>
+  <hy-timeline id="timeline" mode="alternate" pending="Deploying preview" aria-label="Release history"></hy-timeline>
+  <script type="module">
+    import { defineTimelineComponents } from '../../dist/timeline.js';
+    defineTimelineComponents();
+    const timeline = document.querySelector('#timeline');
+    timeline.items = [
+      { key: 'created', label: '09:00', title: 'Project created', description: 'Initial scene generated.', status: 'success' },
+      { key: 'built', label: '09:12', title: 'Build completed', description: 'Web target compiled.', status: 'info', dot: '✓' },
+      { key: 'review', label: '09:20', title: 'Review warning', description: 'One asset needs review.', status: 'warning' },
+    ];
+  </script>
+</body>
+</html>
