@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Virtual mouse test</title></head>
+<body>
+  <hy-virtual-mouse id="mouse" animated duration="40"></hy-virtual-mouse>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineVirtualMouseComponents } from '../../dist/virtual-mouse.js';
+    defineVirtualMouseComponents();
+    const mouse = document.querySelector('#mouse');
+    const output = document.querySelector('#events');
+    for (const name of ['virtual-mouse-move-end', 'virtual-mouse-down', 'virtual-mouse-up', 'virtual-mouse-click']) {
+      mouse.addEventListener(name, event => { output.textContent += `${name}:${event.detail.button ?? event.detail.to.x}\n`; });
+    }
+  </script>
+</body>
+</html>

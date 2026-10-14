@@ -19,6 +19,22 @@ import { defineInputComponents } from './input.js';
 import { defineNotificationComponents } from './notification.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
 import { defineVirtualListComponents } from './virtual-list.js';
+import { defineVirtualMouseComponents } from './virtual-mouse.js';
+import { defineTableComponents } from './table.js';
+import { defineBreadcrumbComponents } from './breadcrumb.js';
+import { defineCascaderComponents } from './cascader.js';
+import { defineDatePickerComponents } from './date-picker.js';
+import { defineTimePickerComponents } from './time-picker.js';
+import { defineSkeletonComponents } from './skeleton.js';
+import { defineWatermarkComponents } from './watermark.js';
+import { defineTimelineComponents } from './timeline.js';
+import { defineRateComponents } from './rate.js';
+import { defineDividerComponents } from './divider.js';
+import { defineStepsComponents } from './steps.js';
+import { defineAffixComponents } from './affix.js';
+import { defineTourComponents } from './tour.js';
+import { defineBadgeComponents } from './badge.js';
+import { defineCollapseComponents } from './collapse.js';
 
 export {
   defineButtonComponents,
@@ -104,6 +120,162 @@ export type {
   HYVirtualListRange,
   HYVirtualListRangeChangeDetail,
 } from './virtual-list.js';
+export {
+  defineVirtualMouseComponents,
+  HYVirtualMouse,
+} from './virtual-mouse.js';
+export {
+  defineTableComponents,
+  HYTable,
+} from './table.js';
+export {
+  defineBreadcrumbComponents,
+  HYBreadcrumb,
+} from './breadcrumb.js';
+export {
+  defineCascaderComponents,
+  HYCascader,
+} from './cascader.js';
+export type {
+  HYCascaderChangeDetail,
+  HYCascaderOpenChangeDetail,
+  HYCascaderOption,
+  HYCascaderValue,
+} from './cascader.js';
+export {
+  defineDatePickerComponents,
+  HYDatePicker,
+} from './date-picker.js';
+export type {
+  HYDatePickerChangeDetail,
+  HYDatePickerOpenChangeDetail,
+} from './date-picker.js';
+export {
+  defineTimePickerComponents,
+  HYTimePicker,
+} from './time-picker.js';
+export type {
+  HYTimePickerChangeDetail,
+  HYTimePickerOpenChangeDetail,
+} from './time-picker.js';
+export {
+  defineSkeletonComponents,
+  HYSkeleton,
+} from './skeleton.js';
+export type {
+  HYSkeletonAvatarShape,
+  HYSkeletonSize,
+} from './skeleton.js';
+export {
+  defineWatermarkComponents,
+  HYWatermark,
+} from './watermark.js';
+export {
+  defineTimelineComponents,
+  HYTimeline,
+} from './timeline.js';
+export {
+  defineRateComponents,
+  HYRate,
+} from './rate.js';
+export type {
+  HYRateChangeDetail,
+  HYRateHoverChangeDetail,
+} from './rate.js';
+export {
+  defineDividerComponents,
+  HYDivider,
+} from './divider.js';
+export type {
+  HYDividerLineStyle,
+  HYDividerOrientation,
+  HYDividerTextPlacement,
+} from './divider.js';
+export {
+  defineStepsComponents,
+  HYSteps,
+} from './steps.js';
+export {
+  defineAffixComponents,
+  HYAffix,
+} from './affix.js';
+export type { HYAffixChangeDetail } from './affix.js';
+export {
+  defineTourComponents,
+  HYTour,
+} from './tour.js';
+export {
+  defineBadgeComponents,
+  HYBadge,
+} from './badge.js';
+export type {
+  HYBadgeCount,
+  HYBadgeSize,
+  HYBadgeStatus,
+} from './badge.js';
+export {
+  defineCollapseComponents,
+  HYCollapse,
+} from './collapse.js';
+export type {
+  HYCollapseChangeDetail,
+  HYCollapseContent,
+  HYCollapseIconPosition,
+  HYCollapseItem,
+  HYCollapseKey,
+  HYCollapseTrigger,
+} from './collapse.js';
+export type {
+  HYTourChangeDetail,
+  HYTourCloseDetail,
+  HYTourCloseReason,
+  HYTourFinishDetail,
+  HYTourOpenChangeDetail,
+  HYTourPlacement,
+  HYTourStep,
+  HYTourTarget,
+} from './tour.js';
+export type {
+  HYStepItem,
+  HYStepsChangeDetail,
+  HYStepsDirection,
+  HYStepsSize,
+  HYStepStatus,
+} from './steps.js';
+export type {
+  HYTimelineDotRenderer,
+  HYTimelineItem,
+  HYTimelineItemPosition,
+  HYTimelineItemRenderer,
+  HYTimelineMode,
+  HYTimelineStatus,
+} from './timeline.js';
+export type {
+  HYBreadcrumbClickDetail,
+  HYBreadcrumbItem,
+  HYBreadcrumbItemRenderer,
+} from './breadcrumb.js';
+export type {
+  HYTableAlign,
+  HYTableChangeDetail,
+  HYTableChangeReason,
+  HYTableColumn,
+  HYTableFilterOption,
+  HYTableFilterState,
+  HYTableRowClickDetail,
+  HYTableSortDirection,
+  HYTableSortState,
+} from './table.js';
+export type {
+  HYVirtualMouseButton,
+  HYVirtualMouseButtonDetail,
+  HYVirtualMouseClickOptions,
+  HYVirtualMouseImages,
+  HYVirtualMouseMoveDetail,
+  HYVirtualMouseMoveOptions,
+  HYVirtualMousePosition,
+  HYVirtualMouseState,
+} from './virtual-mouse.js';
 export type {
   HYSplitDirection,
   HYSplitRatioChangeDetail,
@@ -189,4 +361,20 @@ export function defineHaiyueUI(): void {
   defineNotificationComponents();
   defineHistoryControlsComponents();
   defineVirtualListComponents();
+  defineVirtualMouseComponents();
+  defineTableComponents();
+  defineBreadcrumbComponents();
+  defineCascaderComponents();
+  defineDatePickerComponents();
+  defineTimePickerComponents();
+  defineSkeletonComponents();
+  defineWatermarkComponents();
+  defineTimelineComponents();
+  defineRateComponents();
+  defineDividerComponents();
+  defineStepsComponents();
+  defineAffixComponents();
+  defineTourComponents();
+  defineBadgeComponents();
+  defineCollapseComponents();
 }

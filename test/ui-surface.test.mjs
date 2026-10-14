@@ -7,33 +7,56 @@ globalThis.HTMLElement ??= class HTMLElement {};
 test('UI root keeps the supported component surface importable', async () => {
   const ui = await import('../dist/index.js');
   const expected = [
+    'HYAffix',
+    'HYBadge',
     'HYExpandable',
     'defineExpandableComponents',
     'HYButton',
     'HYBorderBeam',
+    'HYBreadcrumb',
+    'HYCascader',
+    'HYDatePicker',
     'HYCheckbox',
+    'HYCollapse',
     'HYContextMenu',
     'HYDialog',
+    'HYDivider',
     'HYDrawer',
     'HYDropdown',
     'HYHistoryControls',
     'HYInput',
     'HYNotification',
     'HYRadio',
+    'HYRate',
     'HYRange',
     'HYSelect',
+    'HYSkeleton',
     'HYSplit',
+    'HYSteps',
     'HYTabs',
+    'HYTimeline',
     'HYTooltip',
     'HYTree',
     'HYTreeNode',
     'HYVirtualList',
+    'HYVirtualMouse',
+    'HYWatermark',
+    'HYTable',
+    'HYTimePicker',
+    'HYTour',
     'calculateVirtualListRange',
     'defineButtonComponents',
+    'defineAffixComponents',
+    'defineBadgeComponents',
     'defineBorderBeamComponents',
+    'defineBreadcrumbComponents',
+    'defineCascaderComponents',
+    'defineDatePickerComponents',
     'defineCheckboxComponents',
+    'defineCollapseComponents',
     'defineContextMenuComponents',
     'defineDialogComponents',
+    'defineDividerComponents',
     'defineDrawerComponents',
     'defineDropdownComponents',
     'defineHistoryControlsComponents',
@@ -41,16 +64,216 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineNotificationComponents',
     'defineHaiyueUI',
     'defineRadioComponents',
+    'defineRateComponents',
     'defineRangeComponents',
     'defineSelectComponents',
+    'defineSkeletonComponents',
     'defineSplitComponents',
+    'defineStepsComponents',
     'defineTabsComponents',
+    'defineTimelineComponents',
     'defineTooltipComponents',
     'defineTreeComponents',
     'defineVirtualListComponents',
+    'defineVirtualMouseComponents',
+    'defineWatermarkComponents',
+    'defineTableComponents',
+    'defineTimePickerComponents',
+    'defineTourComponents',
   ];
   assert.deepEqual(Object.keys(ui).sort(), expected.sort());
   assert.equal(Object.keys(ui).some(name => /^GE[A-Z]/u.test(name)), false);
+});
+
+test('affix preserves layout while pinning content to window or an owned scroll target', () => {
+  const source = readFileSync(new URL('../src/affix.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYAffix extends HTMLElement/);
+  assert.match(source, /get topOffset\(\): number \| null/);
+  assert.match(source, /get bottomOffset\(\): number \| null/);
+  assert.match(source, /get target\(\): HTMLElement \| Window \| null/);
+  assert.match(source, /this\._placeholder\.style\.height/);
+  assert.match(source, /this\._listeners\?\.abort\(\)/);
+  assert.match(source, /this\._resizeObserver\?\.disconnect\(\)/);
+  assert.match(source, /CustomEvent<HYAffixChangeDetail>\('affix-change'/);
+  assert.match(source, /customElements\.define\('hy-affix'/);
+});
+
+test('badge renders bounded counts, dots, semantic statuses, custom colors, and offsets', () => {
+  const source = readFileSync(new URL('../src/badge.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYBadge extends HTMLElement/);
+  assert.match(source, /get overflowCount\(\): number/);
+  assert.match(source, /get showZero\(\): boolean/);
+  assert.match(source, /get offset\(\): readonly \[number, number\]/);
+  assert.match(source, /value > this\.overflowCount \? `\$\{this\.overflowCount\}\+`/);
+  assert.match(source, /role', 'status'/);
+  assert.match(source, /prefers-reduced-motion: reduce/);
+  assert.match(source, /customElements\.define\('hy-badge'/);
+});
+
+test('collapse exposes accessible multi-panel and accordion disclosure behavior', () => {
+  const source = readFileSync(new URL('../src/collapse.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYCollapse extends HTMLElement/);
+  assert.match(source, /get activeKeys\(\): readonly HYCollapseKey\[\]/);
+  assert.match(source, /get accordion\(\): boolean/);
+  assert.match(source, /get destroyOnHidden\(\): boolean/);
+  assert.match(source, /button\.setAttribute\('aria-expanded'/);
+  assert.match(source, /region\.setAttribute\('role', 'region'\)/);
+  assert.match(source, /--hy-collapse-extra-gap, 10px/);
+  assert.match(source, /this\.accordion \? \[normalized\]/);
+  assert.match(source, /CustomEvent<HYCollapseChangeDetail>\('collapse-change'/);
+  assert.match(source, /customElements\.define\('hy-collapse'/);
+});
+
+test('tour guides across resolved targets with mask, keyboard, focus, and lifecycle events', () => {
+  const source = readFileSync(new URL('../src/tour.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYTour extends HTMLElement/);
+  assert.match(source, /'top' \| 'right' \| 'bottom' \| 'left' \| 'center'/);
+  assert.match(source, /target\.scrollIntoView/);
+  assert.match(source, /event\.key === 'Escape'/);
+  assert.match(source, /this\._returnFocus\?\.focus/);
+  assert.match(source, /CustomEvent<HYTourChangeDetail>\('tour-change'/);
+  assert.match(source, /CustomEvent<HYTourFinishDetail>\('tour-finish'/);
+  assert.match(source, /CustomEvent<HYTourCloseDetail>\('tour-close'/);
+  assert.match(source, /customElements\.define\('hy-tour'/);
+});
+
+test('date picker exposes an ISO calendar, constraints, keyboard navigation, and owned listener cleanup', () => {
+  const source = readFileSync(new URL('../src/date-picker.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYDatePicker extends HTMLElement/);
+  assert.match(source, /\^\(\\d\{4\}\)-\(\\d\{2\}\)-\(\\d\{2\}\)\$/);
+  assert.match(source, /get weekStart\(\): 0 \| 1/);
+  assert.match(source, /'ArrowLeft'.*'ArrowRight'.*'ArrowUp'.*'ArrowDown'/s);
+  assert.match(source, /'PageUp'.*'PageDown'/s);
+  assert.match(source, /this\._outsideAbort\?\.abort\(\)/);
+  assert.match(source, /CustomEvent<HYDatePickerChangeDetail>\('value-change'/);
+  assert.match(source, /customElements\.define\('hy-date-picker'/);
+});
+
+test('time picker exposes stepped columns, range limits, keyboard navigation, and composed events', () => {
+  const source = readFileSync(new URL('../src/time-picker.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYTimePicker extends HTMLElement/);
+  assert.match(source, /get showSeconds\(\): boolean/);
+  assert.match(source, /get minuteStep\(\): number/);
+  assert.match(source, /get secondStep\(\): number/);
+  assert.match(source, /role', 'listbox'/);
+  assert.match(source, /'ArrowDown'.*'ArrowUp'.*'Home'.*'End'/s);
+  assert.match(source, /this\._outsideAbort\?\.abort\(\)/);
+  assert.match(source, /CustomEvent<HYTimePickerChangeDetail>\('value-change'/);
+  assert.match(source, /customElements\.define\('hy-time-picker'/);
+});
+
+test('skeleton swaps loading placeholders for content with bounded and themeable structure', () => {
+  const source = readFileSync(new URL('../src/skeleton.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYSkeleton extends HTMLElement/);
+  assert.match(source, /get loading\(\): boolean/);
+  assert.match(source, /get rows\(\): number/);
+  assert.match(source, /get paragraphWidths\(\): readonly string\[\]/);
+  assert.match(source, /clampInteger\(this\.getAttribute\('rows'\), 3, 0, 20\)/);
+  assert.match(source, /prefers-reduced-motion: reduce/);
+  assert.match(source, /this\._content\.hidden = loading/);
+  assert.match(source, /part\.add\('avatar'\)/);
+  assert.match(source, /customElements\.define\('hy-skeleton'/);
+});
+
+test('watermark renders protected shadow-owned text or image patterns without intercepting input', () => {
+  const source = readFileSync(new URL('../src/watermark.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYWatermark extends HTMLElement/);
+  assert.match(source, /patternUnits', 'userSpaceOnUse'/);
+  assert.match(source, /pointer-events: none/);
+  assert.match(source, /this\.content\.split\(\/\\r\?\\n\/u\)/);
+  assert.match(source, /private _renderImage/);
+  assert.match(source, /private _renderText/);
+  assert.match(source, /rotate\(\$\{this\.rotate\}/);
+  assert.match(source, /customElements\.define\('hy-watermark'/);
+});
+
+test('timeline renders semantic ordered history with modes, reverse, pending, and custom content hooks', () => {
+  const source = readFileSync(new URL('../src/timeline.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYTimeline extends HTMLElement/);
+  assert.match(source, /private readonly _list = document\.createElement\('ol'\)/);
+  assert.match(source, /'left' \| 'right' \| 'alternate'/);
+  assert.match(source, /if \(this\.reverse\) nodes\.unshift\(pending\)/);
+  assert.match(source, /get renderItem\(\): HYTimelineItemRenderer \| null/);
+  assert.match(source, /get renderDot\(\): HYTimelineDotRenderer \| null/);
+  assert.match(source, /prefers-reduced-motion: reduce/);
+  assert.match(source, /customElements\.define\('hy-timeline'/);
+});
+
+test('rate supports bounded half stars, clear, keyboard control, and composed events', () => {
+  const source = readFileSync(new URL('../src/rate.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYRate extends HTMLElement/);
+  assert.match(source, /get allowHalf\(\): boolean/);
+  assert.match(source, /const step = this\.allowHalf \? 0\.5 : 1/);
+  assert.match(source, /role', 'slider'/);
+  assert.match(source, /'ArrowRight'.*'ArrowUp'.*'ArrowLeft'.*'ArrowDown'/s);
+  assert.match(source, /CustomEvent<HYRateChangeDetail>\('value-change'/);
+  assert.match(source, /CustomEvent<HYRateHoverChangeDetail>\('hover-change'/);
+  assert.match(source, /customElements\.define\('hy-rate'/);
+});
+
+test('divider exposes semantic orientation, line styles, text placement, and slotted labels', () => {
+  const source = readFileSync(new URL('../src/divider.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYDivider extends HTMLElement/);
+  assert.match(source, /'solid' \| 'dashed' \| 'dotted' \| 'double'/);
+  assert.match(source, /setAttribute\('role', 'separator'\)/);
+  assert.match(source, /setAttribute\('aria-orientation', this\.orientation\)/);
+  assert.match(source, /this\._slot\.assignedNodes\(\)/);
+  assert.match(source, /lineStyle === 'double' \? Math\.max\(3, this\.thickness\)/);
+  assert.match(source, /customElements\.define\('hy-divider'/);
+});
+
+test('steps exposes semantic status progression, horizontal and vertical layout, and optional navigation', () => {
+  const source = readFileSync(new URL('../src/steps.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYSteps extends HTMLElement/);
+  assert.match(source, /'horizontal' \| 'vertical'/);
+  assert.match(source, /private readonly _list = document\.createElement\('ol'\)/);
+  assert.match(source, /index < current \? 'finish' : index === current \? 'process' : 'wait'/);
+  assert.match(source, /setAttribute\('aria-current', 'step'\)/);
+  assert.match(source, /CustomEvent<HYStepsChangeDetail>\('step-change'/);
+  assert.match(source, /customElements\.define\('hy-steps'/);
+});
+
+test('cascader owns hierarchical selection, keyboard traversal, and outside-listener cleanup', () => {
+  const cascader = readFileSync(new URL('../src/cascader.ts', import.meta.url), 'utf8');
+  assert.match(cascader, /export class HYCascader extends HTMLElement/);
+  assert.match(cascader, /readonly children\?: readonly HYCascaderOption\[\]/);
+  assert.match(cascader, /private _normalizePath/);
+  assert.match(cascader, /'ArrowDown'.*'ArrowUp'.*'Home'.*'End'/s);
+  assert.match(cascader, /event\.key === 'ArrowRight'/);
+  assert.match(cascader, /event\.key === 'ArrowLeft'/);
+  assert.match(cascader, /this\._outsideAbort\?\.abort\(\)/);
+  assert.match(cascader, /CustomEvent<HYCascaderChangeDetail>\('value-change'/);
+  assert.match(cascader, /CustomEvent<HYCascaderOpenChangeDetail>\('open-change'/);
+  assert.match(cascader, /customElements\.define\('hy-cascader'/);
+});
+
+test('breadcrumb renders accessible navigation, separators, actions, and a cancelable click contract', () => {
+  const breadcrumb = readFileSync(new URL('../src/breadcrumb.ts', import.meta.url), 'utf8');
+  assert.match(breadcrumb, /export class HYBreadcrumb extends HTMLElement/);
+  assert.match(breadcrumb, /this\._nav\.setAttribute\('aria-label'/);
+  assert.match(breadcrumb, /element\.setAttribute\('aria-current', 'page'\)/);
+  assert.match(breadcrumb, /separator\.setAttribute\('aria-hidden', 'true'\)/);
+  assert.match(breadcrumb, /CustomEvent<HYBreadcrumbClickDetail>\('breadcrumb-click'/);
+  assert.match(breadcrumb, /cancelable: true/);
+  assert.match(breadcrumb, /customElements\.define\('hy-breadcrumb'/);
+});
+
+test('table composes filtering, stable sorting, pagination, and accessible controls', () => {
+  const table = readFileSync(new URL('../src/table.ts', import.meta.url), 'utf8');
+  assert.match(table, /export class HYTable.*extends HTMLElement/);
+  assert.match(table, /this\._dataSource\.map\(\(record, index\) => \(\{ record, index \}\)\)/);
+  assert.match(table, /records\.sort\(\(left, right\) =>/);
+  assert.match(table, /slice\(start, start \+ this\._pageSize\)/);
+  assert.match(table, /setFilter\(key: string, value: string\)/);
+  assert.match(table, /sortBy\(key: string, direction\?: HYTableSortDirection\)/);
+  assert.match(table, /goToPage\(value: number\)/);
+  assert.match(table, /aria-sort/);
+  assert.match(table, /get showFilters\(\): boolean/);
+  assert.match(table, /column\.showFilter !== false/);
+  assert.match(table, /className = 'filter-trigger'/);
+  assert.match(table, /CustomEvent<HYTableChangeDetail<T>>\('table-change'/);
+  assert.match(table, /CustomEvent<HYTableRowClickDetail<T>>\('row-click'/);
+  assert.match(table, /customElements\.define\('hy-table'/);
 });
 
 test('virtual list calculates a buffered, exclusive render range', async () => {
@@ -86,6 +309,24 @@ test('virtual list keeps data off-DOM and cleans up owned observers and listener
   assert.match(source, /removeEventListener\('scroll', this\._onScroll\)/);
   assert.match(source, /'visible-range-change'/);
   assert.match(source, /'item-click'/);
+});
+
+test('virtual mouse exposes fixed visuals, state images, movement, and owned interaction cleanup', () => {
+  const virtualMouse = readFileSync(new URL('../src/virtual-mouse.ts', import.meta.url), 'utf8');
+  assert.match(virtualMouse, /export class HYVirtualMouse extends HTMLElement/);
+  assert.match(virtualMouse, /position: fixed !important/);
+  assert.match(virtualMouse, /pointer-events: none !important/);
+  assert.match(virtualMouse, /moveTo\(x: number, y: number/);
+  assert.match(virtualMouse, /moveBy\(deltaX: number, deltaY: number/);
+  assert.match(virtualMouse, /press\(button: HYVirtualMouseButton = 'left'\)/);
+  assert.match(virtualMouse, /release\(button: HYVirtualMouseButton = 'left'\)/);
+  assert.match(virtualMouse, /rightClick\(options:/);
+  assert.match(virtualMouse, /idle-image.*left-down-image.*middle-down-image.*right-down-image/s);
+  assert.match(virtualMouse, /--hy-virtual-mouse-right-down-background/);
+  assert.match(virtualMouse, /this\._cancelMove\(\)/);
+  assert.match(virtualMouse, /for \(const cancel of this\._delays\.values\(\)\) cancel\(\)/);
+  assert.match(virtualMouse, /CustomEvent<HYVirtualMouseMoveDetail>\('virtual-mouse-move-end'/);
+  assert.match(virtualMouse, /CustomEvent<HYVirtualMouseButtonDetail>\(name/);
 });
 
 test('drawer exposes directional placement, mask, Escape, and hidden-content destruction', () => {

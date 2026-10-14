@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Breadcrumb test</title></head>
+<body>
+  <hy-breadcrumb
+    id="breadcrumb"
+    aria-label="Project path"
+    separator="›"
+    items='[{"key":"home","label":"Home","href":"#home"},{"key":"assets","title":"Assets"},{"key":"locked","title":"Locked","disabled":true},{"key":"lighting","title":"Lighting"}]'
+  ></hy-breadcrumb>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineBreadcrumbComponents } from '../../dist/breadcrumb.js';
+    defineBreadcrumbComponents();
+    const breadcrumb = document.querySelector('#breadcrumb');
+    const output = document.querySelector('#events');
+    breadcrumb.addEventListener('breadcrumb-click', event => {
+      event.preventDefault();
+      output.textContent += `click:${event.detail.index}:${event.detail.item.title ?? event.detail.item.label}\n`;
+    });
+  </script>
+</body>
+</html>

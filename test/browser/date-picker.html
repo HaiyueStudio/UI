@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Date picker test</title></head>
+<body>
+  <hy-date-picker id="picker" aria-label="Publish date" value="2026-10-14" min="2026-10-10" max="2026-11-20"></hy-date-picker>
+  <button id="outside">Outside</button><pre id="events"></pre>
+  <script type="module">
+    import { defineDatePickerComponents } from '../../dist/date-picker.js';
+    defineDatePickerComponents();
+    const picker = document.querySelector('#picker'); const output = document.querySelector('#events');
+    picker.addEventListener('value-change', event => { output.textContent += `value:${event.detail.value}\n`; });
+    picker.addEventListener('open-change', event => { output.textContent += `open:${event.detail.open}\n`; });
+  </script>
+</body>
+</html>

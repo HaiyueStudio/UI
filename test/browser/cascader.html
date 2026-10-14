@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Cascader test</title></head>
+<body>
+  <hy-cascader id="cascader" aria-label="Location" placeholder="Choose a location"></hy-cascader>
+  <button id="outside">Outside</button>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineCascaderComponents } from '../../dist/cascader.js';
+    defineCascaderComponents();
+    const cascader = document.querySelector('#cascader');
+    const output = document.querySelector('#events');
+    cascader.options = [
+      { label: 'Asia', value: 'asia', children: [
+        { label: 'China', value: 'china', children: [
+          { label: 'Hangzhou', value: 'hangzhou' },
+          { label: 'Ningbo', value: 'ningbo' },
+        ] },
+        { label: 'Japan', value: 'japan', children: [{ label: 'Tokyo', value: 'tokyo' }] },
+      ] },
+      { label: 'Europe', value: 'europe', disabled: true, children: [{ label: 'Paris', value: 'paris' }] },
+    ];
+    cascader.addEventListener('value-change', event => {
+      output.textContent += `value:${event.detail.value.join('.')}:${event.detail.options.map(item => item.label).join('.')}\n`;
+    });
+    cascader.addEventListener('open-change', event => { output.textContent += `open:${event.detail.open}\n`; });
+  </script>
+</body>
+</html>

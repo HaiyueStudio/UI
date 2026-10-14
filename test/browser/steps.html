@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Steps test</title></head>
+<body>
+  <hy-steps id="steps" current="1" clickable aria-label="Publish progress"></hy-steps>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineStepsComponents } from '../../dist/steps.js';
+    defineStepsComponents();
+    const steps = document.querySelector('#steps'); const output = document.querySelector('#events');
+    steps.items = [
+      { key: 'scene', title: 'Scene', description: 'Prepare content' },
+      { key: 'build', title: 'Build', description: 'Compile assets' },
+      { key: 'review', title: 'Review', description: 'Resolve warning', status: 'error', icon: '!' },
+      { key: 'publish', title: 'Publish', description: 'Upload release', disabled: true },
+    ];
+    steps.addEventListener('step-change', event => { output.textContent = `${event.detail.previous}->${event.detail.current}:${event.detail.item.key}`; });
+  </script>
+</body>
+</html>

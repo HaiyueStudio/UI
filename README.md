@@ -82,6 +82,220 @@ Use the `height` property (or `height` attribute) for the internal viewport. `vi
 exclusive `endIndex` / `visibleEndIndex` values, and `item-click` reports the source item and absolute index.
 The scrollbar can be themed with inherited semantic tokens and `--hy-virtual-list-scrollbar-size`.
 
+## Breadcrumb
+
+Import and register breadcrumb navigation independently:
+
+```ts
+import { defineBreadcrumbComponents } from '@haiyue/ui/breadcrumb';
+
+defineBreadcrumbComponents();
+const breadcrumb = document.querySelector('hy-breadcrumb');
+breadcrumb.items = [
+  { key: 'projects', title: 'Projects', href: '/projects' },
+  { key: 'scene', title: 'Ocean World' },
+  { key: 'lighting', title: 'Lighting' },
+];
+breadcrumb.separator = '›';
+```
+
+Item text may use the Ant Design-compatible `title` field or its `label` alias. The final item is exposed as
+the current page with `aria-current="page"`. Earlier items render as links when
+they provide `href`, or as action buttons otherwise; disabled items remain readable but cannot be activated.
+Listen for the composed, cancelable `breadcrumb-click` event to handle actions or prevent link navigation.
+Use `renderItem` for custom item content, and `ariaLabel` when rendered content needs an explicit accessible
+name. Styling hooks include the `nav`, `list`, `item`, `link`, `button`, `current`, `disabled`, and `separator`
+shadow parts plus the `--hy-breadcrumb-*` CSS variables.
+
+## Cascader
+
+Use the focused `@haiyue/ui/cascader` entry for hierarchical selection:
+
+```ts
+import { defineCascaderComponents } from '@haiyue/ui/cascader';
+
+defineCascaderComponents();
+const cascader = document.querySelector('hy-cascader');
+cascader.options = [
+  { label: 'Project', value: 'project', children: [
+    { label: 'Scenes', value: 'scenes', children: [
+      { label: 'Moon Temple', value: 'temple' },
+    ] },
+  ] },
+];
+cascader.value = ['project', 'scenes', 'temple'];
+```
+
+Selecting a leaf commits the complete value path and emits `value-change` with both values and resolved option
+objects. Enable `changeOnSelect` (or `change-on-select`) when parent paths should also be committed. The component
+supports string and number values, disabled options, clearing, a custom `displaySeparator`, controlled `open`
+state, outside-pointer and Escape closing, and arrow/Home/End keyboard navigation. `open-change` reports panel
+visibility. Shadow parts expose `control`, `trigger`, `label`, `arrow`, `clear`, `panel`, `column`, `option`,
+`option-item`, and `empty` for product-specific styling.
+
+## Date and time pickers
+
+Date and time selection remain independently importable, so an application only ships the picker it uses:
+
+```ts
+import { defineDatePickerComponents } from '@haiyue/ui/date-picker';
+import { defineTimePickerComponents } from '@haiyue/ui/time-picker';
+
+defineDatePickerComponents();
+defineTimePickerComponents();
+```
+
+`<hy-date-picker>` emits ISO `YYYY-MM-DD` values and provides a locale-aware month calendar, `min` / `max`
+constraints, Monday or Sunday `weekStart`, Today, clearing, outside-pointer and Escape closing, and arrow,
+Home/End, and PageUp/PageDown keyboard navigation.
+
+`<hy-time-picker>` emits 24-hour `HH:mm` or `HH:mm:ss` values. Enable `showSeconds`, configure
+`minuteStep` / `secondStep`, and constrain selection with `min` / `max`. Its scrollable hour, minute, and second
+columns support keyboard traversal, Now, explicit confirmation, clearing, and controlled `open` state. Both
+components emit composed `value-change` and `open-change` events and expose their controls through shadow parts.
+
+## Skeleton
+
+Import the loading placeholder independently and place the real content in its default slot:
+
+```ts
+import { defineSkeletonComponents } from '@haiyue/ui/skeleton';
+
+defineSkeletonComponents();
+```
+
+`<hy-skeleton>` defaults to a title and three paragraph rows. Enable `active` for the shimmer animation, add
+`avatar`, choose `avatarShape`, `avatarSize`, `size`, and `round`, or tune `rows`, `titleWidth`, and the
+`paragraphWidths` property. Set `loading = false` to remove placeholder DOM and reveal the slotted content.
+The host exposes `aria-busy`, honors reduced-motion preferences, inherits both Haiyue themes, and provides
+`placeholder`, `content`, `avatar`, `body`, `title`, `paragraph`, and `row` shadow parts.
+
+## Steps
+
+Use `@haiyue/ui/steps` to show task, form, or publishing progress. Assign `items` with a required `title` and
+optional `description`, `subtitle`, `icon`, `status`, and `disabled` state. `current` is zero-based and derives
+`finish`, `process`, and `wait` states automatically unless an item provides an explicit status. Set
+`direction` to `horizontal` or `vertical`, use `size="small"` for compact layouts, and enable `clickable` when
+users may navigate between steps. Click navigation updates `current` and emits the composed `step-change` event.
+The ordered list exposes `aria-current="step"` and shadow parts for every structural and status element.
+
+## Badge
+
+Import `@haiyue/ui/badge` to decorate slotted content with a count or notification dot, or to render a standalone
+semantic status. Numeric counts are capped by `overflowCount` (99 by default); use `showZero`, `dot`, `size`,
+`color`, `title`, and the `[x, y]` `offset` property for display control. The `default`, `success`, `processing`,
+`warning`, and `error` statuses accept accompanying `text`, expose status semantics, and honor reduced-motion
+preferences. Structural styling hooks include `wrapper`, `badge`, `badge-content`, `status`, `status-dot`, and
+`status-text` shadow parts.
+
+## Collapse
+
+Import `@haiyue/ui/collapse` and assign typed `items` containing `key`, `title`, optional `content`, `extra`,
+`disabled`, and `showArrow` values. `activeKeys` supports multiple open panels, while `accordion` limits the
+group to one. Configure `iconPosition`, `collapsible`, `bordered`, `ghost`, and `destroyOnHidden`; call
+`toggle(key, expanded?)` for imperative control. Each header is a native keyboard-accessible button connected
+to a labelled region, and user changes emit the composed `collapse-change` event with the active keys and
+changed panel. The component exposes structural shadow parts from `collapse` and `panel` through `body`.
+
+## Affix
+
+Import `@haiyue/ui/affix` to pin actions, navigation, or status content after it crosses a viewport threshold.
+Use the `offset-top` or `offset-bottom` attributes, or the `topOffset` / `bottomOffset` properties, and assign an
+element to `target` when the scroll container is not the browser window. The component preserves the original
+layout with an internal placeholder, exposes the read-only `affixed` state, and emits the composed
+`affix-change` event. Call `refresh()` after layout changes that do not trigger resize observation.
+
+## Tour
+
+Import `@haiyue/ui/tour` for step-by-step product guidance. Assign `steps` with a title, optional description,
+target selector, element, or resolver function, and an optional `top`, `right`, `bottom`, `left`, or `center`
+placement. The component can render a spotlight mask, scroll targets into view, close from Escape or mask
+interaction, and is controlled through `open` and zero-based `current`. Use `start()`, `next()`, `previous()`,
+and `close()` from application code; observe `tour-change`, `tour-close`, `tour-finish`, and `tour-open-change`
+for lifecycle state. Focus returns to the launch control when the tour ends.
+
+## Divider
+
+Import `@haiyue/ui/divider` for semantic horizontal or vertical separators. Text can be supplied through the
+default slot or the `label` property. Choose `solid`, `dashed`, `dotted`, or `double` with `lineStyle`, and place
+text at `start`, `center`, or `end` with `textPlacement`. `thickness`, `color`, and `spacing` provide direct
+appearance controls, while the `divider`, `line`, `line-before`, `line-after`, `text`, and `fallback` shadow
+parts support product-specific styling. The internal separator exposes the correct `aria-orientation`.
+
+## Timeline
+
+Use `@haiyue/ui/timeline` for ordered activity, history, and process displays. Assign typed `items` containing
+`title`, optional `label` and `description`, semantic `status`, custom `color` or `dot`, and an optional per-item
+`position`. The `left`, `right`, and `alternate` modes control placement; `reverse` flips the order and moves an
+optional `pending` node to the leading edge. `renderItem` and `renderDot` provide DOM customization without
+changing the data contract. The ordered list automatically collapses to a readable single-column layout on
+narrow screens and its pending animation honors reduced-motion preferences.
+
+## Rate
+
+Import and register the star rating independently:
+
+```ts
+import { defineRateComponents } from '@haiyue/ui/rate';
+
+defineRateComponents();
+```
+
+`<hy-rate>` exposes a controlled numeric `value` and defaults to five stars. Add `allow-half` (or set
+`allowHalf = true`) for 0.5 increments. Configure `count`, `allowClear`, `character`, and `tooltips`, or set
+`disabled` / `readOnly` for non-editable states. The component exposes slider semantics, arrow/Home/End keyboard
+control, `value-change` and `hover-change` composed events, plus `group`, `star`, and `fill` shadow parts.
+
+## Watermark
+
+Wrap any content and render a non-interactive repeated text or image mark above it:
+
+```ts
+import { defineWatermarkComponents } from '@haiyue/ui/watermark';
+
+defineWatermarkComponents();
+const watermark = document.querySelector('hy-watermark');
+watermark.content = ['HAIYUE', 'INTERNAL'];
+```
+
+Use `content` for one or more text lines, or set `image` to prefer an image mark. Geometry is controlled by
+`rotate`, `gapX`, `gapY`, `offsetX`, `offsetY`, `markWidth`, and `markHeight`; typography and appearance use
+`fontSize`, `fontFamily`, `fontWeight`, `color`, `opacity`, and `zIndex`. The SVG pattern lives inside the
+component shadow root, is hidden from assistive technology, and uses `pointer-events: none`, so links, buttons,
+and other slotted content remain interactive. Shadow parts expose `content`, `overlay`, `mark`, `text`, and
+`image` for targeted styling.
+
+## Table
+
+Import the data table from its focused entry. It applies local filters first, then stable sorting, and finally
+pagination, so only the current page is rendered as rows:
+
+```ts
+import { defineTableComponents } from '@haiyue/ui/table';
+
+defineTableComponents();
+const table = document.querySelector('hy-table');
+table.columns = [
+  { key: 'name', title: 'Name', sortable: true, filterable: true },
+  { key: 'role', title: 'Role', filterOptions: roles },
+  { key: 'score', title: 'Score', sortable: true, align: 'right' },
+];
+table.dataSource = records;
+table.pageSize = 20;
+```
+
+Use `page`, `pageSize`, `pageSizeOptions`, and `pagination` for paging; `filters`, `setFilter()`, and
+`clearFilters()` for filtering; and `sort`, `sortBy()`, and `clearSort()` for ordering. Columns may provide a
+custom `filter`, `sorter`, or `render` function. `table-change` reports the complete processed state after a
+user or API change, while `row-click` returns the source record and its original absolute index. The `empty`
+slot, semantic theme tokens, and exported shadow parts support content and visual customization.
+
+Filterable columns show a funnel control beside the title. Set `table.showFilters = false` or
+`show-filters="false"` to hide all filter controls while keeping programmatic filtering active. Set
+`showFilter: false` on an individual column to hide only that column's funnel. The filter menu, trigger, panel,
+input, and clear action are exposed through the `filter-menu`, `filter-trigger`, `filter-panel`, `filter`, and
+`filter-clear` shadow parts.
+
 ## Drawer
 
 Import and register the drawer independently when a product needs an off-canvas panel:
@@ -155,6 +369,35 @@ Single-value mode uses `value`; interval mode exposes `lowerValue`, `upperValue`
 `--hy-range-handle-*`, `--hy-range-rail-*`, and `--hy-range-track-*` tokens for styling, or target the exported
 `rail`, `track`, `handle`, `handle-lower`, and `handle-upper` shadow parts. `value-input` reports live movement and
 `value-change` reports a committed pointer or keyboard change.
+
+## Virtual mouse
+
+Import the fixed-position cursor visual independently. It never intercepts pointer input or synthesizes clicks on
+page elements; host applications receive composed events and decide how actions map to product behavior:
+
+```ts
+import { defineVirtualMouseComponents } from '@haiyue/ui/virtual-mouse';
+
+defineVirtualMouseComponents();
+const mouse = document.querySelector('hy-virtual-mouse');
+mouse.images = {
+  idle: '/cursor-idle.png',
+  'left-down': '/cursor-left.png',
+  'right-down': '/cursor-right.png',
+};
+mouse.show();
+await mouse.moveTo(420, 280, { animate: true, duration: 600 });
+await mouse.leftClick();
+await mouse.rightClick();
+```
+
+Use `moveTo()` / `moveBy()` for coordinates, `press()` / `release()` for held-button states, and
+`leftClick()` / `middleClick()` / `rightClick()` for timed click feedback. `animated`, `duration`, and `easing`
+provide host defaults; every move may override them. State images may also be supplied through `idle-image`,
+`left-down-image`, `middle-down-image`, and `right-down-image`. Style the exported `cursor`, `shape`, `image`,
+and `indicator` parts or the `--hy-virtual-mouse-*` CSS variables. Events include `virtual-mouse-move-start`,
+`virtual-mouse-move`, `virtual-mouse-move-end`, `virtual-mouse-down`, `virtual-mouse-up`, and
+`virtual-mouse-click`.
 
 ## Themes
 

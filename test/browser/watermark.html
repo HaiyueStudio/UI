@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Watermark test</title></head>
+<body>
+  <hy-watermark id="watermark" content="HAIYUE PREVIEW" rotate="-30" gap-x="80" gap-y="60" mark-width="140" mark-height="70" opacity="0.2">
+    <button id="action">Interactive content</button>
+  </hy-watermark>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineWatermarkComponents } from '../../dist/watermark.js';
+    defineWatermarkComponents();
+    document.querySelector('#action').addEventListener('click', () => { document.querySelector('#events').textContent = 'clicked'; });
+  </script>
+</body>
+</html>

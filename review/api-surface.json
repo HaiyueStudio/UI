@@ -6,6 +6,14 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./badge": {
+      "types": "./dist/badge.d.ts",
+      "import": "./dist/badge.js"
+    },
+    "./affix": {
+      "types": "./dist/affix.d.ts",
+      "import": "./dist/affix.js"
+    },
     "./border-beam": {
       "types": "./dist/border-beam.d.ts",
       "import": "./dist/border-beam.js"
@@ -14,9 +22,25 @@
       "types": "./dist/button.d.ts",
       "import": "./dist/button.js"
     },
+    "./breadcrumb": {
+      "types": "./dist/breadcrumb.d.ts",
+      "import": "./dist/breadcrumb.js"
+    },
     "./checkbox": {
       "types": "./dist/checkbox.d.ts",
       "import": "./dist/checkbox.js"
+    },
+    "./collapse": {
+      "types": "./dist/collapse.d.ts",
+      "import": "./dist/collapse.js"
+    },
+    "./cascader": {
+      "types": "./dist/cascader.d.ts",
+      "import": "./dist/cascader.js"
+    },
+    "./date-picker": {
+      "types": "./dist/date-picker.d.ts",
+      "import": "./dist/date-picker.js"
     },
     "./context-menu": {
       "types": "./dist/context-menu.d.ts",
@@ -25,6 +49,10 @@
     "./dialog": {
       "types": "./dist/dialog.d.ts",
       "import": "./dist/dialog.js"
+    },
+    "./divider": {
+      "types": "./dist/divider.d.ts",
+      "import": "./dist/divider.js"
     },
     "./drawer": {
       "types": "./dist/drawer.d.ts",
@@ -50,9 +78,25 @@
       "types": "./dist/virtual-list.d.ts",
       "import": "./dist/virtual-list.js"
     },
+    "./virtual-mouse": {
+      "types": "./dist/virtual-mouse.d.ts",
+      "import": "./dist/virtual-mouse.js"
+    },
+    "./watermark": {
+      "types": "./dist/watermark.d.ts",
+      "import": "./dist/watermark.js"
+    },
+    "./table": {
+      "types": "./dist/table.d.ts",
+      "import": "./dist/table.js"
+    },
     "./radio": {
       "types": "./dist/radio.d.ts",
       "import": "./dist/radio.js"
+    },
+    "./rate": {
+      "types": "./dist/rate.d.ts",
+      "import": "./dist/rate.js"
     },
     "./range": {
       "types": "./dist/range.d.ts",
@@ -62,9 +106,17 @@
       "types": "./dist/select.d.ts",
       "import": "./dist/select.js"
     },
+    "./skeleton": {
+      "types": "./dist/skeleton.d.ts",
+      "import": "./dist/skeleton.js"
+    },
     "./split": {
       "types": "./dist/split.d.ts",
       "import": "./dist/split.js"
+    },
+    "./steps": {
+      "types": "./dist/steps.d.ts",
+      "import": "./dist/steps.js"
     },
     "./tabs": {
       "types": "./dist/tabs.d.ts",
@@ -73,6 +125,18 @@
     "./tooltip": {
       "types": "./dist/tooltip.d.ts",
       "import": "./dist/tooltip.js"
+    },
+    "./tour": {
+      "types": "./dist/tour.d.ts",
+      "import": "./dist/tour.js"
+    },
+    "./time-picker": {
+      "types": "./dist/time-picker.d.ts",
+      "import": "./dist/time-picker.js"
+    },
+    "./timeline": {
+      "types": "./dist/timeline.d.ts",
+      "import": "./dist/timeline.js"
     },
     "./tree": {
       "types": "./dist/tree.d.ts",
@@ -93,7 +157,19 @@
         "kind": "value"
       },
       {
+        "name": "defineAffixComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineBadgeComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineBorderBeamComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineBreadcrumbComponents",
         "kind": "value"
       },
       {
@@ -101,7 +177,15 @@
         "kind": "value"
       },
       {
+        "name": "defineCascaderComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineCheckboxComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineCollapseComponents",
         "kind": "value"
       },
       {
@@ -109,7 +193,15 @@
         "kind": "value"
       },
       {
+        "name": "defineDatePickerComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineDialogComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineDividerComponents",
         "kind": "value"
       },
       {
@@ -149,7 +241,15 @@
         "kind": "value"
       },
       {
+        "name": "defineRateComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineSelectComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineSkeletonComponents",
         "kind": "value"
       },
       {
@@ -157,11 +257,31 @@
         "kind": "value"
       },
       {
+        "name": "defineStepsComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineTableComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineTabsComponents",
         "kind": "value"
       },
       {
+        "name": "defineTimelineComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineTimePickerComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineTooltipComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineTourComponents",
         "kind": "value"
       },
       {
@@ -173,12 +293,80 @@
         "kind": "value"
       },
       {
+        "name": "defineVirtualMouseComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineWatermarkComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYAffix",
+        "kind": "value"
+      },
+      {
+        "name": "HYAffixChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYBadge",
+        "kind": "value"
+      },
+      {
+        "name": "HYBadgeCount",
+        "kind": "type"
+      },
+      {
+        "name": "HYBadgeSize",
+        "kind": "type"
+      },
+      {
+        "name": "HYBadgeStatus",
+        "kind": "type"
+      },
+      {
         "name": "HYBorderBeam",
         "kind": "value"
       },
       {
+        "name": "HYBreadcrumb",
+        "kind": "value"
+      },
+      {
+        "name": "HYBreadcrumbClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYBreadcrumbItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYBreadcrumbItemRenderer",
+        "kind": "type"
+      },
+      {
         "name": "HYButton",
         "kind": "value"
+      },
+      {
+        "name": "HYCascader",
+        "kind": "value"
+      },
+      {
+        "name": "HYCascaderChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYCascaderOpenChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYCascaderOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYCascaderValue",
+        "kind": "type"
       },
       {
         "name": "HYCheckbox",
@@ -186,6 +374,34 @@
       },
       {
         "name": "HYCheckboxChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapse",
+        "kind": "value"
+      },
+      {
+        "name": "HYCollapseChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseContent",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseIconPosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseKey",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseTrigger",
         "kind": "type"
       },
       {
@@ -201,6 +417,18 @@
         "kind": "type"
       },
       {
+        "name": "HYDatePicker",
+        "kind": "value"
+      },
+      {
+        "name": "HYDatePickerChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYDatePickerOpenChangeDetail",
+        "kind": "type"
+      },
+      {
         "name": "HYDialog",
         "kind": "value"
       },
@@ -210,6 +438,22 @@
       },
       {
         "name": "HYDialogCloseReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYDivider",
+        "kind": "value"
+      },
+      {
+        "name": "HYDividerLineStyle",
+        "kind": "type"
+      },
+      {
+        "name": "HYDividerOrientation",
+        "kind": "type"
+      },
+      {
+        "name": "HYDividerTextPlacement",
         "kind": "type"
       },
       {
@@ -333,6 +577,18 @@
         "kind": "type"
       },
       {
+        "name": "HYRate",
+        "kind": "value"
+      },
+      {
+        "name": "HYRateChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYRateHoverChangeDetail",
+        "kind": "type"
+      },
+      {
         "name": "HYSelect",
         "kind": "value"
       },
@@ -342,6 +598,18 @@
       },
       {
         "name": "HYSelectOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYSkeleton",
+        "kind": "value"
+      },
+      {
+        "name": "HYSkeletonAvatarShape",
+        "kind": "type"
+      },
+      {
+        "name": "HYSkeletonSize",
         "kind": "type"
       },
       {
@@ -357,7 +625,71 @@
         "kind": "type"
       },
       {
+        "name": "HYStepItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYSteps",
+        "kind": "value"
+      },
+      {
+        "name": "HYStepsChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYStepsDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYStepsSize",
+        "kind": "type"
+      },
+      {
+        "name": "HYStepStatus",
+        "kind": "type"
+      },
+      {
         "name": "HYTabChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTable",
+        "kind": "value"
+      },
+      {
+        "name": "HYTableAlign",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableChangeReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableColumn",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableFilterOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableFilterState",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableRowClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableSortDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableSortState",
         "kind": "type"
       },
       {
@@ -369,11 +701,87 @@
         "kind": "value"
       },
       {
+        "name": "HYTimeline",
+        "kind": "value"
+      },
+      {
+        "name": "HYTimelineDotRenderer",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineItemPosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineItemRenderer",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineStatus",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimePicker",
+        "kind": "value"
+      },
+      {
+        "name": "HYTimePickerChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimePickerOpenChangeDetail",
+        "kind": "type"
+      },
+      {
         "name": "HYTooltip",
         "kind": "value"
       },
       {
         "name": "HYTooltipPlacement",
+        "kind": "type"
+      },
+      {
+        "name": "HYTour",
+        "kind": "value"
+      },
+      {
+        "name": "HYTourChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourCloseDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourCloseReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourFinishDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourOpenChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourPlacement",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourStep",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourTarget",
         "kind": "type"
       },
       {
@@ -427,6 +835,82 @@
       {
         "name": "HYVirtualListRangeChangeDetail",
         "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouse",
+        "kind": "value"
+      },
+      {
+        "name": "HYVirtualMouseButton",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseButtonDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseClickOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseImages",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseMoveDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseMoveOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMousePosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseState",
+        "kind": "type"
+      },
+      {
+        "name": "HYWatermark",
+        "kind": "value"
+      }
+    ],
+    "./badge": [
+      {
+        "name": "defineBadgeComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYBadge",
+        "kind": "value"
+      },
+      {
+        "name": "HYBadgeCount",
+        "kind": "type"
+      },
+      {
+        "name": "HYBadgeSize",
+        "kind": "type"
+      },
+      {
+        "name": "HYBadgeStatus",
+        "kind": "type"
+      }
+    ],
+    "./affix": [
+      {
+        "name": "defineAffixComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYAffix",
+        "kind": "value"
+      },
+      {
+        "name": "HYAffixChangeDetail",
+        "kind": "type"
       }
     ],
     "./border-beam": [
@@ -449,6 +933,28 @@
         "kind": "value"
       }
     ],
+    "./breadcrumb": [
+      {
+        "name": "defineBreadcrumbComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYBreadcrumb",
+        "kind": "value"
+      },
+      {
+        "name": "HYBreadcrumbClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYBreadcrumbItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYBreadcrumbItemRenderer",
+        "kind": "type"
+      }
+    ],
     "./checkbox": [
       {
         "name": "defineCheckboxComponents",
@@ -460,6 +966,84 @@
       },
       {
         "name": "HYCheckboxChangeDetail",
+        "kind": "type"
+      }
+    ],
+    "./collapse": [
+      {
+        "name": "defineCollapseComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYCollapse",
+        "kind": "value"
+      },
+      {
+        "name": "HYCollapseChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseContent",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseIconPosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseKey",
+        "kind": "type"
+      },
+      {
+        "name": "HYCollapseTrigger",
+        "kind": "type"
+      }
+    ],
+    "./cascader": [
+      {
+        "name": "defineCascaderComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYCascader",
+        "kind": "value"
+      },
+      {
+        "name": "HYCascaderChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYCascaderOpenChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYCascaderOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYCascaderValue",
+        "kind": "type"
+      }
+    ],
+    "./date-picker": [
+      {
+        "name": "defineDatePickerComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYDatePicker",
+        "kind": "value"
+      },
+      {
+        "name": "HYDatePickerChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYDatePickerOpenChangeDetail",
         "kind": "type"
       }
     ],
@@ -496,6 +1080,28 @@
       },
       {
         "name": "HYDialogCloseReason",
+        "kind": "type"
+      }
+    ],
+    "./divider": [
+      {
+        "name": "defineDividerComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYDivider",
+        "kind": "value"
+      },
+      {
+        "name": "HYDividerLineStyle",
+        "kind": "type"
+      },
+      {
+        "name": "HYDividerOrientation",
+        "kind": "type"
+      },
+      {
+        "name": "HYDividerTextPlacement",
         "kind": "type"
       }
     ],
@@ -647,6 +1253,104 @@
         "kind": "type"
       }
     ],
+    "./virtual-mouse": [
+      {
+        "name": "defineVirtualMouseComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYVirtualMouse",
+        "kind": "value"
+      },
+      {
+        "name": "HYVirtualMouseButton",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseButtonDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseClickOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseImages",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseMoveDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseMoveOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMousePosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualMouseState",
+        "kind": "type"
+      }
+    ],
+    "./watermark": [
+      {
+        "name": "defineWatermarkComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYWatermark",
+        "kind": "value"
+      }
+    ],
+    "./table": [
+      {
+        "name": "defineTableComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYTable",
+        "kind": "value"
+      },
+      {
+        "name": "HYTableAlign",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableChangeReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableColumn",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableFilterOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableFilterState",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableRowClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableSortDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYTableSortState",
+        "kind": "type"
+      }
+    ],
     "./radio": [
       {
         "name": "defineRadioComponents",
@@ -658,6 +1362,24 @@
       },
       {
         "name": "HYRadioChangeDetail",
+        "kind": "type"
+      }
+    ],
+    "./rate": [
+      {
+        "name": "defineRateComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYRate",
+        "kind": "value"
+      },
+      {
+        "name": "HYRateChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYRateHoverChangeDetail",
         "kind": "type"
       }
     ],
@@ -701,6 +1423,24 @@
         "kind": "type"
       }
     ],
+    "./skeleton": [
+      {
+        "name": "defineSkeletonComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYSkeleton",
+        "kind": "value"
+      },
+      {
+        "name": "HYSkeletonAvatarShape",
+        "kind": "type"
+      },
+      {
+        "name": "HYSkeletonSize",
+        "kind": "type"
+      }
+    ],
     "./split": [
       {
         "name": "defineSplitComponents",
@@ -716,6 +1456,36 @@
       },
       {
         "name": "HYSplitRatioChangeDetail",
+        "kind": "type"
+      }
+    ],
+    "./steps": [
+      {
+        "name": "defineStepsComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYStepItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYSteps",
+        "kind": "value"
+      },
+      {
+        "name": "HYStepsChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYStepsDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYStepsSize",
+        "kind": "type"
+      },
+      {
+        "name": "HYStepStatus",
         "kind": "type"
       }
     ],
@@ -748,6 +1518,100 @@
       },
       {
         "name": "HYTooltipPlacement",
+        "kind": "type"
+      }
+    ],
+    "./tour": [
+      {
+        "name": "defineTourComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYTour",
+        "kind": "value"
+      },
+      {
+        "name": "HYTourChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourCloseDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourCloseReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourFinishDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourOpenChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourPlacement",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourStep",
+        "kind": "type"
+      },
+      {
+        "name": "HYTourTarget",
+        "kind": "type"
+      }
+    ],
+    "./time-picker": [
+      {
+        "name": "defineTimePickerComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYTimePicker",
+        "kind": "value"
+      },
+      {
+        "name": "HYTimePickerChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimePickerOpenChangeDetail",
+        "kind": "type"
+      }
+    ],
+    "./timeline": [
+      {
+        "name": "defineTimelineComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYTimeline",
+        "kind": "value"
+      },
+      {
+        "name": "HYTimelineDotRenderer",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineItemPosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineItemRenderer",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYTimelineStatus",
         "kind": "type"
       }
     ],

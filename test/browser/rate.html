@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Rate test</title></head>
+<body>
+  <hy-rate id="rate" value="2.5" count="5" allow-half aria-label="Scene rating"></hy-rate>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineRateComponents } from '../../dist/rate.js';
+    defineRateComponents();
+    const rate = document.querySelector('#rate'); const output = document.querySelector('#events');
+    rate.tooltips = ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
+    rate.addEventListener('value-change', event => { output.textContent += `value:${event.detail.value}\n`; });
+    rate.addEventListener('hover-change', event => { output.textContent += `hover:${event.detail.value}\n`; });
+  </script>
+</body>
+</html>

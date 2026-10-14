@@ -114,6 +114,21 @@ byId('button-label').addEventListener('input', event => { buttonLive.setAttribut
 byId('button-disabled').addEventListener('change', event => { setBoolean(buttonLive, 'disabled', event.target.checked); });
 buttonLive.addEventListener('click', () => writeEvent(byId('button-event'), 'click', { label: buttonLive.getAttribute('label') }));
 
+// Badge.
+const badgeLive = byId('badge-live');
+const badgeStatusText = { success: 'Online', processing: 'Rendering', warning: 'Review', error: 'Failed', default: 'Idle' };
+const renderBadgeState = () => {
+  const status = badgeLive.status;
+  byId('badge-state').textContent = status ? `${status} · ${badgeLive.text}` : badgeLive.dot ? 'dot notification' : `count · ${badgeLive.count ?? 'empty'}`;
+};
+byId('badge-count').addEventListener('input', event => { badgeLive.count = event.target.value === '' ? null : Number(event.target.value); renderBadgeState(); });
+byId('badge-overflow').addEventListener('input', event => { badgeLive.overflowCount = Number(event.target.value); });
+byId('badge-status').addEventListener('change', event => { badgeLive.status = event.target.value || null; badgeLive.text = badgeStatusText[event.target.value] ?? ''; renderBadgeState(); });
+byId('badge-color').addEventListener('input', event => { badgeLive.color = event.target.value; });
+byId('badge-dot').addEventListener('change', event => { badgeLive.dot = event.target.checked; renderBadgeState(); });
+byId('badge-zero').addEventListener('change', event => { badgeLive.showZero = event.target.checked; });
+byId('badge-small').addEventListener('change', event => { badgeLive.size = event.target.checked ? 'small' : 'default'; });
+
 // Input.
 const inputText = byId('input-text');
 const inputValue = byId('input-value');
@@ -180,6 +195,26 @@ checkboxLive.addEventListener('checked-change', event => {
 });
 document.querySelector('#radio .preview').addEventListener('checked-change', event => writeEvent(byId('radio-event'), 'checked-change', event.detail));
 
+// Rate.
+const rateLive = byId('rate-live');
+rateLive.tooltips = ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
+byId('rate-count').addEventListener('change', event => { rateLive.count = Number(event.target.value); });
+byId('rate-character').addEventListener('change', event => { rateLive.character = event.target.value; });
+byId('rate-half').addEventListener('change', event => { rateLive.allowHalf = event.target.checked; });
+byId('rate-clear').addEventListener('change', event => { rateLive.allowClear = event.target.checked; });
+byId('rate-disabled').addEventListener('change', event => { rateLive.disabled = event.target.checked; });
+byId('rate-readonly').addEventListener('change', event => { rateLive.readOnly = event.target.checked; });
+rateLive.addEventListener('value-change', event => { byId('rate-value').textContent = `${event.detail.value} / ${rateLive.count}`; writeEvent(byId('rate-event'), 'value-change', event.detail); });
+rateLive.addEventListener('hover-change', event => { if (event.detail.value != null) byId('rate-value').textContent = `${event.detail.value} / ${rateLive.count}`; });
+
+// Divider.
+const dividerLive = byId('divider-live');
+byId('divider-label').addEventListener('input', event => { dividerLive.label = event.target.value; });
+byId('divider-style').addEventListener('change', event => { dividerLive.lineStyle = event.target.value; });
+byId('divider-placement').addEventListener('change', event => { dividerLive.textPlacement = event.target.value; });
+byId('divider-thickness').addEventListener('input', event => { dividerLive.thickness = Number(event.target.value); byId('divider-thickness-value').textContent = `${event.target.value} px`; });
+byId('divider-color').addEventListener('input', event => { dividerLive.color = event.target.value; });
+
 // Select.
 const selectLive = byId('select-live');
 selectLive.options = [
@@ -196,6 +231,156 @@ selectLive.addEventListener('value-change', event => {
   writeEvent(byId('select-event'), 'value-change', event.detail);
 });
 
+// Cascader.
+const cascaderLive = byId('cascader-live');
+cascaderLive.options = [
+  { label: 'Project', value: 'project', children: [
+    { label: 'Scenes', value: 'scenes', children: [
+      { label: 'Moon Temple', value: 'temple' },
+      { label: 'Crystal Shore', value: 'shore' },
+    ] },
+    { label: 'Assets', value: 'assets', children: [
+      { label: 'Characters', value: 'characters' },
+      { label: 'Materials', value: 'materials' },
+    ] },
+  ] },
+  { label: 'Packages', value: 'packages', children: [
+    { label: 'Built-in', value: 'builtin' },
+    { label: 'Remote', value: 'remote', disabled: true },
+  ] },
+];
+byId('cascader-separator').addEventListener('change', event => { cascaderLive.displaySeparator = event.target.value; });
+byId('cascader-clearable').addEventListener('change', event => { cascaderLive.clearable = event.target.checked; });
+byId('cascader-parent').addEventListener('change', event => { cascaderLive.changeOnSelect = event.target.checked; });
+byId('cascader-disabled').addEventListener('change', event => { cascaderLive.disabled = event.target.checked; });
+byId('cascader-reset').addEventListener('click', () => { cascaderLive.value = ['project', 'scenes', 'temple']; });
+cascaderLive.addEventListener('value-change', event => writeEvent(byId('cascader-event'), 'value-change', {
+  value: event.detail.value,
+  labels: event.detail.options.map(option => option.label),
+}));
+cascaderLive.addEventListener('open-change', event => {
+  if (!event.detail.open) return;
+  writeEvent(byId('cascader-event'), 'open-change', event.detail);
+});
+
+// Date picker.
+const datePickerLive = byId('date-picker-live');
+byId('date-picker-week').addEventListener('change', event => { datePickerLive.weekStart = Number(event.target.value); });
+byId('date-picker-clearable').addEventListener('change', event => { datePickerLive.clearable = event.target.checked; });
+byId('date-picker-disabled').addEventListener('change', event => { datePickerLive.disabled = event.target.checked; });
+byId('date-picker-reset').addEventListener('click', () => { datePickerLive.value = '2026-10-14'; });
+datePickerLive.addEventListener('value-change', event => writeEvent(byId('date-picker-event'), 'value-change', { value: event.detail.value }));
+
+// Time picker.
+const timePickerLive = byId('time-picker-live');
+byId('time-picker-step').addEventListener('change', event => { timePickerLive.minuteStep = Number(event.target.value); });
+byId('time-picker-seconds').addEventListener('change', event => { timePickerLive.showSeconds = event.target.checked; });
+byId('time-picker-clearable').addEventListener('change', event => { timePickerLive.clearable = event.target.checked; });
+byId('time-picker-disabled').addEventListener('change', event => { timePickerLive.disabled = event.target.checked; });
+byId('time-picker-reset').addEventListener('click', () => { timePickerLive.value = timePickerLive.showSeconds ? '10:30:00' : '10:30'; });
+timePickerLive.addEventListener('value-change', event => writeEvent(byId('time-picker-event'), 'value-change', event.detail));
+
+// Skeleton.
+const skeletonLive = byId('skeleton-live');
+const renderSkeletonState = () => { byId('skeleton-state').textContent = `${skeletonLive.loading ? 'skeleton' : 'content'} · ${skeletonLive.rows} rows · ${skeletonLive.size}`; };
+byId('skeleton-loading').addEventListener('change', event => { skeletonLive.loading = event.target.checked; renderSkeletonState(); });
+byId('skeleton-active').addEventListener('change', event => { skeletonLive.active = event.target.checked; });
+byId('skeleton-avatar').addEventListener('change', event => { skeletonLive.avatar = event.target.checked; });
+byId('skeleton-round').addEventListener('change', event => { skeletonLive.round = event.target.checked; });
+byId('skeleton-size').addEventListener('change', event => { skeletonLive.size = event.target.value; renderSkeletonState(); });
+byId('skeleton-rows').addEventListener('input', event => { skeletonLive.rows = Number(event.target.value); byId('skeleton-rows-value').textContent = event.target.value; renderSkeletonState(); });
+
+// Watermark.
+const watermarkLive = byId('watermark-live');
+byId('watermark-content').addEventListener('input', event => { watermarkLive.content = event.target.value; });
+byId('watermark-rotate').addEventListener('input', event => { watermarkLive.rotate = Number(event.target.value); byId('watermark-rotate-value').textContent = `${event.target.value}°`; });
+byId('watermark-gap').addEventListener('input', event => { watermarkLive.gapX = Number(event.target.value); watermarkLive.gapY = Number(event.target.value) * 0.8; byId('watermark-gap-value').textContent = `${event.target.value} px`; });
+byId('watermark-opacity').addEventListener('input', event => { watermarkLive.opacity = Number(event.target.value); byId('watermark-opacity-value').textContent = event.target.value; });
+byId('watermark-color').addEventListener('input', event => { watermarkLive.color = event.target.value; });
+
+// Timeline.
+const timelineLive = byId('timeline-live');
+const timelineItems = [
+  { key: 'open', label: '10:18', title: 'Scene opened', description: 'Moon Temple loaded from local project.', status: 'default' },
+  { key: 'light', label: '10:21', title: 'Lighting updated', description: 'Moon key light intensity changed.', status: 'info' },
+  { key: 'save', label: '10:24', title: 'Scene saved', description: 'All local changes persisted.', status: 'success', dot: '✓' },
+  { key: 'build', label: '10:26', title: 'Build completed', description: 'Web target compiled in 1.8 seconds.', status: 'success' },
+  { key: 'review', label: '10:27', title: 'Asset warning', description: 'One texture can be optimized.', status: 'warning', color: '#f2b84b' },
+];
+const renderTimeline = () => { const count = Number(byId('timeline-count').value); timelineLive.items = timelineItems.slice(0, count); byId('timeline-state').textContent = `${count} events · ${timelineLive.mode}${timelineLive.reverse ? ' · reversed' : ''}`; };
+byId('timeline-mode').addEventListener('change', event => { timelineLive.mode = event.target.value; renderTimeline(); });
+byId('timeline-reverse').addEventListener('change', event => { timelineLive.reverse = event.target.checked; renderTimeline(); });
+byId('timeline-pending').addEventListener('change', event => { timelineLive.pending = event.target.checked ? 'Rendering next frame' : ''; });
+byId('timeline-count').addEventListener('change', renderTimeline);
+renderTimeline();
+
+// Steps.
+const stepsLive = byId('steps-live');
+const stepItems = [
+  { key: 'scene', title: 'Scene', description: 'Prepare content' },
+  { key: 'build', title: 'Build', description: 'Compile assets', subtitle: '1.8s' },
+  { key: 'review', title: 'Review', description: 'Validate output' },
+  { key: 'publish', title: 'Publish', description: 'Upload release' },
+];
+const renderSteps = () => { stepsLive.items = stepItems.map((item, index) => index === 2 && byId('steps-error').checked ? { ...item, status: 'error' } : item); const current = stepsLive.current; byId('steps-current').value = String(current); byId('steps-state').textContent = `${stepItems[current].title} · step ${current + 1} of ${stepItems.length}`; };
+byId('steps-direction').addEventListener('change', event => { stepsLive.direction = event.target.value; });
+byId('steps-current').addEventListener('change', event => { stepsLive.current = Number(event.target.value); renderSteps(); });
+byId('steps-size').addEventListener('change', event => { stepsLive.size = event.target.value; });
+byId('steps-clickable').addEventListener('change', event => { stepsLive.clickable = event.target.checked; });
+byId('steps-error').addEventListener('change', renderSteps);
+stepsLive.addEventListener('step-change', event => { writeEvent(byId('steps-state'), 'step-change', { current: event.detail.current, key: event.detail.item.key }); byId('steps-current').value = String(event.detail.current); });
+renderSteps();
+
+// Affix.
+const affixLive = byId('affix-live');
+const affixScroll = byId('affix-scroll');
+affixLive.target = affixScroll;
+byId('affix-position').addEventListener('change', event => {
+  if (event.target.value === 'bottom') { affixLive.topOffset = null; affixLive.bottomOffset = Number(byId('affix-offset').value); }
+  else { affixLive.bottomOffset = null; affixLive.topOffset = Number(byId('affix-offset').value); }
+  affixLive.refresh();
+});
+byId('affix-offset').addEventListener('input', event => {
+  const value = Number(event.target.value);
+  if (byId('affix-position').value === 'bottom') affixLive.bottomOffset = value;
+  else affixLive.topOffset = value;
+  byId('affix-offset-value').textContent = `${value} px`;
+});
+byId('affix-disabled').addEventListener('change', event => { affixLive.disabled = event.target.checked; });
+byId('affix-reset').addEventListener('click', () => affixScroll.scrollTo({ top: 0, behavior: 'smooth' }));
+affixLive.addEventListener('affix-change', event => { byId('affix-state').textContent = event.detail.affixed ? 'affixed inside custom target' : 'not affixed'; });
+
+// Tour.
+const tourLive = byId('tour-live');
+tourLive.steps = [
+  { title: 'Choose a scene', description: 'Start by selecting an object in the scene tree.', target: '#tour-target-scene' },
+  { title: 'Adjust lighting', description: 'Tune color and intensity before the final render.', target: '#tour-target-light' },
+  { title: 'Publish the build', description: 'Create a shareable version when everything is ready.', target: '#tour-target-publish' },
+];
+byId('tour-placement').addEventListener('change', event => { tourLive.placement = event.target.value; });
+byId('tour-mask').addEventListener('change', event => { tourLive.mask = event.target.checked; });
+byId('tour-mask-close').addEventListener('change', event => { tourLive.closeOnMask = event.target.checked; });
+byId('tour-launch').addEventListener('click', () => tourLive.start());
+tourLive.addEventListener('tour-change', event => { byId('tour-state').textContent = `step ${event.detail.current + 1} of ${tourLive.steps.length}`; });
+tourLive.addEventListener('tour-close', event => { byId('tour-state').textContent = `closed · ${event.detail.reason}`; });
+tourLive.addEventListener('tour-finish', () => { byId('tour-state').textContent = 'tour complete'; });
+
+// Collapse.
+const collapseLive = byId('collapse-live');
+collapseLive.items = [
+  { key: 'scene', title: 'Scene settings', content: 'Configure the active camera, world environment, and render target.', extra: '3 fields' },
+  { key: 'assets', title: 'Asset pipeline', content: 'Review models, textures, materials, and their import settings.', extra: '12 assets' },
+  { key: 'publish', title: 'Publish options', content: 'Select a target, optimize the bundle, and create a shareable build.', extra: 'Web' },
+  { key: 'archive', title: 'Archived builds', content: 'Archived builds are read-only.', disabled: true },
+];
+byId('collapse-icon-position').addEventListener('change', event => { collapseLive.iconPosition = event.target.value; });
+byId('collapse-trigger').addEventListener('change', event => { collapseLive.collapsible = event.target.value; });
+byId('collapse-accordion').addEventListener('change', event => { collapseLive.accordion = event.target.checked; });
+byId('collapse-bordered').addEventListener('change', event => { collapseLive.bordered = event.target.checked; });
+byId('collapse-ghost').addEventListener('change', event => { collapseLive.ghost = event.target.checked; });
+byId('collapse-destroy').addEventListener('change', event => { collapseLive.destroyOnHidden = event.target.checked; });
+collapseLive.addEventListener('collapse-change', event => { byId('collapse-state').textContent = `active · ${event.detail.activeKeys.join(', ') || 'none'}`; });
+
 // Tabs.
 const tabsLive = byId('tabs-live');
 tabsLive.options = [
@@ -205,6 +390,30 @@ tabsLive.options = [
   { label: 'Build', value: 'build', disabled: true },
 ];
 tabsLive.addEventListener('tab-change', event => writeEvent(byId('tabs-event'), 'tab-change', event.detail));
+
+// Breadcrumb.
+const breadcrumbLive = byId('breadcrumb-live');
+const breadcrumbItems = [
+  { key: 'projects', title: 'Projects', href: '#projects' },
+  { key: 'ocean', title: 'Ocean World' },
+  { key: 'scenes', title: 'Scenes', href: '#scenes' },
+  { key: 'temple', title: 'Moon Temple', href: '#moon-temple' },
+  { key: 'lighting', title: 'Lighting' },
+];
+const renderBreadcrumb = () => {
+  const depth = Number(byId('breadcrumb-depth').value);
+  breadcrumbLive.items = breadcrumbItems.slice(0, depth).map(item => (
+    item.key === 'scenes' ? { ...item, disabled: byId('breadcrumb-disabled').checked } : item
+  ));
+};
+byId('breadcrumb-separator').addEventListener('change', event => { breadcrumbLive.separator = event.target.value; });
+byId('breadcrumb-depth').addEventListener('change', renderBreadcrumb);
+byId('breadcrumb-disabled').addEventListener('change', renderBreadcrumb);
+breadcrumbLive.addEventListener('breadcrumb-click', event => {
+  event.preventDefault();
+  writeEvent(byId('breadcrumb-event'), 'breadcrumb-click', { index: event.detail.index, key: event.detail.item.key });
+});
+renderBreadcrumb();
 
 // Dropdown.
 const dropdownLive = byId('dropdown-live');
@@ -298,6 +507,58 @@ byId('border-beam-count').addEventListener('input', event => {
   borderBeamLive.count = Number(event.target.value);
   byId('border-beam-count-value').textContent = event.target.value;
 });
+
+// Virtual mouse. It visualizes actions and emits events without synthesizing input on page elements.
+const virtualMouseLive = byId('virtual-mouse-live');
+const virtualMouseStage = byId('virtual-mouse-stage');
+const virtualMouseEvent = byId('virtual-mouse-event');
+const virtualMouseImage = (fill, label) => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38"><path d="M3 2 31 25l-12 2 7 9-6 1-7-10-9 8Z" fill="${fill}" stroke="white" stroke-width="2"/><text x="22" y="14" fill="white" font-size="8" font-family="sans-serif">${label}</text></svg>`)}`;
+const virtualMouseImages = {
+  idle: virtualMouseImage('#397da6', ''),
+  'left-down': virtualMouseImage('#35a9cc', 'L'),
+  'middle-down': virtualMouseImage('#7654e8', 'M'),
+  'right-down': virtualMouseImage('#9b55ce', 'R'),
+};
+const showVirtualMouseAtStage = async (animate = false) => {
+  const rect = virtualMouseStage.getBoundingClientRect();
+  virtualMouseLive.show();
+  await virtualMouseLive.moveTo(rect.left + 55, rect.top + 72, { animate });
+  return rect;
+};
+byId('virtual-mouse-play').addEventListener('click', async () => {
+  const rect = await showVirtualMouseAtStage(false);
+  const points = [
+    [rect.right - 72, rect.top + 72],
+    [rect.left + rect.width * 0.52, rect.bottom - 70],
+    [rect.left + 70, rect.top + rect.height * 0.55],
+  ];
+  for (const [x, y] of points) await virtualMouseLive.moveTo(x, y);
+  await virtualMouseLive.leftClick();
+});
+byId('virtual-mouse-left').addEventListener('click', async () => {
+  await showVirtualMouseAtStage(false);
+  await virtualMouseLive.leftClick();
+});
+byId('virtual-mouse-right').addEventListener('click', async () => {
+  await showVirtualMouseAtStage(false);
+  await virtualMouseLive.rightClick();
+});
+byId('virtual-mouse-hide').addEventListener('click', () => virtualMouseLive.hide());
+byId('virtual-mouse-animated').addEventListener('change', event => { virtualMouseLive.animated = event.target.checked; });
+byId('virtual-mouse-duration').addEventListener('input', event => {
+  virtualMouseLive.duration = Number(event.target.value);
+  byId('virtual-mouse-duration-value').textContent = `${event.target.value} ms`;
+});
+byId('virtual-mouse-color').addEventListener('input', event => {
+  virtualMouseLive.style.setProperty('--hy-virtual-mouse-idle-background', event.target.value);
+  virtualMouseLive.style.setProperty('--hy-virtual-mouse-left-down-background', `color-mix(in srgb, ${event.target.value} 72%, white)`);
+});
+byId('virtual-mouse-images').addEventListener('change', event => {
+  virtualMouseLive.images = event.target.checked ? virtualMouseImages : {};
+});
+for (const name of ['virtual-mouse-move-end', 'virtual-mouse-down', 'virtual-mouse-up', 'virtual-mouse-click']) {
+  virtualMouseLive.addEventListener(name, event => writeEvent(virtualMouseEvent, name, event.detail));
+}
 
 // Context menu.
 const contextLive = byId('context-live');
@@ -412,6 +673,41 @@ virtualListLive.addEventListener('item-click', event => {
   writeEvent(byId('virtual-list-event'), 'item-click', { index: event.detail.index, id: event.detail.item.id });
 });
 virtualListLive.refresh();
+
+// Table. Local filtering is applied before stable sorting and pagination.
+const tableLive = byId('table-live');
+const tableStatuses = ['Ready', 'Review', 'Blocked'];
+tableLive.columns = [
+  { key: 'name', title: 'Asset', width: '40%', sortable: true, filterable: true, filterPlaceholder: 'Filter assets' },
+  { key: 'type', title: 'Type', sortable: true, filterable: true, showFilter: false },
+  { key: 'status', title: 'Status', filterOptions: tableStatuses.map(value => ({ label: value, value })) },
+  { key: 'progress', title: 'Progress', sortable: true, align: 'right', render: value => `${value}%` },
+];
+tableLive.dataSource = Array.from({ length: 37 }, (_, index) => ({
+  name: `Scene Asset ${String(index + 1).padStart(2, '0')}`,
+  type: ['Mesh', 'Texture', 'Material', 'Animation'][index % 4],
+  status: tableStatuses[index % tableStatuses.length],
+  progress: (index * 17 + 23) % 101,
+}));
+byId('table-page-size').addEventListener('change', event => { tableLive.pageSize = Number(event.target.value); });
+byId('table-status').addEventListener('change', event => { tableLive.setFilter('status', event.target.value); });
+byId('table-show-filters').addEventListener('change', event => { tableLive.showFilters = event.target.checked; });
+byId('table-sort').addEventListener('click', () => tableLive.sortBy('progress'));
+byId('table-clear').addEventListener('click', () => {
+  tableLive.clearFilters();
+  tableLive.clearSort();
+  byId('table-status').value = '';
+});
+tableLive.addEventListener('table-change', event => writeEvent(byId('table-event'), 'table-change', {
+  reason: event.detail.reason,
+  page: event.detail.page,
+  filteredTotal: event.detail.filteredTotal,
+  sort: event.detail.sort,
+}));
+tableLive.addEventListener('row-click', event => writeEvent(byId('table-event'), 'row-click', {
+  name: event.detail.record.name,
+  index: event.detail.index,
+}));
 
 // History controls.
 const historyLive = byId('history-live');
