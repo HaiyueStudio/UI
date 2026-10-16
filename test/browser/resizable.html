@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resizable browser test</title>
+  <style>
+    body { margin: 20px; font: 14px sans-serif; }
+    #stage { position: relative; width: 520px; height: 340px; overflow: hidden; border: 1px solid #777; }
+    .card { width: 100%; height: 100%; padding: 16px; background: #dff3ff; }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <hy-resizable id="resizable" x="40" y="30" width="200" height="120" min-width="80" min-height="60" bounds="parent" grid="10" aria-label="Test resizable">
+      <article class="card"><b>Transform me</b><button data-no-move>Action</button></article>
+    </hy-resizable>
+  </div>
+  <output id="events"></output>
+  <script type="module">
+    import { defineResizableComponents } from '../../dist/resizable.js';
+    defineResizableComponents();
+    const resizable = document.querySelector('#resizable');
+    const events = document.querySelector('#events');
+    for (const name of ['resize-start', 'resize', 'resize-end']) resizable.addEventListener(name, event => { events.textContent += `${name}:${JSON.stringify(event.detail)}\n`; });
+  </script>
+</body>
+</html>

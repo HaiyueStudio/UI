@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><style>body { padding: 30px; background: #0d121a; color: white; } textarea { width: 500px; height: 70px; margin-bottom: 20px; } hy-virtual-keyboard { width: 760px; }</style></head>
+<body>
+  <textarea id="editor" aria-label="Editor"></textarea>
+  <hy-virtual-keyboard id="keyboard" physical-sync aria-label="Editor keyboard"></hy-virtual-keyboard>
+  <pre id="events"></pre>
+  <script type="module">
+    import { defineVirtualKeyboardComponents } from '../../dist/virtual-keyboard.js';
+    defineVirtualKeyboardComponents(); keyboard.target = editor;
+    for (const name of ['virtual-keyboard-down', 'virtual-keyboard-up', 'virtual-keyboard-input']) keyboard.addEventListener(name, event => { events.textContent += `${name}:${JSON.stringify(event.detail)}\n`; });
+  </script>
+</body>
+</html>

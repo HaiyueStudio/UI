@@ -81,6 +81,11 @@ export class HYTabs extends HTMLElement {
         min-height: 0;
         overflow: auto;
       }
+      .panels > [role="tabpanel"] {
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+      }
       ::slotted(*) {
         box-sizing: border-box;
       }
