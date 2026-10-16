@@ -50,6 +50,7 @@ for (const card of document.querySelectorAll('.demo-card:not(.overflow-visible)'
   for (const attribute of card.attributes) split.setAttribute(attribute.name, attribute.value);
   split.classList.add('demo-split');
   split.setAttribute('aria-label', '示例预览与参数分栏');
+  split.barSize = 3;
   split.dataset.desktopDirection = horizontalCardClasses.some(name => card.classList.contains(name)) ? 'horizontal' : 'vertical';
   split.dataset.desktopHeight = String(Math.ceil(bounds.height));
   preview.slot = 'first';

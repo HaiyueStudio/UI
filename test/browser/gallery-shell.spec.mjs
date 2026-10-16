@@ -35,6 +35,7 @@ test('gallery shell and demo cards use adjustable Split panes', async ({ page })
 
   const buttonCard = page.locator('#button .demo-card');
   await expect(buttonCard).toHaveJSProperty('tagName', 'HY-SPLIT');
+  await expect(buttonCard).toHaveAttribute('bar-size', '3');
   await expect(buttonCard.locator('.preview')).toHaveAttribute('slot', 'first');
   await expect(buttonCard.locator('.controls')).toHaveAttribute('slot', 'second');
   expect(await page.locator('hy-split.demo-split').count()).toBeGreaterThan(20);
