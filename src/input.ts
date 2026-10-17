@@ -1,4 +1,4 @@
-export type HYInputType = 'text' | 'number' | 'color';
+export type HYInputType = 'text' | 'number' | 'color' | 'password';
 
 export interface HYInputChangeDetail {
   value: string;
@@ -88,8 +88,9 @@ export class HYInput extends HTMLElement {
 
   get value(): string { return this.getAttribute('value') ?? ''; }
   set value(value: string) {
-    this.setAttribute('value', String(value));
-    this._input.value = String(value);
+    const text = String(value);
+    if (this.getAttribute('value') !== text) this.setAttribute('value', text);
+    if (this._input.value !== text) this._input.value = text;
   }
 
   get valueAsNumber(): number {
@@ -116,12 +117,14 @@ export class HYInput extends HTMLElement {
       : value;
     for (const name of ['min', 'max', 'step', 'placeholder', 'name', 'autocomplete', 'aria-label', 'title']) {
       const attribute = this.getAttribute(name);
-      if (attribute === null) this._input.removeAttribute(name);
-      else this._input.setAttribute(name, attribute);
+      if (attribute === null) {
+        if (this._input.hasAttribute(name)) this._input.removeAttribute(name);
+      } else if (this._input.getAttribute(name) !== attribute) this._input.setAttribute(name, attribute);
     }
-    this._input.disabled = this.disabled;
-    this._input.readOnly = this.readOnly;
-    this._input.required = this.hasAttribute('required');
+    // Reassigning even an unchanged placeholder can split Chromium's undo group.
+    if (this._input.disabled !== this.disabled) this._input.disabled = this.disabled;
+    if (this._input.readOnly !== this.readOnly) this._input.readOnly = this.readOnly;
+    if (this._input.required !== this.hasAttribute('required')) this._input.required = this.hasAttribute('required');
   }
 
   private _onInput = (): void => {
@@ -146,5 +149,5 @@ export function defineInputComponents(): void {
 }
 
 function normalizedType(value: string | null): HYInputType {
-  return value === 'number' || value === 'color' ? value : 'text';
+  return value === 'number' || value === 'color' || value === 'password' ? value : 'text';
 }

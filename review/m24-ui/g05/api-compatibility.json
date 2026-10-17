@@ -1,0 +1,33 @@
+{
+  "baselineSha256": "c3b67ba9babf4675c5439a51af1a92347844d2f25fae96e144956893670ebde4",
+  "preservedEntrypoints": 38,
+  "addedEntrypoints": [
+    "./adapters/web"
+  ],
+  "addedSymbols": [
+    {
+      "name": "definePortableWebComponents",
+      "kind": "value"
+    },
+    {
+      "name": "HYWebDiagnostics",
+      "kind": "type"
+    },
+    {
+      "name": "HYWebEnvironment",
+      "kind": "type"
+    },
+    {
+      "name": "HYWebPlatformContext",
+      "kind": "type"
+    },
+    {
+      "name": "HYWebRenderer",
+      "kind": "value"
+    },
+    {
+      "name": "HYWebRendererOptions",
+      "kind": "type"
+    }
+  ]
+}

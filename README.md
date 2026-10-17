@@ -46,6 +46,45 @@ defineHaiyueUI();
 Because `defineHaiyueUI()` references the complete component set, prefer focused subpaths in bundle-sensitive
 product entry points.
 
+## Portable component semantics (M24 G03/G05, unreleased)
+
+`@haiyue/ui/core` provides platform-independent component types, validation, selection/input/action
+controllers and the `PlatformView` lifetime contract. `@haiyue/ui/portable` provides `HYPage`, selector
+bindings, keyed updates, transactions, focus/modal policy and semantic theme conversion. Both entries
+can be imported without DOM, NativeScript or Engine. They do not register existing Web Components.
+
+```ts
+import { hyNode, hyKey, type HYRenderer } from '@haiyue/ui/core';
+import { HYPage } from '@haiyue/ui/portable';
+
+export function mountPage(renderer: HYRenderer) {
+  const page = new HYPage(renderer);
+  page.mount(hyNode('Column', 'settings', { layout: { gap: 8 } }, {
+    children: [hyNode('Text', 'title', { text: 'Settings' })],
+  }));
+  page.setProps(hyKey('settings', 'title'), 'Text', { text: 'Preview settings' });
+  return page; // The shell forwards suspend/resume and calls dispose on exit.
+}
+```
+
+Author keys are stable and unique within each parent, including its named slots. `hyKey()` builds
+scoped keys for bindings, events and focus. `setProps()` completely replaces a node's props; use
+`transaction()` for one synchronous batch. Group all selectors for a given store in one `bind(store,
+bindings)` call so an application transaction produces one renderer commit. Identical props produce
+no writes; reordering preserves instances. Applications persist values on `commit`, not `valueChange`.
+
+The Web backend is available from `@haiyue/ui/adapters/web`: explicitly call
+`definePortableWebComponents()`, construct `new HYWebRenderer(connectedElement, options)`, then pass it
+to `HYPage`. It reuses seven existing Web Components and maps the other semantic kinds to browser
+elements. It introduces no runtime package dependencies or automatic registration. See the
+[Web adapter guide](docs/web-adapter.md) and [interactive example](examples/portable-ui/index.html).
+Run `npm run test:web-adapter` for Chromium/WebKit regression coverage.
+
+These APIs are under development and have not been published. Mobile mapping is G06, desktop mapping
+G08, and ShaderLab shared-page migration G07. Existing Web component APIs below remain independent. See the
+[portable UI guide](docs/portable-ui.md) and [typed composition example](test/portable/fixtures/settings-page.ts).
+Run `npm run verify:portable` for semantics, no-DOM types, and an isolated offline tarball consumer.
+
 ## Tabs
 
 `@haiyue/ui/tabs` retains its existing `HYTabs`, `HYTabOption`, `HYTabChangeDetail`, and

@@ -1,0 +1,116 @@
+{
+  "previousReviewed": {
+    "packedBytes": 111009,
+    "unpackedBytes": 533816,
+    "fileCount": 86
+  },
+  "reviewed": {
+    "packedBytes": 129642,
+    "unpackedBytes": 602171,
+    "fileCount": 110
+  },
+  "reserve": {
+    "packedBytes": 3000,
+    "unpackedBytes": 12000,
+    "fileCount": 4
+  },
+  "addedRuntimeFiles": [
+    {
+      "path": "dist/core/actions.d.ts",
+      "bytes": 1305
+    },
+    {
+      "path": "dist/core/actions.js",
+      "bytes": 4960
+    },
+    {
+      "path": "dist/core/data.d.ts",
+      "bytes": 300
+    },
+    {
+      "path": "dist/core/data.js",
+      "bytes": 965
+    },
+    {
+      "path": "dist/core/index.d.ts",
+      "bytes": 508
+    },
+    {
+      "path": "dist/core/index.js",
+      "bytes": 446
+    },
+    {
+      "path": "dist/core/platform-view.d.ts",
+      "bytes": 589
+    },
+    {
+      "path": "dist/core/platform-view.js",
+      "bytes": 2801
+    },
+    {
+      "path": "dist/core/selection.d.ts",
+      "bytes": 667
+    },
+    {
+      "path": "dist/core/selection.js",
+      "bytes": 3019
+    },
+    {
+      "path": "dist/core/text.d.ts",
+      "bytes": 1269
+    },
+    {
+      "path": "dist/core/text.js",
+      "bytes": 5899
+    },
+    {
+      "path": "dist/core/types.d.ts",
+      "bytes": 7413
+    },
+    {
+      "path": "dist/core/types.js",
+      "bytes": 44
+    },
+    {
+      "path": "dist/core/validation.d.ts",
+      "bytes": 1484
+    },
+    {
+      "path": "dist/core/validation.js",
+      "bytes": 11798
+    },
+    {
+      "path": "dist/portable/index.d.ts",
+      "bytes": 240
+    },
+    {
+      "path": "dist/portable/index.js",
+      "bytes": 148
+    },
+    {
+      "path": "dist/portable/page.d.ts",
+      "bytes": 1879
+    },
+    {
+      "path": "dist/portable/page.js",
+      "bytes": 12362
+    },
+    {
+      "path": "dist/portable/theme.d.ts",
+      "bytes": 986
+    },
+    {
+      "path": "dist/portable/theme.js",
+      "bytes": 2422
+    },
+    {
+      "path": "dist/portable/tree.d.ts",
+      "bytes": 453
+    },
+    {
+      "path": "dist/portable/tree.js",
+      "bytes": 3602
+    }
+  ],
+  "note": "Same file allowlist and growth reserve; additional core/portable JS/types only. Test backend, examples, source and evidence are excluded."
+}

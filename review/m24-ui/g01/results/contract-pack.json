@@ -1,0 +1,31 @@
+[
+  {
+    "id": "@haiyue/m24-ui-contract-probe@1.0.0",
+    "name": "@haiyue/m24-ui-contract-probe",
+    "version": "1.0.0",
+    "size": 2898,
+    "unpackedSize": 9334,
+    "shasum": "cbdd295b93ed864b8fc3768124c2d3cfa563aa2d",
+    "integrity": "sha512-jyYnFK0yMvObyBtTP659Tw1SQrs8SPHUpRcJFbIWi1mn23kyse/7HkG6DS4OHN1CvcyNeKrxXzy3nfrZnQtgew==",
+    "filename": "haiyue-m24-ui-contract-probe-1.0.0.tgz",
+    "files": [
+      {
+        "path": "index.d.ts",
+        "size": 6249,
+        "mode": 420
+      },
+      {
+        "path": "package.json",
+        "size": 297,
+        "mode": 420
+      },
+      {
+        "path": "selection.mjs",
+        "size": 2788,
+        "mode": 420
+      }
+    ],
+    "entryCount": 3,
+    "bundled": []
+  }
+]

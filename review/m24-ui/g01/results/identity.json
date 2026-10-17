@@ -1,0 +1,23 @@
+{
+  "repo": "UI",
+  "head": "377643a395242318cbc84a3199eb4befc77d340b",
+  "trackedPatchSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "node": "v24.19.0",
+  "npm": "11.17.0",
+  "host": "macOS-26.6.2-x86_64-i386-64bit",
+  "files": {
+    "package.json": "3b716a056b9c508411146a14850dfb9bf045543020f737530c0e17f0612ebb37",
+    "package-lock.json": "8df758a38f35c93d546407a6f342ceb15f08413510b90ba9bfda3dabea8b7dbf",
+    "src/select.ts": "4f9d1138924a95af08278da805dfaf0e3525f836ce6621d660f78fa0f969c3ab",
+    "src/input.ts": "e782634a31cf3d9c7ca37377c1055c4073a3d818d99d049910736098ce0e6928",
+    "src/button.ts": "c9430496da7db3e72dd7e64d30dce6316a111e9297d107eb12d711787b06d445",
+    "src/checkbox.ts": "5bb48c6ea8740ceb6b32789d0750b06d25dfe6f3d620aed77ff85f10d0e0e01e",
+    "src/tabs.ts": "0db46fba204d856c10b4d5b7798d73dd87f07635a435cd978d0de2f294ed460b",
+    "src/dialog.ts": "2d7a539b4d7c1991e90e79207973690c916a7c20446342a0f5f43b622b47e3dd",
+    "src/range.ts": "15902638fa3cbb2bf0b6cb99d5a56fb1b3ebf7937c666c6b3eb2e0e9a5c15b50",
+    "src/tree-model.ts": "3dd51af0f770f47ab585bdb6f810433ed02806b6bbc8ba3447837579334cd916",
+    "src/virtual-list.ts": "6e02169cfff379f74d980e5fafee6bb3b1be256195269091e4ceaabf3c815a36",
+    "review/m24-ui/g01/contract/selection.mjs": "eae4d0d6b16535c9a628af81e82b8afb9f6c5d6beb782d7925c4419653dfa818",
+    "review/m24-ui/g01/contract/index.d.ts": "609358b9a8b8c55d57bf1050da08be9af736b6d12c74edc4aefa6e3e8df85937"
+  }
+}

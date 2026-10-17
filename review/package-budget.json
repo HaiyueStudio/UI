@@ -3,21 +3,21 @@
   "package": {
     "workspace": ".",
     "nodeImport": false,
-    "maxPackedBytes": 114009,
-    "maxUnpackedBytes": 545816,
-    "maxFileCount": 90,
+    "maxPackedBytes": 149034,
+    "maxUnpackedBytes": 673915,
+    "maxFileCount": 126,
     "capacity": {
       "reviewed": {
-        "packedBytes": 111009,
-        "unpackedBytes": 533816,
-        "fileCount": 86
+        "packedBytes": 146034,
+        "unpackedBytes": 661915,
+        "fileCount": 122
       },
       "growthReserve": {
         "packedBytes": 3000,
         "unpackedBytes": 12000,
         "fileCount": 4
       },
-      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths, including virtual mouse, local-data table, breadcrumb navigation, hierarchical cascader selection, date/time pickers, loading skeletons, text/image watermarks, timelines, half-step ratings, count/status badges, accessible collapse panels, styled text dividers, horizontal/vertical progress steps, viewport affixing, and guided spotlight tours"
+      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths, including virtual mouse, local-data table, breadcrumb navigation, hierarchical cascader selection, date/time pickers, loading skeletons, text/image watermarks, timelines, half-step ratings, count/status badges, accessible collapse panels, styled text dividers, horizontal/vertical progress steps, viewport affixing, and guided spotlight tours; M24 G03 adds independent DOM-free core/portable entries (12 implementation modules, JS and declarations), preserving existing Web entry isolation; M24 G05 adds focused Web adapter (6 modules, JS and declarations), retaining old subpath isolation and zero runtime dependencies"
     },
     "sideEffects": [
       "./themes/*.css"

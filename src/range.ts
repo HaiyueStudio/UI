@@ -29,7 +29,7 @@ export class HYRange extends HTMLElement {
   static get observedAttributes(): string[] {
     return [
       'min', 'max', 'step', 'value', 'range', 'lower-value', 'upper-value',
-      'disabled', 'show-value', 'aria-label',
+      'disabled', 'show-value', 'aria-label', 'controlled',
     ];
   }
 
@@ -164,11 +164,11 @@ export class HYRange extends HTMLElement {
 
   get max(): number {
     const value = Number(this.getAttribute('max'));
-    return Number.isFinite(value) && value > this.min ? value : Math.max(DEFAULT_MAX, this.min + DEFAULT_MAX);
+    return Number.isFinite(value) && (value > this.min || (this.controlled && value === this.min)) ? value : Math.max(DEFAULT_MAX, this.min + DEFAULT_MAX);
   }
   set max(value: number) {
     const next = finiteOr(value, DEFAULT_MAX);
-    this.setAttribute('max', String(next > this.min ? next : this.min + DEFAULT_MAX));
+    this.setAttribute('max', String(next > this.min || (this.controlled && next === this.min) ? next : this.min + DEFAULT_MAX));
   }
 
   get step(): number {
@@ -180,8 +180,15 @@ export class HYRange extends HTMLElement {
     this.setAttribute('step', String(next > 0 ? next : DEFAULT_STEP));
   }
 
-  get value(): number { return this._normalize(Number(this.getAttribute('value') ?? this.min)); }
-  set value(value: number) { this.setAttribute('value', String(this._normalize(value))); }
+  get value(): number { return this._acceptedValue(Number(this.getAttribute('value') ?? this.min)); }
+  set value(value: number) { this.setAttribute('value', String(this._acceptedValue(value))); }
+
+  get controlled(): boolean { return this.hasAttribute('controlled'); }
+  set controlled(value: boolean) { this.toggleAttribute('controlled', value); }
+
+  private _acceptedValue(value: number): number {
+    return this.controlled ? Math.max(this.min, Math.min(this.max, finiteOr(value, this.min))) : this._normalize(value);
+  }
 
   get range(): boolean { return this.hasAttribute('range'); }
   set range(value: boolean) { this.toggleAttribute('range', Boolean(value)); }
@@ -291,6 +298,10 @@ export class HYRange extends HTMLElement {
     const changed = this._dragStartValue !== this._serializedValue();
     const handle = this._activeHandle;
     this._stopDrag();
+    if (this.controlled && event.type === 'pointercancel') {
+      this._dispatchValueEvent('value-cancel', handle);
+      return;
+    }
     if (changed) this._dispatchValueEvent('value-change', handle);
   };
 
@@ -342,7 +353,7 @@ export class HYRange extends HTMLElement {
     if (emit) this._dispatchValueEvent('value-input', handle);
   }
 
-  private _dispatchValueEvent(type: 'value-input' | 'value-change', handle: HYRangeHandle): void {
+  private _dispatchValueEvent(type: 'value-input' | 'value-change' | 'value-cancel', handle: HYRangeHandle): void {
     const lowerValue = this.range ? this.lowerValue : this.min;
     const upperValue = this.range ? this.upperValue : this.value;
     this.dispatchEvent(new CustomEvent<HYRangeChangeDetail>(type, {
@@ -384,6 +395,7 @@ export class HYRange extends HTMLElement {
   }
 
   private _toPercent(value: number): number {
+    if (this.max === this.min) return 0;
     return (value - this.min) / (this.max - this.min) * 100;
   }
 

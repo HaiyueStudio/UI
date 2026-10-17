@@ -1,0 +1,68 @@
+
+> @haiyue/ui@0.2.0 verify:portable
+> npm run typecheck:portable && npm run build && node --test "test/portable/*.test.mjs"
+
+
+> @haiyue/ui@0.2.0 typecheck:portable
+> tsc -p tsconfig.portable.json --noEmit
+
+
+> @haiyue/ui@0.2.0 build
+> tsc -p tsconfig.json
+
+✔ button coalesces shared gesture IDs, blocks busy/disabled, and has no programmatic events (4.430206ms)
+✔ toggle emits one preview/commit pair and same accepted value does not resubmit (3.481595ms)
+✔ slider snaps/clamps changes, has one transaction per gesture and restores rejected value (2.24755ms)
+✔ slider accepted commit updates authoritative value without duplicating events (0.44385ms)
+✔ text keeps rejected draft, same accepted props preserve it and do not produce events (1.123572ms)
+✔ IME confirms final value once and does not use composition Enter as commit (0.622212ms)
+✔ external revisions during composition are queued and latest authoritative value wins (0.333065ms)
+✔ newer acceptance during compositionEnd event supersedes older queued external state (0.518392ms)
+✔ disabling text mid-composition suppresses late IME completion and commit (0.516829ms)
+✔ multiline Enter remains editing; blur commits, read-only and disabled block input (0.579695ms)
+✔ text same-props writes are zero, revisions validated and disposal ignores late input (1.195918ms)
+✔ selection surfaces picker errors and disposal in preview suppresses commit (1.411526ms)
+✔ PlatformView queues before mount, dedupes updates, suspends and releases once (0.995768ms)
+✔ PlatformView mount failure releases allocated resource and cannot silently remount (0.445304ms)
+✔ fresh tarball installs offline; core/portable import and types need no platform globals or sibling repository (3783.168912ms)
+✔ mount creates shallow instances then inserts; same props cause zero writes (11.355309ms)
+✔ a property update only writes its node and full replacement removes old properties (2.643128ms)
+✔ nested transaction commits the final diff once; reverted values do not write (1.993832ms)
+✔ validation failure aborts a page transaction before any platform writes (1.937488ms)
+✔ reorder, insert, remove and named slot migration retain surviving instances (3.31975ms)
+✔ ancestor removal recursively releases once; changing kind rebuilds its subtree (2.69149ms)
+✔ same author key is legal under different parents and escaping cannot collide (1.758295ms)
+✔ one selector subscription batches all targets of a store transaction; unrelated state does no work (3.854852ms)
+✔ bindings have custom equality, unsubscribe, and no leaked listeners across 50 lifetimes (28.202797ms)
+✔ programmatic setter echoes and old renderer callbacks never become user events (1.601122ms)
+✔ suspend queues state changes, ignores events, resume submits once (0.938625ms)
+✔ partial native failure preserves accepted revision, poisons root and explicitly rebuilds latest state (1.738297ms)
+✔ bindings stay live during a backend fault and resume after rebuild (1.766112ms)
+✔ focused deletion falls back to dialog, opener, then page default; modal owns back (3.391386ms)
+✔ non-dismissible dialogs consume back without cancel; hidden/disabled ancestors gate actions (0.886057ms)
+✔ disposal continues after one subscription cleanup throws (1.56355ms)
+✔ deterministic arbitrary reorders match desired tree while preserving surviving instance IDs (72.883964ms)
+✔ imports without DOM, NativeScript, or Engine (3.664254ms)
+✔ properties assigned before native readiness are applied on attach, with no event (2.663723ms)
+✔ one user selection commits once; programmatic setter feedback is suppressed (0.732438ms)
+✔ rejected input restores authoritative state (0.372649ms)
+✔ picker cancel leaves state and event count unchanged (2.349138ms)
+✔ dismissed and superseded picker results cannot change current state (0.479862ms)
+✔ newest picker wins even when older promise resolves later (0.436726ms)
+✔ disabled and unknown values never dispatch; duplicate options are rejected (1.144473ms)
+✔ dispose is idempotent, unbinds and ignores an outstanding picker (0.566535ms)
+✔ all frozen baseline kinds accept typed plain data and snapshots are immutable (8.337642ms)
+✔ duplicate keys include source, parent and slot; different slots share sibling identity (2.961164ms)
+✔ unknown capabilities and unsupported component/secure/icon features are explicit errors (2.840958ms)
+✔ invalid props reject unsupported CSS/layout, handles, non-finite sizes and unknown data fields (2.31161ms)
+✔ dynamic invalid props diagnose file/key/property before committing any write (4.175136ms)
+✔ cycles, empty stable keys and implicit complex child views are rejected (1.813316ms)
+✔ theme maps frozen semantic tokens for Web/native and font scaling excludes spacing (2.548877ms)
+ℹ tests 48
+ℹ suites 0
+ℹ pass 48
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4243.33765

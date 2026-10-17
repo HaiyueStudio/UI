@@ -148,6 +148,18 @@
     "./expandable": {
       "types": "./dist/expandable.d.ts",
       "import": "./dist/expandable.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./portable": {
+      "types": "./dist/portable/index.d.ts",
+      "import": "./dist/portable/index.js"
+    },
+    "./adapters/web": {
+      "types": "./dist/adapters/web/index.d.ts",
+      "import": "./dist/adapters/web/index.js"
     }
   },
   "entrypoints": {
@@ -1664,6 +1676,256 @@
       },
       {
         "name": "HYExpandableChangeDetail",
+        "kind": "type"
+      }
+    ],
+    "./core": [
+      {
+        "name": "HY_COMPONENTS",
+        "kind": "value"
+      },
+      {
+        "name": "HY_FEATURES",
+        "kind": "value"
+      },
+      {
+        "name": "HYAccessibility",
+        "kind": "type"
+      },
+      {
+        "name": "HYBounds",
+        "kind": "type"
+      },
+      {
+        "name": "HYButtonController",
+        "kind": "value"
+      },
+      {
+        "name": "HYCancelSignal",
+        "kind": "type"
+      },
+      {
+        "name": "HYCapabilities",
+        "kind": "type"
+      },
+      {
+        "name": "HYCommonProps",
+        "kind": "type"
+      },
+      {
+        "name": "HYComponentKind",
+        "kind": "type"
+      },
+      {
+        "name": "HYComponentProps",
+        "kind": "type"
+      },
+      {
+        "name": "HYDiagnosticCode",
+        "kind": "type"
+      },
+      {
+        "name": "HYDiagnosticContext",
+        "kind": "type"
+      },
+      {
+        "name": "HYDispose",
+        "kind": "type"
+      },
+      {
+        "name": "HYFeature",
+        "kind": "type"
+      },
+      {
+        "name": "hyKey",
+        "kind": "value"
+      },
+      {
+        "name": "HYLayout",
+        "kind": "type"
+      },
+      {
+        "name": "HYLength",
+        "kind": "type"
+      },
+      {
+        "name": "HYMutation",
+        "kind": "type"
+      },
+      {
+        "name": "hyNode",
+        "kind": "value"
+      },
+      {
+        "name": "HYNode",
+        "kind": "type"
+      },
+      {
+        "name": "HYNodeKey",
+        "kind": "type"
+      },
+      {
+        "name": "HYOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYPlatformView",
+        "kind": "type"
+      },
+      {
+        "name": "HYPlatformViewController",
+        "kind": "value"
+      },
+      {
+        "name": "HYReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYRenderer",
+        "kind": "type"
+      },
+      {
+        "name": "HYRequestContext",
+        "kind": "type"
+      },
+      {
+        "name": "HYResource",
+        "kind": "type"
+      },
+      {
+        "name": "HYSelectionController",
+        "kind": "value"
+      },
+      {
+        "name": "HYSelectionEvent",
+        "kind": "type"
+      },
+      {
+        "name": "HYSelectionProps",
+        "kind": "type"
+      },
+      {
+        "name": "HYSelectionView",
+        "kind": "type"
+      },
+      {
+        "name": "HYSliderController",
+        "kind": "value"
+      },
+      {
+        "name": "HYSourceLocation",
+        "kind": "type"
+      },
+      {
+        "name": "HYStore",
+        "kind": "type"
+      },
+      {
+        "name": "hySupports",
+        "kind": "value"
+      },
+      {
+        "name": "HYTextController",
+        "kind": "value"
+      },
+      {
+        "name": "HYTextProps",
+        "kind": "type"
+      },
+      {
+        "name": "HYTextView",
+        "kind": "type"
+      },
+      {
+        "name": "HYTextViewState",
+        "kind": "type"
+      },
+      {
+        "name": "HYTheme",
+        "kind": "type"
+      },
+      {
+        "name": "HYToggleController",
+        "kind": "value"
+      },
+      {
+        "name": "HYUIError",
+        "kind": "value"
+      },
+      {
+        "name": "HYUIEvent",
+        "kind": "type"
+      },
+      {
+        "name": "hyValidateCapabilities",
+        "kind": "value"
+      },
+      {
+        "name": "hyValidateNode",
+        "kind": "value"
+      },
+      {
+        "name": "hyValidateProps",
+        "kind": "value"
+      }
+    ],
+    "./portable": [
+      {
+        "name": "HY_THEME_TOKENS",
+        "kind": "value"
+      },
+      {
+        "name": "HYBinding",
+        "kind": "type"
+      },
+      {
+        "name": "hyNativeTheme",
+        "kind": "value"
+      },
+      {
+        "name": "HYPage",
+        "kind": "value"
+      },
+      {
+        "name": "HYPageOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYPageStatus",
+        "kind": "type"
+      },
+      {
+        "name": "hyThemeVariables",
+        "kind": "value"
+      },
+      {
+        "name": "HYThemeVariables",
+        "kind": "type"
+      }
+    ],
+    "./adapters/web": [
+      {
+        "name": "definePortableWebComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYWebDiagnostics",
+        "kind": "type"
+      },
+      {
+        "name": "HYWebEnvironment",
+        "kind": "type"
+      },
+      {
+        "name": "HYWebPlatformContext",
+        "kind": "type"
+      },
+      {
+        "name": "HYWebRenderer",
+        "kind": "value"
+      },
+      {
+        "name": "HYWebRendererOptions",
         "kind": "type"
       }
     ]
