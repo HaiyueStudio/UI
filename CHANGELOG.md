@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- 扩展 `HYVirtualKeyboard` / `<hy-virtual-keyboard>`：默认 QWERTY 布局补齐上、下方向键及多行文本纵向光标移动；新增 `qwerty` / `numeric` 模式切换和可复用的 `HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT` 内置数字键盘。
 - 扩展 `HYButton` / `<hy-button>`：支持 `icon` 属性或 `icon` 插槽、`icon-position` 前后位置、会阻止重复点击并带无障碍忙碌状态的 `loading` 旋转图标；新增可按需导入的 `HYButtonGroup` / `<hy-button-group>`，支持横向和纵向组合按钮。
 - 示例页外壳改为使用 Haiyue UI 自身搭建：主题按钮、组件搜索、命令面板、状态徽标和演示操作均复用公开 Web Components；导航/内容和演示/参数区域使用 `HYSplit` 调节尺寸，用法代码通过只读 CodeMirror 提供 HTML、JavaScript 与 CSS 语法高亮，并为 `HYButton` 暴露 `button` part 与 pressed 状态转发。
 - 新增可按需导入的 `HYResizable` / `<hy-resizable>` 调整框组件，支持四个角点与四条边缩放、内容拖动、位置尺寸 API、父容器/视口/元素边界、网格吸附、宽高比、尺寸限制、键盘控制和生命周期事件。

@@ -23,6 +23,25 @@ test('physical keyboard sync highlights keys without duplicating native input', 
   await page.keyboard.up('x'); await expect(keyboard.locator('[data-code="KeyX"]')).not.toHaveClass(/pressed/); await expect(editor).toHaveValue('x');
 });
 
+test('default layout includes four directions and mode switches to the built-in numeric pad', async ({ page }) => {
+  const keyboard = page.locator('#keyboard'); const editor = page.locator('#editor');
+  await expect(keyboard.locator('[data-code="ArrowUp"]')).toBeVisible();
+  await expect(keyboard.locator('[data-code="ArrowDown"]')).toBeVisible();
+  await editor.fill('ab\ncd');
+  await editor.evaluate(element => element.setSelectionRange(4, 4));
+  await keyboard.locator('[data-code="ArrowUp"]').click();
+  expect(await editor.evaluate(element => element.selectionStart)).toBe(1);
+  await keyboard.locator('[data-code="ArrowDown"]').click();
+  expect(await editor.evaluate(element => element.selectionStart)).toBe(4);
+
+  await keyboard.evaluate(element => { element.mode = 'numeric'; });
+  await expect(keyboard).toHaveAttribute('mode', 'numeric');
+  await expect(keyboard.getByRole('button')).toHaveCount(15);
+  await expect(keyboard.locator('[data-code="KeyA"]')).toHaveCount(0);
+  await keyboard.locator('[data-code="Numpad7"]').click();
+  await expect(editor).toHaveValue('ab\nc7d');
+});
+
 test('custom layouts and disabled keys rebuild the public keyboard surface', async ({ page }) => {
   const keyboard = page.locator('#keyboard'); await keyboard.evaluate(element => { element.layout = [[{ code: 'Confirm', label: 'Confirm', value: '✓', width: 2 }, { code: 'Blocked', label: 'Blocked', disabled: true }]]; });
   await expect(keyboard.getByRole('button')).toHaveCount(2); await expect(keyboard.locator('[data-code="Blocked"]')).toBeDisabled(); await keyboard.locator('[data-code="Confirm"]').click(); await expect(page.locator('#editor')).toHaveValue('✓');
@@ -32,5 +51,5 @@ test('component gallery demonstrates typing, layout, and physical sync controls'
   await page.goto('/examples/#virtual-keyboard'); const keyboard = page.locator('#virtual-keyboard-live');
   await keyboard.locator('[data-code="KeyH"]').click(); await expect(page.locator('#virtual-keyboard-target')).toHaveValue(/h$/);
   await page.locator('#virtual-keyboard-type').click(); await expect(page.locator('#virtual-keyboard-target')).toHaveValue(/Haiyue UI 2\.0!$/);
-  await page.locator('#virtual-keyboard-compact').evaluate(input => { input.checked = true; input.dispatchEvent(new Event('change', { bubbles: true })); }); await expect(keyboard.getByRole('button')).toHaveCount(12);
+  await page.locator('#virtual-keyboard-mode').selectOption('numeric'); await expect(keyboard).toHaveAttribute('mode', 'numeric'); await expect(keyboard.getByRole('button')).toHaveCount(15);
 });

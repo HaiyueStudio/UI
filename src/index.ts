@@ -145,6 +145,7 @@ export {
 export {
   defineVirtualKeyboardComponents,
   HYVirtualKeyboard,
+  HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT,
   HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT,
 } from './virtual-keyboard.js';
 export {
@@ -305,6 +306,7 @@ export type {
   HYVirtualKeyboardKey,
   HYVirtualKeyboardKeyDetail,
   HYVirtualKeyboardLayout,
+  HYVirtualKeyboardMode,
   HYVirtualKeyboardSource,
   HYVirtualKeyboardTapOptions,
   HYVirtualKeyboardTypeOptions,

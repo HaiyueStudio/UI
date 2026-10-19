@@ -643,7 +643,7 @@ hy-virtual-mouse {
     </section>
 
     <section class="component-section" id="virtual-keyboard" data-title="Virtual Keyboard">
-      <div class="section-heading"><div><h2>Virtual Keyboard</h2><code>&lt;hy-virtual-keyboard&gt;</code></div><p>可编程的屏幕键盘；支持 QWERTY、自定义布局、输入目标、物理键盘同步与按键播放 API。</p></div>
+      <div class="section-heading"><div><h2>Virtual Keyboard</h2><code>&lt;hy-virtual-keyboard&gt;</code></div><p>可编程的屏幕键盘；支持完整方向键的 QWERTY、内置数字键盘、自定义布局、输入目标与按键播放 API。</p></div>
       <div class="demo-card virtual-keyboard-card">
         <div class="preview virtual-keyboard-stage">
           <textarea id="virtual-keyboard-target" aria-label="Virtual keyboard target" rows="2">Scene note: </textarea>
@@ -651,7 +651,8 @@ hy-virtual-mouse {
         </div>
         <div class="controls stacked">
           <div class="virtual-keyboard-actions"><hy-button id="virtual-keyboard-type" class="native-trigger" label="Type demo text"></hy-button><hy-button id="virtual-keyboard-clear" class="native-trigger secondary" label="Clear"></hy-button></div>
-          <div class="toggle-row"><label class="toggle"><input id="virtual-keyboard-physical" type="checkbox" checked /><span></span>physical sync</label><label class="toggle"><input id="virtual-keyboard-compact" type="checkbox" /><span></span>numeric layout</label></div>
+          <label>mode<select id="virtual-keyboard-mode"><option value="qwerty">QWERTY</option><option value="numeric">numeric</option></select></label>
+          <label class="toggle"><input id="virtual-keyboard-physical" type="checkbox" checked /><span></span>physical sync</label>
           <label class="toggle"><input id="virtual-keyboard-disabled" type="checkbox" /><span></span>disabled</label>
           <label>active color<input id="virtual-keyboard-color" type="color" value="#554cc6" /></label>
           <output id="virtual-keyboard-event">点击按键或运行输入 API</output>
@@ -663,10 +664,11 @@ defineVirtualKeyboardComponents();
 const keyboard = document.querySelector('hy-virtual-keyboard');
 keyboard.target = document.querySelector('textarea');
 keyboard.physicalSync = true;
+keyboard.mode = 'numeric';
 
 await keyboard.tap('Enter');
 await keyboard.type('Haiyue UI', { interval: 45 });</code></pre></details>
-      <div class="parameter-strip"><code>layout</code><code>target</code><code>physical-sync</code><code>disabled</code><code>pressedKeys</code><code>shiftActive</code><code>capsLock</code><code>press()</code><code>release()</code><code>tap()</code><code>type()</code><code>clear()</code></div>
+      <div class="parameter-strip"><code>mode</code><code>layout</code><code>target</code><code>physical-sync</code><code>disabled</code><code>pressedKeys</code><code>shiftActive</code><code>capsLock</code><code>press()</code><code>release()</code><code>tap()</code><code>type()</code><code>clear()</code></div>
     </section>
 
     <section class="component-section" id="context-menu" data-title="Context Menu">

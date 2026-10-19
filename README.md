@@ -425,12 +425,14 @@ defineVirtualKeyboardComponents();
 const keyboard = document.querySelector('hy-virtual-keyboard');
 keyboard.target = document.querySelector('textarea');
 keyboard.physicalSync = true;
+keyboard.mode = 'numeric'; // switch back with 'qwerty'
 await keyboard.type('Haiyue UI', { interval: 45 });
 ```
 
 The default exported `HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT` includes digits, letters, Shift, Caps Lock, editing,
-caret, and navigation keys. Assign `layout` with rows of typed key descriptors to build numeric, shortcut, or
-product-specific keyboards. Pointer and native keyboard activation edit the bound target and emit its normal
+all four arrow directions, caret, and navigation keys. Set `mode` to `qwerty` or `numeric`; the numeric mode uses
+the exported `HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT` with digits, decimal, minus, deletion, and Enter keys. Assign
+`layout` with rows of typed key descriptors for shortcut or product-specific keyboards. Pointer and native keyboard activation edit the bound target and emit its normal
 `input` event; `physicalSync` mirrors real key state without duplicating native input. `press()`, `release()`,
 `tap()`, `type()`, and `clear()` support guided playback. Observe `virtual-keyboard-down`,
 `virtual-keyboard-up`, and `virtual-keyboard-input`, or style `keyboard`, `row`, `key`, and per-code key parts

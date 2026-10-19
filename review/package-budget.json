@@ -3,13 +3,13 @@
   "package": {
     "workspace": ".",
     "nodeImport": false,
-    "maxPackedBytes": 132708,
-    "maxUnpackedBytes": 635714,
+    "maxPackedBytes": 133572,
+    "maxUnpackedBytes": 639286,
     "maxFileCount": 98,
     "capacity": {
       "reviewed": {
-        "packedBytes": 129708,
-        "unpackedBytes": 623714,
+        "packedBytes": 130572,
+        "unpackedBytes": 627286,
         "fileCount": 94
       },
       "growthReserve": {
@@ -17,7 +17,7 @@
         "unpackedBytes": 12000,
         "fileCount": 4
       },
-      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths and a self-hosting examples shell with adjustable Split layouts and bundled CodeMirror highlighting, including icon/loading buttons and button groups, eight-handle constrained resize frames, affixed and searchable inputs, draggable containers, virtual mouse and keyboard, local-data table, breadcrumb navigation, hierarchical cascader selection, date/time pickers, loading skeletons, text/image watermarks, timelines, half-step ratings, count/status badges, accessible collapse panels, styled text dividers, horizontal/vertical progress steps, viewport affixing, and guided spotlight tours"
+      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths and a self-hosting examples shell with adjustable Split layouts and bundled CodeMirror highlighting, including icon/loading buttons and button groups, eight-handle constrained resize frames, affixed and searchable inputs, draggable containers, virtual mouse, QWERTY/numeric virtual keyboard modes, local-data table, breadcrumb navigation, hierarchical cascader selection, date/time pickers, loading skeletons, text/image watermarks, timelines, half-step ratings, count/status badges, accessible collapse panels, styled text dividers, horizontal/vertical progress steps, viewport affixing, and guided spotlight tours"
     },
     "sideEffects": [
       "./themes/*.css"

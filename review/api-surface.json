@@ -333,6 +333,10 @@
         "kind": "value"
       },
       {
+        "name": "HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT",
+        "kind": "value"
+      },
+      {
         "name": "HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT",
         "kind": "value"
       },
@@ -961,6 +965,10 @@
         "kind": "type"
       },
       {
+        "name": "HYVirtualKeyboardMode",
+        "kind": "type"
+      },
+      {
         "name": "HYVirtualKeyboardSource",
         "kind": "type"
       },
@@ -1487,6 +1495,10 @@
         "kind": "value"
       },
       {
+        "name": "HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT",
+        "kind": "value"
+      },
+      {
         "name": "HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT",
         "kind": "value"
       },
@@ -1512,6 +1524,10 @@
       },
       {
         "name": "HYVirtualKeyboardLayout",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardMode",
         "kind": "type"
       },
       {

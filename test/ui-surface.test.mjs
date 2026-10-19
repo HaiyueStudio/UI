@@ -44,6 +44,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYVirtualList',
     'HYVirtualKeyboard',
     'HYVirtualMouse',
+    'HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT',
     'HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT',
     'HYWatermark',
     'HYTable',
@@ -363,6 +364,11 @@ test('virtual keyboard exposes customizable keys, editable targets, API playback
   const source = readFileSync(new URL('../src/virtual-keyboard.ts', import.meta.url), 'utf8');
   assert.match(source, /export class HYVirtualKeyboard extends HTMLElement/);
   assert.match(source, /HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT/);
+  assert.match(source, /HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT/);
+  assert.match(source, /get mode\(\): HYVirtualKeyboardMode/);
+  assert.match(source, /action\('ArrowUp', '↑', 'arrow-up'\)/);
+  assert.match(source, /action\('ArrowDown', '↓', 'arrow-down'\)/);
+  assert.match(source, /_moveCaretVertical\(direction: -1 \| 1\)/);
   assert.match(source, /press\(code: string/);
   assert.match(source, /release\(code: string/);
   assert.match(source, /async tap\(code: string/);

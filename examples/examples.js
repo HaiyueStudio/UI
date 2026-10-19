@@ -660,23 +660,12 @@ for (const name of ['virtual-mouse-move-end', 'virtual-mouse-down', 'virtual-mou
 const virtualKeyboardLive = byId('virtual-keyboard-live');
 const virtualKeyboardTarget = byId('virtual-keyboard-target');
 const virtualKeyboardEvent = byId('virtual-keyboard-event');
-const virtualKeyboardDefaultLayout = virtualKeyboardLive.layout;
-const virtualKeyboardNumericLayout = [
-  ['1', '2', '3'].map(value => ({ code: `Numpad${value}`, label: value, value })),
-  ['4', '5', '6'].map(value => ({ code: `Numpad${value}`, label: value, value })),
-  ['7', '8', '9'].map(value => ({ code: `Numpad${value}`, label: value, value })),
-  [
-    { code: 'Backspace', label: '⌫', action: 'backspace' },
-    { code: 'Numpad0', label: '0', value: '0' },
-    { code: 'Enter', label: 'Enter', action: 'enter' },
-  ],
-];
 virtualKeyboardLive.target = virtualKeyboardTarget;
 virtualKeyboardTarget.setSelectionRange(virtualKeyboardTarget.value.length, virtualKeyboardTarget.value.length);
 byId('virtual-keyboard-type').addEventListener('click', async () => { virtualKeyboardTarget.focus(); await virtualKeyboardLive.type('Haiyue UI 2.0!', { interval: 30 }); });
 byId('virtual-keyboard-clear').addEventListener('click', () => virtualKeyboardLive.clear());
 byId('virtual-keyboard-physical').addEventListener('change', event => { virtualKeyboardLive.physicalSync = event.target.checked; });
-byId('virtual-keyboard-compact').addEventListener('change', event => { virtualKeyboardLive.layout = event.target.checked ? virtualKeyboardNumericLayout : virtualKeyboardDefaultLayout; });
+byId('virtual-keyboard-mode').addEventListener('change', event => { virtualKeyboardLive.mode = event.target.value; });
 byId('virtual-keyboard-disabled').addEventListener('change', event => { virtualKeyboardLive.disabled = event.target.checked; });
 byId('virtual-keyboard-color').addEventListener('input', event => { virtualKeyboardLive.style.setProperty('--hy-virtual-keyboard-active-bg', event.target.value); });
 for (const name of ['virtual-keyboard-down', 'virtual-keyboard-up', 'virtual-keyboard-input']) {

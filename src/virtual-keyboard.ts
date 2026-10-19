@@ -1,7 +1,9 @@
 export type HYVirtualKeyboardSource = 'pointer' | 'keyboard' | 'physical' | 'api';
+export type HYVirtualKeyboardMode = 'qwerty' | 'numeric';
 export type HYVirtualKeyboardAction =
   | 'character' | 'backspace' | 'delete' | 'enter' | 'tab' | 'space'
-  | 'shift' | 'caps-lock' | 'escape' | 'arrow-left' | 'arrow-right' | 'home' | 'end';
+  | 'shift' | 'caps-lock' | 'escape' | 'arrow-left' | 'arrow-right'
+  | 'arrow-up' | 'arrow-down' | 'home' | 'end';
 
 export interface HYVirtualKeyboardKey {
   readonly code: string;
@@ -51,7 +53,16 @@ export const HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT: HYVirtualKeyboardLayout = [
   [action('Tab', 'Tab', 'tab', 1.4), ...'QWERTYUIOP'.split('').map(letter)],
   [action('CapsLock', 'Caps', 'caps-lock', 1.7), ...'ASDFGHJKL'.split('').map(letter), action('Enter', 'Enter', 'enter', 1.7)],
   [action('ShiftLeft', 'Shift', 'shift', 2.1), ...'ZXCVBNM'.split('').map(letter), action('Delete', 'Delete', 'delete', 1.35)],
-  [action('Escape', 'Esc', 'escape', 1.1), action('Space', 'Space', 'space', 6), action('Home', 'Home', 'home', 1.1), action('ArrowLeft', '←', 'arrow-left'), action('ArrowRight', '→', 'arrow-right'), action('End', 'End', 'end', 1.1)],
+  [action('Escape', 'Esc', 'escape', 1.1), action('Space', 'Space', 'space', 5), action('Home', 'Home', 'home', 1.1), action('ArrowLeft', '←', 'arrow-left'), action('ArrowUp', '↑', 'arrow-up'), action('ArrowDown', '↓', 'arrow-down'), action('ArrowRight', '→', 'arrow-right'), action('End', 'End', 'end', 1.1)],
+];
+
+const numeric = (value: string): HYVirtualKeyboardKey => ({ code: `Numpad${value}`, label: value, value });
+
+export const HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT: HYVirtualKeyboardLayout = [
+  [numeric('7'), numeric('8'), numeric('9'), action('Backspace', '⌫', 'backspace')],
+  [numeric('4'), numeric('5'), numeric('6'), action('Delete', 'Delete', 'delete')],
+  [numeric('1'), numeric('2'), numeric('3'), action('NumpadEnter', 'Enter', 'enter')],
+  [{ ...numeric('0'), width: 2 }, { code: 'NumpadDecimal', label: '.', value: '.' }, { code: 'NumpadSubtract', label: '−', value: '-' }],
 ];
 
 function normalizeLayout(value: unknown): HYVirtualKeyboardLayout {
@@ -63,7 +74,7 @@ function normalizeLayout(value: unknown): HYVirtualKeyboardLayout {
       const item = raw as Record<string, unknown>;
       if (item.code == null || item.label == null) return [];
       const actionName = String(item.action ?? 'character') as HYVirtualKeyboardAction;
-      const validActions: readonly HYVirtualKeyboardAction[] = ['character', 'backspace', 'delete', 'enter', 'tab', 'space', 'shift', 'caps-lock', 'escape', 'arrow-left', 'arrow-right', 'home', 'end'];
+      const validActions: readonly HYVirtualKeyboardAction[] = ['character', 'backspace', 'delete', 'enter', 'tab', 'space', 'shift', 'caps-lock', 'escape', 'arrow-left', 'arrow-right', 'arrow-up', 'arrow-down', 'home', 'end'];
       return [{
         code: String(item.code), label: String(item.label),
         ...(item.value != null ? { value: String(item.value) } : {}),
@@ -95,7 +106,7 @@ export class HYVirtualKeyboard extends HTMLElement {
   private _listeners: AbortController | null = null;
   private _operation = 0;
 
-  static get observedAttributes(): string[] { return ['layout', 'disabled', 'physical-sync', 'aria-label']; }
+  static get observedAttributes(): string[] { return ['layout', 'mode', 'disabled', 'physical-sync', 'aria-label']; }
 
   constructor() {
     super();
@@ -118,12 +129,14 @@ export class HYVirtualKeyboard extends HTMLElement {
 
   connectedCallback(): void {
     if (!this._layoutAssigned && this.hasAttribute('layout')) this._readLayoutAttribute();
+    else if (!this._layoutAssigned) this._applyModeLayout();
     this._render(); this._connectPhysicalKeyboard();
   }
   disconnectedCallback(): void { this._operation += 1; this._disconnectPhysicalKeyboard(); this._pressed.clear(); this._pressedValues.clear(); }
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
     if (oldValue === newValue) return;
     if (name === 'layout' && !this._layoutAssigned) { this._readLayoutAttribute(); this._render(); }
+    else if (name === 'mode') { this._layoutAssigned = false; this._applyModeLayout(); this._render(); }
     else if (name === 'physical-sync') this._connectPhysicalKeyboard();
     else if (name === 'aria-label') this._syncLabel();
     else if (name === 'disabled') this._syncVisuals();
@@ -131,6 +144,13 @@ export class HYVirtualKeyboard extends HTMLElement {
 
   get layout(): HYVirtualKeyboardLayout { return this._layout; }
   set layout(value: HYVirtualKeyboardLayout) { this._layoutAssigned = true; this._layout = normalizeLayout(value); this._render(); }
+  get mode(): HYVirtualKeyboardMode { return this.getAttribute('mode') === 'numeric' ? 'numeric' : 'qwerty'; }
+  set mode(value: HYVirtualKeyboardMode) {
+    const normalized: HYVirtualKeyboardMode = value === 'numeric' ? 'numeric' : 'qwerty';
+    this._layoutAssigned = false;
+    if (this.getAttribute('mode') === normalized) { this._applyModeLayout(); this._render(); }
+    else this.setAttribute('mode', normalized);
+  }
   get target(): HTMLInputElement | HTMLTextAreaElement | null { return this._target; }
   set target(value: HTMLInputElement | HTMLTextAreaElement | null) { this._target = value instanceof HTMLInputElement || value instanceof HTMLTextAreaElement ? value : null; }
   get disabled(): boolean { return this.hasAttribute('disabled'); }
@@ -163,6 +183,7 @@ export class HYVirtualKeyboard extends HTMLElement {
   }
 
   private _readLayoutAttribute(): void { try { this._layout = normalizeLayout(JSON.parse(this.getAttribute('layout') ?? '[]')); } catch { this._layout = HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT; } }
+  private _applyModeLayout(): void { this._layout = this.mode === 'numeric' ? HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT : HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT; }
   private _render(): void {
     if (!this.isConnected) return;
     this._buttons.clear(); const rows = this._layout.map((keys, rowIndex) => {
@@ -210,6 +231,8 @@ export class HYVirtualKeyboard extends HTMLElement {
     else if (key.action === 'delete') this._deleteForward(descriptor);
     else if (key.action === 'arrow-left') this._moveCaret(-1);
     else if (key.action === 'arrow-right') this._moveCaret(1);
+    else if (key.action === 'arrow-up') this._moveCaretVertical(-1);
+    else if (key.action === 'arrow-down') this._moveCaretVertical(1);
     else if (key.action === 'home') this._setCaret(0);
     else if (key.action === 'end') this._setCaret(this._target?.value.length ?? 0);
     else if (key.action === 'escape') this._target?.blur();
@@ -230,6 +253,15 @@ export class HYVirtualKeyboard extends HTMLElement {
     target.setRangeText('', start, start === end ? end + 1 : end, 'end'); this._dispatchTargetInput('deleteContentForward', null); this._emitInput(descriptor, 'deleteContentForward');
   }
   private _moveCaret(delta: number): void { const target = this._target; if (!target) return; const position = Math.max(0, Math.min(target.value.length, (target.selectionStart ?? 0) + delta)); this._setCaret(position); }
+  private _moveCaretVertical(direction: -1 | 1): void {
+    const target = this._target; if (!(target instanceof HTMLTextAreaElement)) return;
+    const value = target.value; const position = target.selectionStart ?? 0; const lineStart = value.lastIndexOf('\n', position - 1) + 1; const column = position - lineStart;
+    if (direction < 0) {
+      if (lineStart === 0) return; const previousEnd = lineStart - 1; const previousStart = value.lastIndexOf('\n', previousEnd - 1) + 1; this._setCaret(previousStart + Math.min(column, previousEnd - previousStart));
+    } else {
+      const currentEnd = value.indexOf('\n', position); if (currentEnd < 0) return; const nextStart = currentEnd + 1; const nextEnd = value.indexOf('\n', nextStart); const length = (nextEnd < 0 ? value.length : nextEnd) - nextStart; this._setCaret(nextStart + Math.min(column, length));
+    }
+  }
   private _setCaret(position: number): void { const target = this._target; if (!target) return; target.focus({ preventScroll: true }); target.setSelectionRange(position, position); }
   private _dispatchTargetInput(inputType: string, data: string | null): void {
     if (!this._target) return;
