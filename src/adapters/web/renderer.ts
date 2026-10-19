@@ -56,9 +56,17 @@ export class HYWebRenderer implements HYRenderer {
     const restore=captureFocus(document);this.#applying=true;
     let current:HYMutation|undefined;
     try {
+      const local = mutations.every(m=>m.type==='update'&&['Text','Button','Toggle','Select','TextInput','TextArea','Slider','Image','Icon'].includes(m.node.kind));
+      // Leaf value/text updates preserve the relation tree and accessible label.
+      // Containers, structural edits and changed accessibility props still sync.
+      const relations = local ? mutations.filter(m=>{
+        const node=(m as Extract<HYMutation,{type:'update'}>).node;
+        return !equalData(this.#get(node.key).node.props.a11y,node.props.a11y);
+      }).map(m=>this.#get((m as Extract<HYMutation,{type:'update'}>).node.key)) : undefined;
       for(const mutation of mutations){current=mutation;this.#mutate(mutation,revision);}
       current=undefined;
-      this.#syncRelations();this.#syncResources();restore();
+      this.#syncRelations(relations??this.#nodes.values());
+      this.#syncResources();restore();
       this.#revision=revision;this.#counts.commits++;
     }catch(cause){
       const key=current?('node'in current?current.node.key:current.key):'<page>';
@@ -135,7 +143,8 @@ export class HYWebRenderer implements HYRenderer {
     const previous=entry.node;
     if(node.kind==='PlatformView'&&previous.kind==='PlatformView'&&node.props.slot!==previous.props.slot)throw new HYUIError('invalid-props','PlatformView factory slot is immutable; use a new key',{key:node.key});
     entry.node=node;const element=entry.element;
-    applyLayout(element,node.props.layout,entry.parent?this.#nodes.get(entry.parent)?.node.kind==='Overlay':false);
+    if(entry.parent===undefined||!equalData(previous.props.layout,node.props.layout))
+      applyLayout(element,node.props.layout,entry.parent?this.#nodes.get(entry.parent)?.node.kind==='Overlay':false);
     flag(element,'hidden',node.props.visible===false);
     entry.control?.update(node,revision);
     if(node.kind==='Text'){if(element.textContent!==node.props.text)element.textContent=node.props.text;element.style.whiteSpace=node.props.wrap===false?'pre':'pre-wrap';}
@@ -195,8 +204,8 @@ export class HYWebRenderer implements HYRenderer {
     return true;
   }
   #event(entry:Entry,event:HYUIEvent):void {if(this.#interactive(entry))this.#emit?.(event);}
-  #syncRelations():void {
-    for(const entry of this.#nodes.values()){
+  #syncRelations(entries:Iterable<Entry>=this.#nodes.values()):void {
+    for(const entry of entries){
       if(entry.element instanceof HYDialog)entry.element.open=!this.#suspended&&this.#shown(entry);
       this.#a11y(entry);
       for(const [name,container]of entry.slots)if(!container.childElementCount){container.remove();entry.slots.delete(name);}

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { hyNode as n, hyValidateNode, hySupports, hyValidateCapabilities, HY_COMPONENTS, HY_FEATURES, HYUIError } from '../../dist/core/index.js';
+import { hyNode as n, hyValidateProps, hyValidateNode, hySupports, hyValidateCapabilities, HY_COMPONENTS, HY_FEATURES, HYUIError } from '../../dist/core/index.js';
 import { HYPage, hyNativeTheme, hyThemeVariables, HY_THEME_TOKENS } from '../../dist/portable/index.js';
 import { RecordingRenderer } from './recording.mjs';
 const caps={contract:1,backend:'web',components:HY_COMPONENTS,features:HY_FEATURES};
@@ -59,4 +59,15 @@ test('theme maps frozen semantic tokens for Web/native and font scaling excludes
   assert.equal(Object.keys(css).length,12);assert.equal(HY_THEME_TOKENS.focus,'--hy-focus-ring-color');
   assert.throws(()=>hyNativeTheme(theme,0),/fontScale/);assert.throws(()=>hyNativeTheme({...theme,gap:Infinity}),/gap/);
   assert.throws(()=>hyThemeVariables({...theme,color:{...theme.color,text:'var(--custom)'}}),/color.text/);
+});
+test('immutable validation reuse never trusts mutable nested props or bypasses backend capabilities', () => {
+  const options=[{value:'a',label:'A'}];
+  const shallow=Object.freeze({value:'a',options});
+  hyValidateProps('Select',shallow);
+  options[0].label=42;
+  assert.throws(()=>hyValidateProps('Select',shallow),/Expected string/);
+  const valid=n('TextInput','input',{value:'secret',secure:true,a11y:{label:'Name'}}).props;
+  hyValidateProps('TextInput',valid);
+  assert.throws(()=>hyValidateProps('TextInput',valid,{key:'/other'},{contract:1,backend:'web',components:['TextInput'],features:['accessibility']}),error=>error.context.key==='/other'&&/text.secure/.test(error.message));
+  assert.throws(()=>hyValidateProps('Select',valid),/required|Unknown property/);
 });

@@ -1,5 +1,5 @@
 import type { HYCapabilities, HYComponentKind, HYComponentProps, HYDispose, HYNode, HYReason, HYRenderer, HYStore, HYUIEvent } from '../core/types.js';
-import { HYUIError, hyValidateCapabilities, hyValidateNode, hyValidateProps } from '../core/validation.js';
+import { HYUIError, hyValidateCapabilities, hyValidateNode, hyValidateProps, snapshotValidatedProps } from '../core/validation.js';
 import { equalData, snapshot } from '../core/data.js';
 import { diff, flatten, type Tree } from './tree.js';
 
@@ -57,10 +57,10 @@ export class HYPage {
     const entry = this.#desired.get(key);
     if (!entry || entry.node.kind !== kind) throw new HYUIError('invalid-props', 'Binding target missing or kind changed', { key });
     const context = { key, ...(entry.node.source ? { source: entry.node.source } : {}) };
-    hyValidateProps(kind, props, context, this.#capabilities);
+    const accepted = snapshotValidatedProps(kind, props, context, this.#capabilities);
     if (equalData(entry.node.props, props)) return;
     const next = new Map(this.#desired);
-    next.set(key, { ...entry, node: Object.freeze({ ...entry.node, props: snapshot(props) }) as HYNode });
+    next.set(key, { ...entry, node: Object.freeze({ ...entry.node, props: accepted }) as HYNode });
     this.#desired = next; this.#flush();
   }
   transaction(run: () => void): void {
@@ -82,9 +82,18 @@ export class HYPage {
     const select = (state: Readonly<S>): readonly Props[] => definitions.map(b => b.select(state));
     const equal = (a: readonly Props[], b: readonly Props[]): boolean => a.every((p, i) =>
       (definitions[i]!.equal as ((a: Props, b: Props) => boolean) | undefined ?? equalData)(p, b[i]!));
+    let applied: (HYNode | undefined)[] = [];
     const apply = (props: readonly Props[]): void => {
       if (this.#status === 'disposed') return;
-      this.transaction(() => definitions.forEach((binding, i) => this.setProps(binding.key, binding.kind, props[i]!)));
+      this.transaction(() => definitions.forEach((binding, i) => {
+        const node = this.#desired.get(binding.key)?.node;
+        // A grouped subscription does not make every binding dirty. Reuse a
+        // previously validated result only while its target is still unchanged.
+        // External render/setProps and failed transactions invalidate this path.
+        if (node === applied[i] && node && equalData(node.props, props[i])) return;
+        this.setProps(binding.key, binding.kind, props[i]!);
+      }));
+      applied = definitions.map(binding => this.#desired.get(binding.key)?.node);
     };
     apply(select(store.getSnapshot()));
     let live = true;
@@ -107,6 +116,7 @@ export class HYPage {
   #flush(): void {
     if (this.#depth || this.#status !== 'mounted' || this.#committing) return;
     const next = this.#desired, previous = this.#rendered;
+    if (next === previous) return;
     const mutations = diff(previous, next);
     if (!mutations.length) { this.#rendered = next; return; }
     this.#committing = true;

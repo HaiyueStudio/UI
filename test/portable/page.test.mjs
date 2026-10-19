@@ -94,6 +94,20 @@ test('bindings have custom equality, unsubscribe, and no leaked listeners across
   }
   assert.equal(s.disposed,0);
 });
+test('grouped bindings revisit only changed targets and invalidate after external writes', () => {
+  const s=store({a:'a',b:'b'}),{page,renderer}=setup();
+  const writes=[],set=page.setProps.bind(page);
+  page.setProps=(...args)=>{writes.push(args[0]);return set(...args);};
+  page.bind(s,[{key:key('a'),kind:'Text',select:s=>({text:s.a})},{key:key('b'),kind:'Text',select:s=>({text:s.b})}]);
+  writes.length=0;s.dispatch({a:'changed'});
+  assert.deepEqual(writes,[key('a')]);assert.equal(renderer.props(key('b')).text,'b');
+  page.setProps(key('b'),'Text',{text:'external'});writes.length=0;s.dispatch({a:'next'});
+  assert.deepEqual(writes,[key('a'),key('b')]);assert.equal(renderer.props(key('b')).text,'b');
+  page.render(root([label('a'),n('Button','b',{text:'b'})]));
+  assert.throws(()=>s.dispatch({a:'after render'}),/kind changed/);
+  assert.equal(renderer.props(key('a')).text,'a','failed binding transaction rolls back all targets');
+  page.dispose();
+});
 test('programmatic setter echoes and old renderer callbacks never become user events', () => {
   const {page,renderer,events} = setup();renderer.setterFeedback=true;
   page.setProps(key('a'),'Text',{text:'update'});assert.equal(events.length,0);

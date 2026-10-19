@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "scope": "UI internal optimization contracts, not full ShaderLab/device performance acceptance",
+  "revision": "644bdd8234b14ab8c1e69ca7a5ff78116a086426",
+  "dirty": true,
+  "sourceHashes": {
+    "src/portable/page.ts": "12e117f2d8648710dc8613aa6f1c5ecc950e6682778856ce8bf7304ae23fba15",
+    "src/portable/tree.ts": "c3b7c46d4693678c2d2933273755a77d10e635520f821816126fdc31f0113da6",
+    "src/core/data.ts": "030acba8bceb9232f0e50363f3a7cea787b291c66fb6effa739c3b8fd9ebfbc4",
+    "src/core/validation.ts": "125ab3e401e31a2e8e8081e6c9a32c2b955fbbde5dc0d6915d0615459371eeef",
+    "src/adapters/web/dom.ts": "03027bdd295f376211e0fd7e5a1d19f2c8b07fe71d8969e022b0b8e1f5c92641",
+    "src/adapters/web/controls.ts": "d0dd3e403945929457e7ec6a06a07269e89fb4d91ffe440d93637ecd17968a1e",
+    "src/adapters/web/renderer.ts": "27a8bf7d1a48d09e470ba12066e286dc6a88250d01938a704ad3dcae0672da79",
+    "test/portable/page.test.mjs": "386e9402997b386053d766a3a3dd51f4cc1bc4bbf62a9e368974d552e26cc177",
+    "test/portable/validation.test.mjs": "6355f0e78acec9994970fd59283996f65cce6c5470c666bbc89c92df90d414bf",
+    "test/web-adapter/contracts.spec.mjs": "f0c4a3520d5703283bfd3d496ce91805ea98ae4f29e5e57750641f1f79273d3e"
+  },
+  "checks": {
+    "typecheck": "passed",
+    "build": "passed",
+    "unit": 96,
+    "legacyBrowser": 61,
+    "sharedAdapterChromiumWebKit": 42,
+    "unchangedPublicEntrypoints": 39
+  },
+  "logs": {
+    "g07-browser-2.log": "20800de3025cf35139c2e1fc5c95fe272055e3e466c208def74d191bb67eb3fe",
+    "g07-api.log": "8e0c25db316115c3abc3252556745456e55eb781ac0a58bf9b694bde8161c1e1",
+    "g07-typecheck-2.log": "ac04f3318866b1197781fb98c44d6131286e292795daa6256505b429277ea3cb",
+    "g07-browser.log": "7d5b3bebfb686dc6cebcaaecd1d8f0228587c09aa04a0fdfc9ab6a27d8fc9ff8",
+    "g07-web-adapter-3.log": "47bae250413754007d3392ea3150b1e734ac64c93399cd9e24020d02a99e7424",
+    "g07-typecheck.log": "ac04f3318866b1197781fb98c44d6131286e292795daa6256505b429277ea3cb",
+    "g07-tests.log": "b8a9ba57e82357a6a0e805887b0841d3bfb5960ca322cc33e8b0f81617c88b8d",
+    "g07-tests-2.log": "48de9e07a8088e5255f1f95acb8960649822c2a392a8edb02b951c1eaa61cb3d"
+  },
+  "consumerEvidence": "../../../../ShaderLab/review/m24-ui/g07/optimization/README.md"
+}

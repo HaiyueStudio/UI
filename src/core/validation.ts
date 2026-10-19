@@ -1,5 +1,5 @@
 import type { HYCapabilities, HYComponentKind, HYComponentProps, HYDiagnosticCode, HYDiagnosticContext, HYFeature, HYNode, HYSourceLocation } from './types.js';
-import { snapshot } from './data.js';
+import { isSnapshot, snapshot } from './data.js';
 
 export class HYUIError extends Error {
   readonly code: HYDiagnosticCode;
@@ -98,8 +98,18 @@ export function hySupports(capabilities: HYCapabilities, feature: HYFeature): bo
   if (!HY_FEATURES.includes(feature)) throw new HYUIError('capability', 'Unknown capability', { property: feature });
   return capabilities.features.includes(feature);
 }
+const validatedSnapshots = new WeakMap<object, Set<HYComponentKind>>();
+function remember(props:object,kind:HYComponentKind):void {
+  let kinds=validatedSnapshots.get(props);if(!kinds){kinds=new Set();validatedSnapshots.set(props,kinds);}kinds.add(kind);
+}
+/** Internal immutable hand-off. Mutable and merely shallow-frozen inputs are always validated. */
+export function snapshotValidatedProps<K extends HYComponentKind>(kind:K,props:HYComponentProps[K],context:HYDiagnosticContext,capabilities:HYCapabilities):HYComponentProps[K] {
+  hyValidateProps(kind,props,context,capabilities);
+  const result=snapshot(props);remember(result,kind);return result;
+}
 export function hyValidateProps<K extends HYComponentKind>(kind: K, props: HYComponentProps[K], context: HYDiagnosticContext = {}, capabilities?: HYCapabilities): void {
   if (!Object.hasOwn(schemas, kind)) fail('Unknown component kind', context);
+  if (!validatedSnapshots.get(props)?.has(kind)) {
   schemas[kind](props, context);
   if (kind === 'Select' || kind === 'Tabs') {
     const p = props as HYComponentProps['Select'];
@@ -111,6 +121,8 @@ export function hyValidateProps<K extends HYComponentKind>(kind: K, props: HYCom
     if (p.min > p.max || p.value < p.min || p.value > p.max) fail('Slider value/range is invalid', context);
   }
   if (kind !== 'Grid' && (props.layout?.rows || props.layout?.columns)) fail('Track definitions require Grid', field(context, 'layout'));
+  if (isSnapshot(props)) remember(props,kind);
+  }
   if (capabilities) {
     if (!capabilities.components.includes(kind)) throw new HYUIError('capability', `Unsupported component ${kind}`, context);
     const needs: HYFeature[] = [];

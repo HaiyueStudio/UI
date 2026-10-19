@@ -214,3 +214,40 @@ test('typing, selection and browser undo survive an unrelated page update',async
   await expect(input).toHaveValue('before');
   await input.press('ControlOrMeta+Shift+z');await expect(input).toHaveValue('before after');
 });
+
+test('props-only updates keep focus and selection without a synchronous focus geometry read',async({page})=>{
+  const input=page.getByRole('textbox',{name:'作品名称'});await input.focus();
+  const result=await input.evaluate(el=>{
+    el.setSelectionRange(1,3);const original=Element.prototype.getClientRects;let reads=0;
+    Element.prototype.getClientRects=function(){reads++;return original.call(this);};
+    try {
+      demo.page.setProps('/studio/actions/hint','Text',{text:'updated hint'});
+      let active=document.activeElement;while(active?.shadowRoot?.activeElement)active=active.shadowRoot.activeElement;
+      return {reads,focused:active===el,selection:[el.selectionStart,el.selectionEnd]};
+    }finally{Element.prototype.getClientRects=original;}
+  });
+  expect(result).toEqual({reads:0,focused:true,selection:[1,3]});
+});
+
+test('select value updates retain option nodes while labels and parent errors stay current',async({page})=>{
+  const result=await page.evaluate(async()=>{
+    demo.dispose();
+    const {HYWebRenderer}=await import('/dist/adapters/web/index.js');
+    const {HYPage}=await import('/dist/portable/index.js');
+    const {hyNode:n}=await import('/dist/core/index.js');
+    const p=new HYPage(new HYWebRenderer(document.querySelector('#app')));
+    const props={value:'a',options:[{value:'a',label:'A'},{value:'b',label:'B'}],a11y:{label:'Choice'}};
+    p.mount(n('FormGroup','form',{label:'Form'},{children:[n('Select','choice',props)]}));
+    const select=document.querySelector('[data-hy-key="/form/choice"]').shadowRoot.querySelector('select');
+    const options=[...select.options];
+    p.setProps('/form/choice','Select',{...props,value:'b'});
+    const retained=options.every((el,i)=>el===select.options[i]);
+    p.setProps('/form/choice','Select',{...props,value:'b',a11y:{label:'New choice'}});
+    p.setProps('/form','FormGroup',{label:'Form',error:'Choose carefully'});
+    const state={retained,value:select.value,label:select.getAttribute('aria-label'),error:select.getAttribute('aria-description')};
+    p.setProps('/form/choice','Select',{...props,disabled:true});
+    state.disabled=select.disabled&&[...select.options].every(option=>option.disabled);
+    p.dispose();return state;
+  });
+  expect(result).toEqual({retained:true,value:'b',label:'New choice',error:'Choose carefully',disabled:true});
+});

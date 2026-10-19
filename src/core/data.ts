@@ -10,8 +10,12 @@ export function equalData(a: unknown, b: unknown): boolean {
 }
 
 /** Called only after schema validation, so cycles and platform handles are impossible. */
+const snapshots = new WeakSet<object>();
+export function isSnapshot(value: object): boolean { return snapshots.has(value); }
 export function snapshot<T>(value: T): T {
   if (!value || typeof value !== 'object') return value;
-  if (Array.isArray(value)) return Object.freeze(value.map(snapshot)) as T;
-  return Object.freeze(Object.fromEntries(Object.entries(value).map(([key, item]) => [key, snapshot(item)]))) as T;
+  if (snapshots.has(value)) return value;
+  const result = Array.isArray(value) ? Object.freeze(value.map(snapshot))
+    : Object.freeze(Object.fromEntries(Object.entries(value).map(([key, item]) => [key, snapshot(item)])));
+  snapshots.add(result); return result as T;
 }

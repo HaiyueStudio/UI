@@ -53,9 +53,8 @@ export function createControl(node: HYNode, context: HYWebControlContext, revisi
     let previous: HYSelectionProps|undefined;
     controller.attach({
       apply(props){
-        const options=props.options.map(option=>({...option,disabled:!!option.disabled||!!props.disabled}));
-        const old=previous?.options.map(option=>({...option,disabled:!!option.disabled||!!previous?.disabled}));
-        if(!equalData(options,old)) select.options=options;
+        if(!previous || !!props.disabled!==!!previous.disabled || !equalData(props.options,previous.options))
+          select.options=props.options.map(option=>({...option,disabled:!!option.disabled||!!props.disabled}));
         if(select.value!==props.value)select.value=props.value;
         if(select instanceof HYSelect)flag(select,'disabled',!!props.disabled);
         attribute(select,'aria-disabled',props.disabled?'true':undefined);previous=props;

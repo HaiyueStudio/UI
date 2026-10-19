@@ -23,6 +23,18 @@ function groups(tree: Tree): Map<string, string[]> {
 }
 /** Returns a deterministic batch. Removing an ancestor releases descendants exactly once. */
 export function diff(previous: Tree, next: Tree): readonly HYMutation[] {
+  // Bound props preserve topology. Avoid building/serializing sibling groups
+  // for these updates; keep the general reconciler for insert/move/remove.
+  if (previous.size === next.size) {
+    const entries = previous.entries(), updates: HYMutation[] = [];
+    let sameStructure = true;
+    for (const [key, entry] of next) {
+      const [oldKey, old] = entries.next().value!;
+      if (oldKey !== key || old.parent !== entry.parent || old.slot !== entry.slot || old.node.kind !== entry.node.kind) { sameStructure = false; break; }
+      if (old !== entry && !equalData(old.node.props, entry.node.props)) updates.push(Object.freeze({ type: 'update', node: entry.node }));
+    }
+    if (sameStructure) return Object.freeze(updates);
+  }
   const mutations: HYMutation[] = [];
   const removed = new Set<string>();
   for (const [key, old] of previous) {

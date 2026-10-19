@@ -45,8 +45,13 @@ export function captureFocus(document: Document): () => void {
   const start = input?.selectionStart ?? null, end = input?.selectionEnd ?? null, direction = input?.selectionDirection ?? undefined;
   const value = input?.value;
   return () => {
-    if (!visible(active) || active.matches(':disabled')) return;
-    if (deepActive(document) !== active) active.focus({ preventScroll: true });
+    // Most props-only commits preserve the focused element. Testing visibility
+    // in that case forces a synchronous layout after unrelated DOM writes.
+    // Only a lost focus needs geometry checks before restoring it.
+    if (deepActive(document) !== active) {
+      if (!visible(active) || active.matches(':disabled')) return;
+      active.focus({ preventScroll: true });
+    }
     // A new accepted value intentionally owns its new selection.
     if (input && input.value === value && start !== null && end !== null
       && (input.selectionStart !== start || input.selectionEnd !== end || input.selectionDirection !== direction)) input.setSelectionRange(start, end, direction);
