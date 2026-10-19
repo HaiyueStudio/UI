@@ -1,0 +1,16 @@
+{
+  "schema": "haiyue-portable-ui/1.1",
+  "protocol": 1,
+  "sourceSnapshot": "63cbf4c5c7a72f6549dbdfc670fbdd4d9fd204ab3f180423f49dbbc3dbfa6d03",
+  "packageSha256": "e2e99ab9b681a40a446dc09bafafff8e9c57299b7b4e177e8ead1f1818b0963c",
+  "files": {
+    "src/core/types.ts": "190b033a6249901cfdca36a96d29adc2e7b108216bedcc07a6280ba140a0f478",
+    "src/core/index.ts": "ae4344368e092a977110b5cb67bb9c790174b7bc4505852738a86eb7b13a079d",
+    "src/portable/page.ts": "3ffe02cbbfe394d89389d7879349a32cc1d60d71f2ade55d65c37662921d683d",
+    "src/portable/index.ts": "3b36477c6d53c3d2d30893bc08a2566d56550ea17bb338d870d10261684c819f",
+    "src/portable/theme.ts": "ed30f4ed24fb37b6d096c13148784277575206c303a25db1bd324198ad1460f6",
+    "review/api-surface.json": "c3b67ba9babf4675c5439a51af1a92347844d2f25fae96e144956893670ebde4",
+    "review/m24-ui/g03/schema-1.1.md": "dd3ec15add2b5cb15993df1d59a677fc1278813f166bb51f8d1e07860bd486dd",
+    "docs/for-ai/adr/2026-10-16-g03-component-core.md": "3a0e71e80263c606fd2a3ad301262d74656b9a00e80da5c49869e10b7015e8ce"
+  }
+}

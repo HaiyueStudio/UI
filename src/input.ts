@@ -1,4 +1,4 @@
-export type HYInputType = 'text' | 'number' | 'color' | 'search';
+export type HYInputType = 'text' | 'number' | 'color' | 'search' | 'password';
 export type HYInputSearchSource = 'enter' | 'button' | 'api';
 
 export interface HYInputChangeDetail {
@@ -155,8 +155,9 @@ export class HYInput extends HTMLElement {
 
   get value(): string { return this.getAttribute('value') ?? ''; }
   set value(value: string) {
-    this.setAttribute('value', String(value));
-    this._input.value = String(value);
+    const text = String(value);
+    if (this.getAttribute('value') !== text) this.setAttribute('value', text);
+    if (this._input.value !== text) this._input.value = text;
     this._syncValidity();
   }
 
@@ -190,12 +191,14 @@ export class HYInput extends HTMLElement {
     if (this._input.value !== value) this._input.value = type === 'color' && !/^#[0-9a-f]{6}$/iu.test(value) ? '#000000' : value;
     for (const name of ['min', 'max', 'step', 'placeholder', 'name', 'autocomplete', 'aria-label', 'title']) {
       const attribute = this.getAttribute(name);
-      if (attribute === null) this._input.removeAttribute(name);
-      else this._input.setAttribute(name, attribute);
+      if (attribute === null) {
+        if (this._input.hasAttribute(name)) this._input.removeAttribute(name);
+      } else if (this._input.getAttribute(name) !== attribute) this._input.setAttribute(name, attribute);
     }
-    this._input.disabled = this.disabled;
-    this._input.readOnly = this.readOnly;
-    this._input.required = this.hasAttribute('required');
+    // Reassigning even an unchanged placeholder or state can split Chromium's undo group.
+    if (this._input.disabled !== this.disabled) this._input.disabled = this.disabled;
+    if (this._input.readOnly !== this.readOnly) this._input.readOnly = this.readOnly;
+    if (this._input.required !== this.hasAttribute('required')) this._input.required = this.hasAttribute('required');
     this._searchButton.hidden = type !== 'search';
     this._searchButton.disabled = this.disabled;
     this._searchButton.setAttribute('aria-label', this.searchLabel);
@@ -264,5 +267,5 @@ export function defineInputComponents(): void {
 }
 
 function normalizedType(value: string | null): HYInputType {
-  return value === 'number' || value === 'color' || value === 'search' ? value : 'text';
+  return value === 'number' || value === 'color' || value === 'search' || value === 'password' ? value : 'text';
 }

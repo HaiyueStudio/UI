@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const packageJson = JSON.parse(readFileSync(resolve(repositoryRoot, 'package.json'), 'utf8'));
 const componentSubpaths = Object.entries(packageJson.exports)
-  .filter(([subpath, entry]) => subpath.startsWith('./')
+  .filter(([subpath, entry]) => !['./core', './portable', './adapters/web'].includes(subpath) && subpath.startsWith('./')
     && typeof entry === 'object'
     && entry !== null
     && 'types' in entry

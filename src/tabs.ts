@@ -18,7 +18,7 @@ export class HYTabs extends HTMLElement {
   private _pendingFocusValue: string | null = null;
 
   static get observedAttributes(): string[] {
-    return ['options', 'value', 'aria-label'];
+    return ['options', 'value', 'aria-label', 'controlled'];
   }
 
   constructor() {
@@ -133,6 +133,10 @@ export class HYTabs extends HTMLElement {
     this.setAttribute('value', value);
   }
 
+  /** Opt-in application ownership, including a disabled authoritative selection. */
+  get controlled(): boolean { return this.hasAttribute('controlled'); }
+  set controlled(value: boolean) { this.toggleAttribute('controlled', value); }
+
   private _syncFromAttributes(): void {
     if (this.hasAttribute('options')) this._readOptionsAttribute();
     const value = this._resolveValue();
@@ -219,6 +223,7 @@ export class HYTabs extends HTMLElement {
   }
 
   private _resolveValue(enabled = this._options.filter(option => !option.disabled)): string {
+    if (this.controlled && this._options.some(option => option.value === this.value)) return this.value;
     if (enabled.some(option => option.value === this.value)) return this.value;
     if (enabled[0]) return enabled[0].value;
     return '';

@@ -1,0 +1,68 @@
+{
+  "previousReviewed": {
+    "packedBytes": 129642,
+    "unpackedBytes": 602171,
+    "fileCount": 110
+  },
+  "reviewed": {
+    "packedBytes": 146034,
+    "unpackedBytes": 661915,
+    "fileCount": 122
+  },
+  "reserve": {
+    "packedBytes": 3000,
+    "unpackedBytes": 12000,
+    "fileCount": 4
+  },
+  "addedRuntimeFiles": [
+    {
+      "path": "dist/adapters/web/controls.d.ts",
+      "bytes": 609
+    },
+    {
+      "path": "dist/adapters/web/controls.js",
+      "bytes": 11962
+    },
+    {
+      "path": "dist/adapters/web/dom.d.ts",
+      "bytes": 827
+    },
+    {
+      "path": "dist/adapters/web/dom.js",
+      "bytes": 4646
+    },
+    {
+      "path": "dist/adapters/web/index.d.ts",
+      "bytes": 222
+    },
+    {
+      "path": "dist/adapters/web/index.js",
+      "bytes": 141
+    },
+    {
+      "path": "dist/adapters/web/renderer.d.ts",
+      "bytes": 845
+    },
+    {
+      "path": "dist/adapters/web/renderer.js",
+      "bytes": 26857
+    },
+    {
+      "path": "dist/adapters/web/styles.d.ts",
+      "bytes": 3774
+    },
+    {
+      "path": "dist/adapters/web/styles.js",
+      "bytes": 3750
+    },
+    {
+      "path": "dist/adapters/web/types.d.ts",
+      "bytes": 1885
+    },
+    {
+      "path": "dist/adapters/web/types.js",
+      "bytes": 44
+    }
+  ],
+  "note": "Same file allowlist and growth reserve. Web adapter JS/types, opt-in legacy additions, README/CHANGELOG and entry metadata account for growth. No examples/test/evidence or runtime dependencies."
+}

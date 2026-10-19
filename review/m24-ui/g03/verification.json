@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "goal": "m24-native-ui/g03-component-core",
+  "status": "passed",
+  "recordedAt": "2026-10-16T12:22:26.033Z",
+  "environment": {
+    "platform": "darwin",
+    "arch": "x64",
+    "node": "v24.19.0",
+    "npm": "11.17.0"
+  },
+  "source": {
+    "head": "377643a395242318cbc84a3199eb4befc77d340b",
+    "kind": "working-tree-snapshot",
+    "sha256": "63cbf4c5c7a72f6549dbdfc670fbdd4d9fd204ab3f180423f49dbbc3dbfa6d03",
+    "files": {
+      "CHANGELOG.md": "fb0e0992d10de1b41387757cb0ff91d45197187092e484826f0256502ceab41e",
+      "README.md": "f0af967e245e06d9c121289920f91f9b545e300f4367a7fddae39fbf481e82e4",
+      "package-lock.json": "8df758a38f35c93d546407a6f342ceb15f08413510b90ba9bfda3dabea8b7dbf",
+      "package.json": "3a2d89d3ae88711d472ad04a8c7831bfd96137c6244b2be51504dbb6f398bcee",
+      "review/api-surface.json": "c3b67ba9babf4675c5439a51af1a92347844d2f25fae96e144956893670ebde4",
+      "review/package-budget.json": "59923d1acd9e2dac2168ff671fb705aa79b8d78fb68f940702c8502568e6674c",
+      "scripts/verify-package.mjs": "9b41d5c97de63d835c023821a2ebe531a3d3b5ac66c6aab2e78c3d61acf746c8",
+      "src/affix.ts": "c677fbfb333dd6c01e015bb4231db639ebfb6b91eea50c179907e5ee50af6f0e",
+      "src/badge.ts": "d87321ebcb5595199ef292bf2ea15ddb534959746ff1ee81d7a23a445a96a6ed",
+      "src/border-beam.ts": "8a8162076e2a4fa75d42b9f55dc9e982da662e235aa7f61994a2112ef0bbbe6a",
+      "src/breadcrumb.ts": "e4b6b22695d7f45d03fad5eef90e9f79237170719d3b51b314f01cb2e284d7b6",
+      "src/button.ts": "c9430496da7db3e72dd7e64d30dce6316a111e9297d107eb12d711787b06d445",
+      "src/cascader.ts": "1f293615a2abc3533d31c7be9508824f8fecff5a79ec4c39ccf3a172b24bf111",
+      "src/checkbox.ts": "5bb48c6ea8740ceb6b32789d0750b06d25dfe6f3d620aed77ff85f10d0e0e01e",
+      "src/collapse.ts": "014cc7ddd09d6102b67f2115fa4f45bc2048fdd319e1b4ff9f6d94ffc48f7995",
+      "src/context-menu.ts": "b3bb3ae9bef8cf75335c4dd058669ef97bd52caad725bcaa46bf39ebcfe80ebf",
+      "src/core/actions.ts": "0f24e86179832a0edd21ab5e04441e08f55f8f3f6919af9c97dcc700cad82e7b",
+      "src/core/data.ts": "2c030379db52fc77a5a6554a6d62dec9c9206db69668144c7df2926ab3ff4c10",
+      "src/core/index.ts": "ae4344368e092a977110b5cb67bb9c790174b7bc4505852738a86eb7b13a079d",
+      "src/core/platform-view.ts": "7eff3b13c6089bc5626b0aff61cdcf4995a59ce0d4d635ae29b3a8b44916719d",
+      "src/core/selection.ts": "bd5416fe89f8379c406139e7728e96d0e67cdd53b3b81622fd8952c088e44cb8",
+      "src/core/text.ts": "a9c4665a689e431094b52f0afe9538725d0d32e5d3280684fb8e1d7293b08b2f",
+      "src/core/types.ts": "190b033a6249901cfdca36a96d29adc2e7b108216bedcc07a6280ba140a0f478",
+      "src/core/validation.ts": "f472ac3f2abe7d89d524552e7425228a6908d9a612c1aa13b2184a3a39b9d8ae",
+      "src/date-picker.ts": "492ad672d4da12f527a6df67414dbc30a7896310d597f6e790b1d96eb1abde5e",
+      "src/dialog.ts": "2d7a539b4d7c1991e90e79207973690c916a7c20446342a0f5f43b622b47e3dd",
+      "src/divider.ts": "dff5324bcc13d91d83df17d6ffa490ec66f2d3d51aa3e0edac3d7b865af73a6d",
+      "src/drawer.ts": "bdadf44dd352a5ac1a27bfc91395f93ff3c8b267c4b05ccabd947db40494e888",
+      "src/dropdown.ts": "38e772eb193053f9d14a9941c2453c47604c93dbd42cab7ac572de27dbdbcede",
+      "src/expandable.ts": "b0220bee4bc7089374591898dde735175be9c087bbba57a009edbd20c6cc1d4c",
+      "src/history-controls.ts": "06a4e29291fb80e7941973c5eb653b94c654c776da7318ea9099536cfe629dff",
+      "src/index.ts": "85df426c290fe1883c76efb33e644166c80ecbcb1d377dc55b9c4fed3f9d9860",
+      "src/input.ts": "e782634a31cf3d9c7ca37377c1055c4073a3d818d99d049910736098ce0e6928",
+      "src/menu-shared.ts": "f9de2a268c725d49b9715bd95b3fbfefee558c80af2e3180f3e1154acedba306",
+      "src/notification.ts": "939096a1627a7df5ad6f8c349298a65955b4e47d0a4ffcf17b47c60f3ae8831b",
+      "src/portable/index.ts": "3b36477c6d53c3d2d30893bc08a2566d56550ea17bb338d870d10261684c819f",
+      "src/portable/page.ts": "3ffe02cbbfe394d89389d7879349a32cc1d60d71f2ade55d65c37662921d683d",
+      "src/portable/theme.ts": "ed30f4ed24fb37b6d096c13148784277575206c303a25db1bd324198ad1460f6",
+      "src/portable/tree.ts": "71e11b5c542c42560bd8b11bf20594e316c3e51ad14c20c27482ddcb514ac6cb",
+      "src/radio.ts": "c07744c17a203b86421f8308c43c1dd92a47cffb90e4ef25534ed0c58a874161",
+      "src/range.ts": "15902638fa3cbb2bf0b6cb99d5a56fb1b3ebf7937c666c6b3eb2e0e9a5c15b50",
+      "src/rate.ts": "6f8a72742523aa3e048ad7f4a24963985d2096c3b4f129a0e33f7a1e89023b00",
+      "src/select.ts": "4f9d1138924a95af08278da805dfaf0e3525f836ce6621d660f78fa0f969c3ab",
+      "src/skeleton.ts": "565f2f8e5fd68583d2f7b8423e149191084782762599a608ab543b238b0f6a5d",
+      "src/split.ts": "23b9a6d80e24d55b2885c65b329568a8f192eb1f2bca04868eba1aa190e2b54a",
+      "src/steps.ts": "7be71c81b050141209331c343063f75596244b1a4d386cec531cf44ee87498b7",
+      "src/table.ts": "716a391e0b32c69d4105752c6e9e30bf2d57c5a483f899b3e46c79057f74f447",
+      "src/tabs.ts": "0db46fba204d856c10b4d5b7798d73dd87f07635a435cd978d0de2f294ed460b",
+      "src/time-picker.ts": "0430c6efebc5704ecb5c622d0aac74970602ced341e2aca348acee975ec7cdc2",
+      "src/timeline.ts": "0851588bacdf4cdec5ab387f2f81230a3ed4fb3e89951763e3fd109078c02ac5",
+      "src/tooltip.ts": "7203a5220797f320ae8ee98bcb50ae0a70f84d9e72ccdfe58fd1cf61ad19ed73",
+      "src/tour.ts": "7edfc9d9e9e8b27721e605062420611ab173a1ba2c7c59456f0e7e694bd43f12",
+      "src/tree-model.ts": "3dd51af0f770f47ab585bdb6f810433ed02806b6bbc8ba3447837579334cd916",
+      "src/tree-node.ts": "119ee2c0e626b780fdd274ccb5cac5bb96c66cd4a6a08f10b035e0f96a5a98f7",
+      "src/tree-types.ts": "ecccc7d6601823a121989874293314b6458fb9eddce36efda81a4370857f4c05",
+      "src/tree.ts": "4edff122eeee2312256c54fd95c8abd7319886cabd077b8fe5b22b60dca02efc",
+      "src/virtual-list.ts": "6e02169cfff379f74d980e5fafee6bb3b1be256195269091e4ceaabf3c815a36",
+      "src/virtual-mouse.ts": "b1cf6609aaff78ed38fe4852a206693be749d566b86a4242ced3a5a2ca4a3eac",
+      "src/watermark.ts": "4a0399f775c195418d6d5d2d53f18f276c2d4a10e263e27bef8d1d645e83a583",
+      "test/package-boundaries.test.mjs": "3e05dd189029ce2463d9ab2f354147c3d60d1dd3d2d48786c5891ea084ef5739",
+      "test/portable/controllers.test.mjs": "c3103b39c00cad90eec0b562d5bdb46700437ba39d7ce0d46c7848fb13fd0fd7",
+      "test/portable/fixtures/g01-compatibility.ts": "852164281821414d69fdaffc513d24f80b6554a4bea8fd6afa5d2ad59e713094",
+      "test/portable/fixtures/settings-page.ts": "f63963354651c51485ea830e4f57ef87cfdcc165c043c3258a981f931578562b",
+      "test/portable/fixtures/type-errors.ts": "57f6c167c5161db085573ab24564fa728765c2eef63d732b93bb88f255fbe3f7",
+      "test/portable/package.test.mjs": "962a5e09e0b92492482c74a1ef2b631a466eb0fd53f15155b0f3d61e3effe353",
+      "test/portable/page.test.mjs": "599f68717638d5abb2eb8ec5721c07e2395b5c220003c1dd76f0213adfeccbc5",
+      "test/portable/recording.mjs": "acc22d536fd0cf25808a330d12eebbbe27bfd4634f3fcefdedd0961db76131de",
+      "test/portable/selection.test.mjs": "a72e6f4e66dcf081c9115a77c15abe93fbf8e4eaaf97f66c72bf0a1c797e1875",
+      "test/portable/validation.test.mjs": "63b595f8a32b538b41aa480e40964baf5c3f7ee3f9c7b99f6cb7a2e65ccdc1f5",
+      "tsconfig.base.json": "a2cc1e244ac3bc6054695eacca737056a880fa3fc2a4fa3fa7a4eea95325ef4f",
+      "tsconfig.json": "270e375f111ee00432e6c5e8dd6bc6209ecc8fda96687f2ff33979a273b08106",
+      "tsconfig.portable.json": "149e7615847831d24aa744105666f7b1974bc9fd82690f5dca8bb2a6e54048e3"
+    }
+  },
+  "checks": {
+    "portable": {
+      "status": "passed",
+      "tests": 48,
+      "passed": 48,
+      "log": "review/m24-ui/g03/portable-tests.log",
+      "sha256": "cdf1185d2de0d662e0407b6307a8ece6fab52266e76b12f923beaf6362fea418"
+    },
+    "packageAndFullSuite": {
+      "status": "passed",
+      "tests": 91,
+      "passed": 91,
+      "log": "review/m24-ui/g03/package-check.log",
+      "sha256": "87da6205b2c34e13415dda110a5fb5a9de81f0c97dbfe4664a849623d8194225"
+    },
+    "legacyAPI": {
+      "status": "passed",
+      "preservedEntryPoints": 36,
+      "newEntryPoints": [
+        "./core",
+        "./portable"
+      ]
+    },
+    "noDOMTypes": "passed: source + installed declarations, lib ESNext and types []",
+    "freshConsumer": "passed: offline tarball install/import/typecheck without sibling source"
+  },
+  "operationCounts": {
+    "nodes": 1001,
+    "singlePropertyUpdates": 1,
+    "identicalPropsWrites": 0,
+    "oneHundredChanges": {
+      "commits": 1,
+      "updates": 2
+    },
+    "activeNodesAfterDispose": 0
+  },
+  "package": {
+    "package": "@haiyue/ui",
+    "version": "0.2.0",
+    "file": ".artifacts/packages/haiyue-ui-0.2.0.tgz",
+    "packedBytes": 129642,
+    "unpackedBytes": 602171,
+    "files": 110,
+    "buttonGzipBytes": 949,
+    "sha256": "e2e99ab9b681a40a446dc09bafafff8e9c57299b7b4e177e8ead1f1818b0963c"
+  },
+  "limits": [
+    "Recording backend only; no platform renderer or native layout implemented in G03.",
+    "Actual IME, accessibility, asynchronous native setter feedback and surface integration belong to G05/G06/G08.",
+    "ShaderLab shared UI integration and device comparisons belong to G07.",
+    "No publication; manifest version remains 0.2.0 until the G10 version decision."
+  ]
+}

@@ -13,7 +13,7 @@ export class HYDialog extends HTMLElement {
   private _closeReason: HYDialogCloseDetail['reason'] = 'programmatic';
 
   static get observedAttributes(): string[] {
-    return ['open', 'heading', 'dismissible'];
+    return ['open', 'heading', 'dismissible', 'controlled'];
   }
 
   constructor() {
@@ -110,7 +110,7 @@ export class HYDialog extends HTMLElement {
     this._dialog.append(header, body, footer);
     root.append(style, this._dialog);
 
-    this._closeButton.addEventListener('click', () => this.close('action'));
+    this._closeButton.addEventListener('click', () => this.controlled ? this._requestClose('action') : this.close('action'));
     this._dialog.addEventListener('cancel', this._onCancel);
     this._dialog.addEventListener('click', this._onDialogClick);
     this._dialog.addEventListener('close', this._onNativeClose);
@@ -131,6 +131,10 @@ export class HYDialog extends HTMLElement {
 
   get dismissible(): boolean { return this.hasAttribute('dismissible'); }
   set dismissible(value: boolean) { this.toggleAttribute('dismissible', value); }
+
+  /** Opt-in: user dismissal requests leave open controlled by the application. */
+  get controlled(): boolean { return this.hasAttribute('controlled'); }
+  set controlled(value: boolean) { this.toggleAttribute('controlled', value); }
 
   get heading(): string { return this.getAttribute('heading') ?? ''; }
   set heading(value: string) { this.setAttribute('heading', value); }
@@ -164,6 +168,7 @@ export class HYDialog extends HTMLElement {
   private _onCancel = (event: Event): void => {
     event.preventDefault();
     if (!this.dismissible) return;
+    if (this.controlled) { this._requestClose('escape'); return; }
     const forwarded = new CustomEvent('dialog-cancel', { bubbles: true, composed: true, cancelable: true });
     if (this.dispatchEvent(forwarded)) this.close('escape');
   };
@@ -173,10 +178,16 @@ export class HYDialog extends HTMLElement {
     const rect = this._dialog.getBoundingClientRect();
     const inside = event.clientX >= rect.left && event.clientX <= rect.right
       && event.clientY >= rect.top && event.clientY <= rect.bottom;
-    if (!inside) this.close('backdrop');
+    if (!inside) { if (this.controlled) this._requestClose('backdrop'); else this.close('backdrop'); }
   };
 
+  private _requestClose(reason: HYDialogCloseReason): void {
+    this.dispatchEvent(new CustomEvent('dialog-cancel', { detail: { reason }, bubbles: true, composed: true, cancelable: true }));
+  }
+
   private _onNativeClose = (): void => {
+    // Native close is queued. A subsequent showModal must not be undone by that old event.
+    if (this._dialog.open) return;
     this.removeAttribute('open');
     const reason = this._closeReason;
     this._closeReason = 'programmatic';
@@ -185,7 +196,7 @@ export class HYDialog extends HTMLElement {
       bubbles: true,
       composed: true,
     }));
-    this._returnFocus?.focus();
+    if (!this.controlled) this._returnFocus?.focus();
     this._returnFocus = null;
   };
 }

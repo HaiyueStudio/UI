@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": [
+      "ESNext"
+    ],
+    "types": [],
+    "skipLibCheck": false,
+    "noEmit": true
+  },
+  "include": [
+    "src/core/**/*.ts",
+    "src/portable/**/*.ts",
+    "test/portable/fixtures/**/*.ts"
+  ]
+}

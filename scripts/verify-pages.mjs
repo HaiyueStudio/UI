@@ -11,6 +11,7 @@ const examplePages = [
   'examples/split/index.html',
   'examples/tree/index.html',
   'examples/expandable/index.html',
+  'examples/portable-ui/index.html',
 ];
 
 function resolveLocalReference(pagePath, reference) {

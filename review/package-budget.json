@@ -3,21 +3,21 @@
   "package": {
     "workspace": ".",
     "nodeImport": false,
-    "maxPackedBytes": 133572,
-    "maxUnpackedBytes": 639286,
-    "maxFileCount": 98,
+    "maxPackedBytes": 170424,
+    "maxUnpackedBytes": 771016,
+    "maxFileCount": 134,
     "capacity": {
       "reviewed": {
-        "packedBytes": 130572,
-        "unpackedBytes": 627286,
-        "fileCount": 94
+        "packedBytes": 167424,
+        "unpackedBytes": 759016,
+        "fileCount": 130
       },
       "growthReserve": {
         "packedBytes": 3000,
         "unpackedBytes": 12000,
         "fileCount": 4
       },
-      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths and a self-hosting examples shell with adjustable Split layouts and bundled CodeMirror highlighting, including icon/loading buttons and button groups, eight-handle constrained resize frames, affixed and searchable inputs, draggable containers, virtual mouse, QWERTY/numeric virtual keyboard modes, local-data table, breadcrumb navigation, hierarchical cascader selection, date/time pickers, loading skeletons, text/image watermarks, timelines, half-step ratings, count/status badges, accessible collapse panels, styled text dividers, horizontal/vertical progress steps, viewport affixing, and guided spotlight tours"
+      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths and a self-hosting examples shell with adjustable Split layouts and bundled CodeMirror highlighting, including icon/loading buttons and button groups, eight-handle constrained resize frames, affixed/searchable/password inputs, draggable containers, virtual mouse, QWERTY/numeric virtual keyboard modes, local-data table, breadcrumb navigation, hierarchical cascader selection, date/time pickers, loading skeletons, text/image watermarks, timelines, half-step ratings, count/status badges, accessible collapse panels, styled text dividers, horizontal/vertical progress steps, viewport affixing, and guided spotlight tours; M24 G03 adds independent DOM-free core/portable entries (12 implementation modules, JS and declarations), preserving existing Web entry isolation; M24 G05 adds focused Web adapter (6 modules, JS and declarations), retaining old subpath isolation and zero runtime dependencies"
     },
     "sideEffects": [
       "./themes/*.css"

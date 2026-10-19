@@ -179,6 +179,18 @@
     "./expandable": {
       "types": "./dist/expandable.d.ts",
       "import": "./dist/expandable.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    },
+    "./portable": {
+      "types": "./dist/portable/index.d.ts",
+      "import": "./dist/portable/index.js"
+    },
+    "./adapters/web": {
+      "types": "./dist/adapters/web/index.d.ts",
+      "import": "./dist/adapters/web/index.js"
     }
   },
   "engines": {
@@ -201,7 +213,7 @@
     "build:pages": "npm run build && node scripts/build-pages.mjs",
     "check:pages": "npm run build:pages && node scripts/verify-pages.mjs",
     "examples": "npm run build && node scripts/serve-examples.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck:portable",
     "test": "npm run build && node --test \"test/**/*.test.mjs\"",
     "prepack": "npm run typecheck && npm test && npm run api:check",
     "pack:candidate": "node scripts/pack-candidate.mjs",
@@ -209,7 +221,10 @@
     "api:update": "node scripts/api-surface.mjs --write",
     "test:browser": "npm run build && playwright test",
     "verify:package": "npm run prepack && node scripts/verify-package.mjs",
-    "release:check": "npm run verify:package && npm run test:browser && npm run check:pages"
+    "release:check": "npm run verify:package && npm run test:browser && npm run test:web-adapter && npm run check:pages",
+    "typecheck:portable": "tsc -p tsconfig.portable.json --noEmit",
+    "verify:portable": "npm run typecheck:portable && npm run build && node --test \"test/portable/*.test.mjs\"",
+    "test:web-adapter": "npm run build && playwright test -c test/web-adapter/playwright.config.mjs"
   },
   "devDependencies": {
     "@codemirror/lang-css": "^6.3.1",
