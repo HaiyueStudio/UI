@@ -337,6 +337,8 @@ code { padding: 2px 5px; border-radius: 4px; color: #8fd3ee; background: rgba(64
 .badge-asset b { align-self: end; font-size: 11px; }
 .badge-asset small { align-self: start; color: var(--muted); font-size: 9px; }
 .badge-statuses { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.tag-stage { display: grid; min-height: 260px; align-content: center; justify-items: center; gap: 34px; }
+.tag-examples { display: flex; flex-wrap: wrap; justify-content: center; gap: 9px; }
 .form-preview { display: grid; gap: 14px; align-content: center; }
 .input-affix-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
 .range-preview { display: grid; align-content: center; gap: 46px; min-height: 290px; padding-top: 52px; }
@@ -376,6 +378,8 @@ fieldset.options-preview legend { margin-bottom: 12px; padding: 0; color: #68778
 .drawer-properties b { color: var(--ink); font-size: 11px; font-weight: 600; }
 .notification-actions { flex-direction: column; }
 .notification-actions .native-trigger { min-width: 160px; }
+.toast-actions { flex-direction: column; }
+.toast-actions hy-button { min-width: 150px; }
 .border-beam-stage { min-height: 300px; }
 .border-beam-stage hy-border-beam { width: min(390px, 100%); background: color-mix(in srgb, var(--panel-2) 88%, transparent); }
 .border-beam-content { display: grid; grid-template-columns: 46px 1fr; gap: 2px 14px; align-items: center; min-height: 170px; padding: 28px; box-sizing: border-box; }

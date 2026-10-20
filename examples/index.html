@@ -33,6 +33,7 @@
       <a href="#button" data-name="button 按钮"><span>Button</span><code>hy-button</code></a>
       <a href="#button-group" data-name="button group 按钮组"><span>Button Group</span><code>hy-button-group</code></a>
       <a href="#badge" data-name="badge count dot status 徽标 数量 状态"><span>Badge</span><code>hy-badge</code></a>
+      <a href="#tag" data-name="tag label close check 标签 可关闭 可选中"><span>Tag</span><code>hy-tag</code></a>
       <a href="#input" data-name="input 输入框"><span>Input</span><code>hy-input</code></a>
       <a href="#range" data-name="range slider 范围 数值 滑块"><span>Range</span><code>hy-range</code></a>
       <a href="#checkbox" data-name="checkbox 复选框"><span>Checkbox</span><code>hy-checkbox</code></a>
@@ -58,6 +59,7 @@
       <a href="#dialog" data-name="dialog 对话框"><span>Dialog</span><code>hy-dialog</code></a>
       <a href="#drawer" data-name="drawer 抽屉 侧边栏"><span>Drawer</span><code>hy-drawer</code></a>
       <a href="#notification" data-name="notification 通知 提醒"><span>Notification</span><code>hy-notification</code></a>
+      <a href="#toast" data-name="toast message feedback 轻提示 消息"><span>Toast</span><code>hy-toast</code></a>
       <a href="#border-beam" data-name="border beam 边框 流光 特效"><span>Border Beam</span><code>hy-border-beam</code></a>
       <a href="#virtual-mouse" data-name="virtual mouse cursor 虚拟 鼠标 光标 演示"><span>Virtual Mouse</span><code>hy-virtual-mouse</code></a>
       <a href="#virtual-keyboard" data-name="virtual keyboard qwerty 虚拟 键盘 输入"><span>Virtual Keyboard</span><code>hy-virtual-keyboard</code></a>
@@ -72,7 +74,7 @@
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
       <a href="#table" data-name="table 表格 分页 过滤 排序"><span>Table</span><code>hy-table</code></a>
     </nav>
-    <div class="sidebar-foot"><hy-badge status="success" text="39 components"></hy-badge><span>·</span><span>v0.2.0</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="41 components"></hy-badge><span>·</span><span>v0.2.0</span></div>
   </aside>
 
   <main id="content" slot="second">
@@ -81,7 +83,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>39</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>41</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -164,6 +166,34 @@
 
 &lt;hy-badge status="processing" text="Rendering"&gt;&lt;/hy-badge&gt;</code></pre></details>
       <div class="parameter-strip"><code>count</code><code>overflow-count</code><code>show-zero</code><code>dot</code><code>status</code><code>color</code><code>text</code><code>offset</code><code>offset-x</code><code>offset-y</code><code>size</code><code>title</code></div>
+    </section>
+
+    <section class="component-section" id="tag" data-title="Tag">
+      <div class="section-heading"><div><h2>Tag</h2><code>&lt;hy-tag&gt;</code></div><p>用于分类、筛选和状态标记；支持语义色、自定义颜色、icon、关闭与可选择状态。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview tag-stage">
+          <hy-tag id="tag-live" variant="primary" label="Featured" icon="✦" value="featured" closable></hy-tag>
+          <div class="tag-examples" aria-label="Tag variants">
+            <hy-tag variant="default">Default</hy-tag>
+            <hy-tag variant="success" icon="✓">Synced</hy-tag>
+            <hy-tag variant="warning">Review</hy-tag>
+            <hy-tag variant="error">Failed</hy-tag>
+            <hy-tag color="#a78bfa">Custom</hy-tag>
+          </div>
+        </div>
+        <div class="controls stacked">
+          <label>label<input id="tag-label" value="Featured" /></label>
+          <label>variant<select id="tag-variant"><option>default</option><option selected>primary</option><option>success</option><option>warning</option><option>error</option></select></label>
+          <label>size<select id="tag-size"><option>small</option><option selected>medium</option><option>large</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="tag-closable" type="checkbox" checked /><span></span>closable</label><label class="toggle"><input id="tag-checkable" type="checkbox" /><span></span>checkable</label><label class="toggle"><input id="tag-checked" type="checkbox" /><span></span>checked</label></div>
+          <hy-button id="tag-reset" label="Restore tag" icon="↺"></hy-button>
+          <output id="tag-event">点击关闭或启用 checkable 后选择标签</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-tag variant="success" icon="✓" closable&gt;Synced&lt;/hy-tag&gt;
+&lt;hy-tag variant="primary" checkable checked value="featured"&gt;Featured&lt;/hy-tag&gt;
+&lt;hy-tag color="#a78bfa" size="large"&gt;Custom&lt;/hy-tag&gt;</code></pre></details>
+      <div class="parameter-strip"><code>variant</code><code>color</code><code>size</code><code>label</code><code>icon</code><code>closable</code><code>checkable</code><code>checked</code><code>disabled</code><code>tag-close</code><code>checked-change</code></div>
     </section>
 
     <section class="component-section" id="input" data-title="Input">
@@ -582,6 +612,28 @@ center.success({
   showProgress: true,
 });</code></pre></details>
       <div class="parameter-strip"><code>type</code><code>message</code><code>description</code><code>placement</code><code>duration</code><code>showProgress</code><code>open()</code><code>success()</code><code>info()</code><code>warning()</code><code>error()</code></div>
+    </section>
+
+    <section class="component-section" id="toast" data-title="Toast">
+      <div class="section-heading"><div><h2>Toast</h2><code>&lt;hy-toast&gt;</code></div><p>用于简短、瞬时的操作反馈；支持五种状态、三个位置、自动关闭、数量上限和持久 loading。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview centered toast-actions"><hy-button id="toast-show" label="Show toast"></hy-button><hy-button id="toast-stack" label="Stack messages" icon="≡"></hy-button><hy-button id="toast-clear" label="Clear all" icon="×"></hy-button></div>
+        <div class="controls stacked">
+          <label>type<select id="toast-type"><option>success</option><option selected>info</option><option>warning</option><option>error</option><option>loading</option></select></label>
+          <label>placement<select id="toast-placement"><option selected>top</option><option>center</option><option>bottom</option></select></label>
+          <label>duration <span id="toast-duration-value">3.0 s</span><input id="toast-duration" type="range" min="0" max="8" step="0.5" value="3" /></label>
+          <label>max count <span id="toast-count-value">5</span><input id="toast-count" type="range" min="1" max="10" step="1" value="5" /></label>
+          <label class="toggle"><input id="toast-closable" type="checkbox" checked /><span></span>closable</label>
+          <output id="toast-event">创建 Toast 后查看事件</output>
+        </div>
+      </div>
+      <hy-toast id="toast-live" placement="top" duration="3" max-count="5" closable></hy-toast>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>const toast = document.querySelector('hy-toast');
+toast.success('Saved successfully');
+toast.loading({ key: 'export', message: 'Exporting…' });
+toast.success({ key: 'export', message: 'Export complete', duration: 3 });
+toast.clear();</code></pre></details>
+      <div class="parameter-strip"><code>type</code><code>message</code><code>placement</code><code>duration</code><code>maxCount</code><code>closable</code><code>open()</code><code>success()</code><code>info()</code><code>warning()</code><code>error()</code><code>loading()</code><code>close()</code><code>clear()</code></div>
     </section>
 
     <section class="component-section" id="border-beam" data-title="Border Beam">

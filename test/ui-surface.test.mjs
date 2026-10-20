@@ -9,6 +9,7 @@ test('UI root keeps the supported component surface importable', async () => {
   const expected = [
     'HYAffix',
     'HYBadge',
+    'HYTag',
     'HYExpandable',
     'defineExpandableComponents',
     'HYButton',
@@ -28,6 +29,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYHistoryControls',
     'HYInput',
     'HYNotification',
+    'HYToast',
     'HYRadio',
     'HYRate',
     'HYRange',
@@ -55,6 +57,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineButtonGroupComponents',
     'defineAffixComponents',
     'defineBadgeComponents',
+    'defineTagComponents',
     'defineBorderBeamComponents',
     'defineBreadcrumbComponents',
     'defineCascaderComponents',
@@ -70,6 +73,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineHistoryControlsComponents',
     'defineInputComponents',
     'defineNotificationComponents',
+    'defineToastComponents',
     'defineHaiyueUI',
     'defineRadioComponents',
     'defineRateComponents',
@@ -139,6 +143,20 @@ test('badge renders bounded counts, dots, semantic statuses, custom colors, and 
   assert.match(source, /role', 'status'/);
   assert.match(source, /prefers-reduced-motion: reduce/);
   assert.match(source, /customElements\.define\('hy-badge'/);
+});
+
+test('tag exposes semantic colors, close cancellation, checked state, slots, and keyboard behavior', () => {
+  const source = readFileSync(new URL('../src/tag.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYTag extends HTMLElement/);
+  assert.match(source, /'default' \| 'primary' \| 'success' \| 'warning' \| 'error'/);
+  assert.match(source, /get closable\(\): boolean/);
+  assert.match(source, /get checkable\(\): boolean/);
+  assert.match(source, /role', 'checkbox'/);
+  assert.match(source, /event\.key !== 'Enter'.*event\.key !== ' '/s);
+  assert.match(source, /CustomEvent<HYTagCloseDetail>\('tag-close'.*cancelable: true/s);
+  assert.match(source, /CustomEvent<HYTagCheckedChangeDetail>\('checked-change'/);
+  assert.match(source, /this\._iconSlot\.name = 'icon'/);
+  assert.match(source, /customElements\.define\('hy-tag'/);
 });
 
 test('collapse exposes accessible multi-panel and accordion disclosure behavior', () => {
@@ -445,6 +463,19 @@ test('notification exposes typed timed stacks with optional progress and owned t
   assert.match(notification, /window\.setTimeout\(\(\) => this\._closeNotice\(notice, 'timeout'\)/);
   assert.match(notification, /window\.clearTimeout\(notice\.timer\)/);
   assert.match(notification, /CustomEvent<HYNotificationCloseDetail>\('notification-close'/);
+});
+
+test('toast exposes typed transient feedback, placements, limits, and owned timer cleanup', () => {
+  const toast = readFileSync(new URL('../src/toast.ts', import.meta.url), 'utf8');
+  assert.match(toast, /'success' \| 'info' \| 'warning' \| 'error' \| 'loading'/);
+  assert.match(toast, /'top' \| 'center' \| 'bottom'/);
+  assert.match(toast, /open\(options: string \| HYToastOptions\): string/);
+  assert.match(toast, /loading\(options:/);
+  assert.match(toast, /while \(this\._toasts\.size > this\.maxCount\)/);
+  assert.match(toast, /window\.setTimeout\(\(\) => this\._closeToast\(toast, 'timeout'\)/);
+  assert.match(toast, /window\.clearTimeout\(toast\.timer\)/);
+  assert.match(toast, /CustomEvent<HYToastCloseDetail>\('toast-close'/);
+  assert.match(toast, /customElements\.define\('hy-toast'/);
 });
 
 test('border beam follows the live rounded border with configurable flow instances', () => {

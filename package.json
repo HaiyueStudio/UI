@@ -25,6 +25,10 @@
       "types": "./dist/badge.d.ts",
       "import": "./dist/badge.js"
     },
+    "./tag": {
+      "types": "./dist/tag.d.ts",
+      "import": "./dist/tag.js"
+    },
     "./affix": {
       "types": "./dist/affix.d.ts",
       "import": "./dist/affix.js"
@@ -92,6 +96,10 @@
     "./notification": {
       "types": "./dist/notification.d.ts",
       "import": "./dist/notification.js"
+    },
+    "./toast": {
+      "types": "./dist/toast.d.ts",
+      "import": "./dist/toast.js"
     },
     "./history-controls": {
       "types": "./dist/history-controls.d.ts",

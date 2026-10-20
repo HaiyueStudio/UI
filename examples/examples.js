@@ -222,6 +222,20 @@ byId('badge-dot').addEventListener('change', event => { badgeLive.dot = event.ta
 byId('badge-zero').addEventListener('change', event => { badgeLive.showZero = event.target.checked; });
 byId('badge-small').addEventListener('change', event => { badgeLive.size = event.target.checked ? 'small' : 'default'; });
 
+const tagLive = byId('tag-live');
+byId('tag-label').addEventListener('input', event => { tagLive.label = event.target.value; });
+byId('tag-variant').addEventListener('change', event => { tagLive.variant = event.target.value; });
+byId('tag-size').addEventListener('change', event => { tagLive.size = event.target.value; });
+byId('tag-closable').addEventListener('change', event => { tagLive.closable = event.target.checked; });
+byId('tag-checkable').addEventListener('change', event => { tagLive.checkable = event.target.checked; });
+byId('tag-checked').addEventListener('change', event => { tagLive.checked = event.target.checked; });
+byId('tag-reset').addEventListener('click', () => { tagLive.hidden = false; });
+tagLive.addEventListener('tag-close', event => writeEvent(byId('tag-event'), 'tag-close', event.detail));
+tagLive.addEventListener('checked-change', event => {
+  byId('tag-checked').checked = event.detail.checked;
+  writeEvent(byId('tag-event'), 'checked-change', event.detail);
+});
+
 // Input.
 const inputText = byId('input-text');
 const inputValue = byId('input-value');
@@ -587,6 +601,20 @@ byId('notification-duration').addEventListener('input', event => {
 byId('notification-progress').addEventListener('change', event => { notificationLive.showProgress = event.target.checked; });
 notificationLive.addEventListener('notification-open', event => writeEvent(byId('notification-event'), 'notification-open', event.detail));
 notificationLive.addEventListener('notification-close', event => writeEvent(byId('notification-event'), 'notification-close', event.detail));
+
+const toastLive = byId('toast-live');
+const toastMessages = { success: 'Saved successfully', info: 'A new version is available', warning: 'Storage is almost full', error: 'Export failed', loading: 'Exporting project…' };
+let toastSequence = 0;
+const showToast = type => toastLive.open({ type, message: `${toastMessages[type]} · ${++toastSequence}`, duration: type === 'loading' ? 0 : toastLive.duration });
+byId('toast-show').addEventListener('click', () => showToast(byId('toast-type').value));
+byId('toast-stack').addEventListener('click', () => ['success', 'info', 'warning', 'error'].forEach((type, index) => window.setTimeout(() => showToast(type), index * 90)));
+byId('toast-clear').addEventListener('click', () => toastLive.clear());
+byId('toast-placement').addEventListener('change', event => { toastLive.placement = event.target.value; });
+byId('toast-duration').addEventListener('input', event => { toastLive.duration = Number(event.target.value); byId('toast-duration-value').textContent = `${Number(event.target.value).toFixed(1)} s`; });
+byId('toast-count').addEventListener('input', event => { toastLive.maxCount = Number(event.target.value); byId('toast-count-value').textContent = event.target.value; });
+byId('toast-closable').addEventListener('change', event => { toastLive.closable = event.target.checked; });
+toastLive.addEventListener('toast-open', event => writeEvent(byId('toast-event'), 'toast-open', event.detail));
+toastLive.addEventListener('toast-close', event => writeEvent(byId('toast-event'), 'toast-close', event.detail));
 
 // Border beam.
 const borderBeamLive = byId('border-beam-live');

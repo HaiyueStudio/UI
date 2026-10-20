@@ -48,6 +48,32 @@ defineHaiyueUI();
 Because `defineHaiyueUI()` references the complete component set, prefer focused subpaths in bundle-sensitive
 product entry points.
 
+## Tag and toast
+
+Tags provide compact semantic labels with optional checked and close interactions. Toasts are an imperative,
+lightweight feedback surface for short-lived messages; use Notification when a message also needs a description
+or richer stacked content.
+
+```ts
+import { defineTagComponents } from '@haiyue/ui/tag';
+import { defineToastComponents } from '@haiyue/ui/toast';
+
+defineTagComponents();
+defineToastComponents();
+```
+
+```html
+<hy-tag variant="success" icon="✓" closable>Synced</hy-tag>
+<hy-tag variant="primary" checkable value="featured">Featured</hy-tag>
+<hy-toast id="feedback" placement="top" duration="3" closable></hy-toast>
+<script type="module">
+  feedback.success('Saved successfully');
+  const key = feedback.loading('Exporting…');
+  // Reusing a key replaces the persistent loading toast.
+  feedback.success({ key, message: 'Export complete' });
+</script>
+```
+
 ## Button icons, loading, and groups
 
 Buttons accept a text `icon` or a richer `icon` slot. Set `icon-position="end"` to place it after the label.

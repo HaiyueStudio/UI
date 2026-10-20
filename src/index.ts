@@ -20,6 +20,7 @@ import { defineDrawerComponents } from './drawer.js';
 import { defineDraggableComponents } from './draggable.js';
 import { defineInputComponents } from './input.js';
 import { defineNotificationComponents } from './notification.js';
+import { defineToastComponents } from './toast.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
 import { defineVirtualListComponents } from './virtual-list.js';
 import { defineVirtualMouseComponents } from './virtual-mouse.js';
@@ -38,6 +39,7 @@ import { defineStepsComponents } from './steps.js';
 import { defineAffixComponents } from './affix.js';
 import { defineTourComponents } from './tour.js';
 import { defineBadgeComponents } from './badge.js';
+import { defineTagComponents } from './tag.js';
 import { defineCollapseComponents } from './collapse.js';
 
 export {
@@ -119,6 +121,10 @@ export {
   defineNotificationComponents,
   HYNotification,
 } from './notification.js';
+export {
+  defineToastComponents,
+  HYToast,
+} from './toast.js';
 export {
   defineHistoryControlsComponents,
   HYHistoryControls,
@@ -237,6 +243,16 @@ export type {
   HYBadgeSize,
   HYBadgeStatus,
 } from './badge.js';
+export {
+  defineTagComponents,
+  HYTag,
+} from './tag.js';
+export type {
+  HYTagCheckedChangeDetail,
+  HYTagCloseDetail,
+  HYTagSize,
+  HYTagVariant,
+} from './tag.js';
 export {
   defineCollapseComponents,
   HYCollapse,
@@ -390,6 +406,15 @@ export type {
   HYNotificationType,
 } from './notification.js';
 export type {
+  HYToastCloseDetail,
+  HYToastCloseReason,
+  HYToastMethodOptions,
+  HYToastOpenDetail,
+  HYToastOptions,
+  HYToastPlacement,
+  HYToastType,
+} from './toast.js';
+export type {
   HYTreeDataChangeDetail,
   HYTreeDropPosition,
   HYTreeNodeContextMenuDetail,
@@ -418,6 +443,7 @@ export function defineHaiyueUI(): void {
   defineDraggableComponents();
   defineInputComponents();
   defineNotificationComponents();
+  defineToastComponents();
   defineHistoryControlsComponents();
   defineVirtualListComponents();
   defineVirtualMouseComponents();
@@ -436,5 +462,6 @@ export function defineHaiyueUI(): void {
   defineAffixComponents();
   defineTourComponents();
   defineBadgeComponents();
+  defineTagComponents();
   defineCollapseComponents();
 }
