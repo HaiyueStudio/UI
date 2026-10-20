@@ -22,6 +22,10 @@
       "types": "./dist/button.d.ts",
       "import": "./dist/button.js"
     },
+    "./button-group": {
+      "types": "./dist/button-group.d.ts",
+      "import": "./dist/button-group.js"
+    },
     "./breadcrumb": {
       "types": "./dist/breadcrumb.d.ts",
       "import": "./dist/breadcrumb.js"
@@ -58,6 +62,10 @@
       "types": "./dist/drawer.d.ts",
       "import": "./dist/drawer.js"
     },
+    "./draggable": {
+      "types": "./dist/draggable.d.ts",
+      "import": "./dist/draggable.js"
+    },
     "./dropdown": {
       "types": "./dist/dropdown.d.ts",
       "import": "./dist/dropdown.js"
@@ -77,6 +85,10 @@
     "./virtual-list": {
       "types": "./dist/virtual-list.d.ts",
       "import": "./dist/virtual-list.js"
+    },
+    "./virtual-keyboard": {
+      "types": "./dist/virtual-keyboard.d.ts",
+      "import": "./dist/virtual-keyboard.js"
     },
     "./virtual-mouse": {
       "types": "./dist/virtual-mouse.d.ts",
@@ -101,6 +113,10 @@
     "./range": {
       "types": "./dist/range.d.ts",
       "import": "./dist/range.js"
+    },
+    "./resizable": {
+      "types": "./dist/resizable.d.ts",
+      "import": "./dist/resizable.js"
     },
     "./select": {
       "types": "./dist/select.d.ts",
@@ -189,6 +205,10 @@
         "kind": "value"
       },
       {
+        "name": "defineButtonGroupComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineCascaderComponents",
         "kind": "value"
       },
@@ -214,6 +234,10 @@
       },
       {
         "name": "defineDividerComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineDraggableComponents",
         "kind": "value"
       },
       {
@@ -254,6 +278,10 @@
       },
       {
         "name": "defineRateComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineResizableComponents",
         "kind": "value"
       },
       {
@@ -301,6 +329,10 @@
         "kind": "value"
       },
       {
+        "name": "defineVirtualKeyboardComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineVirtualListComponents",
         "kind": "value"
       },
@@ -310,6 +342,14 @@
       },
       {
         "name": "defineWatermarkComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT",
+        "kind": "value"
+      },
+      {
+        "name": "HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT",
         "kind": "value"
       },
       {
@@ -359,6 +399,18 @@
       {
         "name": "HYButton",
         "kind": "value"
+      },
+      {
+        "name": "HYButtonGroup",
+        "kind": "value"
+      },
+      {
+        "name": "HYButtonGroupOrientation",
+        "kind": "type"
+      },
+      {
+        "name": "HYButtonIconPosition",
+        "kind": "type"
       },
       {
         "name": "HYCascader",
@@ -469,6 +521,42 @@
         "kind": "type"
       },
       {
+        "name": "HYDraggable",
+        "kind": "value"
+      },
+      {
+        "name": "HYDraggableAxis",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableBounds",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableBoundsMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableEndDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableMoveDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableMoveSource",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggablePosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableStartDetail",
+        "kind": "type"
+      },
+      {
         "name": "HYDrawer",
         "kind": "value"
       },
@@ -526,6 +614,14 @@
       },
       {
         "name": "HYInputChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYInputSearchDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYInputSearchSource",
         "kind": "type"
       },
       {
@@ -598,6 +694,38 @@
       },
       {
         "name": "HYRateHoverChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizable",
+        "kind": "value"
+      },
+      {
+        "name": "HYResizableBounds",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableBoundsMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableEndDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableHandle",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableRect",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableSource",
         "kind": "type"
       },
       {
@@ -825,6 +953,46 @@
         "kind": "type"
       },
       {
+        "name": "HYVirtualKeyboard",
+        "kind": "value"
+      },
+      {
+        "name": "HYVirtualKeyboardAction",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardInputDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardKey",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardKeyDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardLayout",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardSource",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardTapOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardTypeOptions",
+        "kind": "type"
+      },
+      {
         "name": "HYVirtualList",
         "kind": "value"
       },
@@ -943,6 +1111,24 @@
       {
         "name": "HYButton",
         "kind": "value"
+      },
+      {
+        "name": "HYButtonIconPosition",
+        "kind": "type"
+      }
+    ],
+    "./button-group": [
+      {
+        "name": "defineButtonGroupComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYButtonGroup",
+        "kind": "value"
+      },
+      {
+        "name": "HYButtonGroupOrientation",
+        "kind": "type"
       }
     ],
     "./breadcrumb": [
@@ -1139,6 +1325,48 @@
         "kind": "type"
       }
     ],
+    "./draggable": [
+      {
+        "name": "defineDraggableComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYDraggable",
+        "kind": "value"
+      },
+      {
+        "name": "HYDraggableAxis",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableBounds",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableBoundsMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableEndDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableMoveDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableMoveSource",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggablePosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYDraggableStartDetail",
+        "kind": "type"
+      }
+    ],
     "./dropdown": [
       {
         "name": "defineDropdownComponents",
@@ -1172,6 +1400,14 @@
       },
       {
         "name": "HYInputChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYInputSearchDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYInputSearchSource",
         "kind": "type"
       },
       {
@@ -1262,6 +1498,60 @@
       },
       {
         "name": "HYVirtualListRangeChangeDetail",
+        "kind": "type"
+      }
+    ],
+    "./virtual-keyboard": [
+      {
+        "name": "defineVirtualKeyboardComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT",
+        "kind": "value"
+      },
+      {
+        "name": "HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT",
+        "kind": "value"
+      },
+      {
+        "name": "HYVirtualKeyboard",
+        "kind": "value"
+      },
+      {
+        "name": "HYVirtualKeyboardAction",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardInputDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardKey",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardKeyDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardLayout",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardSource",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardTapOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYVirtualKeyboardTypeOptions",
         "kind": "type"
       }
     ],
@@ -1414,6 +1704,44 @@
       },
       {
         "name": "HYRangeValue",
+        "kind": "type"
+      }
+    ],
+    "./resizable": [
+      {
+        "name": "defineResizableComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYResizable",
+        "kind": "value"
+      },
+      {
+        "name": "HYResizableBounds",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableBoundsMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableEndDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableHandle",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableRect",
+        "kind": "type"
+      },
+      {
+        "name": "HYResizableSource",
         "kind": "type"
       }
     ],

@@ -4,6 +4,13 @@
 
 - M24 G05 新增独立 `adapters/web` 子路径：18 种共享语义映射、显式注册、受控输入/选择/弹窗、主题/安全区、预览资源生命周期与基础组件示例。新增可选 `controlled` 属性（Tabs/Range/Dialog）和 Input `password` 类型；旧默认 API 保留。修复关闭后立即重开的过期回调，以及共享页面把隐藏标签页误判为可聚焦的问题。WebKit/Chromium 自动化结果与物理输入/读屏待验收范围单独记录，未发布。
 - M24 G03 新增独立 `core` / `portable` 子路径：18 种组件语义、交互 controller、受限页面组合、selector 订阅、稳定节点差异、事务、生命周期与主题数据；无 DOM/NativeScript/Engine 依赖。仅完成核心及记录型后端验证，真实平台适配分别由 G05/G06/G08 交付，旧 Web API 保持不变。
+- 扩展 `HYVirtualKeyboard` / `<hy-virtual-keyboard>`：默认 QWERTY 布局补齐上、下方向键及多行文本纵向光标移动；新增 `qwerty` / `numeric` 模式切换和可复用的 `HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT` 内置数字键盘。
+- 扩展 `HYButton` / `<hy-button>`：支持 `icon` 属性或 `icon` 插槽、`icon-position` 前后位置、会阻止重复点击并带无障碍忙碌状态的 `loading` 旋转图标；新增可按需导入的 `HYButtonGroup` / `<hy-button-group>`，支持横向和纵向组合按钮。
+- 示例页外壳改为使用 Haiyue UI 自身搭建：主题按钮、组件搜索、命令面板、状态徽标和演示操作均复用公开 Web Components；导航/内容和演示/参数区域使用 `HYSplit` 调节尺寸，用法代码通过只读 CodeMirror 提供 HTML、JavaScript 与 CSS 语法高亮，并为 `HYButton` 暴露 `button` part 与 pressed 状态转发。
+- 新增可按需导入的 `HYResizable` / `<hy-resizable>` 调整框组件，支持四个角点与四条边缩放、内容拖动、位置尺寸 API、父容器/视口/元素边界、网格吸附、宽高比、尺寸限制、键盘控制和生命周期事件。
+- 扩展 `HYInput` / `<hy-input>`：新增 prefix/suffix 属性与同名插槽、`search` 输入类型、可访问的搜索按钮、回车/API 搜索和组合 `search` 事件。
+- 新增可按需导入的 `HYDraggable` / `<hy-draggable>` 拖拽容器，支持手柄与排除选择器、双轴/单轴移动、父容器/视口/元素边界、网格吸附、键盘控制、位置 API、生命周期事件与主题样式钩子。
+- 新增可按需导入的 `HYVirtualKeyboard` / `<hy-virtual-keyboard>` 虚拟键盘，提供默认 QWERTY 与自定义布局、输入目标绑定、Shift/Caps、编辑和光标按键、物理键盘同步、按键播放 API、组合事件与主题样式钩子。
 - 新增可按需导入的 `HYCollapse` / `<hy-collapse>` 折叠面板组件，支持多项或手风琴展开、默认/当前展开项、禁用面板、图标位置、触发区域、边框/幽灵样式、隐藏内容销毁和无障碍键盘操作。
 - 新增可按需导入的 `HYBadge` / `<hy-badge>` 徽标组件，支持计数上限、零值显隐、圆点、小尺寸、语义状态、自定义颜色、偏移、标题和无障碍状态播报。
 - 新增可按需导入的 `HYAffix` / `<hy-affix>` 固钉组件，支持窗口或自定义滚动容器、顶部/底部偏移、布局占位、禁用、层级和吸附状态事件。

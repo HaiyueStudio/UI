@@ -37,6 +37,10 @@
       "types": "./dist/button.d.ts",
       "import": "./dist/button.js"
     },
+    "./button-group": {
+      "types": "./dist/button-group.d.ts",
+      "import": "./dist/button-group.js"
+    },
     "./breadcrumb": {
       "types": "./dist/breadcrumb.d.ts",
       "import": "./dist/breadcrumb.js"
@@ -73,6 +77,10 @@
       "types": "./dist/drawer.d.ts",
       "import": "./dist/drawer.js"
     },
+    "./draggable": {
+      "types": "./dist/draggable.d.ts",
+      "import": "./dist/draggable.js"
+    },
     "./dropdown": {
       "types": "./dist/dropdown.d.ts",
       "import": "./dist/dropdown.js"
@@ -92,6 +100,10 @@
     "./virtual-list": {
       "types": "./dist/virtual-list.d.ts",
       "import": "./dist/virtual-list.js"
+    },
+    "./virtual-keyboard": {
+      "types": "./dist/virtual-keyboard.d.ts",
+      "import": "./dist/virtual-keyboard.js"
     },
     "./virtual-mouse": {
       "types": "./dist/virtual-mouse.d.ts",
@@ -116,6 +128,10 @@
     "./range": {
       "types": "./dist/range.d.ts",
       "import": "./dist/range.js"
+    },
+    "./resizable": {
+      "types": "./dist/resizable.d.ts",
+      "import": "./dist/resizable.js"
     },
     "./select": {
       "types": "./dist/select.d.ts",
@@ -193,7 +209,7 @@
     "themes/*.css"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node scripts/build-example-assets.mjs",
     "build:pages": "npm run build && node scripts/build-pages.mjs",
     "check:pages": "npm run build:pages && node scripts/verify-pages.mjs",
     "examples": "npm run build && node scripts/serve-examples.mjs",
@@ -211,7 +227,15 @@
     "test:web-adapter": "npm run build && playwright test -c test/web-adapter/playwright.config.mjs"
   },
   "devDependencies": {
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/lang-html": "^6.4.12",
+    "@codemirror/lang-javascript": "^6.2.5",
+    "@codemirror/language": "^6.13.1",
+    "@codemirror/state": "^6.7.6",
+    "@lezer/highlight": "^1.2.5",
     "@playwright/test": "^1.63.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "codemirror": "^6.0.2",
     "rollup": "^4.63.4",
     "typescript": "^5.2.0"
   }

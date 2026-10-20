@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Draggable browser test</title>
+  <style>
+    body { margin: 20px; font: 14px sans-serif; }
+    #stage { position: relative; width: 500px; height: 320px; overflow: hidden; border: 1px solid #777; }
+    hy-draggable { width: 160px; }
+    .card { height: 100px; border: 1px solid #456; background: #dff3ff; }
+    .handle { padding: 10px; background: #4689b7; color: white; }
+    .body { padding: 10px; }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <hy-draggable id="draggable" x="20" y="20" bounds="parent" grid="10" handle="[data-drag-handle]" aria-label="Test draggable">
+      <article class="card">
+        <header class="handle" data-drag-handle>Move panel</header>
+        <div class="body"><button id="action">Action</button></div>
+      </article>
+    </hy-draggable>
+  </div>
+  <output id="events"></output>
+  <script type="module">
+    import { defineDraggableComponents } from '../../dist/draggable.js';
+    defineDraggableComponents();
+    const draggable = document.querySelector('#draggable');
+    const events = document.querySelector('#events');
+    for (const name of ['drag-start', 'drag-move', 'drag-end']) {
+      draggable.addEventListener(name, event => {
+        events.textContent += `${name}:${JSON.stringify(event.detail)}\n`;
+      });
+    }
+  </script>
+</body>
+</html>

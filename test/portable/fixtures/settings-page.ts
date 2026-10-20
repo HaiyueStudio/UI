@@ -33,4 +33,3 @@ export function mountSettings(renderer: HYRenderer, store: HYStore<State, Action
   page.bind(store, bindings);
   return page; // Shell forwards suspend/resume/back and disposes this page, not the store.
 }
-

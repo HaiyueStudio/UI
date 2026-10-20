@@ -1,4 +1,5 @@
 import { defineHaiyueUI } from '../dist/index.js';
+import { installCodeEditors } from './vendor/codemirror.js';
 
 defineHaiyueUI();
 
@@ -9,8 +10,77 @@ const writeEvent = (target, name, detail) => {
   target.title = target.textContent;
 };
 
+// The gallery itself dogfoods Split: one instance owns the navigation/content shell,
+// while eligible preview/control cards are progressively upgraded to resizable panes.
+const galleryShell = byId('gallery-shell');
+let desktopSidebarRatio = galleryShell.ratio;
+const compactGallery = window.matchMedia('(max-width: 660px)');
+const syncGallerySplit = () => {
+  if (compactGallery.matches) {
+    galleryShell.minFirst = 0;
+    galleryShell.minSecond = 280;
+    galleryShell.barSize = 1;
+    galleryShell.ratio = 0;
+    return;
+  }
+  galleryShell.minFirst = 224;
+  galleryShell.minSecond = 480;
+  galleryShell.barSize = 5;
+  galleryShell.ratio = desktopSidebarRatio;
+};
+galleryShell.addEventListener('ratio-change', event => {
+  if (!compactGallery.matches) desktopSidebarRatio = event.detail.ratio;
+});
+compactGallery.addEventListener('change', syncGallerySplit);
+syncGallerySplit();
+
+const horizontalCardClasses = [
+  'two-column', 'tree-card', 'virtual-list-card', 'virtual-mouse-card',
+  'virtual-keyboard-card', 'draggable-card', 'resizable-card', 'table-card',
+];
+const responsiveCardSplit = window.matchMedia('(max-width: 900px)');
+const cardSplits = [];
+
+for (const card of document.querySelectorAll('.demo-card:not(.overflow-visible)')) {
+  const [preview, controls, ...extra] = card.children;
+  if (extra.length || !preview?.classList.contains('preview') || !controls?.classList.contains('controls')) continue;
+
+  const bounds = card.getBoundingClientRect();
+  const split = document.createElement('hy-split');
+  for (const attribute of card.attributes) split.setAttribute(attribute.name, attribute.value);
+  split.classList.add('demo-split');
+  split.setAttribute('aria-label', '示例预览与参数分栏');
+  split.barSize = 3;
+  split.dataset.desktopDirection = horizontalCardClasses.some(name => card.classList.contains(name)) ? 'horizontal' : 'vertical';
+  split.dataset.desktopHeight = String(Math.ceil(bounds.height));
+  preview.slot = 'first';
+  controls.slot = 'second';
+  split.append(preview, controls);
+  card.replaceWith(split);
+  cardSplits.push(split);
+}
+
+const syncCardSplits = () => {
+  for (const split of cardSplits) {
+    const preview = split.querySelector('[slot="first"]');
+    const controls = split.querySelector('[slot="second"]');
+    const stack = responsiveCardSplit.matches || split.dataset.desktopDirection === 'vertical';
+    split.direction = stack ? 'vertical' : 'horizontal';
+    split.ratio = stack ? 0.68 : 0.64;
+    split.minFirst = stack ? 150 : 220;
+    split.minSecond = stack ? 74 : 220;
+    const desktopHeight = Number(split.dataset.desktopHeight);
+    split.style.height = stack
+      ? `${Math.max(desktopHeight, Math.min(620, (preview?.scrollHeight ?? 0) + (controls?.scrollHeight ?? 0) + 6))}px`
+      : `${Math.max(260, desktopHeight)}px`;
+  }
+};
+responsiveCardSplit.addEventListener('change', syncCardSplits);
+syncCardSplits();
+installCodeEditors();
+
 // Theme preview. Theme styles are independent package exports and flow into component shadow roots via tokens.
-const themeButtons = [...document.querySelectorAll('.theme-picker button')];
+const themeButtons = [...document.querySelectorAll('.theme-picker hy-button')];
 function setTheme(theme) {
   document.documentElement.dataset.hyTheme = theme;
   document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#edf8ff' : '#080b21';
@@ -41,7 +111,8 @@ function filterNavigation(query) {
 
 search.addEventListener('input', () => filterNavigation(search.value.toLocaleLowerCase()));
 document.addEventListener('keydown', event => {
-  if (event.key === '/' && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement?.tagName ?? '')) {
+  const editing = event.composedPath().some(node => node instanceof HTMLElement && /^(INPUT|SELECT|TEXTAREA|HY-INPUT|HY-SELECT)$/.test(node.tagName));
+  if (event.key === '/' && !editing) {
     event.preventDefault();
     search.focus();
   }
@@ -72,9 +143,13 @@ function renderCommand() {
   const items = getCommandItems();
   commandIndex = Math.max(0, Math.min(commandIndex, items.length - 1));
   commandResults.replaceChildren(...items.map((section, index) => {
-    const button = document.createElement('button');
+    const button = document.createElement('hy-button');
     button.classList.toggle('active', index === commandIndex);
-    button.innerHTML = `<span>${section.dataset.title}</span><code>hy-${section.id}</code>`;
+    const title = document.createElement('span');
+    const tag = document.createElement('code');
+    title.textContent = section.dataset.title;
+    tag.textContent = `hy-${section.id}`;
+    button.append(title, tag);
     button.addEventListener('click', () => selectCommand(section));
     return button;
   }));
@@ -111,8 +186,26 @@ command.querySelector('.command-backdrop').addEventListener('click', closeComman
 // Button.
 const buttonLive = byId('button-live');
 byId('button-label').addEventListener('input', event => { buttonLive.setAttribute('label', event.target.value); });
+byId('button-icon').addEventListener('input', event => { buttonLive.icon = event.target.value; });
+byId('button-icon-position').addEventListener('change', event => { buttonLive.iconPosition = event.target.value; });
+byId('button-loading').addEventListener('change', event => { buttonLive.loading = event.target.checked; });
 byId('button-disabled').addEventListener('change', event => { setBoolean(buttonLive, 'disabled', event.target.checked); });
 buttonLive.addEventListener('click', () => writeEvent(byId('button-event'), 'click', { label: buttonLive.getAttribute('label') }));
+const requestButton = byId('button-request');
+requestButton.addEventListener('click', async () => {
+  requestButton.loading = true;
+  writeEvent(byId('button-event'), 'request', { loading: true });
+  await new Promise(resolve => setTimeout(resolve, 900));
+  requestButton.loading = false;
+  writeEvent(byId('button-event'), 'request', { loading: false, status: 200 });
+});
+
+// Button group.
+const buttonGroupLive = byId('button-group-live');
+byId('button-group-orientation').addEventListener('change', event => {
+  buttonGroupLive.orientation = event.target.value;
+  byId('button-group-event').textContent = `${buttonGroupLive.orientation} · 3 buttons`;
+});
 
 // Badge.
 const badgeLive = byId('badge-live');
@@ -141,6 +234,8 @@ byId('input-type').addEventListener('change', event => {
   inputValue.value = inputText.value;
 });
 inputValue.addEventListener('input', event => { inputText.value = event.target.value; });
+byId('input-prefix').addEventListener('input', event => { inputText.prefix = event.target.value; });
+byId('input-suffix').addEventListener('input', event => { inputText.suffix = event.target.value; });
 byId('input-disabled').addEventListener('change', event => { inputText.disabled = event.target.checked; });
 byId('input-readonly').addEventListener('change', event => { inputText.readOnly = event.target.checked; });
 byId('input-required').addEventListener('change', event => { setBoolean(inputText, 'required', event.target.checked); });
@@ -151,6 +246,7 @@ inputText.addEventListener('value-change', event => {
 for (const id of ['input-number', 'input-color']) {
   byId(id).addEventListener('value-change', event => writeEvent(byId('input-event'), 'value-change', event.detail));
 }
+byId('input-search').addEventListener('search', event => writeEvent(byId('input-event'), 'search', event.detail));
 
 // Range.
 const rangeSingle = byId('range-single');
@@ -560,6 +656,22 @@ for (const name of ['virtual-mouse-move-end', 'virtual-mouse-down', 'virtual-mou
   virtualMouseLive.addEventListener(name, event => writeEvent(virtualMouseEvent, name, event.detail));
 }
 
+// Virtual keyboard. Pointer/API input edits a bound target; physical sync only mirrors native key state.
+const virtualKeyboardLive = byId('virtual-keyboard-live');
+const virtualKeyboardTarget = byId('virtual-keyboard-target');
+const virtualKeyboardEvent = byId('virtual-keyboard-event');
+virtualKeyboardLive.target = virtualKeyboardTarget;
+virtualKeyboardTarget.setSelectionRange(virtualKeyboardTarget.value.length, virtualKeyboardTarget.value.length);
+byId('virtual-keyboard-type').addEventListener('click', async () => { virtualKeyboardTarget.focus(); await virtualKeyboardLive.type('Haiyue UI 2.0!', { interval: 30 }); });
+byId('virtual-keyboard-clear').addEventListener('click', () => virtualKeyboardLive.clear());
+byId('virtual-keyboard-physical').addEventListener('change', event => { virtualKeyboardLive.physicalSync = event.target.checked; });
+byId('virtual-keyboard-mode').addEventListener('change', event => { virtualKeyboardLive.mode = event.target.value; });
+byId('virtual-keyboard-disabled').addEventListener('change', event => { virtualKeyboardLive.disabled = event.target.checked; });
+byId('virtual-keyboard-color').addEventListener('input', event => { virtualKeyboardLive.style.setProperty('--hy-virtual-keyboard-active-bg', event.target.value); });
+for (const name of ['virtual-keyboard-down', 'virtual-keyboard-up', 'virtual-keyboard-input']) {
+  virtualKeyboardLive.addEventListener(name, event => writeEvent(virtualKeyboardEvent, name, event.detail));
+}
+
 // Context menu.
 const contextLive = byId('context-live');
 const contextTarget = byId('context-target');
@@ -580,6 +692,48 @@ byId('context-open').addEventListener('click', event => {
   contextLive.openAt(rect.left, rect.bottom + 6);
 });
 contextLive.addEventListener('item-select', event => writeEvent(byId('context-event'), 'item-select', event.detail));
+
+// Draggable container. The preview is the parent constraint and the title is the only drag handle.
+const draggableLive = byId('draggable-live');
+const draggablePosition = byId('draggable-position');
+const draggableEvent = byId('draggable-event');
+const updateDraggablePosition = () => { draggablePosition.textContent = `${Math.round(draggableLive.x)}, ${Math.round(draggableLive.y)}`; };
+byId('draggable-axis').addEventListener('change', event => { draggableLive.axis = event.target.value; });
+byId('draggable-bounds').addEventListener('change', event => { draggableLive.bounds = event.target.value; });
+byId('draggable-grid').addEventListener('input', event => {
+  draggableLive.grid = Number(event.target.value);
+  byId('draggable-grid-value').textContent = `${event.target.value} px`;
+});
+byId('draggable-disabled').addEventListener('change', event => { draggableLive.disabled = event.target.checked; });
+byId('draggable-keyboard').addEventListener('change', event => { draggableLive.keyboard = event.target.checked; });
+byId('draggable-move').addEventListener('click', () => { draggableLive.moveBy(48, 32); updateDraggablePosition(); });
+byId('draggable-reset').addEventListener('click', () => { draggableLive.reset(); updateDraggablePosition(); });
+for (const name of ['drag-start', 'drag-move', 'drag-end']) {
+  draggableLive.addEventListener(name, event => { updateDraggablePosition(); writeEvent(draggableEvent, name, event.detail); });
+}
+
+// Resizable container. Eight handles resize while the content surface moves the rectangle.
+const resizableLive = byId('resizable-live');
+const resizableEvent = byId('resizable-event');
+const renderResizableRect = () => {
+  const { x, y, width, height } = resizableLive.rect;
+  byId('resizable-rect').textContent = `${Math.round(x)}, ${Math.round(y)} · ${Math.round(width)} × ${Math.round(height)}`;
+  byId('resizable-width').value = String(Math.round(width));
+  byId('resizable-height').value = String(Math.round(height));
+};
+const applyResizableSize = () => { resizableLive.resizeTo(Number(byId('resizable-width').value), Number(byId('resizable-height').value)); renderResizableRect(); };
+byId('resizable-width').addEventListener('change', applyResizableSize);
+byId('resizable-height').addEventListener('change', applyResizableSize);
+byId('resizable-bounds').addEventListener('change', event => { resizableLive.bounds = event.target.value; });
+byId('resizable-grid-size').addEventListener('input', event => { resizableLive.grid = Number(event.target.value); byId('resizable-grid-value').textContent = `${event.target.value} px`; });
+byId('resizable-aspect').addEventListener('change', event => { resizableLive.aspectRatio = event.target.checked ? 16 / 9 : null; });
+byId('resizable-movable').addEventListener('change', event => { resizableLive.movable = event.target.checked; });
+byId('resizable-disabled').addEventListener('change', event => { resizableLive.disabled = event.target.checked; });
+byId('resizable-grow').addEventListener('click', () => { resizableLive.resizeTo(resizableLive.width + 64, resizableLive.height + 40); renderResizableRect(); });
+byId('resizable-reset').addEventListener('click', () => { resizableLive.reset(); renderResizableRect(); });
+for (const name of ['resize-start', 'resize', 'resize-end']) {
+  resizableLive.addEventListener(name, event => { renderResizableRect(); writeEvent(resizableEvent, name, event.detail); });
+}
 
 // Split.
 const splitLive = byId('split-live');

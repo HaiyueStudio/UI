@@ -2,6 +2,7 @@ import { defineExpandableComponents } from './expandable.js';
 export { defineExpandableComponents, HYExpandable } from './expandable.js';
 export type { HYExpandableButtonPosition, HYExpandableChangeDetail } from './expandable.js';
 import { defineButtonComponents } from './button.js';
+import { defineButtonGroupComponents } from './button-group.js';
 import { defineBorderBeamComponents } from './border-beam.js';
 import { defineTreeComponents } from './tree.js';
 import { defineSplitComponents } from './split.js';
@@ -13,13 +14,16 @@ import { defineTooltipComponents } from './tooltip.js';
 import { defineCheckboxComponents } from './checkbox.js';
 import { defineRadioComponents } from './radio.js';
 import { defineRangeComponents } from './range.js';
+import { defineResizableComponents } from './resizable.js';
 import { defineDialogComponents } from './dialog.js';
 import { defineDrawerComponents } from './drawer.js';
+import { defineDraggableComponents } from './draggable.js';
 import { defineInputComponents } from './input.js';
 import { defineNotificationComponents } from './notification.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
 import { defineVirtualListComponents } from './virtual-list.js';
 import { defineVirtualMouseComponents } from './virtual-mouse.js';
+import { defineVirtualKeyboardComponents } from './virtual-keyboard.js';
 import { defineTableComponents } from './table.js';
 import { defineBreadcrumbComponents } from './breadcrumb.js';
 import { defineCascaderComponents } from './cascader.js';
@@ -40,6 +44,12 @@ export {
   defineButtonComponents,
   HYButton,
 } from './button.js';
+export type { HYButtonIconPosition } from './button.js';
+export {
+  defineButtonGroupComponents,
+  HYButtonGroup,
+} from './button-group.js';
+export type { HYButtonGroupOrientation } from './button-group.js';
 export {
   defineBorderBeamComponents,
   HYBorderBeam,
@@ -86,6 +96,10 @@ export {
   HYRange,
 } from './range.js';
 export {
+  defineResizableComponents,
+  HYResizable,
+} from './resizable.js';
+export {
   defineDialogComponents,
   HYDialog,
 } from './dialog.js';
@@ -93,6 +107,10 @@ export {
   defineDrawerComponents,
   HYDrawer,
 } from './drawer.js';
+export {
+  defineDraggableComponents,
+  HYDraggable,
+} from './draggable.js';
 export {
   defineInputComponents,
   HYInput,
@@ -124,6 +142,12 @@ export {
   defineVirtualMouseComponents,
   HYVirtualMouse,
 } from './virtual-mouse.js';
+export {
+  defineVirtualKeyboardComponents,
+  HYVirtualKeyboard,
+  HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT,
+  HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT,
+} from './virtual-keyboard.js';
 export {
   defineTableComponents,
   HYTable,
@@ -277,6 +301,17 @@ export type {
   HYVirtualMouseState,
 } from './virtual-mouse.js';
 export type {
+  HYVirtualKeyboardAction,
+  HYVirtualKeyboardInputDetail,
+  HYVirtualKeyboardKey,
+  HYVirtualKeyboardKeyDetail,
+  HYVirtualKeyboardLayout,
+  HYVirtualKeyboardMode,
+  HYVirtualKeyboardSource,
+  HYVirtualKeyboardTapOptions,
+  HYVirtualKeyboardTypeOptions,
+} from './virtual-keyboard.js';
+export type {
   HYSplitDirection,
   HYSplitRatioChangeDetail,
 } from './split.js';
@@ -312,6 +347,15 @@ export type {
   HYRangeValue,
 } from './range.js';
 export type {
+  HYResizableBounds,
+  HYResizableBoundsMode,
+  HYResizableChangeDetail,
+  HYResizableEndDetail,
+  HYResizableHandle,
+  HYResizableRect,
+  HYResizableSource,
+} from './resizable.js';
+export type {
   HYDialogCloseDetail,
   HYDialogCloseReason,
 } from './dialog.js';
@@ -321,7 +365,19 @@ export type {
   HYDrawerPlacement,
 } from './drawer.js';
 export type {
+  HYDraggableAxis,
+  HYDraggableBounds,
+  HYDraggableBoundsMode,
+  HYDraggableEndDetail,
+  HYDraggableMoveDetail,
+  HYDraggableMoveSource,
+  HYDraggablePosition,
+  HYDraggableStartDetail,
+} from './draggable.js';
+export type {
   HYInputChangeDetail,
+  HYInputSearchDetail,
+  HYInputSearchSource,
   HYInputType,
 } from './input.js';
 export type {
@@ -345,6 +401,7 @@ export function defineHaiyueUI(): void {
   defineExpandableComponents();
   defineBorderBeamComponents();
   defineButtonComponents();
+  defineButtonGroupComponents();
   defineTreeComponents();
   defineSplitComponents();
   defineSelectComponents();
@@ -355,13 +412,16 @@ export function defineHaiyueUI(): void {
   defineCheckboxComponents();
   defineRadioComponents();
   defineRangeComponents();
+  defineResizableComponents();
   defineDialogComponents();
   defineDrawerComponents();
+  defineDraggableComponents();
   defineInputComponents();
   defineNotificationComponents();
   defineHistoryControlsComponents();
   defineVirtualListComponents();
   defineVirtualMouseComponents();
+  defineVirtualKeyboardComponents();
   defineTableComponents();
   defineBreadcrumbComponents();
   defineCascaderComponents();

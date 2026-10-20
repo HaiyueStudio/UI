@@ -13,24 +13,25 @@
 <body>
   <a class="skip-link" href="#content">跳到组件示例</a>
 
-  <aside class="sidebar" aria-label="组件导航">
+  <hy-split id="gallery-shell" class="gallery-shell" direction="horizontal" ratio="0.22" min-first="224" min-second="480" bar-size="5" aria-label="示例导航与内容分栏">
+  <aside class="sidebar" slot="first" aria-label="组件导航">
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">HY</span>
       <span><strong>Haiyue UI</strong><small>Component gallery</small></span>
     </div>
     <div class="theme-picker" role="group" aria-label="组件配色皮肤">
-      <button type="button" data-theme="light" aria-pressed="false"><i class="moonlight-swatch"></i><span>月白</span><small>Moonlight</small></button>
-      <button type="button" data-theme="dark" aria-pressed="true"><i class="nightfall-swatch"></i><span>夜阑</span><small>Nightfall</small></button>
+      <hy-button data-theme="light" aria-pressed="false"><i class="moonlight-swatch"></i><span>月白</span><small>Moonlight</small></hy-button>
+      <hy-button data-theme="dark" aria-pressed="true"><i class="nightfall-swatch"></i><span>夜阑</span><small>Nightfall</small></hy-button>
     </div>
     <label class="component-search">
       <span class="sr-only">筛选组件</span>
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
-      <input id="component-search" type="search" placeholder="筛选组件…" autocomplete="off" />
+      <hy-input id="component-search" type="text" placeholder="筛选组件…" autocomplete="off" aria-label="筛选组件"><svg slot="prefix" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg></hy-input>
       <kbd>/</kbd>
     </label>
     <nav id="component-nav">
       <p class="nav-label">基础</p>
       <a href="#button" data-name="button 按钮"><span>Button</span><code>hy-button</code></a>
+      <a href="#button-group" data-name="button group 按钮组"><span>Button Group</span><code>hy-button-group</code></a>
       <a href="#badge" data-name="badge count dot status 徽标 数量 状态"><span>Badge</span><code>hy-badge</code></a>
       <a href="#input" data-name="input 输入框"><span>Input</span><code>hy-input</code></a>
       <a href="#range" data-name="range slider 范围 数值 滑块"><span>Range</span><code>hy-range</code></a>
@@ -59,45 +60,81 @@
       <a href="#notification" data-name="notification 通知 提醒"><span>Notification</span><code>hy-notification</code></a>
       <a href="#border-beam" data-name="border beam 边框 流光 特效"><span>Border Beam</span><code>hy-border-beam</code></a>
       <a href="#virtual-mouse" data-name="virtual mouse cursor 虚拟 鼠标 光标 演示"><span>Virtual Mouse</span><code>hy-virtual-mouse</code></a>
+      <a href="#virtual-keyboard" data-name="virtual keyboard qwerty 虚拟 键盘 输入"><span>Virtual Keyboard</span><code>hy-virtual-keyboard</code></a>
       <a href="#context-menu" data-name="context menu 右键菜单"><span>Context Menu</span><code>hy-context-menu</code></a>
       <a href="#history-controls" data-name="history controls undo redo 历史 撤销 重做"><span>History Controls</span><code>hy-history-controls</code></a>
       <p class="nav-label">布局与数据</p>
+      <a href="#draggable" data-name="draggable drag container 拖拽 容器 移动 位置"><span>Draggable</span><code>hy-draggable</code></a>
+      <a href="#resizable" data-name="resizable resize transform handles 调整 大小 位置 缩放"><span>Resizable</span><code>hy-resizable</code></a>
       <a href="#expandable" data-name="expandable 展开 放大 还原"><span>Expandable</span><code>hy-expandable</code></a>
       <a href="#split" data-name="split 分栏"><span>Split</span><code>hy-split</code></a>
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
       <a href="#table" data-name="table 表格 分页 过滤 排序"><span>Table</span><code>hy-table</code></a>
     </nav>
-    <div class="sidebar-foot"><span class="status-dot"></span><span>35 components</span><span>·</span><span>v0.1.2</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="39 components"></hy-badge><span>·</span><span>v0.2.0</span></div>
   </aside>
 
-  <main id="content">
+  <main id="content" slot="second">
     <header class="hero">
       <div class="eyebrow"><span>UI package</span><i></i><span>Web Components</span></div>
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>35</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>39</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
     <section class="component-section" id="button" data-title="Button">
-      <div class="section-heading"><div><span class="index">01</span><h2>Button</h2><code>&lt;hy-button&gt;</code></div><p>执行即时操作；支持文本、图标、禁用和无障碍名称。</p></div>
+      <div class="section-heading"><div><span class="index">01</span><h2>Button</h2><code>&lt;hy-button&gt;</code></div><p>执行即时操作；支持前后图标、加载状态、禁用和无障碍名称。</p></div>
       <div class="demo-card">
         <div class="preview centered" id="button-preview">
-          <hy-button id="button-live" label="Publish"></hy-button>
+          <hy-button id="button-live" label="Publish" icon="↥"></hy-button>
+          <hy-button label="Next" icon="→" icon-position="end"></hy-button>
+          <hy-button id="button-request" label="Sync from cloud" icon="☁"></hy-button>
           <hy-button label="Disabled" disabled></hy-button>
           <hy-button icon-only aria-label="Add item" title="Add item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></hy-button>
         </div>
         <div class="controls">
           <label>label<input id="button-label" value="Publish" /></label>
+          <label>icon<input id="button-icon" value="↥" /></label>
+          <label>icon position<select id="button-icon-position"><option value="start">start</option><option value="end">end</option></select></label>
+          <label class="toggle"><input id="button-loading" type="checkbox" /><span></span>loading</label>
           <label class="toggle"><input id="button-disabled" type="checkbox" /><span></span>disabled</label>
           <output id="button-event">点击按钮查看事件</output>
         </div>
       </div>
       <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-button label="Publish"&gt;&lt;/hy-button&gt;
-&lt;hy-button disabled label="Disabled"&gt;&lt;/hy-button&gt;
-&lt;hy-button icon-only aria-label="Add item"&gt;…&lt;/hy-button&gt;</code></pre></details>
+&lt;hy-button label="Publish" icon="↥"&gt;&lt;/hy-button&gt;
+&lt;hy-button label="Next" icon="→" icon-position="end"&gt;&lt;/hy-button&gt;
+&lt;hy-button loading label="Syncing"&gt;&lt;/hy-button&gt;
+&lt;hy-button label="Upload"&gt;
+  &lt;svg slot="icon"&gt;…&lt;/svg&gt;
+&lt;/hy-button&gt;</code></pre></details>
+      <div class="parameter-strip"><code>label</code><code>icon</code><code>icon-position</code><code>slot="icon"</code><code>loading</code><code>disabled</code><code>icon-only</code><code>button</code><code>icon</code><code>spinner</code></div>
+    </section>
+
+    <section class="component-section" id="button-group" data-title="Button Group">
+      <div class="section-heading"><div><h2>Button Group</h2><code>&lt;hy-button-group&gt;</code></div><p>将相关按钮组合成连续控件，支持横向和纵向排列。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview centered button-group-stage">
+          <hy-button-group id="button-group-live" aria-label="Editor history actions">
+            <hy-button label="Undo" icon="↶"></hy-button>
+            <hy-button label="Redo" icon="↷"></hy-button>
+            <hy-button label="History" icon="⌄" icon-position="end"></hy-button>
+          </hy-button-group>
+        </div>
+        <div class="controls stacked">
+          <label>orientation<select id="button-group-orientation"><option value="horizontal">horizontal</option><option value="vertical">vertical</option></select></label>
+          <output id="button-group-event">horizontal · 3 buttons</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-button-group aria-label="History actions"&gt;
+  &lt;hy-button label="Undo" icon="↶"&gt;&lt;/hy-button&gt;
+  &lt;hy-button label="Redo" icon="↷"&gt;&lt;/hy-button&gt;
+  &lt;hy-button label="History" icon="⌄" icon-position="end"&gt;&lt;/hy-button&gt;
+&lt;/hy-button-group&gt;</code></pre></details>
+      <div class="parameter-strip"><code>orientation</code><code>aria-label</code><code>group</code></div>
     </section>
 
     <section class="component-section" id="badge" data-title="Badge">
@@ -130,21 +167,31 @@
     </section>
 
     <section class="component-section" id="input" data-title="Input">
-      <div class="section-heading"><div><span class="index">02</span><h2>Input</h2><code>&lt;hy-input&gt;</code></div><p>文本、数字和颜色输入；原生校验状态会映射到组件外观与事件详情。</p></div>
+      <div class="section-heading"><div><span class="index">02</span><h2>Input</h2><code>&lt;hy-input&gt;</code></div><p>文本、数字、颜色与搜索输入；支持 prefix/suffix 属性和同名插槽，原生校验状态会映射到组件外观与事件详情。</p></div>
       <div class="demo-card two-column">
         <div class="preview form-preview">
-          <label class="field-label">Project name<hy-input id="input-text" type="text" value="Ocean scene" placeholder="Untitled project"></hy-input></label>
+          <label class="field-label">Project name<hy-input id="input-text" type="text" value="Ocean scene" prefix="scene://" suffix=".hy" placeholder="Untitled project"></hy-input></label>
+          <label class="field-label">Search assets<hy-input id="input-search" type="search" prefix="⌕" placeholder="Search textures…" search-label="Search assets"></hy-input></label>
           <label class="field-label">Exposure<hy-input id="input-number" type="number" value="1" min="0" max="4" step="0.1"></hy-input></label>
           <label class="field-label">Accent<hy-input id="input-color" type="color" value="#68a8ff"></hy-input></label>
         </div>
         <div class="controls stacked">
-          <label>type<select id="input-type"><option>text</option><option>number</option><option>color</option></select></label>
+          <label>type<select id="input-type"><option>text</option><option>search</option><option>number</option><option>color</option></select></label>
           <label>value<input id="input-value" value="Ocean scene" /></label>
+          <div class="input-affix-controls"><label>prefix<input id="input-prefix" value="scene://" /></label><label>suffix<input id="input-suffix" value=".hy" /></label></div>
           <div class="toggle-row"><label class="toggle"><input id="input-disabled" type="checkbox" /><span></span>disabled</label><label class="toggle"><input id="input-readonly" type="checkbox" /><span></span>readonly</label><label class="toggle"><input id="input-required" type="checkbox" /><span></span>required</label></div>
-          <output id="input-event">修改后离开输入框触发 value-change</output>
+          <output id="input-event">修改后触发 value-change；搜索框回车或点击按钮触发 search</output>
         </div>
       </div>
-      <div class="parameter-strip"><code>type</code><code>value</code><code>min</code><code>max</code><code>step</code><code>placeholder</code><code>disabled</code><code>readonly</code><code>required</code><code>name</code><code>autocomplete</code></div>
+      <details class="code"><summary>查看搜索框用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-input type="search" prefix="⌕" suffix="assets" placeholder="Search…"&gt;&lt;/hy-input&gt;
+
+&lt;hy-input placeholder="Amount"&gt;
+  &lt;span slot="prefix"&gt;¥&lt;/span&gt;
+  &lt;span slot="suffix"&gt;CNY&lt;/span&gt;
+&lt;/hy-input&gt;
+
+searchInput.addEventListener('search', event =&gt; console.log(event.detail));</code></pre></details>
+      <div class="parameter-strip"><code>type</code><code>value</code><code>prefix</code><code>suffix</code><code>slot="prefix"</code><code>slot="suffix"</code><code>search-label</code><code>search()</code><code>min</code><code>max</code><code>step</code><code>placeholder</code><code>disabled</code><code>readonly</code><code>required</code><code>name</code><code>autocomplete</code></div>
     </section>
 
     <section class="component-section" id="checkbox" data-title="Checkbox">
@@ -225,7 +272,7 @@
         <div class="controls stacked">
           <label>display separator<select id="cascader-separator"><option value=" / " selected>/</option><option value=" › ">›</option><option value=" → ">→</option></select></label>
           <div class="toggle-row"><label class="toggle"><input id="cascader-clearable" type="checkbox" checked /><span></span>clearable</label><label class="toggle"><input id="cascader-parent" type="checkbox" /><span></span>changeOnSelect</label><label class="toggle"><input id="cascader-disabled" type="checkbox" /><span></span>disabled</label></div>
-          <button id="cascader-reset" class="native-trigger secondary">Select Moon Temple</button>
+          <hy-button id="cascader-reset" class="native-trigger secondary" label="Select Moon Temple"></hy-button>
           <output id="cascader-event">打开下拉并逐级选择路径</output>
         </div>
       </div>
@@ -249,7 +296,7 @@ cascader.value = ['scenes', 'temple'];</code></pre></details>
         <div class="controls stacked">
           <label>week start<select id="date-picker-week"><option value="1" selected>Monday</option><option value="0">Sunday</option></select></label>
           <div class="toggle-row"><label class="toggle"><input id="date-picker-clearable" type="checkbox" checked /><span></span>clearable</label><label class="toggle"><input id="date-picker-disabled" type="checkbox" /><span></span>disabled</label></div>
-          <button id="date-picker-reset" class="native-trigger secondary">Reset to 2026-10-14</button>
+          <hy-button id="date-picker-reset" class="native-trigger secondary" label="Reset to 2026-10-14"></hy-button>
           <output id="date-picker-event">选择一个日期</output>
         </div>
       </div>
@@ -264,7 +311,7 @@ cascader.value = ['scenes', 'temple'];</code></pre></details>
         <div class="controls stacked">
           <label>minute step<select id="time-picker-step"><option value="1">1</option><option value="5" selected>5</option><option value="10">10</option><option value="15">15</option></select></label>
           <div class="toggle-row"><label class="toggle"><input id="time-picker-seconds" type="checkbox" /><span></span>showSeconds</label><label class="toggle"><input id="time-picker-clearable" type="checkbox" checked /><span></span>clearable</label><label class="toggle"><input id="time-picker-disabled" type="checkbox" /><span></span>disabled</label></div>
-          <button id="time-picker-reset" class="native-trigger secondary">Reset to 10:30</button>
+          <hy-button id="time-picker-reset" class="native-trigger secondary" label="Reset to 10:30"></hy-button>
           <output id="time-picker-event">选择时间后按 OK</output>
         </div>
       </div>
@@ -298,7 +345,7 @@ cascader.value = ['scenes', 'temple'];</code></pre></details>
       <div class="demo-card two-column">
         <div class="preview watermark-stage">
           <hy-watermark id="watermark-live" content="HAIYUE&#10;PREVIEW" rotate="-22" gap-x="80" gap-y="64" opacity="0.18" aria-label="Preview watermark">
-            <article class="watermark-content"><span class="panel-icon">◇</span><div><b>Moon Temple</b><p>Scene preview · Internal build</p><button class="native-trigger secondary" type="button">Interactive action</button></div></article>
+            <article class="watermark-content"><span class="panel-icon">◇</span><div><b>Moon Temple</b><p>Scene preview · Internal build</p><hy-button class="native-trigger secondary" label="Interactive action"></hy-button></div></article>
           </hy-watermark>
         </div>
         <div class="controls stacked">
@@ -365,7 +412,7 @@ steps.items = [
         <div class="preview affix-stage">
           <div class="affix-scroll" id="affix-scroll">
             <div class="affix-spacer">Scroll this panel</div>
-            <hy-affix id="affix-live" offset-top="8"><div class="affix-toolbar"><b>Scene actions</b><button type="button">Publish</button></div></hy-affix>
+            <hy-affix id="affix-live" offset-top="8"><div class="affix-toolbar"><b>Scene actions</b><hy-button label="Publish"></hy-button></div></hy-affix>
             <div class="affix-document"><b>Moon Temple</b><p>Continue scrolling to see the toolbar stay inside this viewport.</p></div>
           </div>
         </div>
@@ -373,7 +420,7 @@ steps.items = [
           <label>position<select id="affix-position"><option value="top" selected>top</option><option value="bottom">bottom</option></select></label>
           <label>offset <input id="affix-offset" type="range" min="0" max="40" value="8" /><output id="affix-offset-value">8 px</output></label>
           <label class="toggle"><input id="affix-disabled" type="checkbox" /><span></span>disabled</label>
-          <button class="native-trigger" id="affix-reset" type="button">Reset scroll</button>
+          <hy-button class="native-trigger" id="affix-reset" label="Reset scroll"></hy-button>
           <output id="affix-state">not affixed</output>
         </div>
       </div>
@@ -399,7 +446,7 @@ affix.addEventListener('affix-change', event =&gt; console.log(event.detail.affi
         <div class="controls stacked">
           <label>placement<select id="tour-placement"><option value="bottom" selected>bottom</option><option value="top">top</option><option value="right">right</option><option value="left">left</option><option value="center">center</option></select></label>
           <div class="toggle-row"><label class="toggle"><input id="tour-mask" type="checkbox" checked /><span></span>mask</label><label class="toggle"><input id="tour-mask-close" type="checkbox" checked /><span></span>close on mask</label></div>
-          <button class="native-trigger" id="tour-launch" type="button">Start guided tour</button>
+          <hy-button class="native-trigger" id="tour-launch" label="Start guided tour"></hy-button>
           <output id="tour-state">ready · 3 steps</output>
         </div>
       </div>
@@ -473,7 +520,7 @@ breadcrumb.separator = '›';</code></pre></details>
     <section class="component-section" id="dropdown" data-title="Dropdown">
       <div class="section-heading"><div><span class="index">07</span><h2>Dropdown</h2><code>&lt;hy-dropdown&gt;</code></div><p>带触发器插槽的动作菜单，支持四种对齐方向、分隔线和禁用项。</p></div>
       <div class="demo-card two-column overflow-visible">
-        <div class="preview centered overflow-visible"><hy-dropdown id="dropdown-live" placement="bottom-start"><button class="native-trigger">Export <span>⌄</span></button></hy-dropdown></div>
+        <div class="preview centered overflow-visible"><hy-dropdown id="dropdown-live" placement="bottom-start"><hy-button class="native-trigger" label="Export ⌄"></hy-button></hy-dropdown></div>
         <div class="controls stacked"><label>placement<select id="dropdown-placement"><option>bottom-start</option><option>bottom-end</option><option>top-start</option><option>top-end</option></select></label><label class="toggle"><input id="dropdown-disabled" type="checkbox" /><span></span>disabled</label><output id="dropdown-event">打开菜单并选择格式</output></div>
       </div>
     </section>
@@ -481,7 +528,7 @@ breadcrumb.separator = '›';</code></pre></details>
     <section class="component-section" id="tooltip" data-title="Tooltip">
       <div class="section-heading"><div><span class="index">08</span><h2>Tooltip</h2><code>&lt;hy-tooltip&gt;</code></div><p>悬停或聚焦时展示辅助文本，支持 12 个方位、延迟和箭头控制。</p></div>
       <div class="demo-card two-column overflow-visible">
-        <div class="preview centered tooltip-stage overflow-visible"><hy-tooltip id="tooltip-live" label="Frame selected object" placement="top" delay="120" arrow><button class="icon-trigger" aria-label="Frame selected object">⌗</button></hy-tooltip></div>
+        <div class="preview centered tooltip-stage overflow-visible"><hy-tooltip id="tooltip-live" label="Frame selected object" placement="top" delay="120" arrow><hy-button class="icon-trigger" icon-only aria-label="Frame selected object">⌗</hy-button></hy-tooltip></div>
         <div class="controls stacked"><label>placement<select id="tooltip-placement"><option>top</option><option>topLeft</option><option>topRight</option><option>bottom</option><option>bottomLeft</option><option>bottomRight</option><option>left</option><option>leftTop</option><option>leftBottom</option><option>right</option><option>rightTop</option><option>rightBottom</option></select></label><label>delay <span id="tooltip-delay-value">120 ms</span><input id="tooltip-delay" type="range" min="0" max="800" step="40" value="120" /></label><div class="toggle-row"><label class="toggle"><input id="tooltip-arrow" type="checkbox" checked /><span></span>arrow</label><label class="toggle"><input id="tooltip-disabled" type="checkbox" /><span></span>disabled</label></div></div>
       </div>
     </section>
@@ -516,7 +563,7 @@ breadcrumb.separator = '›';</code></pre></details>
     <section class="component-section" id="notification" data-title="Notification">
       <div class="section-heading"><div><span class="index">11</span><h2>Notification</h2><code>&lt;hy-notification&gt;</code></div><p>四种语义通知、六个显示位置和独立倒计时；连续通知以 Z 轴层叠，悬停后展开。</p></div>
       <div class="demo-card two-column">
-        <div class="preview centered notification-actions"><button id="notification-show" class="native-trigger">Show notification</button><button id="notification-stack" class="native-trigger secondary">Stack all types</button></div>
+        <div class="preview centered notification-actions"><hy-button id="notification-show" class="native-trigger" label="Show notification"></hy-button><hy-button id="notification-stack" class="native-trigger secondary" label="Stack all types"></hy-button></div>
         <div class="controls stacked">
           <label>type<select id="notification-type"><option>success</option><option selected>info</option><option>warning</option><option>error</option></select></label>
           <label>placement<select id="notification-placement"><option>topLeft</option><option>top</option><option selected>topRight</option><option>bottomLeft</option><option>bottom</option><option>bottomRight</option></select></label>
@@ -567,13 +614,13 @@ center.success({
           <hy-virtual-mouse id="virtual-mouse-live" animated duration="520" hidden></hy-virtual-mouse>
         </div>
         <div class="controls stacked">
-          <button id="virtual-mouse-play" class="native-trigger">Play movement</button>
-          <div class="virtual-mouse-actions"><button id="virtual-mouse-left" class="native-trigger secondary">Left click</button><button id="virtual-mouse-right" class="native-trigger secondary">Right click</button></div>
+          <hy-button id="virtual-mouse-play" class="native-trigger" label="Play movement"></hy-button>
+          <div class="virtual-mouse-actions"><hy-button id="virtual-mouse-left" class="native-trigger secondary" label="Left click"></hy-button><hy-button id="virtual-mouse-right" class="native-trigger secondary" label="Right click"></hy-button></div>
           <label class="toggle"><input id="virtual-mouse-animated" type="checkbox" checked /><span></span>animated</label>
           <label>duration <span id="virtual-mouse-duration-value">520 ms</span><input id="virtual-mouse-duration" type="range" min="0" max="1200" step="20" value="520" /></label>
           <label>state color<input id="virtual-mouse-color" type="color" value="#78d7ff" /></label>
           <label class="toggle"><input id="virtual-mouse-images" type="checkbox" /><span></span>state images</label>
-          <button id="virtual-mouse-hide" class="native-trigger secondary">Hide cursor</button>
+          <hy-button id="virtual-mouse-hide" class="native-trigger secondary" label="Hide cursor"></hy-button>
           <output id="virtual-mouse-event">运行移动或点击 API</output>
         </div>
       </div>
@@ -595,9 +642,107 @@ hy-virtual-mouse {
       <div class="parameter-strip"><code>x</code><code>y</code><code>animated</code><code>duration</code><code>easing</code><code>images</code><code>moveTo()</code><code>moveBy()</code><code>press()</code><code>release()</code><code>leftClick()</code><code>rightClick()</code></div>
     </section>
 
+    <section class="component-section" id="virtual-keyboard" data-title="Virtual Keyboard">
+      <div class="section-heading"><div><h2>Virtual Keyboard</h2><code>&lt;hy-virtual-keyboard&gt;</code></div><p>可编程的屏幕键盘；支持完整方向键的 QWERTY、内置数字键盘、自定义布局、输入目标与按键播放 API。</p></div>
+      <div class="demo-card virtual-keyboard-card">
+        <div class="preview virtual-keyboard-stage">
+          <textarea id="virtual-keyboard-target" aria-label="Virtual keyboard target" rows="2">Scene note: </textarea>
+          <hy-virtual-keyboard id="virtual-keyboard-live" physical-sync aria-label="Scene note keyboard"></hy-virtual-keyboard>
+        </div>
+        <div class="controls stacked">
+          <div class="virtual-keyboard-actions"><hy-button id="virtual-keyboard-type" class="native-trigger" label="Type demo text"></hy-button><hy-button id="virtual-keyboard-clear" class="native-trigger secondary" label="Clear"></hy-button></div>
+          <label>mode<select id="virtual-keyboard-mode"><option value="qwerty">QWERTY</option><option value="numeric">numeric</option></select></label>
+          <label class="toggle"><input id="virtual-keyboard-physical" type="checkbox" checked /><span></span>physical sync</label>
+          <label class="toggle"><input id="virtual-keyboard-disabled" type="checkbox" /><span></span>disabled</label>
+          <label>active color<input id="virtual-keyboard-color" type="color" value="#554cc6" /></label>
+          <output id="virtual-keyboard-event">点击按键或运行输入 API</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineVirtualKeyboardComponents } from '@haiyue/ui/virtual-keyboard';
+
+defineVirtualKeyboardComponents();
+const keyboard = document.querySelector('hy-virtual-keyboard');
+keyboard.target = document.querySelector('textarea');
+keyboard.physicalSync = true;
+keyboard.mode = 'numeric';
+
+await keyboard.tap('Enter');
+await keyboard.type('Haiyue UI', { interval: 45 });</code></pre></details>
+      <div class="parameter-strip"><code>mode</code><code>layout</code><code>target</code><code>physical-sync</code><code>disabled</code><code>pressedKeys</code><code>shiftActive</code><code>capsLock</code><code>press()</code><code>release()</code><code>tap()</code><code>type()</code><code>clear()</code></div>
+    </section>
+
     <section class="component-section" id="context-menu" data-title="Context Menu">
       <div class="section-heading"><div><span class="index">13</span><h2>Context Menu</h2><code>&lt;hy-context-menu&gt;</code></div><p>在指定视口坐标打开；支持鼠标、方向键、Enter、Escape 和焦点管理。</p></div>
-      <div class="demo-card two-column overflow-visible"><div class="preview context-target" id="context-target"><div><span>◇</span><b>Player.controller</b><small>在此区域右键，或点击下方按钮</small></div><button id="context-open" class="native-trigger">Open menu</button><hy-context-menu id="context-live"></hy-context-menu></div><div class="controls stacked"><p class="control-note"><code>openAt(x, y)</code> 会自动约束菜单在可视区域内。</p><output id="context-event">等待打开菜单</output></div></div>
+      <div class="demo-card two-column overflow-visible"><div class="preview context-target" id="context-target"><div><span>◇</span><b>Player.controller</b><small>在此区域右键，或点击下方按钮</small></div><hy-button id="context-open" class="native-trigger" label="Open menu"></hy-button><hy-context-menu id="context-live"></hy-context-menu></div><div class="controls stacked"><p class="control-note"><code>openAt(x, y)</code> 会自动约束菜单在可视区域内。</p><output id="context-event">等待打开菜单</output></div></div>
+    </section>
+
+    <section class="component-section" id="draggable" data-title="Draggable">
+      <div class="section-heading"><div><h2>Draggable</h2><code>&lt;hy-draggable&gt;</code></div><p>让任意内容通过指针或键盘移动；支持拖拽手柄、排除区域、轴向限制、边界约束与网格吸附。</p></div>
+      <div class="demo-card draggable-card">
+        <div class="preview draggable-stage" id="draggable-stage">
+          <div class="draggable-grid" aria-hidden="true"></div>
+          <hy-draggable id="draggable-live" x="24" y="24" bounds="parent" grid="8" handle="[data-drag-handle]" aria-label="可拖拽检查器">
+            <article class="draggable-panel">
+              <header data-drag-handle><span>⋮⋮</span><b>Inspector</b><output id="draggable-position">24, 24</output></header>
+              <p>拖动标题栏移动；按钮和表单控件默认不会触发拖拽。</p>
+              <button type="button" data-no-drag>Focusable action</button>
+            </article>
+          </hy-draggable>
+        </div>
+        <div class="controls stacked">
+          <label>axis<select id="draggable-axis"><option value="both">both</option><option value="x">x only</option><option value="y">y only</option></select></label>
+          <label>bounds<select id="draggable-bounds"><option value="parent">parent</option><option value="viewport">viewport</option><option value="none">none</option></select></label>
+          <label>grid <span id="draggable-grid-value">8 px</span><input id="draggable-grid" type="range" min="1" max="32" value="8" /></label>
+          <div class="toggle-row"><label class="toggle"><input id="draggable-disabled" type="checkbox" /><span></span>disabled</label><label class="toggle"><input id="draggable-keyboard" type="checkbox" checked /><span></span>keyboard</label></div>
+          <div class="draggable-actions"><hy-button id="draggable-move" class="native-trigger" label="moveBy API"></hy-button><hy-button id="draggable-reset" class="native-trigger secondary" label="Reset"></hy-button></div>
+          <output id="draggable-event">拖动标题栏，或聚焦后使用方向键</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineDraggableComponents } from '@haiyue/ui/draggable';
+
+defineDraggableComponents();
+const panel = document.querySelector('hy-draggable');
+panel.bounds = 'parent';
+panel.axis = 'both';
+panel.grid = 8;
+panel.moveTo(24, 24);
+panel.addEventListener('drag-move', event =&gt; console.log(event.detail));</code></pre></details>
+      <div class="parameter-strip"><code>x</code><code>y</code><code>axis</code><code>bounds</code><code>grid</code><code>handle</code><code>cancel</code><code>disabled</code><code>keyboard</code><code>moveTo()</code><code>moveBy()</code><code>reset()</code><code>refresh()</code></div>
+    </section>
+
+    <section class="component-section" id="resizable" data-title="Resizable">
+      <div class="section-heading"><div><h2>Resizable</h2><code>&lt;hy-resizable&gt;</code></div><p>拖动四个角点或四条边调整元素尺寸，拖动内容区域改变位置；支持键盘、边界、网格与宽高比约束。</p></div>
+      <div class="demo-card resizable-card">
+        <div class="preview resizable-stage" id="resizable-stage">
+          <div class="resizable-grid" aria-hidden="true"></div>
+          <hy-resizable id="resizable-live" x="48" y="48" width="240" height="152" min-width="96" min-height="64" bounds="parent" grid="8" aria-label="可调整大小的节点">
+            <article class="resizable-panel">
+              <span>NODE / TRANSFORM</span>
+              <b>Ocean camera</b>
+              <p>拖动内部移动；拖动四边或四角缩放。</p>
+              <output id="resizable-rect">48, 48 · 240 × 152</output>
+            </article>
+          </hy-resizable>
+        </div>
+        <div class="controls stacked">
+          <div class="input-affix-controls"><label>width<input id="resizable-width" type="number" min="96" value="240" /></label><label>height<input id="resizable-height" type="number" min="64" value="152" /></label></div>
+          <label>bounds<select id="resizable-bounds"><option value="parent">parent</option><option value="viewport">viewport</option><option value="none">none</option></select></label>
+          <label>grid <span id="resizable-grid-value">8 px</span><input id="resizable-grid-size" type="range" min="1" max="32" value="8" /></label>
+          <div class="toggle-row"><label class="toggle"><input id="resizable-aspect" type="checkbox" /><span></span>16:9 ratio</label><label class="toggle"><input id="resizable-movable" type="checkbox" checked /><span></span>movable</label><label class="toggle"><input id="resizable-disabled" type="checkbox" /><span></span>disabled</label></div>
+          <div class="resizable-actions"><hy-button id="resizable-grow" class="native-trigger" label="resizeTo API"></hy-button><hy-button id="resizable-reset" class="native-trigger secondary" label="Reset"></hy-button></div>
+          <output id="resizable-event">拖动内容、四条边或四个角点</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineResizableComponents } from '@haiyue/ui/resizable';
+
+defineResizableComponents();
+const frame = document.querySelector('hy-resizable');
+frame.bounds = 'parent';
+frame.grid = 8;
+frame.aspectRatio = 16 / 9;
+frame.setRect({ x: 48, y: 48, width: 240, height: 135 });
+frame.addEventListener('resize', event =&gt; console.log(event.detail));</code></pre></details>
+      <div class="parameter-strip"><code>x</code><code>y</code><code>width</code><code>height</code><code>min-width</code><code>min-height</code><code>max-width</code><code>max-height</code><code>bounds</code><code>grid</code><code>aspect-ratio</code><code>movable</code><code>keyboard</code><code>disabled</code><code>setRect()</code><code>moveTo()</code><code>resizeTo()</code><code>reset()</code></div>
     </section>
 
     <section class="component-section" id="expandable" data-title="Expandable">
@@ -620,7 +765,7 @@ hy-virtual-mouse {
       <div class="section-heading"><div><span class="index">15</span><h2>Tree</h2><code>&lt;hy-tree&gt;</code></div><p>层级数据、展开、范围多选、键盘导航、剪贴板操作和拖放排序。</p></div>
       <div class="demo-card tree-card">
         <div class="preview tree-stage"><hy-tree id="tree-live" allow-drag></hy-tree></div>
-        <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-drag" type="checkbox" checked /><span></span>allow-drag</label></div><button id="tree-select" class="native-trigger">Select lights</button><button id="tree-reset" class="native-trigger secondary">Reset data</button><output id="tree-event">选择节点；Ctrl/⌘ 与 Shift 支持多选</output></div>
+        <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-drag" type="checkbox" checked /><span></span>allow-drag</label></div><hy-button id="tree-select" class="native-trigger" label="Select lights"></hy-button><hy-button id="tree-reset" class="native-trigger secondary" label="Reset data"></hy-button><output id="tree-event">选择节点；Ctrl/⌘ 与 Shift 支持多选</output></div>
       </div>
     </section>
 
@@ -633,7 +778,7 @@ hy-virtual-mouse {
           <label>item-height <span id="virtual-list-height-value">44 px</span><input id="virtual-list-height" type="range" min="28" max="72" value="44" /></label>
           <label>overscan <span id="virtual-list-overscan-value">3</span><input id="virtual-list-overscan" type="range" min="0" max="12" value="3" /></label>
           <label>scrollToIndex<input id="virtual-list-index" type="number" min="0" value="50000" /></label>
-          <button id="virtual-list-jump" class="native-trigger">Jump to item</button>
+          <hy-button id="virtual-list-jump" class="native-trigger" label="Jump to item"></hy-button>
           <output id="virtual-list-event">正在计算可视范围…</output>
         </div>
       </div>
@@ -655,7 +800,7 @@ list.scrollToIndex(50_000, 'center');</code></pre></details>
           <label>page-size<select id="table-page-size"><option value="5">5</option><option value="10">10</option><option value="20">20</option></select></label>
           <label>status filter<select id="table-status"><option value="">All</option><option value="Ready">Ready</option><option value="Review">Review</option><option value="Blocked">Blocked</option></select></label>
           <label class="toggle"><input id="table-show-filters" type="checkbox" checked /><span></span>show filters</label>
-          <div class="table-actions"><button id="table-sort" class="native-trigger">Sort progress</button><button id="table-clear" class="native-trigger secondary">Clear state</button></div>
+          <div class="table-actions"><hy-button id="table-sort" class="native-trigger" label="Sort progress"></hy-button><hy-button id="table-clear" class="native-trigger secondary" label="Clear state"></hy-button></div>
           <output id="table-event">点击表头、过滤器、分页或数据行</output>
         </div>
       </div>
@@ -710,8 +855,9 @@ hy-range {
 
     <footer class="page-footer"><span>Haiyue UI</span><p>Dependency-free interface primitives for creative tools.</p><a href="#content">回到顶部 ↑</a></footer>
   </main>
+  </hy-split>
 
-  <div class="command" id="command" hidden><div class="command-backdrop"></div><div class="command-panel" role="dialog" aria-modal="true" aria-label="快速跳转"><input id="command-input" placeholder="输入组件名称…" autocomplete="off" /><div id="command-results"></div><small><kbd>↑↓</kbd> Navigate <kbd>Enter</kbd> Open <kbd>Esc</kbd> Close</small></div></div>
+  <div class="command" id="command" hidden><div class="command-backdrop"></div><div class="command-panel" role="dialog" aria-modal="true" aria-label="快速跳转"><hy-input id="command-input" prefix="⌕" placeholder="输入组件名称…" autocomplete="off" aria-label="快速查找组件"></hy-input><div id="command-results"></div><small><kbd>↑↓</kbd> Navigate <kbd>Enter</kbd> Open <kbd>Esc</kbd> Close</small></div></div>
 
   <script type="module" src="./examples.js"></script>
 </body>

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { resolve } from 'node:path';
+import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { rollup } from 'rollup';
@@ -45,7 +45,7 @@ test('fresh tarball installs offline; core/portable import and types need no pla
     try {
       const modules=bundle.cache.modules.map(m=>realpathSync(m.id));
       const allowed=realpathSync(resolve(consumer,'node_modules/@haiyue/ui/dist'));
-      assert.ok(modules.every(path=>path.startsWith(`${allowed}/core/`)||path.startsWith(`${allowed}/portable/`)),modules.join('\n'));
+      assert.ok(modules.every(path=>path.startsWith(`${allowed}${sep}core${sep}`)||path.startsWith(`${allowed}${sep}portable${sep}`)),modules.join('\n'));
     } finally {await bundle.close();}
   } finally {rmSync(temp,{recursive:true,force:true});}
 });

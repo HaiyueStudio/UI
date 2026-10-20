@@ -23,10 +23,12 @@ helpers, and registration stays explicit:
 
 ```ts
 import { defineButtonComponents } from '@haiyue/ui/button';
+import { defineButtonGroupComponents } from '@haiyue/ui/button-group';
 import { defineTreeComponents } from '@haiyue/ui/tree';
 import { defineVirtualListComponents } from '@haiyue/ui/virtual-list';
 
 defineButtonComponents();
+defineButtonGroupComponents();
 defineTreeComponents();
 defineVirtualListComponents();
 ```
@@ -45,6 +47,48 @@ defineHaiyueUI();
 
 Because `defineHaiyueUI()` references the complete component set, prefer focused subpaths in bundle-sensitive
 product entry points.
+
+## Button icons, loading, and groups
+
+Buttons accept a text `icon` or a richer `icon` slot. Set `icon-position="end"` to place it after the label.
+The boolean `loading` attribute replaces the configured icon with a spinner, marks the native button busy, and
+temporarily disables activation so an asynchronous request cannot be submitted twice.
+
+```html
+<hy-button label="Publish" icon="↥"></hy-button>
+<hy-button label="Continue" icon="→" icon-position="end"></hy-button>
+<hy-button loading label="Syncing"></hy-button>
+<hy-button label="Upload"><svg slot="icon" aria-hidden="true">…</svg></hy-button>
+
+<hy-button-group aria-label="History actions">
+  <hy-button label="Undo" icon="↶"></hy-button>
+  <hy-button label="Redo" icon="↷"></hy-button>
+</hy-button-group>
+```
+
+Use `orientation="vertical"` for a stacked group. Button styling is exposed through the `button`, `content`,
+`icon`, and `spinner` parts; the group exposes its container as the `group` part.
+
+## Input and search
+
+`HYInput` supports plain-text `prefix` and `suffix` attributes as well as named slots for icons or richer
+content. Use `type="search"` to add an accessible search action button:
+
+```html
+<hy-input type="search" prefix="⌕" suffix="assets"
+  placeholder="Search…" search-label="Search assets"></hy-input>
+
+<hy-input placeholder="Amount">
+  <span slot="prefix">¥</span>
+  <span slot="suffix">CNY</span>
+</hy-input>
+```
+
+Search inputs emit a composed, cancelable `search` event when the user presses Enter, activates the search
+button, or the application calls `search()`. Its detail contains `{ value, valid, source }`, where `source` is
+`enter`, `button`, or `api`. Existing `value-change`, validation, number, and color input behavior remains
+available. Style the `control`, `input`, `prefix`, `suffix`, and `search-button` parts or the
+`--hy-input-affix-*` and `--hy-input-search-*` tokens.
 
 ## Portable component semantics (M24 G03/G05, unreleased)
 
@@ -409,6 +453,75 @@ Single-value mode uses `value`; interval mode exposes `lowerValue`, `upperValue`
 `rail`, `track`, `handle`, `handle-lower`, and `handle-upper` shadow parts. `value-input` reports live movement and
 `value-change` reports a committed pointer or keyboard change.
 
+## Virtual keyboard
+
+Import the on-screen keyboard independently and bind it to a text input or textarea:
+
+```ts
+import { defineVirtualKeyboardComponents } from '@haiyue/ui/virtual-keyboard';
+
+defineVirtualKeyboardComponents();
+const keyboard = document.querySelector('hy-virtual-keyboard');
+keyboard.target = document.querySelector('textarea');
+keyboard.physicalSync = true;
+keyboard.mode = 'numeric'; // switch back with 'qwerty'
+await keyboard.type('Haiyue UI', { interval: 45 });
+```
+
+The default exported `HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT` includes digits, letters, Shift, Caps Lock, editing,
+all four arrow directions, caret, and navigation keys. Set `mode` to `qwerty` or `numeric`; the numeric mode uses
+the exported `HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT` with digits, decimal, minus, deletion, and Enter keys. Assign
+`layout` with rows of typed key descriptors for shortcut or product-specific keyboards. Pointer and native keyboard activation edit the bound target and emit its normal
+`input` event; `physicalSync` mirrors real key state without duplicating native input. `press()`, `release()`,
+`tap()`, `type()`, and `clear()` support guided playback. Observe `virtual-keyboard-down`,
+`virtual-keyboard-up`, and `virtual-keyboard-input`, or style `keyboard`, `row`, `key`, and per-code key parts
+with the `--hy-virtual-keyboard-*` tokens.
+
+## Draggable container
+
+Import the transform-based container independently, then use any slotted element as its handle:
+
+```ts
+import { defineDraggableComponents } from '@haiyue/ui/draggable';
+
+defineDraggableComponents();
+const panel = document.querySelector('hy-draggable');
+panel.bounds = 'parent';
+panel.axis = 'both';
+panel.grid = 8;
+panel.moveTo(24, 24);
+```
+
+`bounds` accepts `none`, `parent`, `viewport`, or an `HTMLElement`; `axis` accepts `both`, `x`, or `y`.
+Use `handle` to restrict pointer starts to a selector and `cancel` to exclude interactive content. The default
+cancel selector protects inputs, buttons, links, editable content, and `[data-no-drag]`. Arrow keys move by one
+grid step, Shift multiplies that step by ten, and Home resets the position. `moveTo()`, `moveBy()`, `reset()`,
+and `refresh()` provide imperative control. Observe cancelable `drag-start`, followed by `drag-move` and
+`drag-end`; style the exported `surface` part and `--hy-draggable-*` tokens.
+
+## Resizable container
+
+Import the eight-handle transform frame independently. Its four corner points and four edge-midpoint handles
+resize the rectangle; dragging the content surface moves it:
+
+```ts
+import { defineResizableComponents } from '@haiyue/ui/resizable';
+
+defineResizableComponents();
+const frame = document.querySelector('hy-resizable');
+frame.bounds = 'parent';
+frame.grid = 8;
+frame.aspectRatio = 16 / 9;
+frame.setRect({ x: 48, y: 48, width: 240, height: 135 });
+```
+
+Configure `minWidth`, `minHeight`, `maxWidth`, and `maxHeight`, or use the matching kebab-case attributes.
+`bounds` accepts `none`, `parent`, `viewport`, or an `HTMLElement`; `movable="false"` keeps content stationary
+while preserving resize handles. The focused frame and handles support arrows, Shift acceleration, and Home
+reset. Imperative APIs include `setRect()`, `moveTo()`, `moveBy()`, `resizeTo()`, `reset()`, and `refresh()`.
+Observe cancelable `resize-start`, continuous `resize`, and `resize-end` events. Shadow parts expose `frame`,
+`content`, `handle`, and every directional handle such as `handle-nw`; appearance uses `--hy-resizable-*` tokens.
+
 ## Virtual mouse
 
 Import the fixed-position cursor visual independently. It never intercepts pointer input or synthesizes clicks on
@@ -471,7 +584,11 @@ npm run examples
 ```
 
 Then open <http://localhost:4173/>. The gallery provides a left-side component index and live examples for
-every exported component, including editable parameters and event output.
+every exported component, including editable parameters and event output. The gallery shell itself dogfoods
+Haiyue UI: theme actions, component search, command results, status, and example action controls use the
+published Web Components rather than parallel page-only widgets. The navigation/content shell and eligible
+preview/control cards use `hy-split` for keyboard- and pointer-adjustable sizing. Usage blocks are rendered as
+read-only CodeMirror editors with HTML, JavaScript, and CSS syntax highlighting.
 
 ## Expandable container
 

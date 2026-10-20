@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>Button browser test</title></head>
+<body>
+  <hy-button id="attribute-icon" label="Download" icon="↓"></hy-button>
+  <hy-button id="slotted-icon" label="Upload" icon-position="end">
+    <svg slot="icon" data-testid="upload-icon" viewBox="0 0 24 24"><path d="M12 18V5M7 10l5-5 5 5" /></svg>
+  </hy-button>
+  <hy-button id="loading" label="Fetch" icon="↻"></hy-button>
+  <hy-button id="icon-only" icon-only aria-label="Add item"><svg data-testid="legacy-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg></hy-button>
+  <hy-button-group id="group" aria-label="History actions">
+    <hy-button label="Undo"></hy-button>
+    <hy-button label="Redo"></hy-button>
+    <hy-button label="History"></hy-button>
+  </hy-button-group>
+  <output id="events">0</output>
+  <script type="module">
+    import { defineButtonComponents } from '../../dist/button.js';
+    import { defineButtonGroupComponents } from '../../dist/button-group.js';
+    defineButtonComponents();
+    defineButtonGroupComponents();
+    let events = 0;
+    document.querySelector('#loading').addEventListener('click', () => { document.querySelector('#events').textContent = String(++events); });
+  </script>
+</body>
+</html>

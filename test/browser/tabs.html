@@ -1,0 +1,15 @@
+<!doctype html><meta charset="utf-8"><title>Tabs layout regression</title>
+<style>
+  hy-tabs { width: 480px; height: 400px; }
+  section { height: 100%; overflow: auto; }
+  .canvas { width: 900px; height: 800px; }
+</style>
+<hy-tabs aria-label="Views">
+  <section slot="graph" aria-label="Graph viewport"><div class="canvas">Graph</div></section>
+  <section slot="list" aria-label="List viewport"><div class="canvas">List</div></section>
+</hy-tabs>
+<script type="module">
+  import { defineTabsComponents } from '../../dist/tabs.js';
+  defineTabsComponents();
+  document.querySelector('hy-tabs').options = [{ value: 'graph', label: 'Graph' }, { value: 'list', label: 'List' }];
+</script>

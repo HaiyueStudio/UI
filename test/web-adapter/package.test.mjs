@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdtempSync,mkdirSync,readFileSync,writeFileSync,rmSync,realpathSync} from 'node:fs';
 import {tmpdir} from 'node:os';
-import {resolve,relative} from 'node:path';
+import {resolve,relative,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {rollup} from 'rollup';
@@ -42,7 +42,7 @@ test('Web adapter tarball has independent exports/types, no eager registration a
     run([resolve(root,'node_modules/typescript/bin/tsc'),'-p','tsconfig.json'],consumer);
     const bundle=await rollup({input:resolve(installed,'dist/adapters/web/index.js'),onwarn:warning=>{throw new Error(warning.message);}});
     try{
-      const dist=realpathSync(resolve(installed,'dist')),modules=bundle.cache.modules.map(m=>relative(dist,realpathSync(m.id)));
+      const dist=realpathSync(resolve(installed,'dist')),modules=bundle.cache.modules.map(m=>relative(dist,realpathSync(m.id)).split(sep).join('/'));
       const focused=new Set(['button.js','checkbox.js','select.js','tabs.js','input.js','range.js','dialog.js','portable/theme.js']);
       assert.ok(modules.every(path=>path.startsWith('core/')||path.startsWith('adapters/web/')||focused.has(path)),modules.join('\n'));
       assert.equal(modules.includes('index.js'),false);

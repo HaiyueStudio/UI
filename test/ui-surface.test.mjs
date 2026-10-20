@@ -12,6 +12,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYExpandable',
     'defineExpandableComponents',
     'HYButton',
+    'HYButtonGroup',
     'HYBorderBeam',
     'HYBreadcrumb',
     'HYCascader',
@@ -22,6 +23,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYDialog',
     'HYDivider',
     'HYDrawer',
+    'HYDraggable',
     'HYDropdown',
     'HYHistoryControls',
     'HYInput',
@@ -29,6 +31,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYRadio',
     'HYRate',
     'HYRange',
+    'HYResizable',
     'HYSelect',
     'HYSkeleton',
     'HYSplit',
@@ -39,13 +42,17 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYTree',
     'HYTreeNode',
     'HYVirtualList',
+    'HYVirtualKeyboard',
     'HYVirtualMouse',
+    'HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT',
+    'HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT',
     'HYWatermark',
     'HYTable',
     'HYTimePicker',
     'HYTour',
     'calculateVirtualListRange',
     'defineButtonComponents',
+    'defineButtonGroupComponents',
     'defineAffixComponents',
     'defineBadgeComponents',
     'defineBorderBeamComponents',
@@ -58,6 +65,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineDialogComponents',
     'defineDividerComponents',
     'defineDrawerComponents',
+    'defineDraggableComponents',
     'defineDropdownComponents',
     'defineHistoryControlsComponents',
     'defineInputComponents',
@@ -66,6 +74,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineRadioComponents',
     'defineRateComponents',
     'defineRangeComponents',
+    'defineResizableComponents',
     'defineSelectComponents',
     'defineSkeletonComponents',
     'defineSplitComponents',
@@ -75,6 +84,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineTooltipComponents',
     'defineTreeComponents',
     'defineVirtualListComponents',
+    'defineVirtualKeyboardComponents',
     'defineVirtualMouseComponents',
     'defineWatermarkComponents',
     'defineTableComponents',
@@ -83,6 +93,27 @@ test('UI root keeps the supported component surface importable', async () => {
   ];
   assert.deepEqual(Object.keys(ui).sort(), expected.sort());
   assert.equal(Object.keys(ui).some(name => /^GE[A-Z]/u.test(name)), false);
+});
+
+test('button exposes a themeable native surface and forwards pressed state for gallery controls', () => {
+  const source = readFileSync(new URL('../src/button.ts', import.meta.url), 'utf8');
+  assert.match(source, /this\._button\.part\.add\('button'\)/);
+  assert.match(source, /this\._button\.type = 'button'/);
+  assert.match(source, /'aria-pressed'/);
+  assert.match(source, /this\._button\.setAttribute\('aria-pressed', pressed\)/);
+  assert.match(source, /get loading\(\): boolean/);
+  assert.match(source, /get iconPosition\(\): HYButtonIconPosition/);
+  assert.match(source, /this\._spinner\.part\.add\('spinner'\)/);
+  assert.match(source, /this\._button\.disabled = this\.hasAttribute\('disabled'\) \|\| loading/);
+});
+
+test('button group joins buttons with accessible horizontal and vertical layouts', () => {
+  const source = readFileSync(new URL('../src/button-group.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYButtonGroup extends HTMLElement/);
+  assert.match(source, /role', 'group'/);
+  assert.match(source, /get orientation\(\): HYButtonGroupOrientation/);
+  assert.match(source, /::slotted\(hy-button:first-child\)/);
+  assert.match(source, /customElements\.define\('hy-button-group'/);
 });
 
 test('affix preserves layout while pinning content to window or an owned scroll target', () => {
@@ -329,6 +360,66 @@ test('virtual mouse exposes fixed visuals, state images, movement, and owned int
   assert.match(virtualMouse, /CustomEvent<HYVirtualMouseButtonDetail>\(name/);
 });
 
+test('virtual keyboard exposes customizable keys, editable targets, API playback, and owned physical listeners', () => {
+  const source = readFileSync(new URL('../src/virtual-keyboard.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYVirtualKeyboard extends HTMLElement/);
+  assert.match(source, /HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT/);
+  assert.match(source, /HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT/);
+  assert.match(source, /get mode\(\): HYVirtualKeyboardMode/);
+  assert.match(source, /action\('ArrowUp', '↑', 'arrow-up'\)/);
+  assert.match(source, /action\('ArrowDown', '↓', 'arrow-down'\)/);
+  assert.match(source, /_moveCaretVertical\(direction: -1 \| 1\)/);
+  assert.match(source, /press\(code: string/);
+  assert.match(source, /release\(code: string/);
+  assert.match(source, /async tap\(code: string/);
+  assert.match(source, /async type\(text: string/);
+  assert.match(source, /target\.setRangeText/);
+  assert.match(source, /new InputEvent\('input'/);
+  assert.match(source, /event\.getModifierState\('CapsLock'\)/);
+  assert.match(source, /this\._listeners\?\.abort\(\)/);
+  assert.match(source, /CustomEvent<HYVirtualKeyboardKeyDetail>\(name/);
+  assert.match(source, /CustomEvent<HYVirtualKeyboardInputDetail>\('virtual-keyboard-input'/);
+  assert.match(source, /customElements\.define\('hy-virtual-keyboard'/);
+});
+
+test('draggable exposes constrained pointer, keyboard, and API movement with owned drag cleanup', () => {
+  const source = readFileSync(new URL('../src/draggable.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYDraggable extends HTMLElement/);
+  assert.match(source, /get axis\(\): HYDraggableAxis/);
+  assert.match(source, /get bounds\(\): HYDraggableBounds/);
+  assert.match(source, /get grid\(\): number/);
+  assert.match(source, /get handle\(\): string/);
+  assert.match(source, /get cancel\(\): string/);
+  assert.match(source, /moveTo\(x: number, y: number\)/);
+  assert.match(source, /moveBy\(deltaX: number, deltaY: number\)/);
+  assert.match(source, /setPointerCapture\(event\.pointerId\)/);
+  assert.match(source, /this\._dragAbort\?\.abort\(\)/);
+  assert.match(source, /Math\.round\(finiteNumber\(x, oldX\) \/ this\.grid\)/);
+  assert.match(source, /event\.key === 'ArrowLeft'.*event\.key === 'ArrowRight'.*event\.key === 'ArrowUp'.*event\.key === 'ArrowDown'/s);
+  assert.match(source, /CustomEvent<HYDraggableStartDetail>\('drag-start'.*cancelable: true/s);
+  assert.match(source, /CustomEvent<HYDraggableMoveDetail>\('drag-move'/);
+  assert.match(source, /CustomEvent<HYDraggableEndDetail>\('drag-end'/);
+  assert.match(source, /customElements\.define\('hy-draggable'/);
+});
+
+test('resizable exposes eight pointer and keyboard handles with constrained rectangle APIs', () => {
+  const source = readFileSync(new URL('../src/resizable.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYResizable extends HTMLElement/);
+  assert.match(source, /\['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'\]/);
+  assert.match(source, /setRect\(rect: HYResizableRect\)/);
+  assert.match(source, /moveTo\(x: number, y: number\)/);
+  assert.match(source, /resizeTo\(width: number, height: number\)/);
+  assert.match(source, /get aspectRatio\(\): number \| null/);
+  assert.match(source, /get bounds\(\): HYResizableBounds/);
+  assert.match(source, /setPointerCapture\(event\.pointerId\)/);
+  assert.match(source, /this\._dragAbort\?\.abort\(\)/);
+  assert.match(source, /event\.key === 'ArrowLeft'.*event\.key === 'ArrowRight'.*event\.key === 'ArrowUp'.*event\.key === 'ArrowDown'/s);
+  assert.match(source, /CustomEvent<HYResizableChangeDetail>\('resize-start'.*cancelable: true/s);
+  assert.match(source, /CustomEvent<HYResizableChangeDetail>\('resize'/);
+  assert.match(source, /CustomEvent<HYResizableEndDetail>\('resize-end'/);
+  assert.match(source, /customElements\.define\('hy-resizable'/);
+});
+
 test('drawer exposes directional placement, mask, Escape, and hidden-content destruction', () => {
   const drawer = readFileSync(new URL('../src/drawer.ts', import.meta.url), 'utf8');
   assert.match(drawer, /export class HYDrawer extends HTMLElement/);
@@ -406,7 +497,14 @@ test('tree orchestrator delegates DOM-free hierarchy ownership to tree-model', (
 test('shared input keeps native constraints and emits one composed commit contract', () => {
   const input = readFileSync(new URL('../src/input.ts', import.meta.url), 'utf8');
   assert.match(input, /export class HYInput extends HTMLElement/);
-  assert.match(input, /'text' \| 'number' \| 'color'/);
+  assert.match(input, /'text' \| 'number' \| 'color' \| 'search'/);
+  assert.match(input, /get prefix\(\): string/);
+  assert.match(input, /get suffix\(\): string/);
+  assert.match(input, /this\._prefixSlot\.name = 'prefix'/);
+  assert.match(input, /this\._suffixSlot\.name = 'suffix'/);
+  assert.match(input, /search\(\): boolean/);
+  assert.match(input, /event\.key === 'Enter'.*this\.type === 'search'/);
+  assert.match(input, /CustomEvent<HYInputSearchDetail>\('search'/);
   assert.match(input, /CustomEvent<HYInputChangeDetail>\('value-change'/);
   assert.match(input, /bubbles: true,[\s\S]*composed: true/);
   assert.match(input, /this\._input\.validity\.valid/);
