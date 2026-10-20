@@ -251,3 +251,24 @@ test('select value updates retain option nodes while labels and parent errors st
   });
   expect(result).toEqual({retained:true,value:'b',label:'New choice',error:'Choose carefully',disabled:true});
 });
+
+test('44px semantic controls paint the complete touch target',async({page})=>{
+  const result=await page.evaluate(async()=>{
+    demo.dispose();
+    const {HYWebRenderer}=await import('/dist/adapters/web/index.js');
+    const {HYPage}=await import('/dist/portable/index.js');
+    const {hyNode:n}=await import('/dist/core/index.js');
+    const renderer=new HYWebRenderer(document.querySelector('#app')),view=new HYPage(renderer);
+    view.mount(n('Row','row',{layout:{gap:8}}, {children:[
+      n('Button','button',{text:'Run',layout:{minHeight:44,width:96}}),
+      n('Select','select',{value:'1',options:[{value:'1',label:'100%'}],layout:{minHeight:44,width:96}}),
+      n('TextInput','input',{value:'Name',layout:{minHeight:44,width:120}}),
+    ]}));
+    await new Promise(requestAnimationFrame);
+    const result=[...document.querySelectorAll('[data-hy-key]')].filter(el=>el.shadowRoot).map(el=>{
+      const control=el.shadowRoot.querySelector('select')??el.shadowRoot.querySelector('button,input'),a=el.getBoundingClientRect(),b=control.getBoundingClientRect();return {host:a.height,control:b.height,width:a.width,paint:b.width};
+    });view.dispose();return result;
+  });
+  expect(result).toHaveLength(3);
+  for(const item of result){expect(item.host).toBeGreaterThanOrEqual(44);expect(item.control).toBe(item.host);expect(item.paint).toBe(item.width);}
+});

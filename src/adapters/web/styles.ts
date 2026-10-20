@@ -30,6 +30,12 @@ export const componentCSS = `
  --hy-active-text-color:var(--hy-text-color,#d8e2f2); --hy-hover-bg-color:var(--hy-input-bg-color,#121822);
  --hy-focus-border-color:var(--hy-focus-ring-color,#8177f2); --hy-dialog-radius:var(--hy-radius,8px); }
 button, input, select { font:inherit; min-height:2em; border-radius:var(--hy-radius,4px); }
+/* The semantic host owns the touch target. Its actual interactive element
+   must fill it too; otherwise a 44px portable Button still paints at 28px. */
+:host(hy-button), :host(hy-input), :host(hy-select) { display:inline-flex; }
+:host(hy-button) button, :host(hy-input) input, :host(hy-select) select {
+ box-sizing:border-box; width:100%; min-height:inherit; height:100%; padding-inline:12px;
+}
 select { height:auto; padding-block:4px; }
 input { height:var(--hy-input-height,auto); padding-block:4px; }
 .box, .box::after, .handle { transition:var(--hy-portable-transition,background .12s ease); }
@@ -40,6 +46,12 @@ input { height:var(--hy-input-height,auto); padding-block:4px; }
 :host(hy-tabs) .tabs { align-items:stretch; }
 :host(hy-tabs) button { height:auto; white-space:normal; }
 :host(hy-range) .handle { min-height:0; }
+:host(hy-dialog) .header { padding:16px 20px; }
+:host(hy-dialog) h2 { font-size:calc(var(--hy-font-size,14px) + 6px); }
+:host(hy-dialog) .body { display:flex; flex-direction:column; gap:var(--hy-gap,8px); padding:20px; }
+:host(hy-dialog) .body > slot { display:contents; }
+:host(hy-dialog) .footer { box-sizing:border-box; min-height:0; padding:12px 20px; }
+
 button:focus-visible, select:focus-visible, input:focus-visible { outline:2px solid var(--hy-focus-ring-color,#8177f2); outline-offset:1px; }
 [aria-invalid=true] { border-color:var(--hy-invalid-border-color,#d65c7c); }
 `;

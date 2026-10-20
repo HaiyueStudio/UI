@@ -1,4 +1,4 @@
-import type { HYCapabilities, HYComponentKind, HYComponentProps, HYDispose, HYNode, HYReason, HYRenderer, HYStore, HYUIEvent } from '../core/types.js';
+import type { HYCapabilities, HYComponentKind, HYComponentProps, HYDispose, HYMutation, HYNode, HYReason, HYRenderer, HYStore, HYUIEvent } from '../core/types.js';
 import { HYUIError, hyValidateCapabilities, hyValidateNode, hyValidateProps, snapshotValidatedProps } from '../core/validation.js';
 import { equalData, snapshot } from '../core/data.js';
 import { diff, flatten, type Tree } from './tree.js';
@@ -22,6 +22,10 @@ export class HYPage {
   #renderer: HYRenderer; #capabilities: HYCapabilities;
   #status: HYPageStatus = 'new'; #revision = 0; #epoch = 0; #depth = 0; #committing = false;
   #desired: Tree = new Map(); #rendered: Tree = new Map();
+  // Undefined means topology may have changed; otherwise only these props
+  // need comparison. Keep tree order deterministic across grouped updates.
+  #updates: Set<string> | undefined;
+  #order = new Map<string, number>();
   #subscriptions = new Set<HYDispose>(); #focused: string | undefined;
   #boundStores = new Set<unknown>();
   #openers = new Map<string, string | undefined>(); #cancelTransaction = 0;
@@ -50,7 +54,7 @@ export class HYPage {
   render(root: HYNode): void {
     this.#assertMutable();
     if (this.#status === 'new') throw new HYUIError('lifecycle', 'Mount the page before render');
-    this.#desired = flatten(hyValidateNode(root, this.#capabilities)); this.#flush();
+    this.#desired = flatten(hyValidateNode(root, this.#capabilities)); this.#updates = undefined; this.#flush();
   }
   setProps<K extends HYComponentKind>(key: string, kind: K, props: HYComponentProps[K]): void {
     this.#assertMutable();
@@ -61,15 +65,15 @@ export class HYPage {
     if (equalData(entry.node.props, props)) return;
     const next = new Map(this.#desired);
     next.set(key, { ...entry, node: Object.freeze({ ...entry.node, props: accepted }) as HYNode });
-    this.#desired = next; this.#flush();
+    this.#desired = next; this.#updates?.add(key); this.#flush();
   }
   transaction(run: () => void): void {
     this.#assertMutable();
-    const before = this.#desired; this.#depth++;
+    const before = this.#desired, updates = this.#updates && new Set(this.#updates); this.#depth++;
     try {
       const result: unknown = run();
       if (result && typeof (result as { then?: unknown }).then === 'function') throw new HYUIError('lifecycle', 'Page transactions must be synchronous');
-    } catch (cause) { this.#desired = before; throw cause; }
+    } catch (cause) { this.#desired = before; this.#updates = updates; throw cause; }
     finally { this.#depth--; }
     this.#flush();
   }
@@ -117,14 +121,29 @@ export class HYPage {
     if (this.#depth || this.#status !== 'mounted' || this.#committing) return;
     const next = this.#desired, previous = this.#rendered;
     if (next === previous) return;
-    const mutations = diff(previous, next);
-    if (!mutations.length) { this.#rendered = next; return; }
+    const topology = this.#updates === undefined;
+    const mutations: readonly HYMutation[] = topology ? diff(previous, next)
+      : Object.freeze([...this.#updates!].sort((a,b) => this.#order.get(a)! - this.#order.get(b)!).flatMap(key => {
+        const node = next.get(key)!.node;
+        return equalData(previous.get(key)!.node.props, node.props) ? [] : [Object.freeze({type:'update' as const,node})];
+      }));
+    const focusChanged = topology || mutations.some(m => {
+      if (m.type !== 'update') return true;
+      const a = previous.get(m.node.key)!.node.props, b = m.node.props;
+      return a.visible !== b.visible || ('disabled' in a && a.disabled) !== ('disabled' in b && b.disabled)
+        || ('busy' in a && a.busy) !== ('busy' in b && b.busy)
+        || (m.node.kind === 'Dialog' && ('open' in a && a.open) !== m.node.props.open)
+        || (m.node.kind === 'Tabs' && ('value' in a && a.value) !== m.node.props.value);
+    });
+    if (!mutations.length) { this.#rendered = next; this.#updates = new Set(); return; }
     this.#committing = true;
     try { this.#renderer.commit(this.#revision + 1, mutations); }
     catch (cause) { this.#fault(cause, 'commit'); }
     finally { this.#committing = false; }
     this.#rendered = next; this.#revision++;
-    this.#restoreFocus(previous);
+    this.#updates = new Set();
+    if (topology) this.#order = new Map([...next.keys()].map((key,index) => [key,index]));
+    if (focusChanged) this.#restoreFocus(previous);
   }
   #available(key: string | undefined, tree = this.#rendered): boolean {
     if (!key) return false;
@@ -208,7 +227,7 @@ export class HYPage {
     ++this.#epoch;
     this.#renderer.dispose();
     this.#renderer = renderer; this.#capabilities = snapshot(renderer.capabilities);
-    this.#rendered = new Map(); this.#focused = undefined; this.#openers.clear();
+    this.#rendered = new Map(); this.#updates = undefined; this.#order.clear(); this.#focused = undefined; this.#openers.clear();
     this.#mountRenderer(); this.#flush();
   }
   dispose(): void {
@@ -218,6 +237,7 @@ export class HYPage {
     for (const unsubscribe of this.#subscriptions) try { unsubscribe(); } catch (cause) { errors.push(cause); }
     this.#subscriptions.clear();
     try { this.#renderer.dispose(); } catch (cause) { errors.push(cause); }
+    this.#updates = undefined; this.#order.clear();
     this.#desired = new Map(); this.#rendered = new Map(); this.#openers.clear(); this.#focused = undefined;
     if (errors.length) throw new AggregateError(errors, 'Page cleanup failed');
   }

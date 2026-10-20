@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "scope": "Incremental props reconciliation and focus contracts; not device performance acceptance",
+  "capturedAt": "2026-10-19T02:36:33.905547+00:00",
+  "sourceHashes": {
+    "src/portable/page.ts": "92281fbbe1276be45eec27ccb94fac0b3130f7d36ec8bb8e186ab204cfb09ed4",
+    "test/portable/page.test.mjs": "1ed9d2c99bb00fe59514be875df4be5e175645aaea040864c2ac30bfb38581be"
+  },
+  "checks": {
+    "typecheck": "passed",
+    "build": "passed",
+    "unit": 98,
+    "sharedAdapterChromiumWebKit": 42,
+    "unchangedPublicEntrypoints": 39
+  },
+  "consumerEvidence": "../../../../ShaderLab/review/m24-ui/g07/optimization/apple-jitter/README.md"
+}

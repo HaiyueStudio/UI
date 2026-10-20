@@ -173,3 +173,26 @@ test('deterministic arbitrary reorders match desired tree while preserving survi
     for(const id of ids) if(previous.has(key(id))) assert.equal(renderer.nodes.get(key(id)).instance,previous.get(key(id)));
   }
 });
+
+test('incremental props retain tree order, nested rollback and topology changes in transactions',()=>{
+ const {page,renderer}=setup();
+ page.transaction(()=>{
+  page.setProps(key('b'),'Text',{text:'B'});
+  assert.throws(()=>page.transaction(()=>{page.render(root([label('c')]));throw Error('rollback');}));
+  page.setProps(key('a'),'Text',{text:'A'});
+ });
+ assert.deepEqual(renderer.batches.at(-1).mutations.map(m=>m.node.key),[key('a'),key('b')]);
+ page.transaction(()=>{page.setProps(key('b'),'Text',{text:'old'});page.render(root([label('c'),label('b')]));page.setProps(key('c'),'Text',{text:'C'});});
+ assert.deepEqual(renderer.order('/root'),[key('c'),key('b')]);assert.equal(renderer.props(key('c')).text,'C');
+ page.suspend();page.setProps(key('b'),'Text',{text:'pending'});page.setProps(key('c'),'Text',{text:'later'});page.resume();
+ assert.deepEqual(renderer.batches.at(-1).mutations.map(m=>m.node.key),[key('c'),key('b')]);page.dispose();
+});
+
+test('value-only updates preserve focus while disabled and dialog changes restore it',()=>{
+ const tree=root([n('Button','a',{text:'A'}),n('Button','b',{text:'B'}),n('Dialog','d',{open:false,title:'D'},{children:[n('Button','close',{text:'Close'})]})]);
+ const {page,renderer}=setup(tree,{defaultFocus:key('b')});page.focus(key('a'));const before=renderer.focused.length;
+ page.setProps(key('a'),'Button',{text:'Changed'});assert.equal(renderer.focused.length,before);
+ page.setProps(key('a'),'Button',{text:'Changed',disabled:true});assert.equal(renderer.focused.at(-1),key('b'));
+ page.setProps(key('d'),'Dialog',{open:true,title:'D'});assert.equal(renderer.focused.at(-1),'/root/d/close');
+ page.setProps(key('d'),'Dialog',{open:false,title:'D'});assert.equal(renderer.focused.at(-1),key('b'));page.dispose();
+});
