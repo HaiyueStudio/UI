@@ -6,6 +6,8 @@ export const rootCSS = `
 [data-hy-portable-root] [data-hy-key] { box-sizing:border-box; min-width:0; min-height:0; }
 [data-hy-portable-root] [data-hy-key][hidden] { display:none !important; }
 [data-hy-portable-root] [data-hy-kind=Row] { display:flex; flex-direction:row; }
+[data-hy-portable-root] [data-hy-kind=RadioGroup] { display:flex; flex-wrap:wrap; gap:var(--hy-gap,8px); }
+[data-hy-portable-root] [data-hy-kind=RadioGroup] hy-radio { font:inherit; min-height:44px; }
 [data-hy-portable-root] [data-hy-kind=Column] { display:flex; flex-direction:column; }
 [data-hy-portable-root] [data-hy-kind=Grid], [data-hy-portable-root] [data-hy-kind=Overlay] { display:grid; }
 [data-hy-portable-root] [data-hy-kind=Text] { display:block; overflow-wrap:anywhere; white-space:pre-wrap; }
@@ -36,6 +38,8 @@ button, input, select { font:inherit; min-height:2em; border-radius:var(--hy-rad
 :host(hy-button) button, :host(hy-input) input, :host(hy-select) select {
  box-sizing:border-box; width:100%; min-height:inherit; height:100%; padding-inline:12px;
 }
+:host(hy-select) .wrap, :host(hy-input) .control { width:100%; min-height:inherit; height:100%; box-sizing:border-box; }
+:host(hy-input) input { min-height:0; }
 select { height:auto; padding-block:4px; }
 input { height:var(--hy-input-height,auto); padding-block:4px; }
 .box, .box::after, .handle { transition:var(--hy-portable-transition,background .12s ease); }

@@ -22,3 +22,12 @@ test('component gallery demonstrates badge counts, dots, and statuses', async ({
   await page.locator('#badge-dot').evaluate(input => { input.checked = true; input.dispatchEvent(new Event('change', { bubbles: true })); }); await expect(badge.locator('[part="badge"]')).toHaveClass(/dot/);
   await page.locator('#badge-status').selectOption('success'); await expect(badge.locator('[part="status"]')).toContainText('Online');
 });
+
+
+test('literal labels preserve zeros without changing default count semantics',async({page})=>{
+  const badge=page.locator('#badge'),indicator=badge.locator('[part=badge]');
+  await badge.evaluate(e=>{e.literal=true;e.setAttribute('count','001');});await expect(indicator).toHaveText('001');
+  await badge.evaluate(e=>e.setAttribute('count','0'));await expect(indicator).toBeVisible();await expect(indicator).toHaveText('0');
+  await badge.evaluate(e=>e.setAttribute('count','120'));await expect(indicator).toHaveText('120');
+  await badge.evaluate(e=>e.literal=false);await expect(indicator).toHaveText('99+');
+});

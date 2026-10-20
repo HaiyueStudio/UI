@@ -630,3 +630,21 @@ npm run release:check
 
 Candidates: `.artifacts/packages/`. Review API changes before `npm run api:update`.
 See [release review](review/release-0.1.2.md).
+
+### 共享组件目录（开发中）
+
+`@haiyue/ui/core` 的 `HYComponentProps` 增加五种节点，Web 适配复用对应组件子模块，Native 适配使用原生控件；不新增根导出，也不自动注册全部组件。现有 18 种节点保持兼容，支持范围由 renderer 的 `capabilities.components` 声明。
+
+| 节点 | 对应 WebComponent | 当前共享属性 |
+| --- | --- | --- |
+| `Checkbox` | `hy-checkbox` | `text`, `checked`, `disabled`；区别于原生开关 `Toggle` |
+| `RadioGroup` | 一组 `hy-radio` | `value`, `options`, `disabled`；值必须出现在选项中 |
+| `Rate` | `hy-rate` | `value`（0 到 count 的整数）, `count`（1–10）, `disabled`, `readOnly` |
+| `Badge` | `hy-badge` | 独立文本 `text`，计数截断由应用决定 |
+| `Divider` | `hy-divider` | 水平分隔线，可选 `text` |
+
+交互节点受应用状态控制，通过同一 transaction 的 `valueChange` / `commit` 提议变更；应用拒绝时保留已接受值。评分的半星、悬浮效果，徽标的圆点、动画、悬挂计数，分隔线的垂直/虚线模式尚未纳入共享协议。请勿把 WebComponent 的所有属性直接传入通用节点。
+
+Native 仓库的 `examples/ui-validation/mobile` 提供独立「Haiyue UI」组件实验室；折叠内容、步骤导航与按钮组是基础节点组合示例，不是新增协议节点。
+
+Web 的 `hy-badge` 新增可选 `literal` 属性（默认为 false）：启用后 `count` 按原始文字显示，保留 0、前导零和大数字。普通计数的隐藏零值、截断，以及 status/text 模式保持原行为；共享 Badge 适配显式启用此模式。

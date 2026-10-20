@@ -4,12 +4,12 @@ import { hyNode as n, hyValidateProps, hyValidateNode, hySupports, hyValidateCap
 import { HYPage, hyNativeTheme, hyThemeVariables, HY_THEME_TOKENS } from '../../dist/portable/index.js';
 import { RecordingRenderer } from './recording.mjs';
 const caps={contract:1,backend:'web',components:HY_COMPONENTS,features:HY_FEATURES};
-const props={Row:{},Column:{},Grid:{layout:{columns:['auto',{grow:1},40],rows:['auto'],padding:[1,2,3,4]}},Overlay:{},
+const props={Checkbox:{checked:true,text:'Accept'},RadioGroup:{value:'a',options:[{value:'a',label:'A'}]},Rate:{value:3,count:5},Badge:{text:'NEW'},Divider:{},Row:{},Column:{},Grid:{layout:{columns:['auto',{grow:1},40],rows:['auto'],padding:[1,2,3,4]}},Overlay:{},
   Scroll:{axis:'vertical'},Text:{text:'label'},Image:{resource:{id:'art:logo',alt:'Logo'}},Icon:{resource:{id:'icon:play',alt:'Play'}},
   Button:{text:'Save'},Toggle:{checked:false},Select:{value:'a',options:[{value:'a',label:'A'}]},Tabs:{value:'a',options:[{value:'a',label:'A'}]},
   TextInput:{value:''},TextArea:{value:''},Slider:{value:1,min:0,max:2,step:.5},Dialog:{open:false,title:'Settings'},FormGroup:{label:'Name'},PlatformView:{slot:'preview',resourceId:'scene:1'}};
 test('all frozen baseline kinds accept typed plain data and snapshots are immutable', () => {
-  assert.deepEqual(Object.keys(props).sort(),[...HY_COMPONENTS].sort());assert.equal(HY_COMPONENTS.length,18);
+  assert.deepEqual(Object.keys(props).sort(),[...HY_COMPONENTS].sort());assert.equal(HY_COMPONENTS.length,23);
   for(const [kind,properties] of Object.entries(props)) {
     const node=hyValidateNode({kind,key:'example',props:properties},caps);assert.ok(Object.isFrozen(node));assert.ok(Object.isFrozen(node.props));
   }

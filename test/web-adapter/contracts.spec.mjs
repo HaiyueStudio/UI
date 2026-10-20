@@ -266,7 +266,8 @@ test('44px semantic controls paint the complete touch target',async({page})=>{
     ]}));
     await new Promise(requestAnimationFrame);
     const result=[...document.querySelectorAll('[data-hy-key]')].filter(el=>el.shadowRoot).map(el=>{
-      const control=el.shadowRoot.querySelector('select')??el.shadowRoot.querySelector('button,input'),a=el.getBoundingClientRect(),b=control.getBoundingClientRect();return {host:a.height,control:b.height,width:a.width,paint:b.width};
+      // HYInput paints its border/background on .control (input is inset by that border).
+      const control=el.shadowRoot.querySelector('.control,select')??el.shadowRoot.querySelector('button,input'),a=el.getBoundingClientRect(),b=control.getBoundingClientRect();return {host:a.height,control:b.height,width:a.width,paint:b.width};
     });view.dispose();return result;
   });
   expect(result).toHaveLength(3);

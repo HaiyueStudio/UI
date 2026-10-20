@@ -74,6 +74,10 @@ const schemas: Record<HYComponentKind, Check> = {
   Image: shape({ ...common, resource, fit: choice('contain','cover') }, ['resource']),
   Icon: shape({ ...common, resource, systemName: name }, ['resource']),
   Button: shape({ ...common, text: string, disabled: boolean, busy: boolean }, ['text']),
+  Checkbox: shape({ ...common, checked: boolean, disabled: boolean, text: string }, ['checked','text']),
+  RadioGroup: shape({ ...common, ...selection }, ['value','options']),
+  Rate: shape({ ...common, value: integer, count: check(v => Number.isInteger(v) && (v as number) >= 1 && (v as number) <= 10, 'Expected count 1–10'), disabled: boolean, readOnly: boolean }, ['value','count']),
+  Badge: shape({ ...common, text: string }, ['text']), Divider: shape({ ...common, text: string }),
   Toggle: shape({ ...common, checked: boolean, disabled: boolean }, ['checked']),
   Select: shape({ ...common, ...selection }, ['value','options']), Tabs: shape({ ...common, ...selection }, ['value','options']),
   TextInput: shape({ ...common, ...text, secure: boolean }, ['value']), TextArea: shape({ ...common, ...text }, ['value']),
@@ -111,11 +115,12 @@ export function hyValidateProps<K extends HYComponentKind>(kind: K, props: HYCom
   if (!Object.hasOwn(schemas, kind)) fail('Unknown component kind', context);
   if (!validatedSnapshots.get(props)?.has(kind)) {
   schemas[kind](props, context);
-  if (kind === 'Select' || kind === 'Tabs') {
+  if (kind === 'Select' || kind === 'Tabs' || kind === 'RadioGroup') {
     const p = props as HYComponentProps['Select'];
     if (new Set(p.options.map(o => o.value)).size !== p.options.length) fail('Duplicate option value', field(context, 'options'));
     if (!p.options.some(o => o.value === p.value)) fail('Unknown controlled value', field(context, 'value'));
   }
+  if (kind === 'Rate' && (props as HYComponentProps['Rate']).value > (props as HYComponentProps['Rate']).count) fail('Rating exceeds count', context);
   if (kind === 'Slider') {
     const p = props as HYComponentProps['Slider'];
     if (p.min > p.max || p.value < p.min || p.value > p.max) fail('Slider value/range is invalid', context);

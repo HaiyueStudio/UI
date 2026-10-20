@@ -19,7 +19,7 @@ export class HYBadge extends HTMLElement {
   private readonly _statusText = document.createElement('span');
 
   static get observedAttributes(): string[] {
-    return ['count', 'overflow-count', 'show-zero', 'dot', 'status', 'color', 'text', 'offset-x', 'offset-y', 'size', 'title', 'aria-label'];
+    return ['literal', 'count', 'overflow-count', 'show-zero', 'dot', 'status', 'color', 'text', 'offset-x', 'offset-y', 'size', 'title', 'aria-label'];
   }
 
   constructor() {
@@ -54,9 +54,13 @@ export class HYBadge extends HTMLElement {
   connectedCallback(): void { this._render(); }
   attributeChangedCallback(): void { this._render(); }
 
+  /** Opt-in literal label; preserve zeros and bypass numeric overflow formatting. */
+  get literal(): boolean { return this.hasAttribute('literal'); }
+  set literal(value: boolean) { this.toggleAttribute('literal', Boolean(value)); }
   get count(): HYBadgeCount {
     const value = this.getAttribute('count');
     if (value == null) return null;
+    if (this.literal) return value;
     if (/^-?\d+(?:\.\d+)?$/u.test(value.trim())) return Number(value);
     return value;
   }

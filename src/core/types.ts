@@ -46,6 +46,11 @@ export interface HYComponentProps {
   Image: HYCommonProps & { readonly resource: HYResource; readonly fit?: 'contain' | 'cover' };
   Icon: HYCommonProps & { readonly resource: HYResource; readonly systemName?: string };
   Button: HYCommonProps & { readonly text: string; readonly disabled?: boolean; readonly busy?: boolean };
+  Checkbox: HYCommonProps & { readonly checked: boolean; readonly disabled?: boolean; readonly text: string };
+  RadioGroup: HYCommonProps & HYSelectionProps;
+  Rate: HYCommonProps & { readonly value: number; readonly count: number; readonly disabled?: boolean; readonly readOnly?: boolean };
+  Badge: HYCommonProps & { readonly text: string };
+  Divider: HYCommonProps & { readonly text?: string };
   Toggle: HYCommonProps & { readonly checked: boolean; readonly disabled?: boolean };
   Select: HYCommonProps & HYSelectionProps; Tabs: HYCommonProps & HYSelectionProps;
   TextInput: HYCommonProps & HYTextProps;

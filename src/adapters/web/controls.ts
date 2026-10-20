@@ -10,21 +10,50 @@ import { HYTabs, defineTabsComponents } from '../../tabs.js';
 import { HYInput, defineInputComponents } from '../../input.js';
 import { HYRange, defineRangeComponents } from '../../range.js';
 import { HYDialog, defineDialogComponents } from '../../dialog.js';
+import {defineRadioComponents} from '../../radio.js';
+import {defineRateComponents} from '../../rate.js';
+import {defineBadgeComponents} from '../../badge.js';
+import {defineDividerComponents} from '../../divider.js';
 import type { HYWebControl, HYWebControlContext } from './types.js';
 import { attribute, flag, focusable } from './dom.js';
 
-/** Registration is explicit and limited to the seven reused components. */
+/** Registration is explicit and limited to the reused components. */
 export function definePortableWebComponents(): void {
   defineButtonComponents(); defineCheckboxComponents(); defineSelectComponents(); defineTabsComponents();
+  defineRadioComponents(); defineRateComponents(); defineBadgeComponents(); defineDividerComponents();
   defineInputComponents(); defineRangeComponents(); defineDialogComponents();
 }
-export const componentTags = Object.freeze({ Button:'hy-button',Toggle:'hy-checkbox',Select:'hy-select',Tabs:'hy-tabs',TextInput:'hy-input',Slider:'hy-range',Dialog:'hy-dialog' });
+export const componentTags = Object.freeze({ Checkbox:'hy-checkbox',RadioGroup:'div',Rate:'hy-rate',Badge:'hy-badge',Divider:'hy-divider',Button:'hy-button',Toggle:'hy-checkbox',Select:'hy-select',Tabs:'hy-tabs',TextInput:'hy-input',Slider:'hy-range',Dialog:'hy-dialog' });
+
+let radioGroupSequence=0;
+function toggleProps(node:Extract<HYNode,{kind:'Toggle'|'Checkbox'}>) { const {checked,disabled,visible}=node.props;return {checked,...(disabled===undefined?{}:{disabled}),...(visible===undefined?{}:{visible})}; }
 
 export function createControl(node: HYNode, context: HYWebControlContext, revision: number): HYWebControl | undefined {
   const {host,listen,emit}=context;
   let reason: HYReason='accessibility', transaction=0;
   listen(host,'pointerdown',()=>{reason='pointer';},true);
   listen(host,'keydown',()=>{reason='keyboard';},true);
+  if(node.kind==='Badge'||node.kind==='Divider')return {update(next){if(next.kind==='Badge'){flag(host,'literal',true);attribute(host,'count',next.props.text);};if(next.kind==='Divider')attribute(host,'label',next.props.text);},focus(){},dispose(){}};
+  if(node.kind==='RadioGroup') {
+    const controller=new HYSelectionController(node.key,node.props,emit);
+    let props=node.props;
+    const buttons=new Map<string,HTMLElement>(),groupName=`hy-portable-radio-${++radioGroupSequence}`;
+    host.setAttribute('role','radiogroup');
+    const render=()=>{for(const [value,button] of buttons){flag(button,'checked',props.value===value);flag(button,'disabled',!!props.disabled||!!props.options.find(o=>o.value===value)?.disabled);}};
+    listen(host,'checked-change',event=>{const detail=(event as CustomEvent<{checked:boolean,value:string}>).detail;if(detail.checked)controller.choose(detail.value,reason);render();});
+    return {update(next){if(next.kind!=='RadioGroup')return;props=next.props;controller.update(props);
+      for(const [value,button] of buttons)if(!props.options.some(o=>o.value===value)){button.remove();buttons.delete(value);}
+      for(const option of props.options){let button=buttons.get(option.value);if(!button){button=document.createElement('hy-radio');buttons.set(option.value,button);}attribute(button,'value',option.value);attribute(button,'label',option.label);attribute(button,'name',groupName);host.append(button);}render();},
+      focus(){focusable(host)[0]?.focus();},dispose(){controller.dispose();buttons.clear();}};
+  }
+  if(node.kind==='Rate') {
+    let props=node.props,disposed=false,choosing=false;
+    const restore=()=>attribute(host,'value',String(props.value));
+    listen(host,'value-change',event=>{const value=(event as CustomEvent<{value:number}>).detail.value;
+      if(disposed||choosing||props.disabled||props.readOnly||value===props.value)return;
+      choosing=true;const tx=++transaction;try{emit({key:node.key,type:'valueChange',value,reason,transaction:tx});if(!disposed)emit({key:node.key,type:'commit',value,reason,transaction:tx});}finally{choosing=false;if(!disposed)restore();}});
+    return {update(next){if(next.kind!=='Rate')return;props=next.props;attribute(host,'count',String(props.count));flag(host,'disabled',!!props.disabled);flag(host,'readonly',!!props.readOnly);restore();},focus(){focusable(host)[0]?.focus();},dispose(){disposed=true;}};
+  }
   if (node.kind === 'Button') {
     const button=host as HYButton;
     const label=document.createElement('span');label.dataset.hyButtonLabel='';button.append(label);
@@ -36,15 +65,15 @@ export function createControl(node: HYNode, context: HYWebControlContext, revisi
       focus(){button.shadowRoot!.querySelector('button')!.focus();},dispose(){controller.dispose();},
     };
   }
-  if (node.kind === 'Toggle') {
+  if (node.kind === 'Toggle' || node.kind === 'Checkbox') {
     const toggle=host as HYCheckbox;
-    const controller=new HYToggleController(node.key,node.props,emit);
+    const controller=new HYToggleController(node.key,toggleProps(node),emit);
     listen(toggle,'checked-change',event=>{controller.choose((event as CustomEvent<{checked:boolean}>).detail.checked,reason);
       // The app may reject a discrete change; restore its latest accepted value.
       flag(toggle,'checked',accepted);});
     let accepted=node.props.checked;
-    return {update(next){if(next.kind!=='Toggle')return;accepted=next.props.checked;controller.update(next.props);flag(toggle,'checked',accepted);flag(toggle,'disabled',!!next.props.disabled);
-      attribute(toggle,'label',next.props.a11y?.label);},focus(){toggle.shadowRoot!.querySelector('input')!.focus();},dispose(){controller.dispose();}};
+    return {update(next){if(next.kind!=='Toggle'&&next.kind!=='Checkbox')return;accepted=next.props.checked;controller.update(toggleProps(next));flag(toggle,'checked',accepted);flag(toggle,'disabled',!!next.props.disabled);
+      attribute(toggle,'label',next.kind==='Checkbox'?next.props.text:next.props.a11y?.label);},focus(){toggle.shadowRoot!.querySelector('input')!.focus();},dispose(){controller.dispose();}};
   }
   if (node.kind === 'Select' || node.kind === 'Tabs') {
     const select=host as HYSelect|HYTabs;
