@@ -1,9 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.2.1 - 2026-10-20
 
 - 新增可按需导入的 `HYTag` / `<hy-tag>` 标签组件，支持语义与自定义配色、三种尺寸、文字或 icon 插槽、可取消的关闭事件、可选择状态、键盘操作和禁用状态；新增 `HYToast` / `<hy-toast>` 轻提示组件，支持五种状态、上/中/下位置、自动或持久显示、最大数量、手动关闭/清空、生命周期事件与完整计时器清理。
-- M24 G05 新增独立 `adapters/web` 子路径：18 种共享语义映射、显式注册、受控输入/选择/弹窗、主题/安全区、预览资源生命周期与基础组件示例。新增可选 `controlled` 属性（Tabs/Range/Dialog）和 Input `password` 类型；旧默认 API 保留。修复关闭后立即重开的过期回调，以及共享页面把隐藏标签页误判为可聚焦的问题。WebKit/Chromium 自动化结果与物理输入/读屏待验收范围单独记录，未发布。
+- M24 G05 新增独立 `adapters/web` 子路径：18 种共享语义映射、显式注册、受控输入/选择/弹窗、主题/安全区、预览资源生命周期与基础组件示例。新增可选 `controlled` 属性（Tabs/Range/Dialog）和 Input `password` 类型；旧默认 API 保留。修复关闭后立即重开的过期回调，以及共享页面把隐藏标签页误判为可聚焦的问题。Chromium/WebKit 自动化已通过，物理输入与读屏验收范围单独记录。
 - M24 G03 新增独立 `core` / `portable` 子路径：18 种组件语义、交互 controller、受限页面组合、selector 订阅、稳定节点差异、事务、生命周期与主题数据；无 DOM/NativeScript/Engine 依赖。仅完成核心及记录型后端验证，真实平台适配分别由 G05/G06/G08 交付，旧 Web API 保持不变。
 - 扩展 `HYVirtualKeyboard` / `<hy-virtual-keyboard>`：默认 QWERTY 布局补齐上、下方向键及多行文本纵向光标移动；新增 `qwerty` / `numeric` 模式切换和可复用的 `HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT` 内置数字键盘。
 - 扩展 `HYButton` / `<hy-button>`：支持 `icon` 属性或 `icon` 插槽、`icon-position` 前后位置、会阻止重复点击并带无障碍忙碌状态的 `loading` 旋转图标；新增可按需导入的 `HYButtonGroup` / `<hy-button-group>`，支持横向和纵向组合按钮。

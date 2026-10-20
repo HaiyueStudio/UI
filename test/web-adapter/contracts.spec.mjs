@@ -85,9 +85,11 @@ test('legacy defaults and event contracts remain independent of the portable opt
     toggle.shadowRoot.querySelector('input').click();
     const closed=new Promise(resolve=>dialog.addEventListener('dialog-close',resolve,{once:true}));
     dialog.open=true;dialog.shadowRoot.querySelector('button').click();await closed;
-    return {fallback,rounded,controlled:[tabs.controlled,range.controlled,dialog.controlled],inputType:text.type,dialogOpen:dialog.open,received};
+    const nativeColor=document.createElement('input');nativeColor.type='color';
+    return {fallback,rounded,controlled:[tabs.controlled,range.controlled,dialog.controlled],inputType:input.type,nativeInputType:text.type,nativeColorType:nativeColor.type,dialogOpen:dialog.open,received};
   });
   expect(result).toMatchObject({fallback:'a',rounded:.3,controlled:[false,false,false],inputType:'color',dialogOpen:false});
+  expect(result.nativeInputType).toBe(result.nativeColorType); // Playwright WebKit on Windows natively falls back to text.
   expect(result.received.map(e=>e.type)).toEqual(['value-change','tab-change','value-change','value-change','checked-change','dialog-close']);
   for(const e of result.received)expect(e).toMatchObject({bubbles:true,composed:true});
   expect(result.received[0].detail).toEqual({value:'b',option:{value:'b',label:'B'}});
