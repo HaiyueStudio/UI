@@ -8,7 +8,8 @@ import {spawnSync} from 'node:child_process';
 import {rollup} from 'rollup';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 function run(args,cwd) {
-  const result=spawnSync(process.execPath,args,{cwd,encoding:'utf8',env:process.env});
+  // A parent `npm publish --dry-run` must not turn this nested fixture pack into a no-write dry run.
+  const result=spawnSync(process.execPath,args,{cwd,encoding:'utf8',env:{...process.env,npm_config_dry_run:'false'}});
   assert.equal(result.status,0,result.error?.message||result.stderr||result.stdout);return result.stdout;
 }
 test('Web adapter tarball has independent exports/types, no eager registration and only focused browser dependencies',async()=>{
