@@ -70,20 +70,20 @@ const text = { value: string, disabled: boolean, readOnly: boolean, placeholder:
 const schemas: Record<HYComponentKind, Check> = {
   Row: shape(common), Column: shape(common), Grid: shape(common), Overlay: shape(common),
   Scroll: shape({ ...common, axis: choice('horizontal', 'vertical') }, ['axis']),
-  Text: shape({ ...common, text: string, wrap: boolean }, ['text']),
+  Text: shape({ ...common, text: string, wrap: boolean, textStyle: choice('title','body','caption'), tone: choice('default','muted','danger') }, ['text']),
   Image: shape({ ...common, resource, fit: choice('contain','cover') }, ['resource']),
   Icon: shape({ ...common, resource, systemName: name }, ['resource']),
-  Button: shape({ ...common, text: string, disabled: boolean, busy: boolean }, ['text']),
+  Button: shape({ ...common, text: string, disabled: boolean, busy: boolean, icon: choice('save','export','play','pause','reset','step','settings','back','chevronDown','check','close','add'), variant: choice('primary','secondary','quiet','danger'), size: choice('regular','compact') }, ['text']),
   Checkbox: shape({ ...common, checked: boolean, disabled: boolean, text: string }, ['checked','text']),
   RadioGroup: shape({ ...common, ...selection }, ['value','options']),
   Rate: shape({ ...common, value: integer, count: check(v => Number.isInteger(v) && (v as number) >= 1 && (v as number) <= 10, 'Expected count 1–10'), disabled: boolean, readOnly: boolean }, ['value','count']),
   Badge: shape({ ...common, text: string }, ['text']), Divider: shape({ ...common, text: string }),
   Toggle: shape({ ...common, checked: boolean, disabled: boolean }, ['checked']),
-  Select: shape({ ...common, ...selection }, ['value','options']), Tabs: shape({ ...common, ...selection }, ['value','options']),
+  Select: shape({ ...common, ...selection, presentation: choice('auto','popover','sheet') }, ['value','options']), Tabs: shape({ ...common, ...selection, variant: choice('underline','segmented') }, ['value','options']),
   TextInput: shape({ ...common, ...text, secure: boolean }, ['value']), TextArea: shape({ ...common, ...text }, ['value']),
   Slider: shape({ ...common, value: number, min: number, max: number, step: positive, disabled: boolean }, ['value','min','max','step']),
   Dialog: shape({ ...common, open: boolean, title: string, dismissible: boolean }, ['open','title']),
-  FormGroup: shape({ ...common, label: string, error: string }, ['label']),
+  FormGroup: shape({ ...common, label: string, description: string, error: string }, ['label']),
   PlatformView: shape({ ...common, slot: name, resourceId: name }, ['slot','resourceId']),
 };
 export const HY_COMPONENTS: readonly HYComponentKind[] = Object.freeze(Object.keys(schemas) as HYComponentKind[]);
@@ -120,6 +120,7 @@ export function hyValidateProps<K extends HYComponentKind>(kind: K, props: HYCom
     if (new Set(p.options.map(o => o.value)).size !== p.options.length) fail('Duplicate option value', field(context, 'options'));
     if (!p.options.some(o => o.value === p.value)) fail('Unknown controlled value', field(context, 'value'));
   }
+  if (kind === 'Button') { const p = props as HYComponentProps['Button']; if (p.icon && !p.text.trim() && !p.a11y?.label.trim()) fail('Icon-only button needs an accessible label', field(context, 'a11y.label')); }
   if (kind === 'Rate' && (props as HYComponentProps['Rate']).value > (props as HYComponentProps['Rate']).count) fail('Rating exceeds count', context);
   if (kind === 'Slider') {
     const p = props as HYComponentProps['Slider'];

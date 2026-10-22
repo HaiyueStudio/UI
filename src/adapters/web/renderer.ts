@@ -14,7 +14,7 @@ interface Entry {
   node: HYNode; readonly element: HTMLElement; parent: string|null|undefined; slot: string|undefined;
   control?: HYWebControl; readonly cleanup: Set<()=>void>; readonly slots: Map<string,HTMLElement>;
   platform?: HYPlatformViewController; platformMounted: boolean;
-  label?: HTMLElement; error?: HTMLElement; readonly id: string;
+  label?: HTMLElement; help?: HTMLElement; error?: HTMLElement; readonly id: string;
 }
 const tags: Record<string,string> = {Row:'div',Column:'div',Grid:'div',Overlay:'div',Scroll:'div',Text:'span',Image:'img',Icon:'img',TextArea:'textarea',FormGroup:'fieldset',PlatformView:'div',...componentTags};
 let rendererSequence=0;
@@ -128,8 +128,8 @@ export class HYWebRenderer implements HYRenderer {
       });
     }
     if(node.kind==='FormGroup'){
-      entry.label=document.createElement('legend');entry.error=document.createElement('span');entry.error.dataset.hyError='';
-      entry.label.id=`${entry.id}-label`;entry.error.id=`${entry.id}-error`;element.append(entry.label,entry.error);
+      entry.label=document.createElement('legend');entry.help=document.createElement('span');entry.help.dataset.hyHelp='';element.append(entry.help);entry.error=document.createElement('span');entry.error.dataset.hyError='';
+      entry.label.id=`${entry.id}-label`;entry.error.id=`${entry.id}-error`;element.prepend(entry.label);element.append(entry.error);
     }
     if(node.kind==='PlatformView'){
       const factory=this.options.platformViews?.[node.props.slot];
@@ -147,7 +147,7 @@ export class HYWebRenderer implements HYRenderer {
       applyLayout(element,node.props.layout,entry.parent?this.#nodes.get(entry.parent)?.node.kind==='Overlay':false);
     flag(element,'hidden',node.props.visible===false);
     entry.control?.update(node,revision);
-    if(node.kind==='Text'){if(element.textContent!==node.props.text)element.textContent=node.props.text;element.style.whiteSpace=node.props.wrap===false?'pre':'pre-wrap';}
+    if(node.kind==='Text'){attribute(element,'data-hy-text-style',node.props.textStyle??'body');attribute(element,'data-hy-tone',node.props.tone??'default');if(element.textContent!==node.props.text)element.textContent=node.props.text;element.style.whiteSpace=node.props.wrap===false?'pre':'pre-wrap';}
     if(node.kind==='Scroll'){
       element.style.overflowX=node.props.axis==='horizontal'?'auto':'hidden';element.style.overflowY=node.props.axis==='vertical'?'auto':'hidden';
       if(node.props.layout?.clip)element.style.overflow='hidden';element.tabIndex=0;
@@ -162,7 +162,7 @@ export class HYWebRenderer implements HYRenderer {
       image.alt=node.props.resource.alt;image.style.objectFit=node.kind==='Image'?(node.props.fit??'contain'):'contain';
     }
     if(node.kind==='FormGroup'){
-      entry.label!.textContent=node.props.label;entry.error!.textContent=node.props.error??'';entry.error!.hidden=!node.props.error;
+      entry.label!.textContent=node.props.label;entry.help!.textContent=node.props.description??'';entry.help!.hidden=!node.props.description;entry.error!.textContent=node.props.error??'';entry.error!.hidden=!node.props.error;
     }
     if(node.kind==='PlatformView')entry.platform!.update(node.props.resourceId);
     if(node.kind==='Tabs')for(const child of this.#nodes.values())if(child.parent===node.key)this.#container(entry,child.slot);
@@ -217,7 +217,7 @@ export class HYWebRenderer implements HYRenderer {
     while(group&&group.node.kind!=='FormGroup')group=group.parent?this.#nodes.get(group.parent):undefined;
     const groupProps=group?.node.kind==='FormGroup'?group.node.props:undefined;
     const label=node.props.a11y?.label??(entry.control||node.kind==='TextArea'?groupProps?.label:undefined);
-    const description=[node.props.a11y?.description,node.props.a11y?.error??groupProps?.error].filter(Boolean).join('. ');
+    const description=[node.props.a11y?.description,groupProps?.description,node.props.a11y?.error??groupProps?.error].filter(Boolean).join('. ');
     const a11y=label===undefined?undefined:{...node.props.a11y,label,...(groupProps?.error&&!node.props.a11y?.error?{error:groupProps.error}:{})};
     applyAccessibility(element,a11y);
     const targets=element instanceof HYTabs?[...element.shadowRoot!.querySelectorAll<HTMLElement>('[role=tablist],button')]

@@ -2161,6 +2161,10 @@
         "kind": "value"
       },
       {
+        "name": "HYButtonVariant",
+        "kind": "type"
+      },
+      {
         "name": "HYCancelSignal",
         "kind": "type"
       },
@@ -2194,6 +2198,10 @@
       },
       {
         "name": "HYFeature",
+        "kind": "type"
+      },
+      {
+        "name": "HYIconName",
         "kind": "type"
       },
       {
@@ -2293,6 +2301,10 @@
         "kind": "type"
       },
       {
+        "name": "HYTextStyle",
+        "kind": "type"
+      },
+      {
         "name": "HYTextView",
         "kind": "type"
       },
@@ -2307,6 +2319,10 @@
       {
         "name": "HYToggleController",
         "kind": "value"
+      },
+      {
+        "name": "HYTypography",
+        "kind": "type"
       },
       {
         "name": "HYUIError",
@@ -2331,12 +2347,20 @@
     ],
     "./portable": [
       {
+        "name": "HY_ICONS",
+        "kind": "value"
+      },
+      {
         "name": "HY_THEME_TOKENS",
         "kind": "value"
       },
       {
         "name": "HYBinding",
         "kind": "type"
+      },
+      {
+        "name": "hyIconSvg",
+        "kind": "value"
       },
       {
         "name": "hyNativeTheme",
@@ -2352,6 +2376,22 @@
       },
       {
         "name": "HYPageStatus",
+        "kind": "type"
+      },
+      {
+        "name": "hyResponsiveGrid",
+        "kind": "value"
+      },
+      {
+        "name": "HYResponsiveGridOptions",
+        "kind": "type"
+      },
+      {
+        "name": "hyResponsiveWorkspace",
+        "kind": "value"
+      },
+      {
+        "name": "HYResponsiveWorkspaceOptions",
         "kind": "type"
       },
       {

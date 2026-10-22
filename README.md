@@ -674,3 +674,21 @@ See [release review](review/release-0.1.2.md).
 Native 仓库的 `examples/ui-validation/mobile` 提供独立「Haiyue UI」组件实验室；折叠内容、步骤导航与按钮组是基础节点组合示例，不是新增协议节点。
 
 Web 的 `hy-badge` 新增可选 `literal` 属性（默认为 false）：启用后 `count` 按原始文字显示，保留 0、前导零和大数字。普通计数的隐藏零值、截断，以及 status/text 模式保持原行为；共享 Badge 适配显式启用此模式。
+
+The portable presentation contract adds optional semantic `Button.variant`
+(`primary`, `secondary`, `quiet`, `danger`), `size` and vector `icon` names;
+`Text.textStyle` (`title`, `body`, `caption`) and `tone`; `Tabs.variant`
+(`underline`, `segmented`); and native `Select.presentation`. Existing nodes stay
+valid. `HYTheme.typography` scales with fontScale, and optional selected, pressed,
+disabled, elevated and onAccent colors map to inherited `--hy-` properties.
+`HYIconName`, `HYButtonVariant`, `HYTextStyle` and `HYTypography` are explicitly
+exported from `@haiyue/ui/core`; `HY_ICONS` / `hyIconSvg` are explicitly exported
+from `@haiyue/ui/portable`, with no platform access or registration at import time.
+
+Portable forms accept optional `FormGroup.description`, rendered as visible helper
+text and included in associated controls' accessible descriptions. Updating help
+or validation errors preserves the existing input, selection and composition.
+`@haiyue/ui/portable` explicitly exports `hyResponsiveGrid`,
+`hyResponsiveWorkspace`, `HYResponsiveGridOptions` and
+`HYResponsiveWorkspaceOptions`. These return logical-pixel layout data without
+reading window or platform globals, so hosts can use actual split-window sizes.

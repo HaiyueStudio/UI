@@ -1,3 +1,4 @@
+import { hyIconSvg } from '../../portable/icons.js';
 import { HYButtonController, HYToggleController, HYSliderController } from '../../core/actions.js';
 import { HYSelectionController } from '../../core/selection.js';
 import { HYTextController } from '../../core/text.js';
@@ -25,6 +26,7 @@ export function definePortableWebComponents(): void {
 }
 export const componentTags = Object.freeze({ Checkbox:'hy-checkbox',RadioGroup:'div',Rate:'hy-rate',Badge:'hy-badge',Divider:'hy-divider',Button:'hy-button',Toggle:'hy-checkbox',Select:'hy-select',Tabs:'hy-tabs',TextInput:'hy-input',Slider:'hy-range',Dialog:'hy-dialog' });
 
+const selectionProps=({value,options,disabled}:HYSelectionProps):HYSelectionProps=>({value,options,...(disabled===undefined?{}:{disabled})});
 let radioGroupSequence=0;
 function toggleProps(node:Extract<HYNode,{kind:'Toggle'|'Checkbox'}>) { const {checked,disabled,visible}=node.props;return {checked,...(disabled===undefined?{}:{disabled}),...(visible===undefined?{}:{visible})}; }
 
@@ -35,13 +37,13 @@ export function createControl(node: HYNode, context: HYWebControlContext, revisi
   listen(host,'keydown',()=>{reason='keyboard';},true);
   if(node.kind==='Badge'||node.kind==='Divider')return {update(next){if(next.kind==='Badge'){flag(host,'literal',true);attribute(host,'count',next.props.text);};if(next.kind==='Divider')attribute(host,'label',next.props.text);},focus(){},dispose(){}};
   if(node.kind==='RadioGroup') {
-    const controller=new HYSelectionController(node.key,node.props,emit);
+    const controller=new HYSelectionController(node.key,selectionProps(node.props),emit);
     let props=node.props;
     const buttons=new Map<string,HTMLElement>(),groupName=`hy-portable-radio-${++radioGroupSequence}`;
     host.setAttribute('role','radiogroup');
     const render=()=>{for(const [value,button] of buttons){flag(button,'checked',props.value===value);flag(button,'disabled',!!props.disabled||!!props.options.find(o=>o.value===value)?.disabled);}};
     listen(host,'checked-change',event=>{const detail=(event as CustomEvent<{checked:boolean,value:string}>).detail;if(detail.checked)controller.choose(detail.value,reason);render();});
-    return {update(next){if(next.kind!=='RadioGroup')return;props=next.props;controller.update(props);
+    return {update(next){if(next.kind!=='RadioGroup')return;props=next.props;controller.update(selectionProps(props));
       for(const [value,button] of buttons)if(!props.options.some(o=>o.value===value)){button.remove();buttons.delete(value);}
       for(const option of props.options){let button=buttons.get(option.value);if(!button){button=document.createElement('hy-radio');buttons.set(option.value,button);}attribute(button,'value',option.value);attribute(button,'label',option.label);attribute(button,'name',groupName);host.append(button);}render();},
       focus(){focusable(host)[0]?.focus();},dispose(){controller.dispose();buttons.clear();}};
@@ -57,10 +59,14 @@ export function createControl(node: HYNode, context: HYWebControlContext, revisi
   if (node.kind === 'Button') {
     const button=host as HYButton;
     const label=document.createElement('span');label.dataset.hyButtonLabel='';button.append(label);
+    const icon=document.createElement('span');icon.slot='icon';icon.setAttribute('aria-hidden','true');let lastIcon:string|undefined;
     const controller=new HYButtonController(node.key,node.props,emit);
     listen(button,'click',()=>controller.activate(reason));
     return {
       update(next) { if(next.kind!=='Button')return;controller.update(next.props);if(label.textContent!==next.props.text)label.textContent=next.props.text;
+        attribute(button,'data-hy-variant',next.props.variant??'secondary');attribute(button,'data-hy-size',next.props.size??'regular');
+        if(lastIcon!==next.props.icon){icon.innerHTML=next.props.icon?hyIconSvg(next.props.icon):'';lastIcon=next.props.icon;}if(next.props.icon){if(!icon.parentNode)button.append(icon);}else icon.remove();
+        flag(button,'icon-only',!!next.props.icon&&!next.props.text);flag(button,'loading',!!next.props.busy);
         flag(button,'disabled',!!next.props.disabled||!!next.props.busy);attribute(button,'aria-busy',next.props.busy?'true':undefined); },
       focus(){button.shadowRoot!.querySelector('button')!.focus();},dispose(){controller.dispose();},
     };
@@ -78,7 +84,7 @@ export function createControl(node: HYNode, context: HYWebControlContext, revisi
   if (node.kind === 'Select' || node.kind === 'Tabs') {
     const select=host as HYSelect|HYTabs;
     if(select instanceof HYTabs)select.controlled=true;
-    const controller=new HYSelectionController(node.key,node.props,emit);
+    const controller=new HYSelectionController(node.key,selectionProps(node.props),emit);
     let previous: HYSelectionProps|undefined;
     controller.attach({
       apply(props){
@@ -106,7 +112,7 @@ export function createControl(node: HYNode, context: HYWebControlContext, revisi
       const target=[...select.shadowRoot!.querySelectorAll<HTMLButtonElement>('button')].find(item=>item.dataset.value===select.value);
       target?.focus();
     },true);
-    return {update(next){if(next.kind==='Select'||next.kind==='Tabs')controller.update(next.props);},
+    return {update(next){if(next.kind==='Select'||next.kind==='Tabs'){if(next.kind==='Tabs')attribute(host,'data-hy-variant',next.props.variant??'underline');controller.update(selectionProps(next.props));}},
       focus(){if(select instanceof HYSelect)select.shadowRoot!.querySelector('select')!.focus();else (select.shadowRoot!.querySelector<HTMLButtonElement>('button[tabindex="0"]')??select).focus();},
       dispose(){controller.dispose();}};
   }
