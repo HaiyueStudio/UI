@@ -28,14 +28,14 @@
 | API | 49 个代码入口符合本库基线 |
 | GitHub Pages | 7 个页面通过 |
 | npm 发布预演 | 已对实际候选 tarball 执行 `--dry-run`，通过，无上传 |
-| 包内容、体积与独立消费者 | 通过，148 个文件，压缩 218,891 B，展开 966,088 B |
+| 包内容、体积与独立消费者 | 通过，148 个文件，压缩 218,888 B，展开 966,088 B |
 | 独立 Button bundle | gzip 1,894 B，上限 5,000 B |
 
 首次完整检查发现本机缺少 WebKit，已安装项目指定版本；发现二维码用法示例中的 `/brand.svg` 占位引用导致 Pages 校验失败，已改为内联 SVG 插槽示例。
 
 候选文件：`.artifacts/packages/haiyue-ui-0.2.2.tgz`。
 
-SHA-256：`eee9c6d1ab1e069c98162fa0518ed01d1617e014718d731eacf22a1944d5995a`。
+SHA-256：`09a7251bb51012435b50e5993fb8e5c731a960b020ea9af2296a6907984aaa9d`。
 
 机器可读包检查：`.artifacts/package-check.json`。完整发布检查日志：`.artifacts/release-0.3.0-check.log`。
 新增 Web Components 的交互检查覆盖 Chromium；Chromium/WebKit 双引擎检查覆盖 Web 适配器，不代表所有组件均完成双引擎验收。
