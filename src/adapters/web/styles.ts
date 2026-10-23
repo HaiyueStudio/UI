@@ -31,7 +31,7 @@ export const rootCSS = `
 @media(prefers-reduced-motion:reduce) { [data-hy-portable-root] { --hy-portable-transition:none; } }
 `;
 export const componentCSS = `
-:host { --hy-input-font:var(--hy-font-size,14px)/var(--hy-line-height,22px) system-ui,sans-serif; font:inherit;
+:host { --hy-input-font:var(--hy-font-size,14px)/var(--hy-line-height,22px) system-ui,sans-serif; --hy-input-radius:var(--hy-radius,8px); font:inherit;
  --hy-panel-bg-color:var(--hy-surface-color,#171d28);
  --hy-menu-bg-color:var(--hy-surface-color,#171d28); --hy-dialog-bg-color:var(--hy-surface-color,#171d28);
  --hy-dialog-body-color:var(--hy-text-color,#d8e2f2); --hy-dialog-footer-bg-color:var(--hy-surface-color,#171d28);
@@ -48,7 +48,7 @@ button, input, select { font:inherit; min-height:2em; border-radius:var(--hy-rad
 :host(hy-select) .wrap, :host(hy-input) .control { width:100%; min-height:inherit; height:100%; box-sizing:border-box; }
 :host(hy-input) input { min-height:0; }
 select { height:auto; padding-block:4px; }
-input { height:var(--hy-input-height,auto); padding-block:4px; }
+:host(hy-input) input { height:auto; align-self:stretch; padding-block:0; border-radius:0; outline:none; }
 .box, .box::after, .handle { transition:var(--hy-portable-transition,background .12s ease); }
 :host(hy-checkbox) { width:auto; }
 :host(hy-checkbox) label, :host(hy-checkbox) .label { white-space:normal; }
@@ -77,6 +77,6 @@ input { height:var(--hy-input-height,auto); padding-block:4px; }
 :host(hy-tabs[data-hy-variant=segmented]) .tabs { padding:4px; gap:4px; border-radius:var(--hy-radius,8px); background:var(--hy-input-bg-color); }
 :host(hy-tabs[data-hy-variant=segmented]) button { border:0; border-radius:var(--hy-radius,8px); }
 :host(hy-tabs[data-hy-variant=segmented]) button[aria-selected=true] { background:var(--hy-selected-bg-color,var(--hy-accent-color)); }
-button:focus-visible, select:focus-visible, input:focus-visible { outline:2px solid var(--hy-focus-ring-color,#8177f2); outline-offset:1px; }
+button:focus-visible, select:focus-visible { outline:2px solid var(--hy-focus-ring-color,#8177f2); outline-offset:1px; }
 [aria-invalid=true] { border-color:var(--hy-invalid-border-color,#d65c7c); }
 `;

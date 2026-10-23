@@ -19,3 +19,10 @@ test('state colors and typography scale consistently without mutating the input'
 test('vector button icons are shared numeric geometry and generate decorative SVG',()=>{
  for(const name of Object.keys(HY_ICONS)){assert.match(hyIconSvg(name),/aria-hidden="true"/);for(const path of HY_ICONS[name])for(const point of path)assert.ok(point.every(n=>Number.isFinite(n)&&n>=0&&n<=24));}
 });
+test('settings gear and center hole keep rotational symmetry in the shared square viewport',()=>{
+ for(const path of HY_ICONS.settings){
+  assert.deepEqual(path[0],path.at(-1));
+  const xs=path.map(p=>p[0]),ys=path.map(p=>p[1]);assert.ok(Math.abs((Math.max(...xs)-Math.min(...xs))-(Math.max(...ys)-Math.min(...ys)))<0.002);
+  for(const [x,y] of path){const a=Math.PI/4,rx=12+(x-12)*Math.cos(a)-(y-12)*Math.sin(a),ry=12+(x-12)*Math.sin(a)+(y-12)*Math.cos(a);assert.ok(path.some(([px,py])=>Math.hypot(px-rx,py-ry)<0.002),'gear must be symmetric at every eighth turn');}
+ }
+});
