@@ -48,6 +48,168 @@ defineHaiyueUI();
 Because `defineHaiyueUI()` references the complete component set, prefer focused subpaths in bundle-sensitive
 product entry points.
 
+## Modal
+
+Import `defineModalComponents` from `@haiyue/ui/modal` and register once. `HYModal` is also exported by the root
+and included in `defineHaiyueUI()`. It provides default confirmation/cancel actions around a native modal
+`<dialog>`, with top-layer rendering, background inertness, focus containment and return focus through shadow roots.
+The existing Dialog entry remains available for surfaces with application-supplied footer actions.
+
+```html
+<hy-modal id="publish" heading="Publish project" width="560" ok-text="Publish">
+  <p>Review the project before publishing.</p>
+</hy-modal>
+```
+
+Call `showModal()` / `close(reason?)`, or set the reflected boolean `open` property/attribute.
+`heading` defaults to “Modal”; the `heading` slot overrides its content and the default slot supplies the body.
+`width` defaults to 520 CSS pixels (240–2000), constrained to the viewport. `centered`, `closable`,
+`mask-closable` / `maskClosable`, `keyboard` (Escape), and `show-footer` / `showFooter` all default to true;
+set their attributes to `"false"` or properties to false to disable them independently.
+`ok-text` / `okText` and `cancel-text` / `cancelText` default to “OK” and “Cancel”.
+Use the `footer` slot for application-owned custom actions, replacing both default buttons.
+
+Bubbling/composed events are `modal-open`, `modal-ok`, `modal-cancel` and `modal-close`.
+The cancelable `modal-ok` and `modal-cancel` events carry `{ reason }`. Preventing either event keeps the modal open.
+Close reasons are `ok`, `cancel`, `close-button`, `mask`, `escape` and `programmatic`; `close(reason)` also accepts
+an application-specific string. `modal-close` fires once after an actual close, with `{ reason }`.
+With `controlled`, default user actions only emit requests; the application updates `open` or calls `close()`.
+
+```js
+publish.addEventListener('modal-ok', async event => {
+  event.preventDefault();
+  publish.confirmLoading = true;
+  try {
+    await saveProject();
+    publish.close('ok');
+  } finally {
+    publish.confirmLoading = false;
+  }
+});
+publish.showModal();
+```
+
+`confirm-loading` / `confirmLoading` disables the default actions and user dismissal, shows a spinner and marks the
+surface busy; application `close()` remains available. `confirm-disabled` / `confirmDisabled` only disables confirmation.
+`destroy-on-hidden` / `destroyOnHidden` unmounts light DOM content while closed, retaining the same nodes, values and
+listeners for reopening. It defaults to false. Disconnecting removes modality and scroll locks without emitting a
+close event; a retained `open` attribute reopens on reconnection. Nested modals retain scroll locking until the last closes.
+
+Style parts `panel`, `header`, `heading`, `body`, `footer`, `actions`, `ok-button`, `cancel-button`,
+`close-button`, `spinner`. Tokens include `--hy-modal-width`, `--hy-modal-radius`, `--hy-modal-body-padding`,
+`--hy-modal-duration`, `--hy-modal-bg-color`, `--hy-modal-mask-color`, `--hy-modal-mask-blur`, `--hy-modal-shadow-color`,
+`--hy-modal-footer-bg-color` and `--hy-modal-button-radius`; colors inherit semantic theme tokens. Reduced-motion
+preferences suppress the entrance and spinner animations. No sibling component import or automatic registration is needed.
+
+## QR Code
+
+Import `defineQRCodeComponents` from `@haiyue/ui/qr-code` and call it once. The root registration path also includes
+`<hy-qr-code>`. Values are encoded locally into SVG; no runtime dependency or remote QR generation service is used.
+
+```html
+<hy-qr-code value="https://haiyuestudio.github.io/UI/" size="220"
+  icon="/brand.svg" icon-size="32" icon-margin="2" aria-label="Open Haiyue UI"></hy-qr-code>
+
+<hy-qr-code value="https://haiyuestudio.github.io/UI/">
+  <img slot="icon" src="/brand.svg" alt="" />
+</hy-qr-code>
+```
+
+Set `value` to a URL or text (including UTF-8/Chinese/emoji). `size` defaults to 200 CSS pixels (64–2048).
+`margin` is the quiet zone in modules (default/minimum 4, maximum 16).
+`error-correction-level` / `errorCorrectionLevel` accepts `L`, `M`, `Q`, or `H`. Without an explicit level,
+it defaults to `H` with an icon and `M` otherwise. An explicit level applies with or without an icon.
+An `icon` image URL or content in the `icon` slot adds a center icon; the slot takes precedence over the URL.
+`icon-size` / `iconSize` requests the content size in pixels (default 32), while `icon-margin` / `iconMargin`
+sets its backing padding (default 2). The complete overlay is capped at 20% of the QR matrix width, including padding,
+and scales with responsive sizing. Icon content is decorative and inert. A failed image leaves the plain QR visible.
+
+`color` and `background-color` / `backgroundColor` customize the QR colors. The inherited tokens
+`--hy-qr-code-color` and `--hy-qr-code-background-color` default to dark modules on white for both themes.
+Other styling hooks are `--hy-qr-code-icon-radius`, `--hy-qr-code-radius` and parts `frame`, `code`,
+`background`, `modules`, `icon`, `icon-image`, `message`. Keep sufficient contrast and verify your final payload,
+size, colors and icon with the intended scanner; arbitrary custom styling can affect readability.
+
+The read-only `status` is `empty`, `ready`, or `error`. Empty values and over-capacity payloads clear the previous code.
+Bubbling, composed events are `qr-render` with `{ value, version, moduleCount, errorCorrectionLevel }` after encoding,
+`qr-error` with `{ message }` on encoding failure, and `qr-icon-error` with `{ src }` on image failure.
+SVG is decorative beneath a labelled image role; set `aria-label` to describe the QR's purpose.
+
+The internal encoder is vendored from [Project Nayuki](https://www.nayuki.io/page/qr-code-generator-library),
+upstream Git blob `c4191ac0b5f8a24d87fd9340ceaa2d3b07d0231a`, with its MIT notice retained in source and `LICENSE`.
+Local edits only add an ES module export, strict indexed-access assertions and formatting. Independent decoding tests
+use `jsqr` as a development-only dependency. Internal encoder symbols are excluded from the public component API.
+
+## Carousel
+
+`@haiyue/ui/carousel` exports `HYCarousel`, `defineCarouselComponents()` and the associated `HYCarousel*` types.
+Registration is explicit; panels are HTML elements in the default slot and stay mounted between changes.
+
+```html
+<hy-carousel direction="horizontal" indicator-style="line" indicator-position="bottom"
+  autoplay interval="4000" draggable="true" loop="true" aria-label="Featured projects">
+  <article>First panel</article>
+  <article>Second panel</article>
+  <article>Third panel</article>
+</hy-carousel>
+```
+
+| Attribute / property | Default | Behavior |
+| --- | --- | --- |
+| `index` | `0` | Active panel, zero based |
+| `direction` | `horizontal` | `horizontal` or `vertical`; horizontal supports RTL |
+| `indicator-style` / `indicatorStyle` | `dot` | `dot`, `line`, `number` |
+| `indicator-position` / `indicatorPosition` | `bottom` | `top`, `right`, `bottom`, `left` |
+| `show-indicators` / `showIndicators` | `true` | Set `false` to hide indicators |
+| `show-arrows` / `showArrows` | `true` | Set `false` to hide previous/next buttons |
+| `autoplay` | `false` | Opt-in automatic rotation with a pause/start button |
+| `interval` | `3000` | Milliseconds, normalized to 100–86,400,000 |
+| `draggable` | `true` | Mouse/touch swipe; set `false` to disable |
+| `loop` | `true` | Wrap at the ends; `false` clamps and stops autoplay at the last panel |
+
+Use `next()`, `previous()`, `goTo(index)`, `play()` and `pause()` for imperative control.
+The bubbling, composed `change` event includes `{ index, previousIndex, source }`, with sources
+`api`, `indicator`, `arrow`, `keyboard`, `drag`, `autoplay` and `content`.
+Inactive panels are inert and hidden from assistive technology. Arrow keys (matching direction), Home and End
+navigate the focused viewport or indicators; input fields keep their editing keys. Hover temporarily pauses rotation;
+keyboard focus pauses until explicitly resumed. Reduced-motion preferences suppress transitions and initial automatic
+rotation; `play()` permits explicit rotation. Disconnecting releases timers, pointer listeners and animations and restores panel attributes/styles.
+
+Customize `::part(indicators)`, `::part(indicator)`, `::part(indicator-active)`, `::part(indicator-content)`,
+`::part(previous)`, `::part(next)`, `::part(playback)` and `::part(viewport)`.
+Tokens include `--hy-carousel-height` (240px), `--hy-carousel-duration` (320ms), `--hy-carousel-indicator-size`,
+`--hy-carousel-indicator-gap`, `--hy-carousel-indicator-offset`, `--hy-carousel-indicator-radius`,
+`--hy-carousel-indicator-color` and `--hy-carousel-indicator-active-color`; other colors inherit semantic theme tokens.
+For arbitrary content, set `indicatorRenderer = (index, active) => Node | string | null` (strings are plain text).
+The component retains the native accessible indicator buttons and click/keyboard behavior around your content.
+Panels should not override the component's positioning, dimensions, visibility or transform.
+
+## Masonry layout
+
+Import `defineMasonryComponents` from `@haiyue/ui/masonry` and call it once to register `<hy-masonry>`.
+Place HTML elements of varying heights in the default slot:
+
+```html
+<hy-masonry min-column-width="240" gap="16" aria-label="Project gallery">
+  <article>First card…</article>
+  <article>Another card with more content…</article>
+  <article><img src="preview.jpg" alt="Project preview" style="width: 100%" /></article>
+</hy-masonry>
+```
+
+`columns` defaults to `0` (automatic); positive values request a fixed number of columns.
+`min-column-width` (default `240`) controls automatic sizing; `gap` (default `16`) sets both gaps in CSS pixels.
+Columns shrink to fit narrow containers. Each item goes into the shortest column, starting at the inline start,
+including RTL layouts. DOM, screen-reader and keyboard order remain the original slot order.
+Items keep their own content, theme and semantics; the component supplies positioning, border-box width and zero outer margins.
+Use padding inside cards and avoid overriding item positioning/width. Text nodes and named slots are not layout items.
+
+Container resizing, item resizing (including image loads), adding/removing items and toggling `hidden` automatically
+schedule a layout. Call `refresh()` after changes outside those observations (for example, a stylesheet rule that
+reveals a previously hidden item). `layout-change` bubbles across shadow roots with `{ columns, itemCount, height }`
+after geometry changes; `itemCount` excludes hidden items. Style the transparent container with `::part(layout)`.
+Observers and queued frames are released on disconnect, and internal item CSS properties are restored.
+
 ## Tag and toast
 
 Tags provide compact semantic labels with optional checked and close interactions. Toasts are an imperative,
@@ -116,7 +278,7 @@ button, or the application calls `search()`. Its detail contains `{ value, valid
 available. Style the `control`, `input`, `prefix`, `suffix`, and `search-button` parts or the
 `--hy-input-affix-*` and `--hy-input-search-*` tokens.
 
-## Portable component semantics (M24 G03/G05, unreleased)
+## Portable component semantics (M24 G03/G05)
 
 `@haiyue/ui/core` provides platform-independent component types, validation, selection/input/action
 controllers and the `PlatformView` lifetime contract. `@haiyue/ui/portable` provides `HYPage`, selector
@@ -150,7 +312,7 @@ elements. It introduces no runtime package dependencies or automatic registratio
 [Web adapter guide](docs/web-adapter.md) and [interactive example](examples/portable-ui/index.html).
 Run `npm run test:web-adapter` for Chromium/WebKit regression coverage.
 
-These APIs are under development and have not been published. Mobile mapping is G06, desktop mapping
+These APIs are included in the package and remain under development. Mobile mapping is G06, desktop mapping
 G08, and ShaderLab shared-page migration G07. Existing Web component APIs below remain independent. See the
 [portable UI guide](docs/portable-ui.md) and [typed composition example](test/portable/fixtures/settings-page.ts).
 Run `npm run verify:portable` for semantics, no-DOM types, and an isolated offline tarball consumer.
@@ -305,6 +467,24 @@ group to one. Configure `iconPosition`, `collapsible`, `bordered`, `ghost`, and 
 `toggle(key, expanded?)` for imperative control. Each header is a native keyboard-accessible button connected
 to a labelled region, and user changes emit the composed `collapse-change` event with the active keys and
 changed panel. The component exposes structural shadow parts from `collapse` and `panel` through `body`.
+
+Enable `animated` / `animated = true` for smooth opening and closing. Animation is off by default;
+initial rendering stays immediate. Set `animation-duration` / `animationDuration` in milliseconds
+(default 200, range 0–10,000); zero disables animation. Without the attribute, the inherited
+`--hy-collapse-animation-duration` token (for example `250ms`) supplies the duration.
+`--hy-collapse-animation-easing` customizes the easing (default `ease`).
+
+```html
+<hy-collapse animated animation-duration="250" destroy-on-hidden></hy-collapse>
+```
+
+Rapid toggles reverse from the current height, and content resizing during expansion updates the target height.
+Closed panels become inert and hidden from assistive technology immediately; focus returns to their header
+when needed. With `destroyOnHidden`, content is removed after the closing animation finishes.
+Disabling animation, setting duration to zero, or enabling reduced-motion preferences settles immediately.
+Animations and content observers are released on disconnect. The existing `collapse-change` event still fires
+when the expanded state changes, rather than waiting for animation completion. These options extend `HYCollapse`;
+no new package exports or registration functions are required.
 
 ## Affix
 
@@ -655,7 +835,7 @@ npm run release:check
 ```
 
 Candidates: `.artifacts/packages/`. Review API changes before `npm run api:update`.
-See [release review](review/release-0.1.2.md).
+See [release review](review/release-0.2.2.md).
 
 ### 共享组件目录（开发中）
 

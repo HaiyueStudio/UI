@@ -42,6 +42,10 @@
       "types": "./dist/collapse.d.ts",
       "import": "./dist/collapse.js"
     },
+    "./carousel": {
+      "types": "./dist/carousel.d.ts",
+      "import": "./dist/carousel.js"
+    },
     "./cascader": {
       "types": "./dist/cascader.d.ts",
       "import": "./dist/cascader.js"
@@ -110,6 +114,10 @@
       "types": "./dist/table.d.ts",
       "import": "./dist/table.js"
     },
+    "./qr-code": {
+      "types": "./dist/qr-code.d.ts",
+      "import": "./dist/qr-code.js"
+    },
     "./radio": {
       "types": "./dist/radio.d.ts",
       "import": "./dist/radio.js"
@@ -133,6 +141,14 @@
     "./skeleton": {
       "types": "./dist/skeleton.d.ts",
       "import": "./dist/skeleton.js"
+    },
+    "./modal": {
+      "types": "./dist/modal.d.ts",
+      "import": "./dist/modal.js"
+    },
+    "./masonry": {
+      "types": "./dist/masonry.d.ts",
+      "import": "./dist/masonry.js"
     },
     "./split": {
       "types": "./dist/split.d.ts",
@@ -217,6 +233,10 @@
         "kind": "value"
       },
       {
+        "name": "defineCarouselComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineCascaderComponents",
         "kind": "value"
       },
@@ -273,7 +293,19 @@
         "kind": "value"
       },
       {
+        "name": "defineMasonryComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineModalComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineNotificationComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineQRCodeComponents",
         "kind": "value"
       },
       {
@@ -426,6 +458,34 @@
       },
       {
         "name": "HYButtonIconPosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarousel",
+        "kind": "value"
+      },
+      {
+        "name": "HYCarouselChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselChangeSource",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselIndicatorPosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselIndicatorRenderer",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselIndicatorStyle",
         "kind": "type"
       },
       {
@@ -645,6 +705,30 @@
         "kind": "type"
       },
       {
+        "name": "HYMasonry",
+        "kind": "value"
+      },
+      {
+        "name": "HYMasonryLayoutChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYModal",
+        "kind": "value"
+      },
+      {
+        "name": "HYModalActionDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYModalCloseDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYModalCloseReason",
+        "kind": "type"
+      },
+      {
         "name": "HYNotification",
         "kind": "value"
       },
@@ -674,6 +758,30 @@
       },
       {
         "name": "HYNotificationType",
+        "kind": "type"
+      },
+      {
+        "name": "HYQRCode",
+        "kind": "value"
+      },
+      {
+        "name": "HYQRCodeErrorCorrectionLevel",
+        "kind": "type"
+      },
+      {
+        "name": "HYQRCodeErrorDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYQRCodeIconErrorDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYQRCodeRenderDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYQRCodeStatus",
         "kind": "type"
       },
       {
@@ -1295,6 +1403,40 @@
         "kind": "type"
       }
     ],
+    "./carousel": [
+      {
+        "name": "defineCarouselComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYCarousel",
+        "kind": "value"
+      },
+      {
+        "name": "HYCarouselChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselChangeSource",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselIndicatorPosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselIndicatorRenderer",
+        "kind": "type"
+      },
+      {
+        "name": "HYCarouselIndicatorStyle",
+        "kind": "type"
+      }
+    ],
     "./cascader": [
       {
         "name": "defineCascaderComponents",
@@ -1785,6 +1927,36 @@
         "kind": "type"
       }
     ],
+    "./qr-code": [
+      {
+        "name": "defineQRCodeComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYQRCode",
+        "kind": "value"
+      },
+      {
+        "name": "HYQRCodeErrorCorrectionLevel",
+        "kind": "type"
+      },
+      {
+        "name": "HYQRCodeErrorDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYQRCodeIconErrorDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYQRCodeRenderDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYQRCodeStatus",
+        "kind": "type"
+      }
+    ],
     "./radio": [
       {
         "name": "defineRadioComponents",
@@ -1910,6 +2082,42 @@
       },
       {
         "name": "HYSkeletonSize",
+        "kind": "type"
+      }
+    ],
+    "./modal": [
+      {
+        "name": "defineModalComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYModal",
+        "kind": "value"
+      },
+      {
+        "name": "HYModalActionDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYModalCloseDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYModalCloseReason",
+        "kind": "type"
+      }
+    ],
+    "./masonry": [
+      {
+        "name": "defineMasonryComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYMasonry",
+        "kind": "value"
+      },
+      {
+        "name": "HYMasonryLayoutChangeDetail",
         "kind": "type"
       }
     ],

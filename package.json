@@ -1,6 +1,6 @@
 {
   "name": "@haiyue/ui",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": false,
   "description": "Dependency-free Web Components for HaiyueStudio tools and products.",
   "license": "MIT",
@@ -56,6 +56,10 @@
     "./collapse": {
       "types": "./dist/collapse.d.ts",
       "import": "./dist/collapse.js"
+    },
+    "./carousel": {
+      "types": "./dist/carousel.d.ts",
+      "import": "./dist/carousel.js"
     },
     "./cascader": {
       "types": "./dist/cascader.d.ts",
@@ -125,6 +129,10 @@
       "types": "./dist/table.d.ts",
       "import": "./dist/table.js"
     },
+    "./qr-code": {
+      "types": "./dist/qr-code.d.ts",
+      "import": "./dist/qr-code.js"
+    },
     "./radio": {
       "types": "./dist/radio.d.ts",
       "import": "./dist/radio.js"
@@ -148,6 +156,14 @@
     "./skeleton": {
       "types": "./dist/skeleton.d.ts",
       "import": "./dist/skeleton.js"
+    },
+    "./modal": {
+      "types": "./dist/modal.d.ts",
+      "import": "./dist/modal.js"
+    },
+    "./masonry": {
+      "types": "./dist/masonry.d.ts",
+      "import": "./dist/masonry.js"
     },
     "./split": {
       "types": "./dist/split.d.ts",
@@ -244,6 +260,7 @@
     "@playwright/test": "^1.63.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "codemirror": "^6.0.2",
+    "jsqr": "1.4.0",
     "rollup": "^4.63.4",
     "typescript": "^5.2.0"
   }

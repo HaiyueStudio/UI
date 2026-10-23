@@ -3,21 +3,21 @@
   "package": {
     "workspace": ".",
     "nodeImport": false,
-    "maxPackedBytes": 180012,
-    "maxUnpackedBytes": 810444,
-    "maxFileCount": 138,
+    "maxPackedBytes": 221654,
+    "maxUnpackedBytes": 977495,
+    "maxFileCount": 152,
     "capacity": {
       "reviewed": {
-        "packedBytes": 177012,
-        "unpackedBytes": 798444,
-        "fileCount": 134
+        "packedBytes": 218654,
+        "unpackedBytes": 965495,
+        "fileCount": 148
       },
       "growthReserve": {
         "packedBytes": 3000,
         "unpackedBytes": 12000,
         "fileCount": 4
       },
-      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths and a self-hosting examples shell with adjustable Split layouts and bundled CodeMirror highlighting, including icon/loading buttons and button groups, semantic/checkable/closable tags, lightweight typed toast feedback, eight-handle constrained resize frames, affixed/searchable/password inputs, draggable containers, virtual mouse, QWERTY/numeric virtual keyboard modes, local-data table, breadcrumb navigation, hierarchical cascader selection, date/time pickers, loading skeletons, text/image watermarks, timelines, half-step ratings, count/status badges, accessible collapse panels, styled text dividers, horizontal/vertical progress steps, viewport affixing, and guided spotlight tours; M24 G03 adds independent DOM-free core/portable entries (12 implementation modules, JS and declarations), preserving existing Web entry isolation; M24 G05 adds focused Web adapter (6 modules, JS and declarations), retaining old subpath isolation and zero runtime dependencies"
+      "capabilityBasis": "dependency-free Web Components root registration plus focused component subpaths and a self-hosting examples shell with adjustable Split layouts and bundled CodeMirror highlighting, including icon/loading buttons and button groups, semantic/checkable/closable tags, lightweight typed toast feedback, eight-handle constrained resize frames, affixed/searchable/password inputs, draggable containers, virtual mouse, QWERTY/numeric virtual keyboard modes, local-data table, breadcrumb navigation, hierarchical cascader selection, date/time pickers, loading skeletons, text/image watermarks, timelines, half-step ratings, count/status badges, accessible collapse panels, styled text dividers, horizontal/vertical progress steps, viewport affixing, and guided spotlight tours; M24 G03 adds independent DOM-free core/portable entries (12 implementation modules, JS and declarations), preserving existing Web entry isolation; M24 G05 adds focused Web adapter (6 modules, JS and declarations), retaining old subpath isolation and zero runtime dependencies; UI component additions include responsive shortest-column Masonry, configurable Carousel with custom indicators and mouse/touch navigation, opt-in reversible Collapse height animations, and locally generated SVG QR codes with bounded center icons and an attributed vendored MIT encoder; decoder is development-only; Modal adds an isolated native modal entry with default/cancelable actions, async confirmation, controlled state, custom heading/footer slots, shadow-aware focus wrapping/return focus, nested scroll locking and retained hidden-content unmounting"
     },
     "sideEffects": [
       "./themes/*.css"

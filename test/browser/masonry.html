@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body { margin: 0; }
+    hy-masonry { width: 620px; }
+    article { background: #def; padding: 10px; border: 2px solid #abc; }
+  </style>
+</head>
+<body>
+  <hy-masonry id="masonry" min-column-width="180" gap="10" aria-label="Test gallery">
+    <article id="a" style="height: 100px"><button>A</button></article>
+    <article id="b" style="height: 200px"><button>B</button></article>
+    <article id="c" style="height: 80px"><button>C</button></article>
+    <article id="d" style="height: 120px"><button>D</button></article>
+    <article id="e" style="height: 60px"><button>E</button></article>
+  </hy-masonry>
+  <script type="module">
+    import { defineMasonryComponents } from '../../dist/masonry.js';
+    window.wasRegisteredOnImport = Boolean(customElements.get('hy-masonry'));
+    defineMasonryComponents();
+    defineMasonryComponents();
+    window.layouts = [];
+    document.addEventListener('layout-change', event => window.layouts.push(event.detail));
+  </script>
+</body>
+</html>
