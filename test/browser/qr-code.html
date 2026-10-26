@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><style>body { margin: 24px; } .brand { background: #554cc6; color: white; font: bold 12px/1 system-ui; text-align: center; }</style></head>
+<body>
+  <hy-qr-code id="qr" value="https://haiyuestudio.github.io/UI/" size="240" aria-label="Open Haiyue UI"></hy-qr-code>
+  <script type="module">
+    import { defineQRCodeComponents } from '../../dist/qr-code.js';
+    window.registeredOnImport = Boolean(customElements.get('hy-qr-code'));
+    window.qrEvents = [];
+    for (const name of ['qr-render', 'qr-error', 'qr-icon-error']) document.addEventListener(name, event => window.qrEvents.push({ type: name, detail: event.detail }));
+    defineQRCodeComponents(); defineQRCodeComponents();
+  </script>
+</body>
+</html>

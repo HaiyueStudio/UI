@@ -44,7 +44,7 @@ test('Web adapter tarball has independent exports/types, no eager registration a
     const bundle=await rollup({input:resolve(installed,'dist/adapters/web/index.js'),onwarn:warning=>{throw new Error(warning.message);}});
     try{
       const dist=realpathSync(resolve(installed,'dist')),modules=bundle.cache.modules.map(m=>relative(dist,realpathSync(m.id)).split(sep).join('/'));
-      const focused=new Set(['radio.js','rate.js','badge.js','divider.js','button.js','checkbox.js','select.js','tabs.js','input.js','range.js','dialog.js','portable/theme.js']);
+      const focused=new Set(['radio.js','rate.js','badge.js','divider.js','button.js','checkbox.js','select.js','tabs.js','input.js','range.js','dialog.js','portable/theme.js','portable/icons.js']);
       assert.ok(modules.every(path=>path.startsWith('core/')||path.startsWith('adapters/web/')||focused.has(path)),modules.join('\n'));
       assert.equal(modules.includes('index.js'),false);
     }finally{await bundle.close();}

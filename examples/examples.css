@@ -584,3 +584,48 @@ html[data-hy-theme="light"] .command-backdrop { background: rgba(70, 100, 120, 0
   html { scroll-behavior: auto; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
+
+.masonry-card { min-height: 520px; }
+.masonry-card > .controls { align-items: stretch; justify-content: flex-start; }
+.masonry-card > .controls label, .masonry-card > .controls output { flex: 0 0 auto; }
+.masonry-stage { display: block; padding: 20px; max-height: 520px; overflow: auto; }
+.masonry-stage hy-masonry { width: 100%; }
+.masonry-tile { padding: 16px; border: 1px solid var(--hy-border-color); border-radius: 12px; background: var(--hy-surface-color); color: var(--hy-text-color); }
+.masonry-tile span { color: var(--hy-secondary-text-color); font: 10px/1.6 ui-monospace, monospace; }
+.masonry-tile h3 { margin: 10px 0 6px; font-size: 17px; line-height: 1.25; }
+.masonry-tile p { margin: 0; font-size: 12px; line-height: 1.8; color: var(--hy-secondary-text-color); }
+.masonry-art { display: grid; place-items: center; height: 110px; margin-top: 12px; border-radius: 8px; background: color-mix(in srgb, var(--hy-accent-color) 16%, var(--hy-surface-color)); color: var(--hy-accent-color); font-size: 64px; }
+.masonry-art.short { height: 70px; }
+.masonry-tile:nth-child(3n) .masonry-art { background: color-mix(in srgb, var(--hy-accent-color) 8%, var(--hy-surface-color)); }
+
+.carousel-card { min-height: 490px; }
+.carousel-card > .controls { align-items: stretch; justify-content: flex-start; gap: 12px; }
+.carousel-card > .controls label, .carousel-card > .controls output { flex: 0 0 auto; }
+.carousel-stage { display: flex; align-items: center; padding: 20px; }
+.carousel-stage hy-carousel { --hy-carousel-height: 350px; width: 100%; }
+.carousel-panel { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 36px 48px; text-align: center; color: var(--hy-text-color); background: color-mix(in srgb, var(--hy-accent-color) 10%, var(--hy-surface-color)); }
+.carousel-panel:nth-child(2) { background: color-mix(in srgb, var(--hy-accent-color) 22%, var(--hy-surface-color)); }
+.carousel-panel:nth-child(3) { background: var(--hy-surface-elevated-color); }
+.carousel-panel small { font: 10px ui-monospace, monospace; letter-spacing: .14em; color: var(--hy-secondary-text-color); }
+.carousel-panel > div { font-size: 74px; line-height: 1; color: var(--hy-accent-color); }
+.carousel-panel h3 { margin: 0; font: 28px/1.15 Georgia, serif; }
+.carousel-panel p { margin: 0; font-size: 12px; line-height: 1.7; color: var(--hy-secondary-text-color); }
+
+.qr-code-card { min-height: 650px; }
+.qr-code-card > .controls { align-items: stretch; justify-content: flex-start; gap: 12px; }
+.qr-code-card > .controls label, .qr-code-card > .controls output { flex: 0 0 auto; }
+.qr-code-stage { padding: 24px; }
+
+.modal-card { min-height: 440px; }
+.modal-card > .controls { align-items: stretch; justify-content: flex-start; gap: 14px; }
+.modal-card > .controls label, .modal-card > .controls output { flex: 0 0 auto; }
+.modal-stage { padding: 28px; }
+.modal-intro { max-width: 260px; text-align: center; }
+.modal-intro > span { display: block; color: var(--hy-accent-color); font-size: 64px; line-height: 1; }
+.modal-intro h3 { margin: 20px 0 12px; color: var(--hy-text-color); font: 28px/1.2 Georgia, serif; }
+.modal-intro p { margin: 0 0 20px; color: var(--hy-secondary-text-color); font-size: 12px; line-height: 1.8; }
+.modal-form { display: grid; gap: 16px; }
+.modal-form p { margin: 0; }
+.modal-form label { display: grid; gap: 7px; font-size: 12px; }
+.modal-form input, .modal-form textarea { box-sizing: border-box; width: 100%; border: 1px solid var(--hy-border-color); border-radius: 6px; padding: 9px 10px; background: var(--hy-input-bg-color); color: var(--hy-text-color); font: inherit; }
+.modal-form input:focus, .modal-form textarea:focus { outline: 1px solid var(--hy-focus-border-color); }

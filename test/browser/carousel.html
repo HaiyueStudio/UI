@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body { margin: 20px; font: 14px system-ui; }
+    hy-carousel { width: 400px; --hy-carousel-height: 240px; --hy-carousel-duration: 0ms; --hy-text-color: #123; --hy-surface-color: #def; }
+    article { background: #def; padding: 20px; }
+    .drag-surface { height: 150px; text-align: center; }
+    #b { background: #fed; }
+    #c { background: #dfe; }
+  </style>
+</head>
+<body>
+  <hy-carousel id="carousel" aria-label="Featured projects">
+    <article id="a" aria-label="Alpha"><div class="drag-surface">First panel</div><button id="action">Panel action</button><input aria-label="Caption" /></article>
+    <article id="b"><div class="drag-surface">Second panel</div><button id="second-action">Second action</button></article>
+    <article id="c"><div class="drag-surface">Third panel</div><button>Third action</button></article>
+  </hy-carousel>
+  <button id="outside">Outside</button>
+  <script type="module">
+    import { defineCarouselComponents } from '../../dist/carousel.js';
+    window.registeredOnImport = Boolean(customElements.get('hy-carousel'));
+    defineCarouselComponents(); defineCarouselComponents();
+    window.changes = [];
+    document.addEventListener('change', event => {
+      if (event.target === document.querySelector('#carousel')) window.changes.push(event.detail);
+    });
+  </script>
+</body>
+</html>

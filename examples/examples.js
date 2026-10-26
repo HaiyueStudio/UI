@@ -79,6 +79,85 @@ responsiveCardSplit.addEventListener('change', syncCardSplits);
 syncCardSplits();
 installCodeEditors();
 
+// Modal.
+const modalLive = byId('modal-live');
+let modalConfirmTimer = 0;
+byId('modal-open').addEventListener('click', () => modalLive.showModal());
+byId('modal-heading').addEventListener('input', event => { modalLive.heading = event.target.value; });
+byId('modal-width').addEventListener('input', event => { modalLive.width = Number(event.target.value); });
+for (const [control, property] of [['centered', 'centered'], ['closable', 'closable'], ['mask', 'maskClosable'], ['keyboard', 'keyboard'], ['footer', 'showFooter'], ['destroy', 'destroyOnHidden']]) {
+  byId('modal-' + control).addEventListener('change', event => { modalLive[property] = event.target.checked; });
+}
+modalLive.addEventListener('modal-ok', event => {
+  if (!byId('modal-async').checked) return;
+  event.preventDefault(); modalLive.confirmLoading = true;
+  modalConfirmTimer = window.setTimeout(() => { modalConfirmTimer = 0; modalLive.confirmLoading = false; modalLive.close('ok'); }, 900);
+});
+for (const name of ['modal-open', 'modal-ok', 'modal-cancel', 'modal-close']) modalLive.addEventListener(name, event => {
+  if (name === 'modal-close') { window.clearTimeout(modalConfirmTimer); modalConfirmTimer = 0; modalLive.confirmLoading = false; }
+  writeEvent(byId('modal-event'), name, event.detail);
+});
+
+// QR Code.
+const qrCodeLive = byId('qr-code-live');
+const qrCodeSlotIcon = qrCodeLive.querySelector('[slot="icon"]');
+const qrCodeImage = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" rx="8" fill="#554cc6"/><path d="M10 10v20m20-20v20M10 20h20" fill="none" stroke="white" stroke-width="4"/></svg>');
+byId('qr-code-icon-url').value = qrCodeImage;
+const syncQRCodeIcon = () => {
+  const mode = byId('qr-code-icon-mode').value;
+  if (mode === 'slot') { qrCodeLive.icon = ''; if (!qrCodeSlotIcon.isConnected) qrCodeLive.append(qrCodeSlotIcon); }
+  else { qrCodeSlotIcon.remove(); qrCodeLive.icon = mode === 'image' ? byId('qr-code-icon-url').value : ''; }
+  byId('qr-code-level').value = qrCodeLive.errorCorrectionLevel;
+  byId('qr-code-icon-url').disabled = mode !== 'image';
+};
+byId('qr-code-value').addEventListener('input', event => { qrCodeLive.value = event.target.value; });
+byId('qr-code-size').addEventListener('input', event => { qrCodeLive.size = Number(event.target.value); });
+byId('qr-code-icon-mode').addEventListener('change', syncQRCodeIcon);
+byId('qr-code-icon-url').addEventListener('change', syncQRCodeIcon);
+byId('qr-code-icon-size').addEventListener('input', event => { qrCodeLive.iconSize = Number(event.target.value); });
+byId('qr-code-icon-margin').addEventListener('input', event => { qrCodeLive.iconMargin = Number(event.target.value); });
+byId('qr-code-level').addEventListener('change', event => { qrCodeLive.errorCorrectionLevel = event.target.value; });
+byId('qr-code-color').addEventListener('input', event => { qrCodeLive.color = event.target.value; });
+for (const name of ['qr-render', 'qr-error', 'qr-icon-error']) qrCodeLive.addEventListener(name, event => writeEvent(byId('qr-code-event'), name, event.detail));
+syncQRCodeIcon();
+
+// Carousel.
+const carouselLive = byId('carousel-live');
+byId('carousel-direction').addEventListener('change', event => { carouselLive.direction = event.target.value; });
+byId('carousel-style').addEventListener('change', event => {
+  carouselLive.indicatorStyle = event.target.value === 'custom' ? 'dot' : event.target.value;
+  carouselLive.indicatorRenderer = event.target.value === 'custom' ? (index, active) => {
+    const label = document.createElement('span'); label.className = 'carousel-custom-indicator'; label.textContent = String(index + 1).padStart(2, '0');
+    label.style.cssText = 'padding:3px 8px;border-radius:4px;border:1px solid currentColor;font:11px ui-monospace,monospace;opacity:' + (active ? '1' : '.45');
+    return label;
+  } : null;
+});
+byId('carousel-position').addEventListener('change', event => { carouselLive.indicatorPosition = event.target.value; });
+byId('carousel-interval').addEventListener('change', event => { carouselLive.interval = Number(event.target.value); });
+for (const property of ['autoplay', 'draggable', 'loop']) byId('carousel-' + property).addEventListener('change', event => { carouselLive[property] = event.target.checked; });
+byId('carousel-previous').addEventListener('click', () => carouselLive.previous());
+byId('carousel-next').addEventListener('click', () => carouselLive.next());
+carouselLive.addEventListener('change', event => writeEvent(byId('carousel-event'), 'change', event.detail));
+
+// Masonry.
+const masonryLive = byId('masonry-live');
+byId('masonry-columns').addEventListener('change', event => { masonryLive.columns = Number(event.target.value); });
+byId('masonry-min-width').addEventListener('input', event => { masonryLive.minColumnWidth = Number(event.target.value); });
+byId('masonry-gap').addEventListener('input', event => { masonryLive.gap = Number(event.target.value); });
+let masonrySequence = masonryLive.children.length;
+byId('masonry-add').addEventListener('click', () => {
+  const card = document.createElement('article');
+  card.className = 'masonry-tile';
+  const title = document.createElement('h3');
+  title.textContent = 'New idea ' + ++masonrySequence;
+  const description = document.createElement('p');
+  description.textContent = masonrySequence % 2 ? '一张新的灵感卡片。' : '记录一个更完整的想法，让不同高度的卡片自动填补列中的空间。';
+  card.append(title, description);
+  masonryLive.append(card);
+});
+byId('masonry-remove').addEventListener('click', () => masonryLive.lastElementChild?.remove());
+masonryLive.addEventListener('layout-change', event => writeEvent(byId('masonry-event'), 'layout-change', event.detail));
+
 // Theme preview. Theme styles are independent package exports and flow into component shadow roots via tokens.
 const themeButtons = [...document.querySelectorAll('.theme-picker hy-button')];
 function setTheme(theme) {
@@ -489,6 +568,8 @@ byId('collapse-accordion').addEventListener('change', event => { collapseLive.ac
 byId('collapse-bordered').addEventListener('change', event => { collapseLive.bordered = event.target.checked; });
 byId('collapse-ghost').addEventListener('change', event => { collapseLive.ghost = event.target.checked; });
 byId('collapse-destroy').addEventListener('change', event => { collapseLive.destroyOnHidden = event.target.checked; });
+byId('collapse-animated').addEventListener('change', event => { collapseLive.animated = event.target.checked; });
+byId('collapse-animation-duration').addEventListener('change', event => { collapseLive.animationDuration = Number(event.target.value); });
 collapseLive.addEventListener('collapse-change', event => { byId('collapse-state').textContent = `active · ${event.detail.activeKeys.join(', ') || 'none'}`; });
 
 // Tabs.

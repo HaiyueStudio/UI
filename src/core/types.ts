@@ -36,28 +36,32 @@ export interface HYAccessibility {
   readonly label: string; readonly description?: string; readonly error?: string;
   readonly role?: 'button' | 'text' | 'textbox' | 'checkbox' | 'tab' | 'dialog' | 'image' | 'slider' | 'list' | 'tree';
 }
+export type HYIconName = 'save' | 'export' | 'play' | 'pause' | 'reset' | 'step' | 'settings' | 'back' | 'chevronDown' | 'check' | 'close' | 'add';
+export type HYButtonVariant = 'primary' | 'secondary' | 'quiet' | 'danger';
+export type HYTextStyle = 'title' | 'body' | 'caption';
+export interface HYTypography { readonly fontSize: number; readonly lineHeight: number; readonly weight?: 'normal' | 'medium' | 'bold'; }
 export interface HYCommonProps { readonly layout?: HYLayout; readonly a11y?: HYAccessibility; readonly visible?: boolean; }
 export interface HYTextProps { readonly value: string; readonly disabled?: boolean; readonly readOnly?: boolean; readonly placeholder?: string; readonly secure?: boolean; }
 export interface HYResource { readonly id: string; readonly alt: string; }
 export interface HYComponentProps {
   Row: HYCommonProps; Column: HYCommonProps; Grid: HYCommonProps; Overlay: HYCommonProps;
   Scroll: HYCommonProps & { readonly axis: 'horizontal' | 'vertical' };
-  Text: HYCommonProps & { readonly text: string; readonly wrap?: boolean };
+  Text: HYCommonProps & { readonly text: string; readonly wrap?: boolean; readonly textStyle?: HYTextStyle; readonly tone?: 'default' | 'muted' | 'danger' };
   Image: HYCommonProps & { readonly resource: HYResource; readonly fit?: 'contain' | 'cover' };
   Icon: HYCommonProps & { readonly resource: HYResource; readonly systemName?: string };
-  Button: HYCommonProps & { readonly text: string; readonly disabled?: boolean; readonly busy?: boolean };
+  Button: HYCommonProps & { readonly text: string; readonly disabled?: boolean; readonly busy?: boolean; readonly icon?: HYIconName; readonly variant?: HYButtonVariant; readonly size?: 'regular' | 'compact' };
   Checkbox: HYCommonProps & { readonly checked: boolean; readonly disabled?: boolean; readonly text: string };
   RadioGroup: HYCommonProps & HYSelectionProps;
   Rate: HYCommonProps & { readonly value: number; readonly count: number; readonly disabled?: boolean; readonly readOnly?: boolean };
   Badge: HYCommonProps & { readonly text: string };
   Divider: HYCommonProps & { readonly text?: string };
   Toggle: HYCommonProps & { readonly checked: boolean; readonly disabled?: boolean };
-  Select: HYCommonProps & HYSelectionProps; Tabs: HYCommonProps & HYSelectionProps;
+  Select: HYCommonProps & HYSelectionProps & { readonly presentation?: 'auto' | 'popover' | 'sheet' }; Tabs: HYCommonProps & HYSelectionProps & { readonly variant?: 'underline' | 'segmented' };
   TextInput: HYCommonProps & HYTextProps;
   TextArea: HYCommonProps & Omit<HYTextProps, 'secure'>;
   Slider: HYCommonProps & { readonly value: number; readonly min: number; readonly max: number; readonly step: number; readonly disabled?: boolean };
   Dialog: HYCommonProps & { readonly open: boolean; readonly title: string; readonly dismissible?: boolean };
-  FormGroup: HYCommonProps & { readonly label: string; readonly error?: string };
+  FormGroup: HYCommonProps & { readonly label: string; readonly description?: string; readonly error?: string };
   PlatformView: HYCommonProps & { readonly slot: string; readonly resourceId: string };
 }
 export type HYComponentKind = keyof HYComponentProps;
@@ -96,8 +100,9 @@ export interface HYPlatformView {
   visible(value: boolean): void; focus(): void; dispose(): void;
 }
 export interface HYTheme {
-  readonly color: Readonly<Record<'text' | 'muted' | 'surface' | 'input' | 'accent' | 'danger' | 'border' | 'focus', string>>;
+  readonly color: Readonly<Record<'text' | 'muted' | 'surface' | 'input' | 'accent' | 'danger' | 'border' | 'focus', string> & Partial<Record<'selected' | 'pressed' | 'disabled' | 'elevated' | 'onAccent', string>>>;
   readonly fontSize: number; readonly lineHeight: number; readonly gap: number; readonly radius: number;
+  readonly typography?: Readonly<Partial<Record<HYTextStyle, HYTypography>>>;
 }
 
 export interface HYSourceLocation { readonly file: string; readonly line?: number; }

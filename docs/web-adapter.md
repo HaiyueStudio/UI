@@ -1,6 +1,6 @@
 # WebComponent 适配器（M24 G05）
 
-当前为未发布的开发能力，沿用 `haiyue-portable-ui/1.1`。`@haiyue/ui/adapters/web` 是只供浏览器装配的独立入口；`core` / `portable` 仍不需要 DOM、NativeScript 或 Engine。应用状态、业务操作和共享页面不引用 HTMLElement。
+该能力已包含在 npm 包中，仍处于开发阶段，沿用 `haiyue-portable-ui/1.1`。`@haiyue/ui/adapters/web` 是只供浏览器装配的独立入口；`core` / `portable` 仍不需要 DOM、NativeScript 或 Engine。应用状态、业务操作和共享页面不引用 HTMLElement。
 
 ## 最小接入
 
