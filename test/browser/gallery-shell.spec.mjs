@@ -55,3 +55,20 @@ test('usage blocks are rendered by read-only CodeMirror with syntax highlighting
   await expect(usage.locator('.cm-content')).toHaveAttribute('contenteditable', 'false');
   expect(await usage.locator('.cm-line span').count()).toBeGreaterThan(0);
 });
+
+test('Dropdown example renders a visible slotted trigger and opens its menu', async ({ page }) => {
+  await page.goto('/examples/#dropdown');
+  const dropdown = page.locator('#dropdown-live');
+  const trigger = dropdown.locator('[slot="trigger"]');
+
+  const triggerBox = await trigger.boundingBox();
+  const dropdownBox = await dropdown.boundingBox();
+  expect(triggerBox?.width).toBeGreaterThan(0);
+  expect(triggerBox?.height).toBeGreaterThan(0);
+  expect(dropdownBox?.width).toBeGreaterThan(0);
+  expect(dropdownBox?.height).toBeGreaterThan(0);
+
+  await trigger.click();
+  await expect(dropdown).toHaveAttribute('open', '');
+  await expect(dropdown.locator('.menu')).toBeVisible();
+});

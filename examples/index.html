@@ -550,7 +550,7 @@ breadcrumb.separator = '›';</code></pre></details>
     <section class="component-section" id="dropdown" data-title="Dropdown">
       <div class="section-heading"><div><span class="index">07</span><h2>Dropdown</h2><code>&lt;hy-dropdown&gt;</code></div><p>带触发器插槽的动作菜单，支持四种对齐方向、分隔线和禁用项。</p></div>
       <div class="demo-card two-column overflow-visible">
-        <div class="preview centered overflow-visible"><hy-dropdown id="dropdown-live" placement="bottom-start"><hy-button class="native-trigger" label="Export ⌄"></hy-button></hy-dropdown></div>
+        <div class="preview centered overflow-visible"><hy-dropdown id="dropdown-live" placement="bottom-start"><hy-button slot="trigger" class="native-trigger" label="Export ⌄"></hy-button></hy-dropdown></div>
         <div class="controls stacked"><label>placement<select id="dropdown-placement"><option>bottom-start</option><option>bottom-end</option><option>top-start</option><option>top-end</option></select></label><label class="toggle"><input id="dropdown-disabled" type="checkbox" /><span></span>disabled</label><output id="dropdown-event">打开菜单并选择格式</output></div>
       </div>
     </section>
