@@ -13,7 +13,7 @@ test('UI API gate works without Engine and rejects an unreviewed public export',
       mkdirSync(resolve(root, item, '..'), { recursive: true });
       cpSync(resolve(source, item), resolve(root, item), { recursive: true });
     }
-    symlinkSync(resolve(source, 'node_modules'), resolve(root, 'node_modules'), 'dir');
+    symlinkSync(resolve(source, 'node_modules'), resolve(root, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
     const run = () => spawnSync(process.execPath, ['scripts/api-surface.mjs', '--check'], { cwd: root, encoding: 'utf8' });
     let result = run();
     assert.equal(result.status, 0, result.stderr);
