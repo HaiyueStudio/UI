@@ -30,6 +30,7 @@
     </label>
     <nav id="component-nav">
       <p class="nav-label">基础</p>
+      <a href="#alert" data-name="alert message feedback 警告 提示 反馈"><span>Alert</span><code>hy-alert</code></a>
       <a href="#badge" data-name="badge count dot status 徽标 数量 状态"><span>Badge</span><code>hy-badge</code></a>
       <a href="#button" data-name="button 按钮"><span>Button</span><code>hy-button</code></a>
       <a href="#button-group" data-name="button group 按钮组"><span>Button Group</span><code>hy-button-group</code></a>
@@ -43,6 +44,7 @@
       <a href="#tag" data-name="tag label close check 标签 可关闭 可选中"><span>Tag</span><code>hy-tag</code></a>
       <p class="nav-label">选择与反馈</p>
       <a href="#affix" data-name="affix sticky 固钉 吸附 固定"><span>Affix</span><code>hy-affix</code></a>
+      <a href="#anchor" data-name="anchor navigation scroll 锚点 导航 滚动"><span>Anchor</span><code>hy-anchor</code></a>
       <a href="#border-beam" data-name="border beam 边框 流光 特效"><span>Border Beam</span><code>hy-border-beam</code></a>
       <a href="#breadcrumb" data-name="breadcrumb 面包屑 导航 路径"><span>Breadcrumb</span><code>hy-breadcrumb</code></a>
       <a href="#carousel" data-name="carousel slider slideshow 轮播 走马灯 面板 自动 拖拽"><span>Carousel</span><code>hy-carousel</code></a>
@@ -57,6 +59,7 @@
       <a href="#modal" data-name="modal confirm 弹窗 模态 确认 对话框"><span>Modal</span><code>hy-modal</code></a>
       <a href="#notification" data-name="notification 通知 提醒"><span>Notification</span><code>hy-notification</code></a>
       <a href="#select" data-name="select 选择器"><span>Select</span><code>hy-select</code></a>
+      <a href="#segmented" data-name="segmented switch 分段 单选 切换"><span>Segmented</span><code>hy-segmented</code></a>
       <a href="#skeleton" data-name="skeleton loading 骨架屏 加载 占位"><span>Skeleton</span><code>hy-skeleton</code></a>
       <a href="#steps" data-name="steps stepper 步骤条 流程 横向 纵向"><span>Steps</span><code>hy-steps</code></a>
       <a href="#tabs" data-name="tabs 标签页"><span>Tabs</span><code>hy-tabs</code></a>
@@ -78,7 +81,7 @@
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><hy-badge status="success" text="45 components"></hy-badge><span>·</span><span>v0.2.0</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="48 components"></hy-badge><span>·</span><span>v0.2.2</span></div>
   </aside>
 
   <main id="content" slot="second">
@@ -87,9 +90,34 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>45</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>48</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
+
+    <section class="component-section" id="alert" data-title="Alert">
+      <div class="section-heading"><div><h2>Alert</h2><code>&lt;hy-alert&gt;</code></div><p>展示需要关注的静态反馈；支持四种语义状态、图标、描述、操作区和可取消的关闭行为。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview alert-stage">
+          <hy-alert id="alert-live" type="info" message="Build is ready for review" description="Open the preview and verify lighting before publishing." show-icon closable><hy-button slot="action" label="Review"></hy-button></hy-alert>
+          <hy-alert type="success" message="All assets synchronized" show-icon></hy-alert>
+          <hy-alert type="warning" message="Texture budget is nearly full" show-icon></hy-alert>
+          <hy-alert type="error" message="The latest export failed" show-icon></hy-alert>
+        </div>
+        <div class="controls stacked">
+          <label>type<select id="alert-type"><option>success</option><option selected>info</option><option>warning</option><option>error</option></select></label>
+          <label>message<input id="alert-message" value="Build is ready for review" /></label>
+          <div class="toggle-row"><label class="toggle"><input id="alert-icon" type="checkbox" checked /><span></span>show icon</label><label class="toggle"><input id="alert-closable" type="checkbox" checked /><span></span>closable</label><label class="toggle"><input id="alert-banner" type="checkbox" /><span></span>banner</label></div>
+          <hy-button id="alert-reset" label="Show again" icon="↺"></hy-button>
+          <output id="alert-event">关闭事件可以被取消</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-alert type="success" show-icon closable
+  message="Export complete"
+  description="The package is ready to download."&gt;
+  &lt;hy-button slot="action" label="Open"&gt;&lt;/hy-button&gt;
+&lt;/hy-alert&gt;</code></pre></details>
+      <div class="parameter-strip"><code>type</code><code>message</code><code>description</code><code>show-icon</code><code>closable</code><code>close-text</code><code>banner</code><code>icon slot</code><code>action slot</code><code>close()</code><code>alert-close</code></div>
+    </section>
 
     <section class="component-section" id="badge" data-title="Badge">
       <div class="section-heading"><div><h2>Badge</h2><code>&lt;hy-badge&gt;</code></div><p>在内容角落展示数量或圆点提醒，也可独立表达成功、处理中、警告和错误状态。</p></div>
@@ -380,6 +408,39 @@ affix.addEventListener('affix-change', event =&gt; console.log(event.detail.affi
       <div class="parameter-strip"><code>offset-top</code><code>offset-bottom</code><code>target</code><code>disabled</code><code>z-index</code><code>affixed</code><code>refresh()</code><code>affix-change</code></div>
     </section>
 
+    <section class="component-section" id="anchor" data-title="Anchor">
+      <div class="section-heading"><div><h2>Anchor</h2><code>&lt;hy-anchor&gt;</code></div><p>在页面或自定义滚动容器中快速定位内容，并随滚动同步当前锚点。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview anchor-stage" id="anchor-stage">
+          <hy-anchor id="anchor-live" active-href="#anchor-overview" offset-top="12" bounds="8" aria-label="Example sections"></hy-anchor>
+          <div class="anchor-scroll" id="anchor-scroll" tabindex="0">
+            <article id="anchor-overview"><small>01</small><h3>Overview</h3><p>Review the scene summary and active camera.</p></article>
+            <article id="anchor-assets"><small>02</small><h3>Assets</h3><p>Inspect materials, meshes, and texture budgets.</p></article>
+            <article id="anchor-lighting"><small>03</small><h3>Lighting</h3><p>Tune key lights and the world environment.</p></article>
+            <article id="anchor-publish"><small>04</small><h3>Publish</h3><p>Validate and create a shareable build.</p></article>
+          </div>
+        </div>
+        <div class="controls stacked">
+          <label>direction<select id="anchor-direction"><option selected>vertical</option><option>horizontal</option></select></label>
+          <label>offset top <span id="anchor-offset-value">12 px</span><input id="anchor-offset" type="range" min="0" max="48" value="12" /></label>
+          <label class="toggle"><input id="anchor-smooth" type="checkbox" checked /><span></span>smooth</label>
+          <hy-button id="anchor-publish-button" label="Go to Publish"></hy-button>
+          <output id="anchor-event">active · #anchor-overview</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineAnchorComponents } from '@haiyue/ui/anchor';
+
+defineAnchorComponents();
+anchor.items = [
+  { title: 'Overview', href: '#overview' },
+  { title: 'Assets', href: '#assets', children: [
+    { title: 'Textures', href: '#textures' }
+  ] }
+];
+anchor.scrollContainer = document.querySelector('.scroll-panel');</code></pre></details>
+      <div class="parameter-strip"><code>items</code><code>active-href</code><code>offset-top</code><code>bounds</code><code>direction</code><code>smooth</code><code>scrollContainer</code><code>scrollToAnchor()</code><code>anchor-click</code><code>anchor-change</code></div>
+    </section>
+
     <section class="component-section" id="border-beam" data-title="Border Beam">
       <div class="section-heading"><div><span class="index">13</span><h2>Border Beam</h2><code>&lt;hy-border-beam&gt;</code></div><p>沿实时圆角边框运行的流光效果；可调整粗细、速度、颜色和均匀错相的流光数量。</p></div>
       <div class="demo-card two-column">
@@ -643,6 +704,28 @@ center.success({
         <div class="preview narrow"><hy-select id="select-live" label="Render quality" searchable value="high"></hy-select></div>
         <div class="controls stacked"><label>value<select id="select-value"><option value="low">Low</option><option value="medium">Medium</option><option value="high" selected>High</option><option value="ultra">Ultra</option></select></label><div class="toggle-row"><label class="toggle"><input id="select-searchable" type="checkbox" checked /><span></span>searchable</label><label class="toggle"><input id="select-disabled" type="checkbox" /><span></span>disabled</label></div><output id="select-event">选择渲染质量</output></div>
       </div>
+    </section>
+
+    <section class="component-section" id="segmented" data-title="Segmented">
+      <div class="section-heading"><div><h2>Segmented</h2><code>&lt;hy-segmented&gt;</code></div><p>在少量互斥选项间快速切换；支持图标、三种尺寸、整行布局、禁用项和方向键操作。</p></div>
+      <div class="demo-card two-column">
+        <div class="preview centered segmented-stage"><hy-segmented id="segmented-live" value="preview" aria-label="Editor mode"></hy-segmented></div>
+        <div class="controls stacked">
+          <label>size<select id="segmented-size"><option>small</option><option selected>medium</option><option>large</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="segmented-block" type="checkbox" /><span></span>block</label><label class="toggle"><input id="segmented-disabled" type="checkbox" /><span></span>disabled</label></div>
+          <hy-button id="segmented-next" label="Select Code"></hy-button>
+          <output id="segmented-event">value · preview</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看用法 <span>JavaScript</span></summary><pre><code>import { defineSegmentedComponents } from '@haiyue/ui/segmented';
+
+defineSegmentedComponents();
+segmented.options = [
+  { label: 'Preview', value: 'preview', icon: '◉' },
+  { label: 'Code', value: 'code', icon: '&lt;/&gt;' },
+  { label: 'Deploy', value: 'deploy', disabled: true }
+];</code></pre></details>
+      <div class="parameter-strip"><code>options</code><code>value</code><code>size</code><code>block</code><code>disabled</code><code>select()</code><code>value-change</code></div>
     </section>
 
     <section class="component-section" id="skeleton" data-title="Skeleton">

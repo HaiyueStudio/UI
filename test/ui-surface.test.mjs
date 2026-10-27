@@ -8,6 +8,8 @@ test('UI root keeps the supported component surface importable', async () => {
   const ui = await import('../dist/index.js');
   const expected = [
     'HYAffix',
+    'HYAlert',
+    'HYAnchor',
     'HYBadge',
     'HYTag',
     'HYExpandable',
@@ -39,6 +41,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYRange',
     'HYResizable',
     'HYSelect',
+    'HYSegmented',
     'HYSkeleton',
     'HYSplit',
     'HYSteps',
@@ -60,6 +63,8 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineButtonComponents',
     'defineButtonGroupComponents',
     'defineAffixComponents',
+    'defineAlertComponents',
+    'defineAnchorComponents',
     'defineBadgeComponents',
     'defineTagComponents',
     'defineBorderBeamComponents',
@@ -88,6 +93,7 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineRangeComponents',
     'defineResizableComponents',
     'defineSelectComponents',
+    'defineSegmentedComponents',
     'defineSkeletonComponents',
     'defineSplitComponents',
     'defineStepsComponents',
@@ -117,6 +123,40 @@ test('button exposes a themeable native surface and forwards pressed state for g
   assert.match(source, /get iconPosition\(\): HYButtonIconPosition/);
   assert.match(source, /this\._spinner\.part\.add\('spinner'\)/);
   assert.match(source, /this\._button\.disabled = this\.hasAttribute\('disabled'\) \|\| loading/);
+});
+
+test('alert exposes semantic variants, slots, and cancelable dismissal', () => {
+  const source = readFileSync(new URL('../src/alert.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYAlert extends HTMLElement/);
+  assert.match(source, /'success' \| 'info' \| 'warning' \| 'error'/);
+  assert.match(source, /role', 'alert'/);
+  assert.match(source, /this\._actionSlot\.name = 'action'/);
+  assert.match(source, /CustomEvent<HYAlertCloseDetail>\('alert-close'.*cancelable: true/s);
+  assert.match(source, /customElements\.define\('hy-alert'/);
+});
+
+test('anchor owns scroll listeners, nested links, active tracking, and cancelable clicks', () => {
+  const source = readFileSync(new URL('../src/anchor.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYAnchor extends HTMLElement/);
+  assert.match(source, /get scrollContainer\(\): HTMLElement \| Window \| null/);
+  assert.match(source, /scrollToAnchor\(href: string\): boolean/);
+  assert.match(source, /this\._listeners\?\.abort\(\)/);
+  assert.match(source, /this\._programmaticHref/);
+  assert.match(source, /this\._scheduleScrollEnd\(\)/);
+  assert.match(source, /CustomEvent<HYAnchorClickDetail>\('anchor-click'.*cancelable: true/s);
+  assert.match(source, /CustomEvent<HYAnchorChangeDetail>\('anchor-change'/);
+  assert.match(source, /customElements\.define\('hy-anchor'/);
+});
+
+test('segmented provides an accessible radiogroup with disabled-option keyboard navigation', () => {
+  const source = readFileSync(new URL('../src/segmented.ts', import.meta.url), 'utf8');
+  assert.match(source, /export class HYSegmented extends HTMLElement/);
+  assert.match(source, /role', 'radiogroup'/);
+  assert.match(source, /role', 'radio'/);
+  assert.match(source, /HYSegmentedOption \| string \| number/);
+  assert.match(source, /'ArrowLeft'.*'ArrowRight'.*'ArrowUp'.*'ArrowDown'.*'Home'.*'End'/s);
+  assert.match(source, /CustomEvent<HYSegmentedChangeDetail>\('value-change'/);
+  assert.match(source, /customElements\.define\('hy-segmented'/);
 });
 
 test('button group joins buttons with accessible horizontal and vertical layouts', () => {

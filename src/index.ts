@@ -53,6 +53,9 @@ import { defineTourComponents } from './tour.js';
 import { defineBadgeComponents } from './badge.js';
 import { defineTagComponents } from './tag.js';
 import { defineCollapseComponents } from './collapse.js';
+import { defineAlertComponents } from './alert.js';
+import { defineAnchorComponents } from './anchor.js';
+import { defineSegmentedComponents } from './segmented.js';
 
 export {
   defineButtonComponents,
@@ -433,8 +436,16 @@ export type {
   HYTreeNodeData,
   HYTreeSelectionChangeDetail,
 } from './tree.js';
+export { defineAlertComponents, HYAlert } from './alert.js';
+export type { HYAlertCloseDetail, HYAlertType } from './alert.js';
+export { defineAnchorComponents, HYAnchor } from './anchor.js';
+export type { HYAnchorChangeDetail, HYAnchorClickDetail, HYAnchorDirection, HYAnchorItem } from './anchor.js';
+export { defineSegmentedComponents, HYSegmented } from './segmented.js';
+export type { HYSegmentedChangeDetail, HYSegmentedOption, HYSegmentedOptionInput, HYSegmentedSize } from './segmented.js';
 
 export function defineHaiyueUI(): void {
+  defineAlertComponents();
+  defineAnchorComponents();
   defineExpandableComponents();
   defineBorderBeamComponents();
   defineButtonComponents();
@@ -446,6 +457,7 @@ export function defineHaiyueUI(): void {
   defineQRCodeComponents();
   defineModalComponents();
   defineSelectComponents();
+  defineSegmentedComponents();
   defineTabsComponents();
   defineContextMenuComponents();
   defineDropdownComponents();

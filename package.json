@@ -21,6 +21,14 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./alert": {
+      "types": "./dist/alert.d.ts",
+      "import": "./dist/alert.js"
+    },
+    "./anchor": {
+      "types": "./dist/anchor.d.ts",
+      "import": "./dist/anchor.js"
+    },
     "./badge": {
       "types": "./dist/badge.d.ts",
       "import": "./dist/badge.js"
@@ -152,6 +160,10 @@
     "./select": {
       "types": "./dist/select.d.ts",
       "import": "./dist/select.js"
+    },
+    "./segmented": {
+      "types": "./dist/segmented.d.ts",
+      "import": "./dist/segmented.js"
     },
     "./skeleton": {
       "types": "./dist/skeleton.d.ts",

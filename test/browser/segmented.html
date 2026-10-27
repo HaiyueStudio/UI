@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><style>body { padding: 40px; background: #101620; }</style></head>
+<body>
+  <hy-segmented id="segmented" value="preview" aria-label="View mode"></hy-segmented>
+  <script type="module">
+    import { defineSegmentedComponents } from '../../dist/segmented.js';
+    defineSegmentedComponents();
+    segmented.options = [
+      { label: 'Preview', value: 'preview', icon: '◉' },
+      { label: 'Code', value: 'code' },
+      { label: 'Deploy', value: 'deploy', disabled: true },
+      { label: 'Compare', value: 'compare' },
+    ];
+  </script>
+</body>
+</html>

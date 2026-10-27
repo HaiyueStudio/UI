@@ -48,6 +48,27 @@ defineHaiyueUI();
 Because `defineHaiyueUI()` references the complete component set, prefer focused subpaths in bundle-sensitive
 product entry points.
 
+## Alert, Anchor, and Segmented
+
+The three components have isolated, side-effect-free entry points and are also included in the opt-in root registration:
+
+```ts
+import { defineAlertComponents } from '@haiyue/ui/alert';
+import { defineAnchorComponents } from '@haiyue/ui/anchor';
+import { defineSegmentedComponents } from '@haiyue/ui/segmented';
+
+defineAlertComponents();
+defineAnchorComponents();
+defineSegmentedComponents();
+```
+
+`<hy-alert>` supports `success`, `info`, `warning`, and `error`, optional built-in/custom icons, message and description
+content, an `action` slot, banner presentation, and cancelable `alert-close` dismissal. `<hy-anchor>` accepts nested
+`items`, tracks `active-href` against the viewport or an assigned `scrollContainer`, and exposes offsets, vertical or
+horizontal layout, smooth scrolling, `scrollToAnchor()`, and composed click/change events. `<hy-segmented>` accepts
+string or object options, uses an accessible radiogroup with roving focus, skips disabled choices during arrow-key
+navigation, and supports three sizes, full-width layout, icons, group disable, `select()`, and `value-change`.
+
 ## Modal
 
 Import `defineModalComponents` from `@haiyue/ui/modal` and register once. `HYModal` is also exported by the root

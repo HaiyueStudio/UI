@@ -286,6 +286,16 @@ byId('button-group-orientation').addEventListener('change', event => {
   byId('button-group-event').textContent = `${buttonGroupLive.orientation} · 3 buttons`;
 });
 
+// Alert.
+const alertLive = byId('alert-live');
+byId('alert-type').addEventListener('change', event => { alertLive.type = event.target.value; });
+byId('alert-message').addEventListener('input', event => { alertLive.message = event.target.value; });
+byId('alert-icon').addEventListener('change', event => { alertLive.showIcon = event.target.checked; });
+byId('alert-closable').addEventListener('change', event => { alertLive.closable = event.target.checked; });
+byId('alert-banner').addEventListener('change', event => { alertLive.banner = event.target.checked; });
+byId('alert-reset').addEventListener('click', () => { alertLive.hidden = false; });
+alertLive.addEventListener('alert-close', event => writeEvent(byId('alert-event'), 'alert-close', event.detail));
+
 // Badge.
 const badgeLive = byId('badge-live');
 const badgeStatusText = { success: 'Online', processing: 'Rendering', warning: 'Review', error: 'Failed', default: 'Idle' };
@@ -420,6 +430,20 @@ selectLive.addEventListener('value-change', event => {
   writeEvent(byId('select-event'), 'value-change', event.detail);
 });
 
+// Segmented.
+const segmentedLive = byId('segmented-live');
+segmentedLive.options = [
+  { label: 'Preview', value: 'preview', icon: '◉' },
+  { label: 'Code', value: 'code', icon: '</>' },
+  { label: 'Compare', value: 'compare', icon: '◫' },
+  { label: 'Deploy', value: 'deploy', disabled: true },
+];
+byId('segmented-size').addEventListener('change', event => { segmentedLive.size = event.target.value; });
+byId('segmented-block').addEventListener('change', event => { segmentedLive.block = event.target.checked; });
+byId('segmented-disabled').addEventListener('change', event => { segmentedLive.disabled = event.target.checked; });
+byId('segmented-next').addEventListener('click', () => { segmentedLive.select('code'); });
+segmentedLive.addEventListener('value-change', event => writeEvent(byId('segmented-event'), 'value-change', event.detail));
+
 // Cascader.
 const cascaderLive = byId('cascader-live');
 cascaderLive.options = [
@@ -519,6 +543,25 @@ byId('steps-clickable').addEventListener('change', event => { stepsLive.clickabl
 byId('steps-error').addEventListener('change', renderSteps);
 stepsLive.addEventListener('step-change', event => { writeEvent(byId('steps-state'), 'step-change', { current: event.detail.current, key: event.detail.item.key }); byId('steps-current').value = String(event.detail.current); });
 renderSteps();
+
+// Anchor.
+const anchorLive = byId('anchor-live');
+const anchorScroll = byId('anchor-scroll');
+anchorLive.items = [
+  { title: 'Overview', href: '#anchor-overview' },
+  { title: 'Assets', href: '#anchor-assets', children: [{ title: 'Lighting', href: '#anchor-lighting' }] },
+  { title: 'Publish', href: '#anchor-publish' },
+];
+anchorLive.scrollContainer = anchorScroll;
+byId('anchor-direction').addEventListener('change', event => { anchorLive.direction = event.target.value; });
+byId('anchor-offset').addEventListener('input', event => {
+  anchorLive.offsetTop = Number(event.target.value);
+  byId('anchor-offset-value').textContent = `${event.target.value} px`;
+});
+byId('anchor-smooth').addEventListener('change', event => { anchorLive.smooth = event.target.checked; });
+byId('anchor-publish-button').addEventListener('click', () => { anchorLive.scrollToAnchor('#anchor-publish'); });
+anchorLive.addEventListener('anchor-change', event => { byId('anchor-event').textContent = `active · ${event.detail.href}`; });
+anchorLive.addEventListener('anchor-click', event => writeEvent(byId('anchor-event'), 'anchor-click', { href: event.detail.href }));
 
 // Affix.
 const affixLive = byId('affix-live');

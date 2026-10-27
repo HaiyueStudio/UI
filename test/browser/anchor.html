@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8" /><style>body { padding: 30px; background: #101620; } .layout { display: grid; grid-template-columns: 150px 300px; gap: 20px; } #scroll { height: 220px; overflow: auto; } section { height: 260px; color: white; }</style></head>
+<body>
+  <div class="layout"><hy-anchor id="anchor" active-href="#one" offset-top="10" smooth></hy-anchor><div id="scroll"><section id="one">One</section><section id="two">Two</section><section id="three">Three</section></div></div>
+  <script type="module">
+    import { defineAnchorComponents } from '../../dist/anchor.js';
+    defineAnchorComponents();
+    const anchorElement = document.getElementById('anchor');
+    anchorElement.items = [{ title: 'One', href: '#one' }, { title: 'Two', href: '#two', children: [{ title: 'Three', href: '#three' }] }];
+    anchorElement.scrollContainer = document.getElementById('scroll');
+  </script>
+</body>
+</html>

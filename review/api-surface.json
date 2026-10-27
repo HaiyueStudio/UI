@@ -6,6 +6,14 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./alert": {
+      "types": "./dist/alert.d.ts",
+      "import": "./dist/alert.js"
+    },
+    "./anchor": {
+      "types": "./dist/anchor.d.ts",
+      "import": "./dist/anchor.js"
+    },
     "./badge": {
       "types": "./dist/badge.d.ts",
       "import": "./dist/badge.js"
@@ -138,6 +146,10 @@
       "types": "./dist/select.d.ts",
       "import": "./dist/select.js"
     },
+    "./segmented": {
+      "types": "./dist/segmented.d.ts",
+      "import": "./dist/segmented.js"
+    },
     "./skeleton": {
       "types": "./dist/skeleton.d.ts",
       "import": "./dist/skeleton.js"
@@ -210,6 +222,14 @@
       },
       {
         "name": "defineAffixComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineAlertComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineAnchorComponents",
         "kind": "value"
       },
       {
@@ -325,6 +345,10 @@
         "kind": "value"
       },
       {
+        "name": "defineSegmentedComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineSelectComponents",
         "kind": "value"
       },
@@ -406,6 +430,38 @@
       },
       {
         "name": "HYAffixChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAlert",
+        "kind": "value"
+      },
+      {
+        "name": "HYAlertCloseDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAlertType",
+        "kind": "type"
+      },
+      {
+        "name": "HYAnchor",
+        "kind": "value"
+      },
+      {
+        "name": "HYAnchorChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAnchorClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAnchorDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYAnchorItem",
         "kind": "type"
       },
       {
@@ -853,6 +909,26 @@
         "kind": "type"
       },
       {
+        "name": "HYSegmented",
+        "kind": "value"
+      },
+      {
+        "name": "HYSegmentedChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYSegmentedOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYSegmentedOptionInput",
+        "kind": "type"
+      },
+      {
+        "name": "HYSegmentedSize",
+        "kind": "type"
+      },
+      {
         "name": "HYSelect",
         "kind": "value"
       },
@@ -1231,6 +1307,50 @@
       {
         "name": "HYWatermark",
         "kind": "value"
+      }
+    ],
+    "./alert": [
+      {
+        "name": "defineAlertComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYAlert",
+        "kind": "value"
+      },
+      {
+        "name": "HYAlertCloseDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAlertType",
+        "kind": "type"
+      }
+    ],
+    "./anchor": [
+      {
+        "name": "defineAnchorComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYAnchor",
+        "kind": "value"
+      },
+      {
+        "name": "HYAnchorChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAnchorClickDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAnchorDirection",
+        "kind": "type"
+      },
+      {
+        "name": "HYAnchorItem",
+        "kind": "type"
       }
     ],
     "./badge": [
@@ -2064,6 +2184,32 @@
       },
       {
         "name": "HYSelectOption",
+        "kind": "type"
+      }
+    ],
+    "./segmented": [
+      {
+        "name": "defineSegmentedComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYSegmented",
+        "kind": "value"
+      },
+      {
+        "name": "HYSegmentedChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYSegmentedOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYSegmentedOptionInput",
+        "kind": "type"
+      },
+      {
+        "name": "HYSegmentedSize",
         "kind": "type"
       }
     ],
