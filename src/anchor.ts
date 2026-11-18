@@ -42,20 +42,20 @@ export class HYAnchor extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = `
-      :host { display: block; min-width: 0; color: var(--hy-secondary-text-color, #8fa7c8); font: 12px/1.5 system-ui, sans-serif; }
+      :host { display: block; min-width: 0; color: var(--hy-secondary-text-color, #8fa7c8); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-relaxed, 1.5) var(--hy-font-family, system-ui, sans-serif); }
       nav { position: relative; min-width: 0; }
-      .list { display: flex; min-width: 0; flex-direction: column; gap: 2px; border-inline-start: 1px solid var(--hy-anchor-rail-color, var(--hy-border-color, #303746)); }
+      .list { display: flex; min-width: 0; flex-direction: column; gap: var(--hy-space-1, 2px); border-inline-start: 1px solid var(--hy-anchor-rail-color, var(--hy-border-color, #303746)); }
       .item { position: relative; min-width: 0; }
-      a { display: block; min-width: 0; padding: 5px 10px 5px calc(10px + var(--_depth, 0) * 14px); border-radius: 0 4px 4px 0; overflow: hidden; color: inherit; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; transition: color 120ms ease, background 120ms ease; }
-      a::before { content: ''; position: absolute; inset-block: 5px; inset-inline-start: -1px; width: 2px; border-radius: 2px; background: transparent; }
+      a { display: block; min-width: 0; padding: calc(var(--hy-space-2, 4px) + 1px) var(--hy-space-5, 10px) calc(var(--hy-space-2, 4px) + 1px) calc(var(--hy-space-5, 10px) + var(--_depth, 0) * var(--hy-space-7, 14px)); border-radius: 0 var(--hy-radius-sm, 4px) var(--hy-radius-sm, 4px) 0; overflow: hidden; color: inherit; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; transition: color 120ms ease, background 120ms ease; }
+      a::before { content: ''; position: absolute; inset-block: 5px; inset-inline-start: -1px; width: 2px; border-radius: var(--hy-radius-xs, 2px); background: transparent; }
       a:hover { color: var(--hy-text-color, #d8e2f2); background: var(--hy-hover-bg-color, #222b3a); }
       a.active { color: var(--hy-anchor-active-color, var(--hy-accent-color, #6fc8ef)); }
       a.active::before { background: currentColor; }
       a.disabled { opacity: 0.45; cursor: default; }
       a:focus-visible { outline: 2px solid var(--hy-focus-border-color, #3d6fa8); outline-offset: -2px; }
-      :host([direction="horizontal"]) .list { flex-direction: row; gap: 4px; overflow-x: auto; border-inline-start: 0; border-block-end: 1px solid var(--hy-anchor-rail-color, var(--hy-border-color, #303746)); }
+      :host([direction="horizontal"]) .list { flex-direction: row; gap: var(--hy-space-2, 4px); overflow-x: auto; border-inline-start: 0; border-block-end: 1px solid var(--hy-anchor-rail-color, var(--hy-border-color, #303746)); }
       :host([direction="horizontal"]) .item { flex: none; }
-      :host([direction="horizontal"]) a { padding: 7px 10px; border-radius: 4px 4px 0 0; }
+      :host([direction="horizontal"]) a { padding: calc(var(--hy-space-3, 6px) + 1px) var(--hy-space-5, 10px); border-radius: var(--hy-radius-sm, 4px) var(--hy-radius-sm, 4px) 0 0; }
       :host([direction="horizontal"]) a::before { inset: auto 6px -1px; width: auto; height: 2px; }
       @media (prefers-reduced-motion: reduce) { a { transition: none; } }
     `;

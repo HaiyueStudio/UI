@@ -69,11 +69,11 @@ export class HYCollapse extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = `
-      :host { display: block; min-width: 0; color: var(--hy-text-color, #eef3ff); font: 12px/1.5 system-ui, sans-serif; }
-      .collapse { overflow: hidden; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-collapse-radius, 8px); background: var(--hy-surface-color, #111722); }
+      :host { display: block; min-width: 0; color: var(--hy-text-color, #eef3ff); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-relaxed, 1.5) var(--hy-font-family, system-ui, sans-serif); }
+      .collapse { overflow: hidden; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-collapse-radius, var(--hy-radius-lg, 8px)); background: var(--hy-surface-color, #111722); }
       .panel + .panel { border-top: 1px solid var(--hy-border-color, #3d4654); }
-      .header { display: flex; min-height: var(--hy-collapse-header-height, 44px); align-items: center; background: var(--hy-collapse-header-bg, color-mix(in srgb, var(--hy-surface-elevated-color, #171d27) 82%, transparent)); }
-      .trigger { display: flex; min-width: 0; min-height: inherit; flex: 1 1 auto; align-items: center; gap: 10px; padding: 9px 14px; border: 0; color: inherit; background: transparent; cursor: pointer; font: inherit; text-align: start; }
+      .header { display: flex; min-height: var(--hy-collapse-header-height, var(--hy-control-height-lg, 44px)); align-items: center; background: var(--hy-collapse-header-bg, color-mix(in srgb, var(--hy-surface-elevated-color, #171d27) 82%, transparent)); }
+      .trigger { display: flex; min-width: 0; min-height: inherit; flex: 1 1 auto; align-items: center; gap: var(--hy-space-5, 10px); padding: calc(var(--hy-space-4, 8px) + 1px) var(--hy-space-7, 14px); border: 0; color: inherit; background: transparent; cursor: pointer; font: inherit; text-align: start; }
       .trigger:hover:not(:disabled) { background: var(--hy-hover-bg-color, #273241); }
       .trigger:focus-visible { position: relative; z-index: 1; outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: -2px; }
       .trigger:disabled { color: var(--hy-muted-color, #788697); cursor: not-allowed; }
@@ -81,9 +81,9 @@ export class HYCollapse extends HTMLElement {
       .arrow::before { content: ''; width: 6px; height: 6px; border-block-start: 1.5px solid currentColor; border-inline-end: 1.5px solid currentColor; transform: rotate(45deg); }
       .panel.expanded .arrow { transform: rotate(90deg); }
       .title { min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .extra { flex: 0 0 auto; padding-inline: var(--hy-collapse-extra-gap, 10px) 14px; color: var(--hy-muted-color, #788697); font-size: 10px; }
+      .extra { flex: 0 0 auto; padding-inline: var(--hy-collapse-extra-gap, var(--hy-space-5, 10px)) var(--hy-space-7, 14px); color: var(--hy-muted-color, #788697); font-size: var(--hy-font-size-xs, 10px); }
       .region[hidden] { display: none; }
-      .body { padding: var(--hy-collapse-content-padding, 16px); border-top: 1px solid var(--hy-border-color, #3d4654); color: var(--hy-secondary-text-color, #aebbd0); background: var(--hy-collapse-content-bg, transparent); }
+      .body { padding: var(--hy-collapse-content-padding, var(--hy-space-8, 16px)); border-top: 1px solid var(--hy-border-color, #3d4654); color: var(--hy-secondary-text-color, #aebbd0); background: var(--hy-collapse-content-bg, transparent); }
       :host([icon-position="end"]) .arrow { order: 2; }
       :host([bordered="false"]) .collapse { border: 0; border-radius: 0; }
       :host([ghost]) .collapse { border: 0; background: transparent; }

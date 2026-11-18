@@ -23,7 +23,7 @@ export class HYCheckbox extends HTMLElement {
         width: max-content;
         min-width: 0;
         color: var(--hy-checkbox-text-color, var(--hy-text-color, #d8e2f2));
-        font: 12px system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif);
       }
       :host([disabled]) {
         opacity: 0.55;
@@ -32,7 +32,7 @@ export class HYCheckbox extends HTMLElement {
       label {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--hy-space-4, 8px);
         min-width: 0;
         cursor: pointer;
         user-select: none;
@@ -59,7 +59,7 @@ export class HYCheckbox extends HTMLElement {
         display: inline-grid;
         place-items: center;
         border: 1px solid var(--hy-checkbox-border-color, var(--hy-border-color, #303746));
-        border-radius: 3px;
+        border-radius: calc(var(--hy-radius-xs, 2px) + 1px);
         background: var(--hy-checkbox-bg-color, var(--hy-input-bg-color, #121822));
         color: var(--hy-checkbox-mark-color, var(--hy-selected-text-color, #ffffff));
         transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;

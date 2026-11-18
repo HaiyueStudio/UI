@@ -24,7 +24,7 @@ export class HYRadio extends HTMLElement {
         width: max-content;
         min-width: 0;
         color: var(--hy-radio-text-color, var(--hy-text-color, #d8e2f2));
-        font: 12px system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif);
       }
       :host([disabled]) {
         opacity: 0.55;
@@ -33,7 +33,7 @@ export class HYRadio extends HTMLElement {
       label {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--hy-space-4, 8px);
         min-width: 0;
         cursor: pointer;
         user-select: none;

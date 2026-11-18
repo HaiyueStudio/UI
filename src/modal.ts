@@ -60,22 +60,22 @@ export class HYModal extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = `
-      :host { color: var(--hy-text-color, #eef0ff); font: 13px/1.5 system-ui, sans-serif; }
-      dialog { box-sizing: border-box; flex-direction: column; width: min(var(--_hy-modal-width, var(--hy-modal-width, 520px)), calc(100vw - 32px)); max-width: calc(100vw - 32px); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); margin: auto; padding: 0; overflow: hidden; border: 1px solid var(--hy-border-color, #343765); border-radius: var(--hy-modal-radius, 12px); color: inherit; background: var(--hy-modal-bg-color, var(--hy-surface-elevated-color, #181a40)); box-shadow: 0 24px 80px var(--hy-modal-shadow-color, rgba(0,0,0,.45)); }
+      :host { color: var(--hy-text-color, #eef0ff); font: calc(var(--hy-font-size-sm, 12px) + 1px)/var(--hy-line-height-relaxed, 1.5) var(--hy-font-family, system-ui, sans-serif); }
+      dialog { box-sizing: border-box; flex-direction: column; width: min(var(--_hy-modal-width, var(--hy-modal-width, 520px)), calc(100vw - 32px)); max-width: calc(100vw - 32px); max-height: calc(100vh - 32px); max-height: calc(100dvh - 32px); margin: auto; padding: 0; overflow: hidden; border: 1px solid var(--hy-border-color, #343765); border-radius: var(--hy-modal-radius, var(--hy-radius-xl, 12px)); color: inherit; background: var(--hy-modal-bg-color, var(--hy-surface-elevated-color, #181a40)); box-shadow: 0 24px 80px var(--hy-modal-shadow-color, var(--hy-dialog-shadow-color, rgba(0,0,0,.45))); }
       dialog:not([open]), [hidden] { display: none !important; }
       dialog[open] { display: flex; animation: hy-modal-enter var(--hy-modal-duration, 160ms) ease-out; }
       dialog::backdrop { background: var(--hy-modal-mask-color, var(--hy-dialog-backdrop-color, rgba(3,7,12,.66))); backdrop-filter: blur(var(--hy-modal-mask-blur, 2px)); }
-      :host([centered="false"]) dialog { margin: min(64px, 10vh) auto auto; max-height: calc(100vh - 96px); max-height: calc(100dvh - 96px); }
-      .header { display: flex; flex: 0 0 auto; align-items: center; gap: 12px; min-height: 56px; padding: 12px 16px 12px 20px; box-sizing: border-box; border-bottom: 1px solid var(--hy-border-color, #343765); }
-      h2 { flex: 1; min-width: 0; margin: 0; font-size: 16px; font-weight: 650; overflow-wrap: anywhere; }
-      .body { flex: 1 1 auto; min-height: 0; padding: var(--hy-modal-body-padding, 20px); overflow: auto; color: var(--hy-secondary-text-color, #a9add4); }
-      .footer { flex: 0 0 auto; padding: 12px 20px; border-top: 1px solid var(--hy-border-color, #343765); background: var(--hy-modal-footer-bg-color, var(--hy-surface-color, #10132f)); }
-      .actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-      button { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 32px; padding: 6px 14px; border: 1px solid var(--hy-border-strong-color, #484b84); border-radius: var(--hy-modal-button-radius, 6px); color: var(--hy-text-color, #eef0ff); background: var(--hy-surface-elevated-color, #181a40); font: inherit; cursor: pointer; }
+      :host([centered="false"]) dialog { margin: min(var(--hy-space-32, 64px), 10vh) auto auto; max-height: calc(100vh - 96px); max-height: calc(100dvh - 96px); }
+      .header { display: flex; flex: 0 0 auto; align-items: center; gap: var(--hy-space-6, 12px); min-height: 56px; padding: var(--hy-space-6, 12px) var(--hy-space-8, 16px) var(--hy-space-6, 12px) var(--hy-space-10, 20px); box-sizing: border-box; border-bottom: 1px solid var(--hy-border-color, #343765); }
+      h2 { flex: 1; min-width: 0; margin: 0; font-size: var(--hy-font-size-lg, 16px); font-weight: calc(var(--hy-font-weight-semibold, 600) + 50); overflow-wrap: anywhere; }
+      .body { flex: 1 1 auto; min-height: 0; padding: var(--hy-modal-body-padding, var(--hy-space-10, 20px)); overflow: auto; color: var(--hy-secondary-text-color, #a9add4); }
+      .footer { flex: 0 0 auto; padding: var(--hy-space-6, 12px) var(--hy-space-10, 20px); border-top: 1px solid var(--hy-border-color, #343765); background: var(--hy-modal-footer-bg-color, var(--hy-surface-color, #10132f)); }
+      .actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--hy-space-4, 8px); }
+      button { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: var(--hy-space-4, 8px); min-height: 32px; padding: var(--hy-space-3, 6px) var(--hy-space-7, 14px); border: 1px solid var(--hy-border-strong-color, #484b84); border-radius: var(--hy-modal-button-radius, var(--hy-radius-md, 6px)); color: var(--hy-text-color, #eef0ff); background: var(--hy-surface-elevated-color, #181a40); font: inherit; cursor: pointer; }
       button:hover:not(:disabled) { background: var(--hy-hover-bg-color, #242752); }
       button:disabled { opacity: .5; cursor: default; }
       button:focus-visible, dialog:focus-visible { outline: 2px solid var(--hy-focus-border-color, #9c8fff); outline-offset: -3px; }
-      .close { flex: 0 0 auto; width: 30px; height: 30px; min-height: 0; padding: 0; border: 0; background: transparent; color: var(--hy-secondary-text-color, #a9add4); font-size: 22px; }
+      .close { flex: 0 0 auto; width: 30px; height: 30px; min-height: 0; padding: 0; border: 0; background: transparent; color: var(--hy-secondary-text-color, #a9add4); font-size: calc(var(--hy-font-size-xl, 20px) + 2px); }
       .ok { border-color: transparent; color: var(--hy-selected-text-color, #fff); background: var(--hy-accent-strong-color, #554cc6); }
       .ok:hover:not(:disabled) { background: var(--hy-accent-color, #8177f2); }
       .spinner { width: 12px; height: 12px; border: 2px solid currentColor; border-inline-end-color: transparent; border-radius: 50%; animation: hy-modal-spin .7s linear infinite; }

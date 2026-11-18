@@ -45,15 +45,15 @@ export class HYQRCode extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = `
-      :host { display: inline-block; max-width: 100%; vertical-align: middle; color: var(--hy-text-color, #eef0ff); font: 12px/1.5 system-ui, sans-serif; }
+      :host { display: inline-block; max-width: 100%; vertical-align: middle; color: var(--hy-text-color, #eef0ff); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-relaxed, 1.5) var(--hy-font-family, system-ui, sans-serif); }
       :host([hidden]), [hidden] { display: none !important; }
       .frame { position: relative; box-sizing: border-box; max-width: 100%; aspect-ratio: 1; }
       svg { display: block; width: 100%; height: 100%; }
-      .icon { position: absolute; box-sizing: border-box; inset: 50% auto auto 50%; transform: translate(-50%, -50%); display: grid; place-items: center; background: var(--_qr-background); border-radius: var(--hy-qr-code-icon-radius, 4px); pointer-events: none; overflow: hidden; }
+      .icon { position: absolute; box-sizing: border-box; inset: 50% auto auto 50%; transform: translate(-50%, -50%); display: grid; place-items: center; background: var(--_qr-background); border-radius: var(--hy-qr-code-icon-radius, var(--hy-radius-sm, 4px)); pointer-events: none; overflow: hidden; }
       img { display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; }
       slot { display: contents; }
       ::slotted([slot="icon"]) { display: block; box-sizing: border-box; width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; overflow: hidden; }
-      .message { position: absolute; inset: 0; display: grid; place-items: center; box-sizing: border-box; padding: 12px; text-align: center; color: var(--hy-secondary-text-color, #a9add4); background: var(--hy-surface-color, #10132f); border: 1px solid var(--hy-border-color, #343765); border-radius: var(--hy-qr-code-radius, 8px); }
+      .message { position: absolute; inset: 0; display: grid; place-items: center; box-sizing: border-box; padding: var(--hy-space-6, 12px); text-align: center; color: var(--hy-secondary-text-color, #a9add4); background: var(--hy-surface-color, #10132f); border: 1px solid var(--hy-border-color, #343765); border-radius: var(--hy-qr-code-radius, var(--hy-radius-lg, 8px)); }
     `;
     this._frame.className = 'frame'; this._frame.part.add('frame');
     this._svg.part.add('code'); this._svg.setAttribute('aria-hidden', 'true'); this._svg.setAttribute('shape-rendering', 'crispEdges');

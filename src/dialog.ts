@@ -23,7 +23,7 @@ export class HYDialog extends HTMLElement {
     style.textContent = `
       :host {
         color: var(--hy-text-color, #e6edf7);
-        font: 13px system-ui, sans-serif;
+        font: calc(var(--hy-font-size-sm, 12px) + 1px) var(--hy-font-family, system-ui, sans-serif);
       }
       dialog {
         width: min(var(--hy-dialog-width, 460px), calc(100vw - 32px));
@@ -32,7 +32,7 @@ export class HYDialog extends HTMLElement {
         padding: 0;
         overflow: hidden;
         border: 1px solid var(--hy-border-color, #303746);
-        border-radius: var(--hy-dialog-radius, 8px);
+        border-radius: var(--hy-dialog-radius, var(--hy-radius-lg, 8px));
         color: inherit;
         background: var(--hy-dialog-bg-color, var(--hy-surface-elevated-color, #171e2a));
         box-shadow: 0 22px 70px var(--hy-dialog-shadow-color, rgba(0, 0, 0, 0.52));
@@ -45,7 +45,7 @@ export class HYDialog extends HTMLElement {
         display: flex;
         align-items: center;
         min-height: 49px;
-        padding: 0 12px 0 16px;
+        padding: 0 var(--hy-space-6, 12px) 0 var(--hy-space-8, 16px);
         border-bottom: 1px solid var(--hy-border-color, #303746);
       }
       h2 {
@@ -53,8 +53,8 @@ export class HYDialog extends HTMLElement {
         min-width: 0;
         margin: 0;
         overflow: hidden;
-        font-size: 14px;
-        font-weight: 650;
+        font-size: var(--hy-font-size-md, 14px);
+        font-weight: calc(var(--hy-font-weight-semibold, 600) + 50);
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -63,27 +63,27 @@ export class HYDialog extends HTMLElement {
         width: 28px;
         height: 28px;
         border: 0;
-        border-radius: 5px;
+        border-radius: calc(var(--hy-radius-sm, 4px) + 1px);
         color: var(--hy-secondary-text-color, #8b99ad);
         background: transparent;
         cursor: pointer;
-        font: 20px/1 system-ui, sans-serif;
+        font: var(--hy-font-size-xl, 20px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif);
       }
       :host([dismissible]) .close { display: grid; place-items: center; }
       .close:hover { color: inherit; background: var(--hy-hover-bg-color, #242d3b); }
       .body {
         max-height: calc(100vh - 160px);
         overflow: auto;
-        padding: var(--hy-dialog-body-padding, 16px);
+        padding: var(--hy-dialog-body-padding, var(--hy-space-8, 16px));
         color: var(--hy-dialog-body-color, var(--hy-secondary-text-color, #a8b4c5));
-        line-height: 1.55;
+        line-height: calc(var(--hy-line-height-relaxed, 1.5) + 0.05);
       }
       .footer {
         display: flex;
         justify-content: flex-end;
-        gap: 8px;
+        gap: var(--hy-space-4, 8px);
         min-height: 54px;
-        padding: 10px 14px;
+        padding: var(--hy-space-5, 10px) var(--hy-space-7, 14px);
         border-top: 1px solid var(--hy-border-color, #303746);
         background: var(--hy-dialog-footer-bg-color, rgba(9, 13, 19, 0.22));
       }

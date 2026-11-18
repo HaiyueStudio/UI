@@ -9,6 +9,60 @@
   <link rel="stylesheet" href="../themes/haiyue-light.css" />
   <link rel="stylesheet" href="../themes/haiyue-dark.css" />
   <link rel="stylesheet" href="./examples.css" />
+  <style id="design-skin-css">
+[data-design-skin="terracotta"] {
+  /* 在 data-hy-theme="light" 的子树内覆盖月白主题。 */
+  --hy-canvas-color: #f4e8dc;
+  --hy-surface-color: #fff8ef;
+  --hy-surface-elevated-color: #fffdf8;
+  --hy-input-bg-color: #fffdf8;
+  --hy-text-color: #33241e;
+  --hy-secondary-text-color: #694a3d;
+  --hy-muted-color: #766052;
+  --hy-disabled-text-color: #857167;
+  --hy-border-color: #c6a28c;
+  --hy-hover-border-color: #a76d54;
+  --hy-hover-bg-color: #f7e4d6;
+  --hy-accent-color: #a44932;
+  --hy-active-text-color: #74301e;
+  --hy-focus-border-color: #a44932;
+  --hy-focus-ring-color: #a4493240;
+  --hy-success-color: #376749;
+  --hy-shadow-color: #694a3d30;
+
+  --hy-space-1: 3px;
+  --hy-space-2: 6px;
+  --hy-space-3: 9px;
+  --hy-space-4: 12px;
+  --hy-space-5: 15px;
+  --hy-space-6: 18px;
+  --hy-space-7: 21px;
+  --hy-space-8: 24px;
+  --hy-space-10: 30px;
+  --hy-space-12: 36px;
+  --hy-space-16: 48px;
+  --hy-space-32: 96px;
+
+  --hy-font-size-xs: 12px;
+  --hy-font-size-sm: 15px;
+  --hy-font-size-md: 17px;
+  --hy-font-size-lg: 19px;
+  --hy-font-size-xl: 23px;
+  --hy-font-size-2xl: 28px;
+  --hy-line-height-relaxed: 1.6;
+
+  --hy-radius-xs: 4px;
+  --hy-radius-sm: 10px;
+  --hy-radius-md: 14px;
+  --hy-radius-lg: 18px;
+  --hy-radius-xl: 24px;
+
+  --hy-control-height-xs: 30px;
+  --hy-control-height-sm: 38px;
+  --hy-control-height-md: 44px;
+  --hy-control-height-lg: 52px;
+}
+  </style>
 </head>
 <body>
   <a class="skip-link" href="#content">跳到组件示例</a>
@@ -29,6 +83,8 @@
       <kbd>/</kbd>
     </label>
     <nav id="component-nav">
+      <p class="nav-label">设计</p>
+      <a href="#design-tokens" data-name="design tokens theme 设计 规范 皮肤 主题 颜色 排版 间距 圆角"><span>设计规范</span><code>CSS tokens</code></a>
       <p class="nav-label">基础</p>
       <a href="#alert" data-name="alert message feedback 警告 提示 反馈"><span>Alert</span><code>hy-alert</code></a>
       <a href="#badge" data-name="badge count dot status 徽标 数量 状态"><span>Badge</span><code>hy-badge</code></a>
@@ -93,6 +149,38 @@
         <span><b>48</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
+
+    <section class="component-section" id="design-tokens" data-title="设计规范" data-tag="CSS tokens">
+      <div class="section-heading">
+        <div><h2>设计规范</h2></div>
+        <p>预览区共用同一组组件。切换皮肤，观察它们如何从父容器继承颜色、间距、字号、圆角与控件高度。</p>
+      </div>
+      <div class="design-skin-picker" role="group" aria-label="切换设计规范预览皮肤">
+        <hy-button data-design-theme="light" aria-pressed="false">月白</hy-button>
+        <hy-button data-design-theme="dark" aria-pressed="false">夜阑</hy-button>
+        <hy-button data-design-theme="terracotta" aria-pressed="true">陶土</hy-button>
+      </div>
+      <div class="design-preview" id="design-preview" data-hy-theme="light" data-design-skin="terracotta">
+        <div class="design-preview-components">
+          <hy-input value="界面主题" aria-label="示例输入框"></hy-input>
+          <hy-button id="design-demo-button" aria-pressed="false">收藏</hy-button>
+          <hy-segmented id="design-demo-segmented" aria-label="预览模式"></hy-segmented>
+        </div>
+        <hy-alert type="success" message="设置已保存" description="按钮、输入框和提示共享当前皮肤的设计参数。" show-icon></hy-alert>
+        <dl class="design-token-values" aria-label="当前皮肤 token">
+          <div><dt><code>--hy-accent-color</code></dt><dd data-design-token="--hy-accent-color" class="design-token-swatch"></dd></div>
+          <div><dt><code>--hy-space-4</code></dt><dd data-design-token="--hy-space-4"></dd></div>
+          <div><dt><code>--hy-font-size-sm</code></dt><dd data-design-token="--hy-font-size-sm"></dd></div>
+          <div><dt><code>--hy-radius-sm</code></dt><dd data-design-token="--hy-radius-sm"></dd></div>
+          <div><dt><code>--hy-control-height-sm</code></dt><dd data-design-token="--hy-control-height-sm"></dd></div>
+        </dl>
+      </div>
+      <details class="code"><summary><span>CSS · 陶土皮肤</span></summary><pre><code id="design-skin-source"></code></pre></details>
+      <details class="code"><summary><span>HTML · 将皮肤应用于组件子树</span></summary><pre><code>&lt;section data-hy-theme="light" data-design-skin="terracotta"&gt;
+  &lt;hy-input aria-label="配置名称"&gt;&lt;/hy-input&gt;
+  &lt;hy-button&gt;保存&lt;/hy-button&gt;
+&lt;/section&gt;</code></pre></details>
+    </section>
 
     <section class="component-section" id="alert" data-title="Alert">
       <div class="section-heading"><div><h2>Alert</h2><code>&lt;hy-alert&gt;</code></div><p>展示需要关注的静态反馈；支持四种语义状态、图标、描述、操作区和可取消的关闭行为。</p></div>

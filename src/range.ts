@@ -43,7 +43,7 @@ export class HYRange extends HTMLElement {
         width: var(--hy-range-width, 280px);
         min-width: 120px;
         color: var(--hy-text-color, #e8effa);
-        font: 11px/1.3 system-ui, sans-serif;
+        font: calc(var(--hy-font-size-xs, 10px) + 1px)/calc(var(--hy-line-height-snug, 1.4) - 0.1) var(--hy-font-family, system-ui, sans-serif);
         --_handle-size: var(--hy-range-handle-size, 18px);
         --_rail-height: var(--hy-range-rail-height, 5px);
       }
@@ -62,7 +62,7 @@ export class HYRange extends HTMLElement {
         right: 0;
         left: 0;
         height: var(--_rail-height);
-        border-radius: var(--hy-range-rail-radius, 999px);
+        border-radius: var(--hy-range-rail-radius, var(--hy-radius-full, 999px));
         transform: translateY(-50%);
       }
       .rail {
@@ -89,7 +89,7 @@ export class HYRange extends HTMLElement {
         outline: none;
         color: var(--hy-text-color, #e8effa);
         background: var(--hy-range-handle-color, var(--hy-surface-elevated-color, #171e2a));
-        box-shadow: var(--hy-range-handle-shadow, 0 2px 8px rgba(0, 0, 0, 0.28));
+        box-shadow: var(--hy-range-handle-shadow, 0 2px 8px var(--hy-shadow-color, rgba(0, 0, 0, 0.28)));
         cursor: grab;
         transform: translate(-50%, -50%);
         transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
@@ -110,14 +110,14 @@ export class HYRange extends HTMLElement {
         bottom: calc(100% + 8px);
         display: none;
         min-width: 24px;
-        padding: 3px 6px;
+        padding: calc(var(--hy-space-1, 2px) + 1px) var(--hy-space-3, 6px);
         border: 1px solid var(--hy-border-color, #303746);
-        border-radius: 4px;
+        border-radius: var(--hy-radius-sm, 4px);
         pointer-events: none;
         color: var(--hy-text-color, #e8effa);
         background: var(--hy-surface-elevated-color, #171e2a);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
-        font: 10px/1.2 ui-monospace, monospace;
+        box-shadow: 0 4px 12px var(--hy-shadow-color, rgba(0, 0, 0, 0.22));
+        font: var(--hy-font-size-xs, 10px)/var(--hy-line-height-compact, 1.2) var(--hy-font-family-mono, ui-monospace, monospace);
         white-space: nowrap;
       }
       :host([show-value]) .bubble { display: block; }

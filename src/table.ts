@@ -128,12 +128,12 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
         display: block;
         min-width: 0;
         color: var(--hy-text-color, #eef3ff);
-        font: 13px/1.4 system-ui, sans-serif;
+        font: calc(var(--hy-font-size-sm, 12px) + 1px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif);
       }
       .scroller {
         overflow: auto;
         border: 1px solid var(--hy-border-color, #3d4654);
-        border-radius: var(--hy-table-radius, 7px);
+        border-radius: var(--hy-table-radius, calc(var(--hy-radius-md, 6px) + 1px));
         background: var(--hy-surface-color, #171d27);
         scrollbar-color: var(--hy-border-strong-color, #596779) var(--hy-input-bg-color, #111722);
         scrollbar-width: thin;
@@ -142,7 +142,7 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
       th, td {
         box-sizing: border-box;
         min-width: 0;
-        padding: var(--hy-table-cell-padding, 11px 13px);
+        padding: var(--hy-table-cell-padding, calc(var(--hy-space-5, 10px) + 1px) calc(var(--hy-space-6, 12px) + 1px));
         border-bottom: 1px solid var(--hy-border-subtle-color, var(--hy-border-color, #3d4654));
         overflow-wrap: anywhere;
       }
@@ -150,8 +150,8 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
         position: relative;
         color: var(--hy-secondary-text-color, #aebbd0);
         background: var(--hy-table-header-background, var(--hy-input-bg-color, #111722));
-        font-size: 11px;
-        font-weight: 650;
+        font-size: calc(var(--hy-font-size-xs, 10px) + 1px);
+        font-weight: calc(var(--hy-font-weight-semibold, 600) + 50);
         text-align: left;
       }
       tbody tr { background: var(--hy-table-row-background, var(--hy-surface-color, #171d27)); }
@@ -159,12 +159,12 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
       tbody tr:last-child td { border-bottom: 0; }
       thead { position: relative; z-index: 2; }
       tbody { position: relative; z-index: 1; }
-      .header-content { display: flex; align-items: center; gap: 7px; min-width: 0; }
+      .header-content { display: flex; align-items: center; gap: calc(var(--hy-space-3, 6px) + 1px); min-width: 0; }
       .header-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .sort-button {
         display: inline-flex;
         align-items: center;
-        gap: 7px;
+        gap: calc(var(--hy-space-3, 6px) + 1px);
         max-width: 100%;
         padding: 0;
         border: 0;
@@ -175,7 +175,7 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
         text-align: inherit;
       }
       .sort-button:hover, .sort-button:focus-visible { color: var(--hy-accent-color, #79a8ff); }
-      .sort-indicator { color: var(--hy-muted-text-color, #667587); font-size: 9px; }
+      .sort-indicator { color: var(--hy-muted-text-color, var(--hy-muted-color, #667587)); font-size: calc(var(--hy-font-size-xs, 10px) - 1px); }
       th[aria-sort="ascending"] .sort-indicator,
       th[aria-sort="descending"] .sort-indicator { color: var(--hy-accent-color, #79a8ff); }
       .filter-menu { position: relative; flex: 0 0 auto; }
@@ -187,8 +187,8 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
         place-items: center;
         padding: 0;
         border: 1px solid transparent;
-        border-radius: var(--hy-table-filter-radius, 5px);
-        color: var(--hy-muted-text-color, #667587);
+        border-radius: var(--hy-table-filter-radius, calc(var(--hy-radius-sm, 4px) + 1px));
+        color: var(--hy-muted-text-color, var(--hy-muted-color, #667587));
         background: transparent;
         cursor: pointer;
         list-style: none;
@@ -211,11 +211,11 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
         width: max-content;
         min-width: 184px;
         max-width: min(280px, 70vw);
-        gap: 7px;
+        gap: calc(var(--hy-space-3, 6px) + 1px);
         box-sizing: border-box;
-        padding: 9px;
+        padding: calc(var(--hy-space-4, 8px) + 1px);
         border: 1px solid var(--hy-border-color, #3d4654);
-        border-radius: var(--hy-table-filter-panel-radius, 7px);
+        border-radius: var(--hy-table-filter-panel-radius, calc(var(--hy-radius-md, 6px) + 1px));
         background: var(--hy-surface-elevated-color, var(--hy-surface-color, #171d27));
         box-shadow: 0 10px 28px var(--hy-menu-shadow-color, rgba(0, 0, 0, 0.28));
       }
@@ -227,51 +227,51 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
         min-width: 74px;
         height: 30px;
         box-sizing: border-box;
-        padding: 0 9px;
+        padding: 0 calc(var(--hy-space-4, 8px) + 1px);
         border: 1px solid var(--hy-border-color, #3d4654);
-        border-radius: var(--hy-table-filter-radius, 5px);
+        border-radius: var(--hy-table-filter-radius, calc(var(--hy-radius-sm, 4px) + 1px));
         outline: none;
         color: var(--hy-text-color, #eef3ff);
         background: var(--hy-input-bg-color, #111722);
-        font: 11px system-ui, sans-serif;
+        font: calc(var(--hy-font-size-xs, 10px) + 1px) var(--hy-font-family, system-ui, sans-serif);
       }
       .filter:focus { border-color: var(--hy-focus-border-color, #79a8ff); box-shadow: 0 0 0 2px var(--hy-focus-ring-color, rgba(121, 168, 255, 0.22)); }
       .filter-clear {
         flex: 0 0 auto;
         height: 30px;
-        padding: 0 9px;
+        padding: 0 calc(var(--hy-space-4, 8px) + 1px);
         border: 1px solid var(--hy-border-color, #3d4654);
-        border-radius: var(--hy-table-filter-radius, 5px);
+        border-radius: var(--hy-table-filter-radius, calc(var(--hy-radius-sm, 4px) + 1px));
         color: var(--hy-secondary-text-color, #aebbd0);
         background: var(--hy-surface-color, #171d27);
         cursor: pointer;
-        font: 11px system-ui, sans-serif;
+        font: calc(var(--hy-font-size-xs, 10px) + 1px) var(--hy-font-family, system-ui, sans-serif);
       }
       .filter-clear:hover:not(:disabled) { border-color: var(--hy-accent-color, #79a8ff); color: var(--hy-accent-color, #79a8ff); }
       .filter-clear:disabled { cursor: default; opacity: 0.45; }
-      .empty { height: 112px; color: var(--hy-muted-text-color, #788697); text-align: center; }
+      .empty { height: 112px; color: var(--hy-muted-text-color, var(--hy-muted-color, #788697)); text-align: center; }
       .pagination {
         display: flex;
         align-items: center;
         justify-content: flex-end;
-        gap: 6px;
-        padding: 11px 0 0;
+        gap: var(--hy-space-3, 6px);
+        padding: calc(var(--hy-space-5, 10px) + 1px) 0 0;
       }
       .pagination[hidden] { display: none; }
       .pagination button, .pagination select {
         height: 30px;
         box-sizing: border-box;
         border: 1px solid var(--hy-border-color, #3d4654);
-        border-radius: 5px;
+        border-radius: calc(var(--hy-radius-sm, 4px) + 1px);
         color: var(--hy-secondary-text-color, #aebbd0);
         background: var(--hy-surface-color, #171d27);
-        font: 11px system-ui, sans-serif;
+        font: calc(var(--hy-font-size-xs, 10px) + 1px) var(--hy-font-family, system-ui, sans-serif);
       }
-      .pagination button { min-width: 30px; padding: 0 8px; cursor: pointer; }
+      .pagination button { min-width: 30px; padding: 0 var(--hy-space-4, 8px); cursor: pointer; }
       .pagination button:hover:not(:disabled), .pagination button[aria-current="page"] { border-color: var(--hy-accent-color, #79a8ff); color: var(--hy-accent-color, #79a8ff); }
       .pagination button:disabled { cursor: not-allowed; opacity: 0.45; }
-      .pagination select { margin-left: 6px; padding: 0 7px; }
-      .summary { margin-right: auto; color: var(--hy-muted-text-color, #788697); font-size: 10px; }
+      .pagination select { margin-left: var(--hy-space-3, 6px); padding: 0 calc(var(--hy-space-3, 6px) + 1px); }
+      .summary { margin-right: auto; color: var(--hy-muted-text-color, var(--hy-muted-color, #788697)); font-size: var(--hy-font-size-xs, 10px); }
     `;
     this._scroller.className = 'scroller';
     this._scroller.part.add('scroller');

@@ -32,7 +32,7 @@ export class HYSelect extends HTMLElement {
       }
       .wrap {
         display: grid;
-        gap: 4px;
+        gap: var(--hy-space-2, 4px);
         width: 100%;
         min-width: 0;
       }
@@ -40,14 +40,14 @@ export class HYSelect extends HTMLElement {
       select {
         box-sizing: border-box;
         width: 100%;
-        height: 28px;
+        height: var(--hy-control-height-sm, 28px);
         min-width: 0;
-        padding: 0 28px 0 8px;
+        padding: 0 calc(var(--hy-space-12, 24px) + 4px) 0 var(--hy-space-4, 8px);
         border: 1px solid var(--hy-border-color, #303746);
-        border-radius: 4px;
+        border-radius: var(--hy-radius-sm, 4px);
         color: var(--hy-text-color, #d8e2f2);
         background-color: var(--hy-input-bg-color, var(--hy-surface-color, #121822));
-        font: 12px system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif);
         outline: none;
         color-scheme: inherit;
       }
@@ -58,8 +58,8 @@ export class HYSelect extends HTMLElement {
           linear-gradient(45deg, transparent 50%, var(--hy-select-arrow-color, var(--hy-secondary-text-color, #8fa7c8)) 50%),
           linear-gradient(135deg, var(--hy-select-arrow-color, var(--hy-secondary-text-color, #8fa7c8)) 50%, transparent 50%);
         background-position:
-          calc(100% - 15px) 11px,
-          calc(100% - 10px) 11px;
+          calc(100% - var(--hy-space-5, 10px) - 5px) center,
+          calc(100% - var(--hy-space-5, 10px)) center;
         background-size: 5px 5px, 5px 5px;
         background-repeat: no-repeat;
       }
@@ -68,11 +68,11 @@ export class HYSelect extends HTMLElement {
         background-color: var(--hy-select-hover-bg-color, var(--hy-input-bg-color, #151d2a));
       }
       option {
-        min-height: 28px;
-        padding: 6px 8px;
+        min-height: var(--hy-control-height-sm, 28px);
+        padding: var(--hy-space-3, 6px) var(--hy-space-4, 8px);
         color: var(--hy-select-option-text-color, var(--hy-text-color, #d8e2f2));
         background: var(--hy-select-option-bg-color, var(--hy-menu-bg-color, #1b2230));
-        font: 12px system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif);
       }
       option:checked {
         color: var(--hy-select-option-selected-text-color, var(--hy-selected-text-color, #ffffff));

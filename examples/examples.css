@@ -220,6 +220,39 @@ main { width: min(1040px, 100%); min-height: 100%; margin: 0; padding: 0 58px; }
 .section-heading h2 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 34px; font-weight: 400; letter-spacing: -0.025em; }
 .section-heading code { color: #617383; background: transparent; font-size: 10px; }
 .section-heading p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+
+.design-skin-picker { display: flex; flex-wrap: wrap; gap: var(--hy-space-2); margin-bottom: var(--hy-space-4); }
+.design-skin-picker [aria-pressed="true"]::part(button) { border-color: var(--hy-focus-border-color); background: var(--hy-hover-bg-color); }
+.design-preview {
+  display: grid;
+  gap: var(--hy-space-6);
+  padding: var(--hy-space-8);
+  border: 1px solid var(--hy-border-color);
+  border-radius: var(--hy-radius-md);
+  color: var(--hy-text-color);
+  background: var(--hy-canvas-color);
+  font: var(--hy-font-size-sm)/var(--hy-line-height-relaxed) var(--hy-font-family);
+}
+.design-preview-components { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hy-space-4); }
+.design-preview-components hy-input { flex: 1 1 11rem; max-width: 20rem; }
+.design-token-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+  gap: var(--hy-space-4);
+  margin: 0;
+  color: var(--hy-secondary-text-color);
+}
+.design-token-values code { font: var(--hy-font-size-xs) var(--hy-font-family-mono); color: inherit; background: none; padding: 0; overflow-wrap: anywhere; }
+.design-token-values dd { margin: 0; color: var(--hy-text-color); font-family: var(--hy-font-family-mono); }
+.design-token-swatch::before {
+  content: "";
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-inline-end: var(--hy-space-3);
+  border-radius: var(--hy-radius-xs);
+  background: var(--hy-accent-color);
+}
 code { padding: 2px 5px; border-radius: 4px; color: #8fd3ee; background: rgba(64, 145, 181, 0.1); font: 11px ui-monospace, SFMono-Regular, Consolas, monospace; }
 
 .demo-card {
@@ -323,6 +356,9 @@ code { padding: 2px 5px; border-radius: 4px; color: #8fd3ee; background: rgba(64
 .code summary::before { content: "+"; margin-right: 8px; color: #5e7181; }
 .code[open] summary::before { content: "−"; }
 .code summary span { margin-left: auto; color: #4d5968; font: 9px ui-monospace, monospace; }
+#design-tokens .code summary { justify-content: flex-start; color: var(--hy-text-color); }
+#design-tokens .code summary::before { color: var(--hy-accent-color); }
+#design-tokens .code summary span { margin-left: 0; color: inherit; font: var(--hy-font-size-sm) var(--hy-font-family); }
 .code pre { margin: 0; padding: 16px; border-top: 1px solid var(--line-soft); overflow: auto; }
 .code pre code { padding: 0; color: #9fb1c3; background: none; font-size: 11px; line-height: 1.8; }
 .code-editor-host { height: min(340px, 55vh); border-top: 1px solid var(--line-soft); overflow: hidden; }

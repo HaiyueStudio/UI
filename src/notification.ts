@@ -66,7 +66,7 @@ const NOTIFICATION_STYLES = `
         display: block;
         pointer-events: none;
         color: var(--hy-text-color, #e8effa);
-        font: 13px/1.45 system-ui, sans-serif;
+        font: calc(var(--hy-font-size-sm, 12px) + 1px)/calc(var(--hy-line-height-snug, 1.4) + 0.05) var(--hy-font-family, system-ui, sans-serif);
       }
       .container {
         position: fixed;
@@ -90,16 +90,16 @@ const NOTIFICATION_STYLES = `
         inset: 0 0 auto;
         display: grid;
         grid-template-columns: 34px minmax(0, 1fr) 28px;
-        gap: 11px;
+        gap: calc(var(--hy-space-5, 10px) + 1px);
         min-height: 82px;
-        padding: 15px 13px 15px 15px;
+        padding: calc(var(--hy-space-7, 14px) + 1px) calc(var(--hy-space-6, 12px) + 1px) calc(var(--hy-space-7, 14px) + 1px) calc(var(--hy-space-7, 14px) + 1px);
         overflow: hidden;
         border: 1px solid color-mix(in srgb, var(--_tone) 30%, var(--hy-border-color, #303746));
-        border-radius: var(--hy-notification-radius, 9px);
+        border-radius: var(--hy-notification-radius, calc(var(--hy-radius-lg, 8px) + 1px));
         pointer-events: auto;
         color: var(--hy-text-color, #e8effa);
         background: var(--hy-notification-bg-color, var(--hy-surface-elevated-color, #171e2a));
-        box-shadow: 0 14px 38px var(--hy-notification-shadow-color, rgba(0, 0, 0, 0.34));
+        box-shadow: 0 14px 38px var(--hy-notification-shadow-color, var(--hy-shadow-color, rgba(0, 0, 0, 0.34)));
         transform: translate3d(0, calc(var(--_depth) * 10px), calc(var(--_depth) * -24px)) scale(calc(1 - var(--_depth) * 0.035));
         transform-origin: top center;
         transition: margin 180ms ease, opacity 160ms ease, transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -142,20 +142,20 @@ const NOTIFICATION_STYLES = `
       }
       .icon svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.2; }
       .content { min-width: 0; padding-top: 1px; }
-      .message { margin: 0; color: inherit; font-size: 13px; font-weight: 680; overflow-wrap: anywhere; }
-      .description { margin: 4px 0 0; color: var(--hy-secondary-text-color, #9aa8ba); font-size: 11px; overflow-wrap: anywhere; }
+      .message { margin: 0; color: inherit; font-size: calc(var(--hy-font-size-sm, 12px) + 1px); font-weight: calc(var(--hy-font-weight-bold, 700) - 20); overflow-wrap: anywhere; }
+      .description { margin: var(--hy-space-2, 4px) 0 0; color: var(--hy-secondary-text-color, #9aa8ba); font-size: calc(var(--hy-font-size-xs, 10px) + 1px); overflow-wrap: anywhere; }
       .close {
         display: grid;
         width: 26px;
         height: 26px;
         padding: 0;
         border: 0;
-        border-radius: 5px;
+        border-radius: calc(var(--hy-radius-sm, 4px) + 1px);
         place-items: center;
         color: var(--hy-secondary-text-color, #8492a6);
         background: transparent;
         cursor: pointer;
-        font: 18px/1 system-ui, sans-serif;
+        font: calc(var(--hy-font-size-lg, 16px) + 2px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif);
       }
       .close:hover { color: inherit; background: var(--hy-hover-bg-color, #242d3b); }
       .close:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: 1px; }

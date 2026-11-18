@@ -23,3 +23,26 @@ test('portable vectors, busy states, typography and tab variants share semantic 
  await page.evaluate(()=>{p0.render(p0Tree());p0.dispose();});
  expect(await page.evaluate(()=>p0Renderer.diagnostics)).toMatchObject({activeNodes:0,activeResources:0,activeListeners:0});expect(errors).toEqual([]);
 });
+
+test('portable font scaling follows live inherited CSS tokens', async ({ page }) => {
+  await page.goto('/examples/portable-ui/');
+  await page.waitForFunction(() => !!window.demo);
+  await page.evaluate(async () => {
+    demo.dispose();
+    const { HYWebRenderer } = await import('/dist/adapters/web/index.js');
+    const { HYPage } = await import('/dist/portable/index.js');
+    const { hyNode } = await import('/dist/core/index.js');
+    const host = document.querySelector('#app');
+    host.style.setProperty('--hy-font-size-md', '1rem');
+    host.style.setProperty('--hy-line-height', '1.5');
+    const renderer = new HYWebRenderer(host, { environment: { fontScale: 1.5 } });
+    const portablePage = new HYPage(renderer);
+    portablePage.mount(hyNode('Text', 'label', { text: 'Inherited size' }));
+  });
+
+  const label = page.getByText('Inherited size');
+  await expect(label).toHaveCSS('font-size', '24px');
+  await expect(label).toHaveCSS('line-height', '54px');
+  await page.locator('#app').evaluate(host => host.style.setProperty('--hy-font-size-md', '1.25rem'));
+  await expect(label).toHaveCSS('font-size', '30px');
+});

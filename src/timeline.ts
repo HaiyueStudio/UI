@@ -51,24 +51,24 @@ export class HYTimeline extends HTMLElement {
     super();
     const root = this.attachShadow({ mode: 'open' }); const style = document.createElement('style');
     style.textContent = `
-      :host { display: block; min-width: 0; color: var(--hy-text-color, #eef3ff); font: 12px/1.5 system-ui, sans-serif; }
+      :host { display: block; min-width: 0; color: var(--hy-text-color, #eef3ff); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-relaxed, 1.5) var(--hy-font-family, system-ui, sans-serif); }
       .timeline { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
       .item { display: grid; grid-template-columns: minmax(0, 1fr) var(--hy-timeline-axis-width, 30px) minmax(0, 1fr); min-height: var(--hy-timeline-item-min-height, 72px); margin: 0; padding: 0; }
-      .label { grid-column: 1; padding: 1px 14px 22px 0; color: var(--hy-muted-color, #788697); text-align: right; }
+      .label { grid-column: 1; padding: 1px var(--hy-space-7, 14px) calc(var(--hy-space-10, 20px) + 2px) 0; color: var(--hy-muted-color, #788697); text-align: right; }
       .axis { position: relative; grid-column: 2; grid-row: 1; display: flex; justify-content: center; }
       .axis::after { position: absolute; top: 16px; bottom: 0; width: var(--hy-timeline-line-width, 1px); background: var(--hy-timeline-line-color, var(--hy-border-color, #3d4654)); content: ''; }
       .item:last-child .axis::after { display: none; }
-      .dot { position: relative; z-index: 1; display: grid; width: var(--hy-timeline-dot-size, 10px); height: var(--hy-timeline-dot-size, 10px); box-sizing: border-box; place-items: center; margin-top: 4px; border: 2px solid var(--_dot-color, var(--hy-muted-color, #788697)); border-radius: 50%; color: var(--_dot-color, var(--hy-muted-color, #788697)); background: var(--hy-surface-color, #111722); font-size: 9px; line-height: 1; }
-      .dot.custom { width: var(--hy-timeline-custom-dot-size, 22px); height: var(--hy-timeline-custom-dot-size, 22px); margin-top: -2px; border-width: 1px; background: var(--hy-surface-elevated-color, #171d27); }
+      .dot { position: relative; z-index: 1; display: grid; width: var(--hy-timeline-dot-size, 10px); height: var(--hy-timeline-dot-size, 10px); box-sizing: border-box; place-items: center; margin-top: var(--hy-space-2, 4px); border: 2px solid var(--_dot-color, var(--hy-muted-color, #788697)); border-radius: 50%; color: var(--_dot-color, var(--hy-muted-color, #788697)); background: var(--hy-surface-color, #111722); font-size: calc(var(--hy-font-size-xs, 10px) - 1px); line-height: var(--hy-line-height-tight, 1); }
+      .dot.custom { width: var(--hy-timeline-custom-dot-size, 22px); height: var(--hy-timeline-custom-dot-size, 22px); margin-top: calc(-1 * var(--hy-space-1, 2px)); border-width: 1px; background: var(--hy-surface-elevated-color, #171d27); }
       .status-success { --_dot-color: var(--hy-success-color, #4ade80); }
       .status-info { --_dot-color: var(--hy-info-color, var(--hy-accent-color, #79a8ff)); }
       .status-warning { --_dot-color: var(--hy-warning-color, #fbbf24); }
       .status-error { --_dot-color: var(--hy-error-color, #fb7185); }
-      .card { grid-column: 3; min-width: 0; padding: 0 0 22px 14px; }
-      .title { color: var(--hy-text-color, #eef3ff); font-weight: 650; }
-      .description { margin-top: 4px; color: var(--hy-secondary-text-color, #aebbd0); }
-      .content-left .card { grid-column: 1; padding: 0 14px 22px 0; text-align: right; }
-      .content-left .label { grid-column: 3; padding: 1px 0 22px 14px; text-align: left; }
+      .card { grid-column: 3; min-width: 0; padding: 0 0 calc(var(--hy-space-10, 20px) + 2px) var(--hy-space-7, 14px); }
+      .title { color: var(--hy-text-color, #eef3ff); font-weight: calc(var(--hy-font-weight-semibold, 600) + 50); }
+      .description { margin-top: var(--hy-space-2, 4px); color: var(--hy-secondary-text-color, #aebbd0); }
+      .content-left .card { grid-column: 1; padding: 0 var(--hy-space-7, 14px) calc(var(--hy-space-10, 20px) + 2px) 0; text-align: right; }
+      .content-left .label { grid-column: 3; padding: 1px 0 calc(var(--hy-space-10, 20px) + 2px) var(--hy-space-7, 14px); text-align: left; }
       .pending .dot { border-style: dashed; animation: hy-timeline-spin 1.2s linear infinite; }
       .pending .dot.custom { animation: none; }
       @keyframes hy-timeline-spin { to { transform: rotate(360deg); } }
@@ -76,9 +76,9 @@ export class HYTimeline extends HTMLElement {
       @media (max-width: 560px) {
         .item, .item.content-left { grid-template-columns: var(--hy-timeline-axis-width, 30px) minmax(0, 1fr); }
         .axis, .item.content-left .axis { grid-column: 1; }
-        .card, .item.content-left .card { grid-column: 2; padding: 0 0 22px 12px; text-align: left; }
-        .label, .item.content-left .label { grid-column: 2; grid-row: 1; justify-self: end; padding: 1px 0 0 12px; text-align: right; }
-        .label + .axis + .card { padding-top: 22px; }
+        .card, .item.content-left .card { grid-column: 2; padding: 0 0 calc(var(--hy-space-10, 20px) + 2px) var(--hy-space-6, 12px); text-align: left; }
+        .label, .item.content-left .label { grid-column: 2; grid-row: 1; justify-self: end; padding: 1px 0 0 var(--hy-space-6, 12px); text-align: right; }
+        .label + .axis + .card { padding-top: calc(var(--hy-space-10, 20px) + 2px); }
       }
     `;
     this._list.className = 'timeline'; this._list.part.add('list'); root.append(style, this._list);

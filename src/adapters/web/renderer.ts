@@ -287,10 +287,7 @@ export class HYWebRenderer implements HYRenderer {
     const theme=environment.theme?hyThemeVariables(environment.theme,fontScale):undefined;
     for(const key of this.#themeKeys)this.#root.style.removeProperty(key);this.#themeKeys=[];
     if(theme){for(const [key,value]of Object.entries(theme)){this.#root.style.setProperty(key,value);this.#themeKeys.push(key);}}
-    else if(environment.fontScale!==undefined){
-      const inherited=getComputedStyle(this.host);
-      for(const [key,fallback]of [['--hy-font-size',14],['--hy-line-height',22]] as const){const base=parseFloat(inherited.getPropertyValue(key))||fallback;this.#root.style.setProperty(key,`${base*fontScale}px`);this.#themeKeys.push(key);}
-    }
+    this.#root.style.setProperty('--_hy-web-font-scale', String(theme ? 1 : fontScale));
     this.#root.dir=direction;flag(this.#root,'data-hy-reduced-motion',!!environment.reducedMotion);
     this.#root.style.padding=safeArea==='environment'?['top','right','bottom','left'].map(side=>`env(safe-area-inset-${side}, 0px)`).join(' '):safeArea.map(value=>`${value}px`).join(' ');
     this.#scheduleLayout();

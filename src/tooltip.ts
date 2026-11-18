@@ -60,14 +60,14 @@ export class HYTooltip extends HTMLElement {
         z-index: 10001;
         box-sizing: border-box;
         max-width: min(280px, calc(100vw - 16px));
-        padding: 5px 8px;
-        border-radius: 4px;
+        padding: calc(var(--hy-space-2, 4px) + 1px) var(--hy-space-4, 8px);
+        border-radius: var(--hy-radius-sm, 4px);
         color: var(--hy-tooltip-text-color, #f4f7fb);
         background: var(--hy-tooltip-bg-color, #0f141c);
         border: 1px solid var(--hy-tooltip-border-color, rgba(255, 255, 255, 0.08));
         box-shadow: 0 8px 24px var(--hy-tooltip-shadow-color, rgba(0, 0, 0, 0.35));
-        font: 12px system-ui, sans-serif;
-        line-height: 1.35;
+        font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif);
+        line-height: calc(var(--hy-line-height-snug, 1.4) - 0.05);
         width: max-content;
         white-space: normal;
         overflow-wrap: anywhere;

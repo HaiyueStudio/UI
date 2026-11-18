@@ -27,17 +27,17 @@ export class HYBadge extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = `
-      :host { display: inline-block; max-width: 100%; color: var(--hy-text-color, #eef3ff); font: 12px/1.4 system-ui, sans-serif; vertical-align: middle; }
+      :host { display: inline-block; max-width: 100%; color: var(--hy-text-color, #eef3ff); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif); vertical-align: middle; }
       .wrapper { position: relative; display: inline-flex; max-width: 100%; align-items: center; }
-      .badge { display: inline-flex; min-width: var(--hy-badge-height, 20px); height: var(--hy-badge-height, 20px); align-items: center; justify-content: center; box-sizing: border-box; margin: 0; padding: 0 var(--hy-badge-padding, 6px); border: var(--hy-badge-border-width, 2px) solid var(--hy-surface-color, #111722); border-radius: 999px; color: var(--hy-badge-text-color, #fff); background: var(--_badge-color, var(--hy-error-color, #ef5b72)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--_badge-color, var(--hy-error-color, #ef5b72)) 12%, transparent); font: 650 var(--hy-badge-font-size, 11px)/1 system-ui, sans-serif; white-space: nowrap; }
+      .badge { display: inline-flex; min-width: var(--hy-badge-height, 20px); height: var(--hy-badge-height, 20px); align-items: center; justify-content: center; box-sizing: border-box; margin: 0; padding: 0 var(--hy-badge-padding, var(--hy-space-3, 6px)); border: var(--hy-badge-border-width, 2px) solid var(--hy-surface-color, #111722); border-radius: var(--hy-radius-full, 999px); color: var(--hy-badge-text-color, var(--hy-on-status-color, #fff)); background: var(--_badge-color, var(--hy-error-color, #ef5b72)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--_badge-color, var(--hy-error-color, #ef5b72)) 12%, transparent); font: calc(var(--hy-font-weight-semibold, 600) + 50) var(--hy-badge-font-size, calc(var(--hy-font-size-xs, 10px) + 1px))/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif); white-space: nowrap; }
       .wrapper.has-content .badge { position: absolute; z-index: 1; inset-block-start: 0; inset-inline-end: 0; transform: translate(calc(50% + var(--_offset-x, 0px)), calc(-50% + var(--_offset-y, 0px))); transform-origin: 100% 0; }
       .badge.dot { min-width: var(--hy-badge-dot-size, 8px); width: var(--hy-badge-dot-size, 8px); height: var(--hy-badge-dot-size, 8px); padding: 0; border-width: var(--hy-badge-dot-border-width, 1px); }
       .badge[hidden], .status[hidden] { display: none; }
-      .status { display: inline-flex; align-items: center; gap: var(--hy-badge-status-gap, 7px); color: var(--hy-secondary-text-color, #aebbd0); }
-      .wrapper.has-content .status { margin-inline-start: 10px; }
+      .status { display: inline-flex; align-items: center; gap: var(--hy-badge-status-gap, calc(var(--hy-space-3, 6px) + 1px)); color: var(--hy-secondary-text-color, #aebbd0); }
+      .wrapper.has-content .status { margin-inline-start: var(--hy-space-5, 10px); }
       .status-dot { position: relative; width: var(--hy-badge-status-size, 8px); height: var(--hy-badge-status-size, 8px); flex: 0 0 auto; border-radius: 50%; background: var(--_badge-color, var(--hy-muted-color, #788697)); }
       .status.processing .status-dot::after { content: ''; position: absolute; inset: -3px; border: 1px solid var(--_badge-color, var(--hy-accent-color, #79a8ff)); border-radius: inherit; animation: hy-badge-pulse 1.5s ease-out infinite; }
-      :host([size="small"]) .badge { --hy-badge-height: 16px; --hy-badge-padding: 4px; --hy-badge-font-size: 9px; }
+      :host([size="small"]) .badge { --hy-badge-height: 16px; --hy-badge-padding: var(--hy-space-2, 4px); --hy-badge-font-size: calc(var(--hy-font-size-xs, 10px) - 1px); }
       @keyframes hy-badge-pulse { 0% { opacity: .75; transform: scale(.55); } 100% { opacity: 0; transform: scale(1.35); } }
       @media (prefers-reduced-motion: reduce) { .status.processing .status-dot::after { animation: none; } }
     `;

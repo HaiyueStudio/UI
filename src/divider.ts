@@ -24,8 +24,8 @@ export class HYDivider extends HTMLElement {
     super();
     const root = this.attachShadow({ mode: 'open' }); const style = document.createElement('style');
     style.textContent = `
-      :host { display: block; min-width: 0; color: var(--hy-secondary-text-color, #aebbd0); font: 12px/1.4 system-ui, sans-serif; }
-      .divider { display: flex; width: 100%; align-items: center; gap: var(--_spacing, var(--hy-divider-text-gap, 12px)); box-sizing: border-box; }
+      :host { display: block; min-width: 0; color: var(--hy-secondary-text-color, #aebbd0); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif); }
+      .divider { display: flex; width: 100%; align-items: center; gap: var(--_spacing, var(--hy-divider-text-gap, var(--hy-space-6, 12px))); box-sizing: border-box; }
       .line { flex: 1 1 auto; min-width: 0; height: 0; border-top: var(--_thickness, 1px) var(--_line-style, solid) var(--_color, var(--hy-divider-color, var(--hy-border-color, #3d4654))); }
       .label { flex: 0 0 auto; max-width: min(70%, 64ch); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .label[hidden] { display: none; }

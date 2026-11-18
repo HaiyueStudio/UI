@@ -28,36 +28,36 @@ export class HYTabs extends HTMLElement {
       :host {
         box-sizing: border-box;
         display: grid;
-        grid-template-rows: 32px minmax(0, 1fr);
+        grid-template-rows: calc(var(--hy-control-height-sm, 28px) + var(--hy-space-2, 4px)) minmax(0, 1fr);
         width: 100%;
         height: 100%;
         min-width: 0;
         min-height: 0;
         color: var(--hy-text-color, #d8e2f2);
         background: var(--hy-panel-bg-color, #171d28);
-        font: 12px system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif);
       }
       .tabs {
         display: flex;
         align-items: end;
-        gap: 2px;
+        gap: var(--hy-space-1, 2px);
         min-width: 0;
         overflow-x: auto;
         overflow-y: hidden;
         scrollbar-width: none;
-        padding: 4px 6px 0;
+        padding: var(--hy-space-2, 4px) var(--hy-space-3, 6px) 0;
         border-bottom: 1px solid var(--hy-border-color, #303746);
         background: var(--hy-tabs-bar-bg-color, var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #1b2230)));
       }
       button {
-        height: 28px;
+        height: var(--hy-control-height-sm, 28px);
         min-width: 0;
         flex-shrink: 0;
         white-space: nowrap;
-        padding: 0 10px;
+        padding: 0 var(--hy-space-5, 10px);
         border: 1px solid transparent;
         border-bottom: 0;
-        border-radius: 4px 4px 0 0;
+        border-radius: var(--hy-radius-sm, 4px) var(--hy-radius-sm, 4px) 0 0;
         color: var(--hy-secondary-text-color, #8fa7c8);
         background: transparent;
         font: inherit;

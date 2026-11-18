@@ -26,18 +26,18 @@ export class HYHistoryControls extends HTMLElement {
     const style = document.createElement('style');
     style.textContent = `
       :host { display: inline-flex; }
-      [role="toolbar"] { display: inline-flex; gap: 2px; }
+      [role="toolbar"] { display: inline-flex; gap: var(--hy-space-1, 2px); }
       button {
         width: 30px;
-        min-height: 28px;
+        min-height: var(--hy-control-height-sm, 28px);
         border: 1px solid var(--hy-border-color, #3d4654);
         background: var(--hy-surface-elevated-color, #202733);
         color: var(--hy-text-color, #eef3ff);
-        font: 600 15px system-ui, sans-serif;
+        font: var(--hy-font-weight-semibold, 600) calc(var(--hy-font-size-md, 14px) + 1px) var(--hy-font-family, system-ui, sans-serif);
         cursor: pointer;
       }
-      button:first-child { border-radius: 4px 0 0 4px; }
-      button:last-child { border-radius: 0 4px 4px 0; }
+      button:first-child { border-radius: var(--hy-radius-sm, 4px) 0 0 var(--hy-radius-sm, 4px); }
+      button:last-child { border-radius: 0 var(--hy-radius-sm, 4px) var(--hy-radius-sm, 4px) 0; }
       button:hover:not(:disabled) { background: var(--hy-hover-bg-color, #273241); }
       button:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: 1px; }
       button:disabled { opacity: 0.45; cursor: default; }

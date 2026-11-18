@@ -45,6 +45,9 @@ test('package publishes both Haiyue themes as optional CSS subpaths', () => {
     assert.match(source, new RegExp(`data-hy-theme=["']${subpath.includes('light') ? 'light' : 'dark'}["']`));
     assert.match(source, /--hy-accent-color:/);
     assert.match(source, /--hy-surface-color:/);
+    for (const token of ['--hy-space-4: 8px', '--hy-font-size-sm: 12px', '--hy-radius-sm: 4px', '--hy-control-height-sm: 28px']) {
+      assert.ok(source.includes(token), `${subpath} must define ${token}`);
+    }
   }
 });
 

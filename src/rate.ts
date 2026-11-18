@@ -22,10 +22,10 @@ export class HYRate extends HTMLElement {
     super();
     const root = this.attachShadow({ mode: 'open' }); const style = document.createElement('style');
     style.textContent = `
-      :host { display: inline-block; color: var(--hy-text-color, #eef3ff); font: 12px/1 system-ui, sans-serif; }
-      .group { display: inline-flex; align-items: center; gap: var(--hy-rate-gap, 5px); border-radius: var(--hy-rate-focus-radius, 5px); }
+      :host { display: inline-block; color: var(--hy-text-color, #eef3ff); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif); }
+      .group { display: inline-flex; align-items: center; gap: var(--hy-rate-gap, calc(var(--hy-space-2, 4px) + 1px)); border-radius: var(--hy-rate-focus-radius, calc(var(--hy-radius-sm, 4px) + 1px)); }
       .group:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: 3px; }
-      .star { position: relative; width: 1em; height: 1em; padding: 0; overflow: hidden; border: 0; color: inherit; background: transparent; cursor: pointer; font: var(--hy-rate-font-size, 25px)/1 system-ui, sans-serif; transition: transform 120ms ease; }
+      .star { position: relative; width: 1em; height: 1em; padding: 0; overflow: hidden; border: 0; color: inherit; background: transparent; cursor: pointer; font: var(--hy-rate-font-size, calc(var(--hy-font-size-2xl, 24px) + 1px))/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif); transition: transform 120ms ease; }
       .star:hover { transform: scale(1.12); }
       .empty, .fill-inner { display: block; width: 1em; height: 1em; }
       .empty { color: var(--hy-rate-empty-color, color-mix(in srgb, var(--hy-text-color, #eef3ff) 16%, transparent)); }

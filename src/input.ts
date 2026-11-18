@@ -42,12 +42,12 @@ export class HYInput extends HTMLElement {
         display: flex;
         width: 100%;
         min-width: 0;
-        height: var(--hy-input-height, 28px);
+        height: var(--hy-input-height, var(--hy-control-height-sm, 28px));
         box-sizing: border-box;
         align-items: stretch;
         overflow: hidden;
         border: 1px solid var(--hy-border-color, #303746);
-        border-radius: var(--hy-input-radius, 4px);
+        border-radius: var(--hy-input-radius, var(--hy-radius-sm, 4px));
         color: var(--hy-text-color, #d8e2f2);
         background: var(--hy-input-bg-color, var(--hy-surface-color, #121822));
         transition: border-color 120ms ease, box-shadow 120ms ease;
@@ -61,28 +61,28 @@ export class HYInput extends HTMLElement {
         width: 0;
         min-width: 0;
         box-sizing: border-box;
-        padding: 0 var(--hy-input-padding-inline, 8px);
+        padding: 0 var(--hy-input-padding-inline, var(--hy-space-4, 8px));
         border: 0;
         outline: none;
         color: inherit;
         background: transparent;
-        font: var(--hy-input-font, 12px system-ui, sans-serif);
+        font: var(--hy-input-font, var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif));
         color-scheme: inherit;
       }
       input:disabled, input:read-only { cursor: default; }
-      input[type="color"] { min-width: 42px; padding: 3px; cursor: pointer; }
+      input[type="color"] { min-width: 42px; padding: calc(var(--hy-space-1, 2px) + 1px); cursor: pointer; }
       input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-      input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 2px; }
+      input[type="color"]::-webkit-color-swatch { border: 0; border-radius: var(--hy-radius-xs, 2px); }
       input[type="search"]::-webkit-search-cancel-button { cursor: pointer; }
       .affix {
         display: inline-flex;
         flex: 0 0 auto;
         align-items: center;
         max-width: 42%;
-        padding-inline: var(--hy-input-affix-padding, 8px);
+        padding-inline: var(--hy-input-affix-padding, var(--hy-space-4, 8px));
         overflow: hidden;
-        color: var(--hy-input-affix-color, var(--hy-muted-text-color, #8290a3));
-        font: var(--hy-input-affix-font, 12px system-ui, sans-serif);
+        color: var(--hy-input-affix-color, var(--hy-muted-text-color, var(--hy-muted-color, #8290a3)));
+        font: var(--hy-input-affix-font, var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif));
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -100,7 +100,7 @@ export class HYInput extends HTMLElement {
         color: var(--hy-input-search-color, var(--hy-accent-color, #79a8ff));
         background: var(--hy-input-search-bg, color-mix(in srgb, var(--hy-accent-color, #79a8ff) 11%, transparent));
         cursor: pointer;
-        font: 16px/1 system-ui, sans-serif;
+        font: var(--hy-font-size-lg, 16px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif);
       }
       .search-button:hover:not(:disabled) { background: var(--hy-input-search-hover-bg, color-mix(in srgb, var(--hy-accent-color, #79a8ff) 20%, transparent)); }
       .search-button:focus-visible { outline: 2px solid var(--hy-focus-border-color, #3d6fa8); outline-offset: -3px; }

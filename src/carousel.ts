@@ -51,7 +51,7 @@ export class HYCarousel extends HTMLElement {
     style.textContent = `
       :host { display: block; position: relative; box-sizing: border-box; width: 100%; height: var(--hy-carousel-height, 240px); min-width: 0; min-height: 0; color: var(--hy-text-color, #eef0ff); font: inherit; }
       :host([hidden]), [hidden] { display: none !important; }
-      .viewport { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: var(--hy-carousel-radius, 10px); background: var(--hy-carousel-bg-color, var(--hy-surface-color, #10132f)); touch-action: pan-y; }
+      .viewport { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: var(--hy-carousel-radius, calc(var(--hy-radius-lg, 8px) + 2px)); background: var(--hy-carousel-bg-color, var(--hy-surface-color, #10132f)); touch-action: pan-y; }
       :host([direction="vertical"]) .viewport { touch-action: pan-x; }
       :host([draggable="false"]) .viewport { touch-action: auto; }
       slot { display: contents; }
@@ -72,17 +72,17 @@ export class HYCarousel extends HTMLElement {
       :host(:not([direction="vertical"])[indicator-position="left"]) .arrow,
       :host(:not([direction="vertical"])[indicator-position="right"]) .arrow { top: auto; bottom: 12px; }
       :host([direction="vertical"]:not([indicator-position="left"]):not([indicator-position="right"])) .arrow { left: auto; right: auto; inset-inline-start: 12px; }
-      .playback { top: 12px; inset-inline-end: 12px; font-size: 12px; }
-      .indicators { position: absolute; z-index: 2; display: flex; align-items: center; max-width: calc(100% - 88px); overflow: auto; gap: var(--hy-carousel-indicator-gap, 4px); bottom: var(--hy-carousel-indicator-offset, 12px); left: 50%; transform: translateX(-50%); }
+      .playback { top: 12px; inset-inline-end: 12px; font-size: var(--hy-font-size-sm, 12px); }
+      .indicators { position: absolute; z-index: 2; display: flex; align-items: center; max-width: calc(100% - 88px); overflow: auto; gap: var(--hy-carousel-indicator-gap, var(--hy-space-2, 4px)); bottom: var(--hy-carousel-indicator-offset, 12px); left: 50%; transform: translateX(-50%); }
       :host([indicator-position="top"]) .indicators { top: var(--hy-carousel-indicator-offset, 12px); bottom: auto; }
       :host([indicator-position="left"]) .indicators, :host([indicator-position="right"]) .indicators { flex-direction: column; max-height: calc(100% - 88px); top: 50%; bottom: auto; transform: translateY(-50%); }
       :host([indicator-position="left"]) .indicators { left: var(--hy-carousel-indicator-offset, 12px); }
       :host([indicator-position="right"]) .indicators { left: auto; right: var(--hy-carousel-indicator-offset, 12px); }
-      .indicator { display: grid; flex: 0 0 auto; place-items: center; min-width: 24px; min-height: 24px; padding: 4px; background: transparent; border-radius: 4px; }
+      .indicator { display: grid; flex: 0 0 auto; place-items: center; min-width: 24px; min-height: 24px; padding: var(--hy-space-2, 4px); background: transparent; border-radius: var(--hy-radius-sm, 4px); }
       .indicator-content { display: grid; place-items: center; width: var(--hy-carousel-indicator-size, 8px); height: var(--hy-carousel-indicator-size, 8px); border-radius: var(--hy-carousel-indicator-radius, 50%); background: var(--hy-carousel-indicator-color, var(--hy-muted-color, #747ba8)); }
       .indicator[aria-current="true"] .indicator-content { background: var(--hy-carousel-indicator-active-color, var(--hy-accent-color, #8177f2)); }
-      :host([indicator-style="line"]) .indicator-content { width: var(--hy-carousel-indicator-width, 24px); height: var(--hy-carousel-indicator-thickness, 3px); border-radius: var(--hy-carousel-indicator-radius, 2px); }
-      :host([indicator-style="number"]) .indicator-content { width: 24px; height: 24px; font-size: 12px; color: var(--hy-carousel-indicator-text-color, var(--hy-text-color, #eef0ff)); }
+      :host([indicator-style="line"]) .indicator-content { width: var(--hy-carousel-indicator-width, 24px); height: var(--hy-carousel-indicator-thickness, 3px); border-radius: var(--hy-carousel-indicator-radius, var(--hy-radius-xs, 2px)); }
+      :host([indicator-style="number"]) .indicator-content { width: 24px; height: 24px; font-size: var(--hy-font-size-sm, 12px); color: var(--hy-carousel-indicator-text-color, var(--hy-text-color, #eef0ff)); }
       .indicators.custom .indicator-content { width: auto; height: auto; background: transparent; }
     `;
     this._viewport.className = 'viewport'; this._viewport.part.add('viewport'); this._viewport.tabIndex = 0;

@@ -43,4 +43,55 @@
   --hy-drop-target-bg-color: #d9effa;
   --hy-theme-glow-color: #b9e9fb;
   --hy-theme-highlight-color: #a99bea;
+  --hy-info-color: #216b91;
+  --hy-success-color: #21734f;
+  --hy-warning-color: #866018;
+  --hy-error-color: #ad3850;
+  --hy-on-status-color: #ffffff;
+  --hy-on-accent-color: #102e40;
+  --hy-shadow-color: rgba(50, 91, 118, 0.18);
+
+  /* Spacing uses a 2px step. */
+  --hy-space-1: 2px;
+  --hy-space-2: 4px;
+  --hy-space-3: 6px;
+  --hy-space-4: 8px;
+  --hy-space-5: 10px;
+  --hy-space-6: 12px;
+  --hy-space-7: 14px;
+  --hy-space-8: 16px;
+  --hy-space-10: 20px;
+  --hy-space-12: 24px;
+  --hy-space-16: 32px;
+  --hy-space-32: 64px;
+
+  --hy-font-family: system-ui, sans-serif;
+  --hy-font-family-mono: ui-monospace, monospace;
+  --hy-font-size-xs: 10px;
+  --hy-font-size-sm: 12px;
+  --hy-font-size-md: 14px;
+  --hy-font-size-lg: 16px;
+  --hy-font-size-xl: 20px;
+  --hy-font-size-2xl: 24px;
+  --hy-line-height-tight: 1;
+  --hy-line-height-compact: 1.2;
+  --hy-line-height-snug: 1.4;
+  --hy-line-height-relaxed: 1.5;
+  --hy-line-height-loose: 1.6;
+  --hy-font-weight-normal: 400;
+  --hy-font-weight-semibold: 600;
+  --hy-font-weight-bold: 700;
+  --hy-font-weight-heavy: 800;
+
+  --hy-radius-xs: 2px;
+  --hy-radius-sm: 4px;
+  --hy-radius-md: 6px;
+  --hy-radius-lg: 8px;
+  --hy-radius-xl: 12px;
+  --hy-radius-full: 999px;
+
+  --hy-control-height-xs: 24px;
+  --hy-control-height-sm: 28px;
+  --hy-control-height-md: 34px;
+  --hy-control-height-lg: 44px;
 }

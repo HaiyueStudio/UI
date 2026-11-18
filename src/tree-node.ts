@@ -17,7 +17,7 @@ export class HYTreeNode extends HTMLElement {
         display: flex;
         align-items: center;
         min-width: 0;
-        gap: 6px;
+        gap: var(--hy-space-3, 6px);
         color: inherit;
         font: inherit;
       }
@@ -27,7 +27,7 @@ export class HYTreeNode extends HTMLElement {
         display: inline-grid;
         place-items: center;
         color: var(--hy-tree-icon-color, var(--hy-secondary-text-color, #8fa7c8));
-        font-size: 12px;
+        font-size: var(--hy-font-size-sm, 12px);
       }
       .label {
         min-width: 0;

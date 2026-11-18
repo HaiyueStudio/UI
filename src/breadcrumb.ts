@@ -45,7 +45,7 @@ export class HYBreadcrumb extends HTMLElement {
         display: block;
         min-width: 0;
         color: var(--hy-secondary-text-color, #aebbd0);
-        font: 12px/1.4 system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif);
       }
       nav { min-width: 0; }
       ol {
@@ -72,10 +72,10 @@ export class HYBreadcrumb extends HTMLElement {
         min-width: 0;
         max-width: var(--hy-breadcrumb-item-max-width, 240px);
         box-sizing: border-box;
-        padding: var(--hy-breadcrumb-item-padding, 3px 5px);
+        padding: var(--hy-breadcrumb-item-padding, calc(var(--hy-space-1, 2px) + 1px) calc(var(--hy-space-2, 4px) + 1px));
         overflow: hidden;
         border: 0;
-        border-radius: var(--hy-breadcrumb-radius, 4px);
+        border-radius: var(--hy-breadcrumb-radius, var(--hy-radius-sm, 4px));
         color: inherit;
         background: transparent;
         font: inherit;
@@ -94,7 +94,7 @@ export class HYBreadcrumb extends HTMLElement {
       }
       .current {
         color: var(--hy-text-color, #eef3ff);
-        font-weight: 600;
+        font-weight: var(--hy-font-weight-semibold, 600);
       }
       .disabled { color: var(--hy-disabled-text-color, #657185); cursor: not-allowed; }
       .separator {
@@ -102,7 +102,7 @@ export class HYBreadcrumb extends HTMLElement {
         align-items: center;
         justify-content: center;
         min-width: 14px;
-        padding: 0 var(--hy-breadcrumb-separator-gap, 3px);
+        padding: 0 var(--hy-breadcrumb-separator-gap, calc(var(--hy-space-1, 2px) + 1px));
         color: var(--hy-muted-color, #657185);
         user-select: none;
       }

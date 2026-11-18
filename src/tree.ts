@@ -103,7 +103,7 @@ export class HYTree extends HTMLElement {
         min-height: 0;
         color: var(--hy-tree-text-color, var(--hy-text-color, #c8d3e4));
         background: var(--hy-panel-bg-color, #171d28);
-        font: 12px system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif);
         text-align: left;
         user-select: none;
         overflow: auto;
@@ -112,14 +112,15 @@ export class HYTree extends HTMLElement {
         box-sizing: border-box;
         width: 100%;
         flex: 0 0 auto;
-        padding: 4px;
+        padding: var(--hy-space-2, 4px);
       }
       .row {
         height: 28px;
         display: flex;
         align-items: center;
-        gap: 4px;
-        border-radius: 4px;
+        gap: var(--hy-space-2, 4px);
+        padding-left: calc(var(--hy-space-2, 4px) + var(--_hy-tree-depth, 0) * var(--hy-space-8, 16px));
+        border-radius: var(--hy-radius-sm, 4px);
         color: var(--hy-tree-text-color, var(--hy-text-color, #c8d3e4));
         cursor: default;
       }
@@ -441,7 +442,7 @@ export class HYTree extends HTMLElement {
 
     row.className = `row${selected ? ' selected' : ''}${active ? ' active' : ''}`;
     row.dataset.id = node.id;
-    row.style.paddingLeft = `${depth * 16 + 4}px`;
+    row.style.setProperty('--_hy-tree-depth', String(depth));
     row.draggable = this.allowDrag;
 
     toggle.className = `${hasChildren ? 'toggle' : 'toggle empty'}${expanded ? ' expanded' : ''}`;

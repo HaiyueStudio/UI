@@ -215,7 +215,7 @@ test('collapse exposes accessible multi-panel and accordion disclosure behavior'
   assert.match(source, /get destroyOnHidden\(\): boolean/);
   assert.match(source, /button\.setAttribute\('aria-expanded'/);
   assert.match(source, /region\.setAttribute\('role', 'region'\)/);
-  assert.match(source, /--hy-collapse-extra-gap, 10px/);
+  assert.match(source, /--hy-collapse-extra-gap, var\(--hy-space-5, 10px\)/);
   assert.match(source, /this\.accordion \? \[normalized\]/);
   assert.match(source, /CustomEvent<HYCollapseChangeDetail>\('collapse-change'/);
   assert.match(source, /customElements\.define\('hy-collapse'/);

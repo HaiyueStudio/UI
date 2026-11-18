@@ -35,7 +35,7 @@ export class HYDropdown extends HTMLElement {
         width: max-content;
         min-width: 0;
         color: var(--hy-text-color, #d8e2f2);
-        font: 12px system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif);
       }
       :host([disabled]) {
         pointer-events: none;
@@ -49,9 +49,9 @@ export class HYDropdown extends HTMLElement {
         max-height: min(320px, calc(100vh - 12px));
         overflow: auto;
         display: none;
-        padding: 4px;
+        padding: var(--hy-space-2, 4px);
         border: 1px solid var(--hy-border-color, #303746);
-        border-radius: 4px;
+        border-radius: var(--hy-radius-sm, 4px);
         color: var(--hy-text-color, #d8e2f2);
         background: var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #1b2230));
         box-shadow: 0 10px 26px var(--hy-menu-shadow-color, rgba(0, 0, 0, 0.36));

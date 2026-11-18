@@ -62,20 +62,20 @@ export class HYTour extends HTMLElement {
     super();
     const root = this.attachShadow({ mode: 'open' }); const style = document.createElement('style'); const header = document.createElement('header'); const footer = document.createElement('footer');
     style.textContent = `
-      :host { position: fixed; z-index: var(--_hy-tour-z-index, 1000); inset: 0; display: block; visibility: hidden; pointer-events: none; color: var(--hy-text-color, #eef3ff); font: 12px/1.5 system-ui, sans-serif; }
+      :host { position: fixed; z-index: var(--_hy-tour-z-index, 1000); inset: 0; display: block; visibility: hidden; pointer-events: none; color: var(--hy-text-color, #eef3ff); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-relaxed, 1.5) var(--hy-font-family, system-ui, sans-serif); }
       :host([open]) { visibility: visible; }
-      .mask { position: absolute; background: var(--hy-tour-mask-color, rgba(3, 7, 18, .68)); pointer-events: auto; }
+      .mask { position: absolute; background: var(--hy-tour-mask-color, var(--hy-dialog-backdrop-color, rgba(3, 7, 18, .68))); pointer-events: auto; }
       .mask[hidden], .highlight[hidden] { display: none; }
-      .highlight { position: absolute; box-sizing: border-box; border: 1px solid var(--hy-tour-highlight-color, var(--hy-accent-color, #79a8ff)); border-radius: var(--hy-tour-highlight-radius, 8px); box-shadow: 0 0 0 3px var(--hy-focus-ring-color, rgba(121, 168, 255, .22)); pointer-events: none; }
-      .popover { position: absolute; width: min(var(--hy-tour-width, 310px), calc(100vw - 24px)); box-sizing: border-box; padding: 15px; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-tour-radius, 10px); outline: none; background: var(--hy-surface-elevated-color, #171d27); box-shadow: 0 18px 48px var(--hy-menu-shadow-color, rgba(0, 0, 0, .4)); pointer-events: auto; }
-      header { display: flex; align-items: flex-start; gap: 12px; }
-      h2 { flex: 1; margin: 0; color: var(--hy-text-color, #eef3ff); font: 650 14px/1.4 system-ui, sans-serif; }
-      .close { width: 24px; height: 24px; padding: 0; border: 0; border-radius: 4px; color: var(--hy-muted-color, #788697); background: transparent; cursor: pointer; font: 17px/1 system-ui, sans-serif; }
+      .highlight { position: absolute; box-sizing: border-box; border: 1px solid var(--hy-tour-highlight-color, var(--hy-accent-color, #79a8ff)); border-radius: var(--hy-tour-highlight-radius, var(--hy-radius-lg, 8px)); box-shadow: 0 0 0 3px var(--hy-focus-ring-color, rgba(121, 168, 255, .22)); pointer-events: none; }
+      .popover { position: absolute; width: min(var(--hy-tour-width, 310px), calc(100vw - 24px)); box-sizing: border-box; padding: calc(var(--hy-space-7, 14px) + 1px); border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-tour-radius, calc(var(--hy-radius-lg, 8px) + 2px)); outline: none; background: var(--hy-surface-elevated-color, #171d27); box-shadow: 0 18px 48px var(--hy-menu-shadow-color, rgba(0, 0, 0, .4)); pointer-events: auto; }
+      header { display: flex; align-items: flex-start; gap: var(--hy-space-6, 12px); }
+      h2 { flex: 1; margin: 0; color: var(--hy-text-color, #eef3ff); font: calc(var(--hy-font-weight-semibold, 600) + 50) var(--hy-font-size-md, 14px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif); }
+      .close { width: 24px; height: 24px; padding: 0; border: 0; border-radius: var(--hy-radius-sm, 4px); color: var(--hy-muted-color, #788697); background: transparent; cursor: pointer; font: calc(var(--hy-font-size-lg, 16px) + 1px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif); }
       .close:hover { color: var(--hy-text-color, #eef3ff); background: var(--hy-hover-bg-color, #273241); }
-      .description { margin-top: 8px; color: var(--hy-secondary-text-color, #aebbd0); }
-      footer { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
-      .counter { flex: 1; color: var(--hy-muted-color, #788697); font: 10px/1 ui-monospace, monospace; }
-      footer button { min-width: 58px; height: 29px; padding: 0 10px; border: 1px solid var(--hy-border-color, #3d4654); border-radius: 5px; color: var(--hy-secondary-text-color, #aebbd0); background: transparent; cursor: pointer; font: inherit; }
+      .description { margin-top: var(--hy-space-4, 8px); color: var(--hy-secondary-text-color, #aebbd0); }
+      footer { display: flex; align-items: center; gap: var(--hy-space-4, 8px); margin-top: var(--hy-space-8, 16px); }
+      .counter { flex: 1; color: var(--hy-muted-color, #788697); font: var(--hy-font-size-xs, 10px)/var(--hy-line-height-tight, 1) var(--hy-font-family-mono, ui-monospace, monospace); }
+      footer button { min-width: 58px; height: 29px; padding: 0 var(--hy-space-5, 10px); border: 1px solid var(--hy-border-color, #3d4654); border-radius: calc(var(--hy-radius-sm, 4px) + 1px); color: var(--hy-secondary-text-color, #aebbd0); background: transparent; cursor: pointer; font: inherit; }
       footer button:hover:not(:disabled) { color: var(--hy-text-color, #eef3ff); border-color: var(--hy-hover-border-color, #596779); background: var(--hy-hover-bg-color, #273241); }
       footer .next { color: var(--hy-selected-text-color, #fff); border-color: var(--hy-selected-bg-color, #554cc6); background: var(--hy-selected-bg-color, #554cc6); }
       footer button:disabled { visibility: hidden; }

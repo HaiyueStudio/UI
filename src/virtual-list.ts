@@ -88,7 +88,7 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
         display: block;
         min-width: 0;
         color: var(--hy-text-color, #eef3ff);
-        font: 13px/1.4 system-ui, sans-serif;
+        font: calc(var(--hy-font-size-sm, 12px) + 1px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif);
       }
       .viewport {
         position: relative;
@@ -97,7 +97,7 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
         overflow-y: auto;
         overscroll-behavior: contain;
         border: 1px solid var(--hy-border-color, #3d4654);
-        border-radius: var(--hy-virtual-list-border-radius, 6px);
+        border-radius: var(--hy-virtual-list-border-radius, var(--hy-radius-md, 6px));
         outline: none;
         background: var(--hy-surface-color, #171d27);
         scrollbar-color: var(--hy-border-strong-color, #596779) var(--hy-input-bg-color, #111722);
@@ -112,7 +112,7 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
       .viewport::-webkit-scrollbar-thumb {
         min-height: 28px;
         border: 2px solid var(--hy-input-bg-color, #111722);
-        border-radius: 999px;
+        border-radius: var(--hy-radius-full, 999px);
         background: var(--hy-border-strong-color, #596779);
       }
       .viewport::-webkit-scrollbar-thumb:hover { background: var(--hy-accent-color, #79a8ff); }
@@ -132,7 +132,7 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
         display: grid;
         height: 100%;
         place-items: center;
-        padding: 24px;
+        padding: var(--hy-space-12, 24px);
         color: var(--hy-secondary-text-color, #9aa8ba);
         box-sizing: border-box;
       }

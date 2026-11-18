@@ -31,22 +31,22 @@ export class HYAlert extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = `
-      :host { display: block; min-width: 0; color: var(--hy-text-color, #d8e2f2); font: 12px/1.5 system-ui, sans-serif; }
+      :host { display: block; min-width: 0; color: var(--hy-text-color, #d8e2f2); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-relaxed, 1.5) var(--hy-font-family, system-ui, sans-serif); }
       :host([hidden]) { display: none; }
-      .alert { --_tone: var(--hy-info-color, #4ba3d3); --_tone-bg: var(--hy-alert-info-bg, color-mix(in srgb, var(--_tone) 13%, var(--hy-surface-color, #121822))); display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 10px; align-items: start; box-sizing: border-box; min-height: 42px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--_tone) 42%, var(--hy-border-color, #303746)); border-radius: var(--hy-alert-radius, 6px); background: var(--_tone-bg); }
+      .alert { --_tone: var(--hy-info-color, #4ba3d3); --_tone-bg: var(--hy-alert-info-bg, color-mix(in srgb, var(--_tone) 13%, var(--hy-surface-color, #121822))); display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: var(--hy-space-5, 10px); align-items: start; box-sizing: border-box; min-height: 42px; padding: var(--hy-space-5, 10px) var(--hy-space-6, 12px); border: 1px solid color-mix(in srgb, var(--_tone) 42%, var(--hy-border-color, #303746)); border-radius: var(--hy-alert-radius, var(--hy-radius-md, 6px)); background: var(--_tone-bg); }
       .alert.success { --_tone: var(--hy-success-color, #45b883); --_tone-bg: var(--hy-alert-success-bg, color-mix(in srgb, var(--_tone) 13%, var(--hy-surface-color, #121822))); }
       .alert.warning { --_tone: var(--hy-warning-color, #d5a642); --_tone-bg: var(--hy-alert-warning-bg, color-mix(in srgb, var(--_tone) 14%, var(--hy-surface-color, #121822))); }
       .alert.error { --_tone: var(--hy-error-color, #e06b72); --_tone-bg: var(--hy-alert-error-bg, color-mix(in srgb, var(--_tone) 13%, var(--hy-surface-color, #121822))); }
       :host([banner]) .alert { border-inline: 0; border-radius: 0; }
-      .icon { display: none; width: 18px; height: 18px; place-items: center; margin-top: 1px; border-radius: 50%; color: var(--hy-alert-icon-text-color, #fff); background: var(--_tone); font-size: 11px; font-weight: 800; line-height: 1; }
+      .icon { display: none; width: 18px; height: 18px; place-items: center; margin-top: 1px; border-radius: 50%; color: var(--hy-alert-icon-text-color, var(--hy-on-status-color, #fff)); background: var(--_tone); font-size: calc(var(--hy-font-size-xs, 10px) + 1px); font-weight: var(--hy-font-weight-heavy, 800); line-height: var(--hy-line-height-tight, 1); }
       .icon.visible { display: grid; }
       .content { min-width: 0; }
-      .message { display: block; color: var(--hy-alert-message-color, var(--hy-text-color, #d8e2f2)); font-weight: 600; overflow-wrap: anywhere; }
-      .description { display: block; margin-top: 2px; color: var(--hy-alert-description-color, var(--hy-secondary-text-color, #8fa7c8)); overflow-wrap: anywhere; }
+      .message { display: block; color: var(--hy-alert-message-color, var(--hy-text-color, #d8e2f2)); font-weight: var(--hy-font-weight-semibold, 600); overflow-wrap: anywhere; }
+      .description { display: block; margin-top: var(--hy-space-1, 2px); color: var(--hy-alert-description-color, var(--hy-secondary-text-color, #8fa7c8)); overflow-wrap: anywhere; }
       .description.empty { display: none; }
       .action { align-self: center; }
       .action.empty { display: none; }
-      button { min-width: 24px; height: 24px; margin: -2px -4px -2px 0; padding: 0 5px; border: 0; border-radius: 4px; color: var(--hy-alert-close-color, var(--hy-secondary-text-color, #8fa7c8)); background: transparent; font: inherit; cursor: pointer; }
+      button { min-width: var(--hy-control-height-xs, 24px); height: var(--hy-control-height-xs, 24px); margin: calc(-1 * var(--hy-space-1, 2px)) calc(-1 * var(--hy-space-2, 4px)) calc(-1 * var(--hy-space-1, 2px)) 0; padding: 0 calc(var(--hy-space-2, 4px) + 1px); border: 0; border-radius: var(--hy-radius-sm, 4px); color: var(--hy-alert-close-color, var(--hy-secondary-text-color, #8fa7c8)); background: transparent; font: inherit; cursor: pointer; }
       button:hover { color: var(--hy-alert-close-hover-color, var(--hy-text-color, #d8e2f2)); background: color-mix(in srgb, var(--_tone) 14%, transparent); }
       button:focus-visible { outline: 2px solid var(--hy-focus-border-color, #3d6fa8); outline-offset: 1px; }
       button[hidden] { display: none; }

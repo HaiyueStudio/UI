@@ -86,12 +86,12 @@ export class HYResizable extends HTMLElement {
         z-index: 2;
         inset: 0;
         border: var(--hy-resizable-border-width, 1px) var(--hy-resizable-border-style, solid) var(--hy-resizable-border-color, var(--hy-accent-color, #79a8ff));
-        border-radius: var(--hy-resizable-radius, 5px);
+        border-radius: var(--hy-resizable-radius, calc(var(--hy-radius-sm, 4px) + 1px));
         pointer-events: none;
         content: '';
       }
       .frame:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: 3px; }
-      .content { width: 100%; height: 100%; overflow: var(--hy-resizable-content-overflow, hidden); border-radius: var(--hy-resizable-radius, 5px); }
+      .content { width: 100%; height: 100%; overflow: var(--hy-resizable-content-overflow, hidden); border-radius: var(--hy-resizable-radius, calc(var(--hy-radius-sm, 4px) + 1px)); }
       :host(:not([disabled])) .content { cursor: var(--hy-resizable-move-cursor, move); }
       :host([movable="false"]) .content, :host([disabled]) .content { cursor: default; }
       .handle { position: absolute; z-index: 3; box-sizing: border-box; touch-action: none; outline: none; }
@@ -118,9 +118,9 @@ export class HYResizable extends HTMLElement {
         height: var(--hy-resizable-corner-size, 10px);
         box-sizing: border-box;
         border: 1px solid var(--hy-resizable-handle-border-color, #dbeeff);
-        border-radius: var(--hy-resizable-handle-radius, 2px);
+        border-radius: var(--hy-resizable-handle-radius, var(--hy-radius-xs, 2px));
         background: var(--hy-resizable-handle-color, var(--hy-accent-color, #79a8ff));
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
+        box-shadow: 0 1px 4px var(--hy-shadow-color, rgba(0, 0, 0, 0.28));
         content: '';
       }
       .handle.n::after, .handle.s::after { left: 50%; top: 50%; translate: -50% -50%; }

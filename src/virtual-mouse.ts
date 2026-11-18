@@ -109,17 +109,17 @@ export class HYVirtualMouse extends HTMLElement {
         box-sizing: border-box;
         border: var(--hy-virtual-mouse-border-width, 1.5px) solid var(--hy-virtual-mouse-border-color, #f5fbff);
         clip-path: polygon(5% 0, 88% 70%, 55% 74%, 72% 100%, 51% 100%, 36% 76%, 10% 96%);
-        background: var(--hy-virtual-mouse-idle-background, linear-gradient(145deg, #78d7ff, #5265e8));
+        background: var(--hy-virtual-mouse-idle-background, linear-gradient(145deg, var(--hy-accent-color, #78d7ff), var(--hy-accent-strong-color, #5265e8)));
         filter: drop-shadow(var(--hy-virtual-mouse-shadow, 0 3px 5px rgba(4, 9, 28, 0.5)));
       }
       :host([data-state="left-down"]) .shape {
-        background: var(--hy-virtual-mouse-left-down-background, linear-gradient(145deg, #b5f1ff, #6d74ff));
+        background: var(--hy-virtual-mouse-left-down-background, linear-gradient(145deg, var(--hy-focus-border-color, #b5f1ff), var(--hy-accent-color, #6d74ff)));
       }
       :host([data-state="middle-down"]) .shape {
-        background: var(--hy-virtual-mouse-middle-down-background, linear-gradient(145deg, #d6c4ff, #7654e8));
+        background: var(--hy-virtual-mouse-middle-down-background, linear-gradient(145deg, var(--hy-theme-highlight-color, #d6c4ff), #7654e8));
       }
       :host([data-state="right-down"]) .shape {
-        background: var(--hy-virtual-mouse-right-down-background, linear-gradient(145deg, #f4c8ff, #9156dc));
+        background: var(--hy-virtual-mouse-right-down-background, linear-gradient(145deg, #f4c8ff, var(--hy-accent-strong-color, #9156dc)));
       }
       .image {
         position: absolute;
@@ -140,7 +140,7 @@ export class HYVirtualMouse extends HTMLElement {
         left: var(--hy-virtual-mouse-hotspot-x, 2px);
         width: var(--hy-virtual-mouse-click-size, 28px);
         height: var(--hy-virtual-mouse-click-size, 28px);
-        border: 2px solid var(--hy-virtual-mouse-click-color, #83dcff);
+        border: 2px solid var(--hy-virtual-mouse-click-color, var(--hy-accent-color, #83dcff));
         border-radius: 50%;
         opacity: 0;
         translate: -50% -50%;

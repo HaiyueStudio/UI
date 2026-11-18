@@ -58,38 +58,38 @@ export class HYDatePicker extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = `
-      :host { position: relative; display: inline-block; min-width: 180px; color: var(--hy-text-color, #eef3ff); font: 12px/1.4 system-ui, sans-serif; }
-      .control { display: grid; grid-template-columns: minmax(0, 1fr) auto; height: var(--hy-date-picker-height, 34px); box-sizing: border-box; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-date-picker-radius, 6px); background: var(--hy-input-bg-color, #111722); }
+      :host { position: relative; display: inline-block; min-width: 180px; color: var(--hy-text-color, #eef3ff); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif); }
+      .control { display: grid; grid-template-columns: minmax(0, 1fr) auto; height: var(--hy-date-picker-height, var(--hy-control-height-md, 34px)); box-sizing: border-box; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-date-picker-radius, var(--hy-radius-md, 6px)); background: var(--hy-input-bg-color, #111722); }
       :host(:not([disabled])) .control:hover { border-color: var(--hy-hover-border-color, #596779); }
       :host(:focus-within) .control, :host([open]) .control { border-color: var(--hy-focus-border-color, #79a8ff); box-shadow: 0 0 0 2px var(--hy-focus-ring-color, rgba(121, 168, 255, 0.22)); }
-      .trigger { display: flex; align-items: center; min-width: 0; gap: 8px; padding: 0 8px 0 10px; overflow: hidden; border: 0; color: inherit; background: transparent; cursor: pointer; font: inherit; text-align: left; }
+      .trigger { display: flex; align-items: center; min-width: 0; gap: var(--hy-space-4, 8px); padding: 0 var(--hy-space-4, 8px) 0 var(--hy-space-5, 10px); overflow: hidden; border: 0; color: inherit; background: transparent; cursor: pointer; font: inherit; text-align: left; }
       .label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .label.placeholder { color: var(--hy-muted-color, #788697); }
-      .arrow { flex: 0 0 auto; color: var(--hy-muted-color, #788697); font-size: 14px; }
-      .clear { width: 28px; padding: 0; border: 0; color: var(--hy-muted-color, #788697); background: transparent; cursor: pointer; font: 15px/1 system-ui, sans-serif; }
+      .arrow { flex: 0 0 auto; color: var(--hy-muted-color, #788697); font-size: var(--hy-font-size-md, 14px); }
+      .clear { width: 28px; padding: 0; border: 0; color: var(--hy-muted-color, #788697); background: transparent; cursor: pointer; font: calc(var(--hy-font-size-md, 14px) + 1px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif); }
       .clear:hover { color: var(--hy-text-color, #eef3ff); }
       .clear[hidden] { display: none; }
       .trigger:focus-visible, .clear:focus-visible { outline: none; }
       :host([disabled]) { opacity: 0.52; }
       :host([disabled]) .trigger, :host([disabled]) .clear { cursor: not-allowed; }
-      .panel { position: absolute; z-index: var(--hy-date-picker-z-index, 50); top: calc(100% + 6px); left: 0; width: var(--hy-date-picker-panel-width, 286px); box-sizing: border-box; padding: 10px; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-date-picker-panel-radius, 8px); background: var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #171d27)); box-shadow: 0 12px 32px var(--hy-menu-shadow-color, rgba(0, 0, 0, 0.36)); }
+      .panel { position: absolute; z-index: var(--hy-date-picker-z-index, 50); top: calc(100% + 6px); left: 0; width: var(--hy-date-picker-panel-width, 286px); box-sizing: border-box; padding: var(--hy-space-5, 10px); border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-date-picker-panel-radius, var(--hy-radius-lg, 8px)); background: var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #171d27)); box-shadow: 0 12px 32px var(--hy-menu-shadow-color, rgba(0, 0, 0, 0.36)); }
       .panel[hidden] { display: none; }
-      .calendar-header { display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; margin-bottom: 7px; }
-      .month-label { color: var(--hy-text-color, #eef3ff); font-weight: 650; text-align: center; }
-      .month-button, .footer button { height: 28px; border: 1px solid transparent; border-radius: 4px; color: var(--hy-secondary-text-color, #aebbd0); background: transparent; cursor: pointer; font: inherit; }
+      .calendar-header { display: grid; grid-template-columns: 30px 1fr 30px; align-items: center; margin-bottom: calc(var(--hy-space-3, 6px) + 1px); }
+      .month-label { color: var(--hy-text-color, #eef3ff); font-weight: calc(var(--hy-font-weight-semibold, 600) + 50); text-align: center; }
+      .month-button, .footer button { height: var(--hy-control-height-sm, 28px); border: 1px solid transparent; border-radius: var(--hy-radius-sm, 4px); color: var(--hy-secondary-text-color, #aebbd0); background: transparent; cursor: pointer; font: inherit; }
       .month-button:hover:not(:disabled), .footer button:hover:not(:disabled) { color: var(--hy-accent-color, #79a8ff); background: var(--hy-hover-bg-color, #273241); }
       .month-button:focus-visible, .footer button:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: 1px; }
       .month-button:disabled, .footer button:disabled { cursor: not-allowed; opacity: 0.35; }
-      .weekdays, .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-      .weekday { padding: 4px 0; color: var(--hy-muted-color, #788697); font-size: 10px; text-align: center; }
+      .weekdays, .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--hy-space-1, 2px); }
+      .weekday { padding: var(--hy-space-2, 4px) 0; color: var(--hy-muted-color, #788697); font-size: var(--hy-font-size-xs, 10px); text-align: center; }
       .day { position: relative; width: 100%; aspect-ratio: 1; min-height: 31px; padding: 0; border: 1px solid transparent; border-radius: var(--hy-date-picker-day-radius, 50%); color: var(--hy-secondary-text-color, #aebbd0); background: transparent; cursor: pointer; font: inherit; }
       .day:hover:not(:disabled), .day:focus-visible { outline: none; color: var(--hy-text-color, #eef3ff); border-color: var(--hy-hover-border-color, #596779); background: var(--hy-hover-bg-color, #273241); }
       .day.outside { color: var(--hy-muted-color, #788697); opacity: 0.6; }
       .day.today::after { position: absolute; right: 50%; bottom: 3px; width: 3px; height: 3px; border-radius: 50%; background: var(--hy-accent-color, #79a8ff); content: ''; transform: translateX(50%); }
       .day[aria-selected="true"] { color: var(--hy-selected-text-color, #fff); border-color: var(--hy-selected-bg-color, #554cc6); background: var(--hy-selected-bg-color, #554cc6); }
       .day:disabled { cursor: not-allowed; opacity: 0.24; }
-      .footer { display: flex; justify-content: flex-end; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--hy-border-color, #3d4654); }
-      .footer button { padding: 0 9px; color: var(--hy-accent-color, #79a8ff); }
+      .footer { display: flex; justify-content: flex-end; margin-top: var(--hy-space-4, 8px); padding-top: var(--hy-space-4, 8px); border-top: 1px solid var(--hy-border-color, #3d4654); }
+      .footer button { padding: 0 calc(var(--hy-space-4, 8px) + 1px); color: var(--hy-accent-color, #79a8ff); }
     `;
     this._control.className = 'control'; this._control.part.add('control');
     this._trigger.type = 'button'; this._trigger.className = 'trigger'; this._trigger.part.add('trigger');

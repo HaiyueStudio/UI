@@ -51,13 +51,13 @@ export class HYTag extends HTMLElement {
         min-height: var(--hy-tag-height, 24px);
         box-sizing: border-box;
         align-items: center;
-        gap: var(--hy-tag-gap, 5px);
-        padding: 2px var(--hy-tag-padding-inline, 8px);
+        gap: var(--hy-tag-gap, calc(var(--hy-space-2, 4px) + 1px));
+        padding: var(--hy-space-1, 2px) var(--hy-tag-padding-inline, var(--hy-space-4, 8px));
         border: 1px solid color-mix(in srgb, var(--_tone) 42%, var(--hy-border-color, #303746));
-        border-radius: var(--hy-tag-radius, 5px);
+        border-radius: var(--hy-tag-radius, calc(var(--hy-radius-sm, 4px) + 1px));
         color: var(--_tone);
         background: var(--_surface);
-        font: 600 var(--hy-tag-font-size, 11px)/1.35 system-ui, sans-serif;
+        font: var(--hy-font-weight-semibold, 600) var(--hy-tag-font-size, calc(var(--hy-font-size-xs, 10px) + 1px))/calc(var(--hy-line-height-snug, 1.4) - 0.05) var(--hy-font-family, system-ui, sans-serif);
         transition: border-color 120ms ease, box-shadow 120ms ease, color 120ms ease, background 120ms ease;
       }
       .tag[data-variant="primary"] { --_tone: var(--hy-accent-color, #79a8ff); }
@@ -73,8 +73,8 @@ export class HYTag extends HTMLElement {
       :host(:focus-visible) { outline: none; }
       :host(:focus-visible) .tag { box-shadow: 0 0 0 2px var(--hy-focus-ring-color, rgba(61, 111, 168, .24)); }
       :host([disabled]) { pointer-events: none; opacity: .5; }
-      :host([size="small"]) .tag { --hy-tag-height: 20px; --hy-tag-padding-inline: 6px; --hy-tag-font-size: 10px; }
-      :host([size="large"]) .tag { --hy-tag-height: 30px; --hy-tag-padding-inline: 11px; --hy-tag-font-size: 12px; }
+      :host([size="small"]) .tag { --hy-tag-height: 20px; --hy-tag-padding-inline: var(--hy-space-3, 6px); --hy-tag-font-size: var(--hy-font-size-xs, 10px); }
+      :host([size="large"]) .tag { --hy-tag-height: 30px; --hy-tag-padding-inline: calc(var(--hy-space-5, 10px) + 1px); --hy-tag-font-size: var(--hy-font-size-sm, 12px); }
       .icon { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; }
       .icon[hidden] { display: none; }
       .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -82,7 +82,7 @@ export class HYTag extends HTMLElement {
         display: none;
         width: 16px;
         height: 16px;
-        margin-inline-end: -3px;
+        margin-inline-end: calc(-1 * calc(var(--hy-space-1, 2px) + 1px));
         padding: 0;
         border: 0;
         border-radius: 50%;
@@ -90,7 +90,7 @@ export class HYTag extends HTMLElement {
         color: currentColor;
         background: transparent;
         cursor: pointer;
-        font: 15px/1 system-ui, sans-serif;
+        font: calc(var(--hy-font-size-md, 14px) + 1px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif);
       }
       :host([closable]) .close { display: grid; }
       .close:hover { background: color-mix(in srgb, currentColor 16%, transparent); }

@@ -22,21 +22,21 @@ export class HYButtonGroup extends HTMLElement {
       }
       :host(:not([orientation="vertical"])) ::slotted(hy-button:not(:first-child)) { margin-left: -1px; }
       :host(:not([orientation="vertical"])) ::slotted(hy-button:first-child) {
-        --hy-button-radius-top-left: var(--hy-button-group-radius, 4px);
-        --hy-button-radius-bottom-left: var(--hy-button-group-radius, 4px);
+        --hy-button-radius-top-left: var(--hy-button-group-radius, var(--hy-radius-sm, 4px));
+        --hy-button-radius-bottom-left: var(--hy-button-group-radius, var(--hy-radius-sm, 4px));
       }
       :host(:not([orientation="vertical"])) ::slotted(hy-button:last-child) {
-        --hy-button-radius-top-right: var(--hy-button-group-radius, 4px);
-        --hy-button-radius-bottom-right: var(--hy-button-group-radius, 4px);
+        --hy-button-radius-top-right: var(--hy-button-group-radius, var(--hy-radius-sm, 4px));
+        --hy-button-radius-bottom-right: var(--hy-button-group-radius, var(--hy-radius-sm, 4px));
       }
       :host([orientation="vertical"]) ::slotted(hy-button:not(:first-child)) { margin-top: -1px; }
       :host([orientation="vertical"]) ::slotted(hy-button:first-child) {
-        --hy-button-radius-top-left: var(--hy-button-group-radius, 4px);
-        --hy-button-radius-top-right: var(--hy-button-group-radius, 4px);
+        --hy-button-radius-top-left: var(--hy-button-group-radius, var(--hy-radius-sm, 4px));
+        --hy-button-radius-top-right: var(--hy-button-group-radius, var(--hy-radius-sm, 4px));
       }
       :host([orientation="vertical"]) ::slotted(hy-button:last-child) {
-        --hy-button-radius-bottom-left: var(--hy-button-group-radius, 4px);
-        --hy-button-radius-bottom-right: var(--hy-button-group-radius, 4px);
+        --hy-button-radius-bottom-left: var(--hy-button-group-radius, var(--hy-radius-sm, 4px));
+        --hy-button-radius-bottom-right: var(--hy-button-group-radius, var(--hy-radius-sm, 4px));
       }
       ::slotted(hy-button:hover), ::slotted(hy-button:focus-within) { z-index: 1; }
     `;

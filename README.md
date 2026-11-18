@@ -798,7 +798,38 @@ Apply a theme to the document or to a component subtree. Tokens inherit through 
 - `light` / Haiyue Moonlight: moon white, pale ice blue, cyan and a soft violet highlight.
 - `dark` / Haiyue Nightfall: deep navy, blue violet, cool white and a restrained gold highlight.
 
-All theme tokens use the `--hy-` prefix and may be overridden by consuming products.
+The two skins share the same design scales. Define overrides on the element that carries `data-hy-theme`
+or on a descendant wrapper. For overrides on the same element, load product rules after the theme stylesheet
+and match the theme selector's specificity.
+
+| Category | Shared tokens | Examples |
+| --- | --- | --- |
+| Semantic colors | Surface, text, border, accent, focus and status | `--hy-surface-color`, `--hy-text-color`, `--hy-accent-color`, `--hy-success-color` |
+| Spacing | `--hy-space-*` on a 2px scale | `--hy-space-2` = 4px, `--hy-space-4` = 8px, `--hy-space-8` = 16px |
+| Typography | Font families, `--hy-font-size-*`, `--hy-line-height-*`, `--hy-font-weight-*` | `--hy-font-size-sm` = 12px, `--hy-font-size-md` = 14px, `--hy-line-height-relaxed` = 1.5 |
+| Corner radius | `--hy-radius-xs` through `--hy-radius-xl` and `--hy-radius-full` | `--hy-radius-sm` = 4px, `--hy-radius-md` = 6px, `--hy-radius-lg` = 8px |
+| Control height | `--hy-control-height-xs`, `-sm`, `-md`, `-lg` | 24px, 28px, 34px, 44px |
+
+```html
+<section data-hy-theme="light" class="product-skin">
+  <hy-input aria-label="Project name"></hy-input>
+  <hy-button>Save</hy-button>
+</section>
+```
+
+```css
+[data-hy-theme="light"].product-skin {
+  --hy-accent-color: #a44932;
+  --hy-space-4: 12px;
+  --hy-space-5: 15px;
+  --hy-font-size-sm: 15px;
+  --hy-radius-sm: 10px;
+  --hy-control-height-sm: 38px;
+}
+```
+
+Components resolve their specific tokens first where available. For example, `--hy-input-radius` overrides
+`--hy-radius-sm` for Input. Each component provides usable fallback values when no theme is applied.
 
 ## Component examples
 
@@ -811,7 +842,9 @@ npm run examples
 ```
 
 Then open <http://localhost:4173/>. The gallery provides a left-side component index and live examples for
-every exported component, including editable parameters and event output. The gallery shell itself dogfoods
+every exported component, including editable parameters and event output. Open **设计规范** to compare
+Moonlight, Nightfall, and a custom skin on the same controls and inspect the CSS and current token values.
+The gallery shell itself dogfoods
 Haiyue UI: theme actions, component search, command results, status, and example action controls use the
 published Web Components rather than parallel page-only widgets. The navigation/content shell and eligible
 preview/control cards use `hy-split` for keyboard- and pointer-adjustable sizing. Usage blocks are rendered as

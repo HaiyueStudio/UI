@@ -77,6 +77,7 @@ const syncCardSplits = () => {
 };
 responsiveCardSplit.addEventListener('change', syncCardSplits);
 syncCardSplits();
+byId('design-skin-source').textContent = byId('design-skin-css').textContent.trim();
 installCodeEditors();
 
 // Modal.
@@ -167,6 +168,29 @@ function setTheme(theme) {
 }
 for (const button of themeButtons) button.addEventListener('click', () => setTheme(button.dataset.theme));
 
+const designPreview = byId('design-preview');
+const designThemeButtons = document.querySelectorAll('[data-design-theme]');
+const designTokenValues = designPreview.querySelectorAll('[data-design-token]');
+function setDesignTheme(theme) {
+  designPreview.dataset.hyTheme = theme === 'terracotta' ? 'light' : theme;
+  if (theme === 'terracotta') designPreview.dataset.designSkin = theme;
+  else delete designPreview.dataset.designSkin;
+  for (const button of designThemeButtons) button.setAttribute('aria-pressed', String(button.dataset.designTheme === theme));
+  const style = getComputedStyle(designPreview);
+  for (const value of designTokenValues) value.textContent = style.getPropertyValue(value.dataset.designToken).trim();
+}
+for (const button of designThemeButtons) button.addEventListener('click', () => setDesignTheme(button.dataset.designTheme));
+setDesignTheme('terracotta');
+const designButton = byId('design-demo-button');
+designButton.addEventListener('click', () => {
+  const pressed = designButton.getAttribute('aria-pressed') === 'false';
+  designButton.setAttribute('aria-pressed', String(pressed));
+  designButton.textContent = pressed ? '已收藏' : '收藏';
+});
+const designSegmented = byId('design-demo-segmented');
+designSegmented.options = [{ value: 'list', label: '列表' }, { value: 'grid', label: '网格' }];
+designSegmented.value = 'list';
+
 // Navigation, filtering and the quick component switcher.
 const navLinks = [...document.querySelectorAll('#component-nav a')];
 const sections = [...document.querySelectorAll('.component-section')];
@@ -227,7 +251,7 @@ function renderCommand() {
     const title = document.createElement('span');
     const tag = document.createElement('code');
     title.textContent = section.dataset.title;
-    tag.textContent = `hy-${section.id}`;
+    tag.textContent = section.dataset.tag ?? `hy-${section.id}`;
     button.append(title, tag);
     button.addEventListener('click', () => selectCommand(section));
     return button;

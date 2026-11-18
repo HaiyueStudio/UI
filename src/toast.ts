@@ -63,7 +63,7 @@ export class HYToast extends HTMLElement {
     const style = document.createElement('style');
     style.textContent = `
       :host { position: fixed; z-index: var(--hy-toast-z-index, 1200); inset: 0; display: block; pointer-events: none; }
-      .container { position: fixed; left: 50%; display: flex; width: min(var(--hy-toast-width, 420px), calc(100vw - 32px)); flex-direction: column; align-items: center; gap: var(--hy-toast-gap, 9px); pointer-events: none; transform: translateX(-50%); }
+      .container { position: fixed; left: 50%; display: flex; width: min(var(--hy-toast-width, 420px), calc(100vw - 32px)); flex-direction: column; align-items: center; gap: var(--hy-toast-gap, calc(var(--hy-space-4, 8px) + 1px)); pointer-events: none; transform: translateX(-50%); }
       .container[data-placement="top"] { top: var(--hy-toast-offset, 24px); }
       .container[data-placement="center"] { top: 50%; transform: translate(-50%, -50%); }
       .container[data-placement="bottom"] { bottom: var(--hy-toast-offset, 24px); flex-direction: column-reverse; }
@@ -71,19 +71,19 @@ export class HYToast extends HTMLElement {
         --_tone: var(--hy-info-color, var(--hy-accent-color, #79a8ff));
         display: grid;
         grid-template-columns: 20px minmax(0, 1fr) auto;
-        gap: 9px;
+        gap: calc(var(--hy-space-4, 8px) + 1px);
         min-width: min(240px, calc(100vw - 32px));
         max-width: 100%;
         box-sizing: border-box;
         align-items: center;
-        padding: 10px 12px;
+        padding: var(--hy-space-5, 10px) var(--hy-space-6, 12px);
         border: 1px solid color-mix(in srgb, var(--_tone) 28%, var(--hy-border-color, #303746));
-        border-radius: var(--hy-toast-radius, 8px);
+        border-radius: var(--hy-toast-radius, var(--hy-radius-lg, 8px));
         color: var(--hy-text-color, #e8effa);
         background: var(--hy-toast-bg-color, var(--hy-surface-elevated-color, #171e2a));
-        box-shadow: 0 10px 30px var(--hy-toast-shadow-color, rgba(0, 0, 0, .3));
+        box-shadow: 0 10px 30px var(--hy-toast-shadow-color, var(--hy-shadow-color, rgba(0, 0, 0, .3)));
         pointer-events: auto;
-        font: 12px/1.45 system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px)/calc(var(--hy-line-height-snug, 1.4) + 0.05) var(--hy-font-family, system-ui, sans-serif);
         animation: hy-toast-enter 160ms cubic-bezier(.22, 1, .36, 1);
         transition: opacity 140ms ease, transform 140ms ease;
       }
@@ -93,10 +93,10 @@ export class HYToast extends HTMLElement {
       .toast[data-type="loading"] { --_tone: var(--hy-accent-color, #79a8ff); }
       .toast.closing { opacity: 0; transform: translateY(-6px) scale(.97); }
       .container[data-placement="bottom"] .toast.closing { transform: translateY(6px) scale(.97); }
-      .icon { display: grid; width: 20px; height: 20px; place-items: center; color: var(--_tone); font-weight: 800; }
-      .toast[data-type="loading"] .icon { width: 15px; height: 15px; margin: 2px; border: 2px solid color-mix(in srgb, var(--_tone) 25%, transparent); border-top-color: var(--_tone); border-radius: 50%; animation: hy-toast-spin .75s linear infinite; font-size: 0; }
+      .icon { display: grid; width: 20px; height: 20px; place-items: center; color: var(--_tone); font-weight: var(--hy-font-weight-heavy, 800); }
+      .toast[data-type="loading"] .icon { width: 15px; height: 15px; margin: var(--hy-space-1, 2px); border: 2px solid color-mix(in srgb, var(--_tone) 25%, transparent); border-top-color: var(--_tone); border-radius: 50%; animation: hy-toast-spin .75s linear infinite; font-size: 0; }
       .message { min-width: 0; overflow-wrap: anywhere; }
-      .close { display: grid; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 4px; place-items: center; color: var(--hy-secondary-text-color, #9aa8ba); background: transparent; cursor: pointer; font: 16px/1 system-ui, sans-serif; }
+      .close { display: grid; width: 20px; height: 20px; padding: 0; border: 0; border-radius: var(--hy-radius-sm, 4px); place-items: center; color: var(--hy-secondary-text-color, #9aa8ba); background: transparent; cursor: pointer; font: var(--hy-font-size-lg, 16px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif); }
       .close:hover { color: inherit; background: var(--hy-hover-bg-color, #242d3b); }
       .close:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: 1px; }
       @keyframes hy-toast-enter { from { opacity: 0; transform: translateY(-7px) scale(.97); } }

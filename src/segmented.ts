@@ -29,19 +29,19 @@ export class HYSegmented extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = `
-      :host { display: inline-block; max-width: 100%; color: var(--hy-text-color, #d8e2f2); font: 12px system-ui, sans-serif; }
+      :host { display: inline-block; max-width: 100%; color: var(--hy-text-color, #d8e2f2); font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif); }
       :host([block]) { display: block; width: 100%; }
-      .group { display: inline-flex; box-sizing: border-box; max-width: 100%; gap: 2px; padding: 3px; border: 1px solid var(--hy-segmented-border-color, transparent); border-radius: var(--hy-segmented-radius, 7px); background: var(--hy-segmented-bg-color, var(--hy-input-bg-color, #121822)); }
+      .group { display: inline-flex; box-sizing: border-box; max-width: 100%; gap: var(--hy-space-1, 2px); padding: calc(var(--hy-space-1, 2px) + 1px); border: 1px solid var(--hy-segmented-border-color, transparent); border-radius: var(--hy-segmented-radius, calc(var(--hy-radius-md, 6px) + 1px)); background: var(--hy-segmented-bg-color, var(--hy-input-bg-color, #121822)); }
       :host([block]) .group { display: flex; width: 100%; }
-      button { display: inline-flex; min-width: 0; height: 28px; align-items: center; justify-content: center; gap: 6px; padding: 0 12px; border: 0; border-radius: calc(var(--hy-segmented-radius, 7px) - 2px); color: var(--hy-segmented-text-color, var(--hy-secondary-text-color, #8fa7c8)); background: transparent; font: inherit; white-space: nowrap; cursor: pointer; transition: color 120ms ease, background 120ms ease, box-shadow 120ms ease; }
+      button { display: inline-flex; min-width: 0; height: var(--hy-control-height-sm, 28px); align-items: center; justify-content: center; gap: var(--hy-space-3, 6px); padding: 0 var(--hy-space-6, 12px); border: 0; border-radius: calc(var(--hy-segmented-radius, calc(var(--hy-radius-md, 6px) + 1px)) - 2px); color: var(--hy-segmented-text-color, var(--hy-secondary-text-color, #8fa7c8)); background: transparent; font: inherit; white-space: nowrap; cursor: pointer; transition: color 120ms ease, background 120ms ease, box-shadow 120ms ease; }
       :host([block]) button { flex: 1 1 0; }
-      :host([size="small"]) button { height: 22px; padding-inline: 8px; font-size: 11px; }
-      :host([size="large"]) button { height: 34px; padding-inline: 16px; font-size: 13px; }
+      :host([size="small"]) button { height: calc(var(--hy-control-height-xs, 24px) - 2px); padding-inline: var(--hy-space-4, 8px); font-size: calc(var(--hy-font-size-xs, 10px) + 1px); }
+      :host([size="large"]) button { height: var(--hy-control-height-md, 34px); padding-inline: var(--hy-space-8, 16px); font-size: calc(var(--hy-font-size-sm, 12px) + 1px); }
       button:hover:not(:disabled):not(.selected) { color: var(--hy-text-color, #d8e2f2); background: var(--hy-hover-bg-color, #222b3a); }
-      button.selected { color: var(--hy-segmented-selected-text-color, var(--hy-active-text-color, #eef3ff)); background: var(--hy-segmented-selected-bg-color, var(--hy-surface-elevated-color, #1b2230)); box-shadow: var(--hy-segmented-selected-shadow, 0 1px 3px rgba(0, 0, 0, 0.24)); }
+      button.selected { color: var(--hy-segmented-selected-text-color, var(--hy-active-text-color, #eef3ff)); background: var(--hy-segmented-selected-bg-color, var(--hy-surface-elevated-color, #1b2230)); box-shadow: var(--hy-segmented-selected-shadow, 0 1px 3px var(--hy-shadow-color, rgba(0, 0, 0, 0.24))); }
       button:focus-visible { outline: 2px solid var(--hy-focus-border-color, #3d6fa8); outline-offset: 1px; }
       button:disabled { opacity: 0.42; cursor: default; }
-      .icon { flex: none; line-height: 1; }
+      .icon { flex: none; line-height: var(--hy-line-height-tight, 1); }
       .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
       @media (prefers-reduced-motion: reduce) { button { transition: none; } }
     `;

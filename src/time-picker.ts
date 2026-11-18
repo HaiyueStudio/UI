@@ -52,27 +52,27 @@ export class HYTimePicker extends HTMLElement {
     super();
     const root = this.attachShadow({ mode: 'open' }); const style = document.createElement('style');
     style.textContent = `
-      :host { position: relative; display: inline-block; min-width: 150px; color: var(--hy-text-color, #eef3ff); font: 12px/1.4 system-ui, sans-serif; }
-      .control { display: grid; grid-template-columns: minmax(0, 1fr) auto; height: var(--hy-time-picker-height, 34px); box-sizing: border-box; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-time-picker-radius, 6px); background: var(--hy-input-bg-color, #111722); }
+      :host { position: relative; display: inline-block; min-width: 150px; color: var(--hy-text-color, #eef3ff); font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif); }
+      .control { display: grid; grid-template-columns: minmax(0, 1fr) auto; height: var(--hy-time-picker-height, var(--hy-control-height-md, 34px)); box-sizing: border-box; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-time-picker-radius, var(--hy-radius-md, 6px)); background: var(--hy-input-bg-color, #111722); }
       :host(:not([disabled])) .control:hover { border-color: var(--hy-hover-border-color, #596779); }
       :host(:focus-within) .control, :host([open]) .control { border-color: var(--hy-focus-border-color, #79a8ff); box-shadow: 0 0 0 2px var(--hy-focus-ring-color, rgba(121, 168, 255, .22)); }
-      .trigger { display: flex; min-width: 0; align-items: center; gap: 8px; padding: 0 8px 0 10px; overflow: hidden; border: 0; color: inherit; background: transparent; cursor: pointer; font: inherit; text-align: left; }
+      .trigger { display: flex; min-width: 0; align-items: center; gap: var(--hy-space-4, 8px); padding: 0 var(--hy-space-4, 8px) 0 var(--hy-space-5, 10px); overflow: hidden; border: 0; color: inherit; background: transparent; cursor: pointer; font: inherit; text-align: left; }
       .label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .label.placeholder { color: var(--hy-muted-color, #788697); }
-      .arrow { color: var(--hy-muted-color, #788697); font-size: 14px; }
-      .clear { width: 28px; padding: 0; border: 0; color: var(--hy-muted-color, #788697); background: transparent; cursor: pointer; font: 15px/1 system-ui, sans-serif; }
+      .arrow { color: var(--hy-muted-color, #788697); font-size: var(--hy-font-size-md, 14px); }
+      .clear { width: 28px; padding: 0; border: 0; color: var(--hy-muted-color, #788697); background: transparent; cursor: pointer; font: calc(var(--hy-font-size-md, 14px) + 1px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif); }
       .clear:hover { color: var(--hy-text-color, #eef3ff); } .clear[hidden], .panel[hidden] { display: none; }
       .trigger:focus-visible, .clear:focus-visible { outline: none; }
       :host([disabled]) { opacity: .52; } :host([disabled]) .trigger, :host([disabled]) .clear { cursor: not-allowed; }
-      .panel { position: absolute; z-index: var(--hy-time-picker-z-index, 50); top: calc(100% + 6px); left: 0; width: max-content; min-width: 100%; box-sizing: border-box; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-time-picker-panel-radius, 8px); background: var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #171d27)); box-shadow: 0 12px 32px var(--hy-menu-shadow-color, rgba(0, 0, 0, .36)); }
+      .panel { position: absolute; z-index: var(--hy-time-picker-z-index, 50); top: calc(100% + 6px); left: 0; width: max-content; min-width: 100%; box-sizing: border-box; border: 1px solid var(--hy-border-color, #3d4654); border-radius: var(--hy-time-picker-panel-radius, var(--hy-radius-lg, 8px)); background: var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #171d27)); box-shadow: 0 12px 32px var(--hy-menu-shadow-color, rgba(0, 0, 0, .36)); }
       .columns { display: flex; height: var(--hy-time-picker-panel-height, 196px); overflow: hidden; }
-      .column { width: var(--hy-time-picker-column-width, 58px); margin: 0; padding: 4px; overflow-y: auto; list-style: none; scrollbar-color: var(--hy-border-strong-color, #596779) transparent; scrollbar-width: thin; }
+      .column { width: var(--hy-time-picker-column-width, 58px); margin: 0; padding: var(--hy-space-2, 4px); overflow-y: auto; list-style: none; scrollbar-color: var(--hy-border-strong-color, #596779) transparent; scrollbar-width: thin; }
       .column + .column { border-left: 1px solid var(--hy-border-color, #3d4654); }
-      .option { width: 100%; height: 30px; padding: 0; border: 0; border-radius: 4px; color: var(--hy-secondary-text-color, #aebbd0); background: transparent; cursor: pointer; font: inherit; }
+      .option { width: 100%; height: 30px; padding: 0; border: 0; border-radius: var(--hy-radius-sm, 4px); color: var(--hy-secondary-text-color, #aebbd0); background: transparent; cursor: pointer; font: inherit; }
       .option:hover, .option:focus-visible { outline: none; color: var(--hy-text-color, #eef3ff); background: var(--hy-hover-bg-color, #273241); }
       .option[aria-selected="true"] { color: var(--hy-selected-text-color, #fff); background: var(--hy-selected-bg-color, #554cc6); }
-      .footer { display: flex; justify-content: space-between; gap: 8px; padding: 7px 8px; border-top: 1px solid var(--hy-border-color, #3d4654); }
-      .footer button { min-width: 42px; height: 27px; padding: 0 8px; border: 1px solid transparent; border-radius: 4px; color: var(--hy-accent-color, #79a8ff); background: transparent; cursor: pointer; font: inherit; }
+      .footer { display: flex; justify-content: space-between; gap: var(--hy-space-4, 8px); padding: calc(var(--hy-space-3, 6px) + 1px) var(--hy-space-4, 8px); border-top: 1px solid var(--hy-border-color, #3d4654); }
+      .footer button { min-width: 42px; height: 27px; padding: 0 var(--hy-space-4, 8px); border: 1px solid transparent; border-radius: var(--hy-radius-sm, 4px); color: var(--hy-accent-color, #79a8ff); background: transparent; cursor: pointer; font: inherit; }
       .footer button:hover:not(:disabled) { background: var(--hy-hover-bg-color, #273241); }
       .footer .confirm { color: var(--hy-selected-text-color, #fff); background: var(--hy-selected-bg-color, #554cc6); }
       .footer button:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: 1px; }

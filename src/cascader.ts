@@ -67,16 +67,16 @@ export class HYCascader extends HTMLElement {
         display: inline-block;
         min-width: 180px;
         color: var(--hy-text-color, #eef3ff);
-        font: 12px/1.4 system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif);
       }
       .control {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         min-width: 0;
-        height: var(--hy-cascader-height, 34px);
+        height: var(--hy-cascader-height, var(--hy-control-height-md, 34px));
         box-sizing: border-box;
         border: 1px solid var(--hy-border-color, #3d4654);
-        border-radius: var(--hy-cascader-radius, 6px);
+        border-radius: var(--hy-cascader-radius, var(--hy-radius-md, 6px));
         background: var(--hy-input-bg-color, #111722);
       }
       :host(:not([disabled])) .control:hover { border-color: var(--hy-hover-border-color, #596779); }
@@ -88,8 +88,8 @@ export class HYCascader extends HTMLElement {
         display: flex;
         align-items: center;
         min-width: 0;
-        gap: 8px;
-        padding: 0 8px 0 10px;
+        gap: var(--hy-space-4, 8px);
+        padding: 0 var(--hy-space-4, 8px) 0 var(--hy-space-5, 10px);
         overflow: hidden;
         border: 0;
         color: inherit;
@@ -109,7 +109,7 @@ export class HYCascader extends HTMLElement {
         color: var(--hy-muted-color, #788697);
         background: transparent;
         cursor: pointer;
-        font: 15px/1 system-ui, sans-serif;
+        font: calc(var(--hy-font-size-md, 14px) + 1px)/var(--hy-line-height-tight, 1) var(--hy-font-family, system-ui, sans-serif);
       }
       .clear:hover { color: var(--hy-text-color, #eef3ff); }
       .clear[hidden] { display: none; }
@@ -125,7 +125,7 @@ export class HYCascader extends HTMLElement {
         max-width: min(720px, 90vw);
         overflow: auto;
         border: 1px solid var(--hy-border-color, #3d4654);
-        border-radius: var(--hy-cascader-panel-radius, 7px);
+        border-radius: var(--hy-cascader-panel-radius, calc(var(--hy-radius-md, 6px) + 1px));
         background: var(--hy-menu-bg-color, var(--hy-surface-elevated-color, #171d27));
         box-shadow: 0 12px 32px var(--hy-menu-shadow-color, rgba(0, 0, 0, 0.36));
       }
@@ -136,7 +136,7 @@ export class HYCascader extends HTMLElement {
         max-height: var(--hy-cascader-panel-height, 260px);
         box-sizing: border-box;
         margin: 0;
-        padding: 5px;
+        padding: calc(var(--hy-space-2, 4px) + 1px);
         overflow-y: auto;
         list-style: none;
         scrollbar-color: var(--hy-border-strong-color, #596779) transparent;
@@ -148,11 +148,11 @@ export class HYCascader extends HTMLElement {
         width: 100%;
         min-height: 32px;
         align-items: center;
-        gap: 8px;
-        padding: 6px 8px;
+        gap: var(--hy-space-4, 8px);
+        padding: var(--hy-space-3, 6px) var(--hy-space-4, 8px);
         overflow: hidden;
         border: 0;
-        border-radius: 4px;
+        border-radius: var(--hy-radius-sm, 4px);
         color: var(--hy-secondary-text-color, #aebbd0);
         background: transparent;
         cursor: pointer;
@@ -168,7 +168,7 @@ export class HYCascader extends HTMLElement {
       }
       .option[aria-selected="true"] { color: var(--hy-accent-color, #79a8ff); }
       .option:disabled { cursor: not-allowed; opacity: 0.46; }
-      .empty { min-width: 184px; padding: 28px 18px; color: var(--hy-muted-color, #788697); text-align: center; }
+      .empty { min-width: 184px; padding: calc(var(--hy-space-12, 24px) + 4px) calc(var(--hy-space-8, 16px) + 2px); color: var(--hy-muted-color, #788697); text-align: center; }
     `;
     this._control.className = 'control';
     this._control.part.add('control');

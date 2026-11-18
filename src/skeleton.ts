@@ -27,19 +27,19 @@ export class HYSkeleton extends HTMLElement {
     const root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = `
-      :host { display: block; min-width: 0; font: 12px/1.4 system-ui, sans-serif; }
-      .placeholder { display: flex; min-width: 0; align-items: flex-start; gap: var(--hy-skeleton-gap, 14px); }
+      :host { display: block; min-width: 0; font: var(--hy-font-size-sm, 12px)/var(--hy-line-height-snug, 1.4) var(--hy-font-family, system-ui, sans-serif); }
+      .placeholder { display: flex; min-width: 0; align-items: flex-start; gap: var(--hy-skeleton-gap, var(--hy-space-7, 14px)); }
       .placeholder[hidden], .content[hidden] { display: none; }
-      .body { flex: 1; min-width: 0; padding-top: var(--hy-skeleton-body-offset, 2px); }
+      .body { flex: 1; min-width: 0; padding-top: var(--hy-skeleton-body-offset, var(--hy-space-1, 2px)); }
       .block { position: relative; overflow: hidden; background: var(--hy-skeleton-color, color-mix(in srgb, var(--hy-text-color, #eef3ff) 11%, transparent)); }
       .avatar { flex: 0 0 auto; width: var(--_avatar-size); height: var(--_avatar-size); border-radius: 50%; }
-      :host([avatar-shape="square"]) .avatar { border-radius: var(--hy-skeleton-avatar-radius, 7px); }
-      .title { height: var(--hy-skeleton-title-height, 15px); margin-bottom: var(--hy-skeleton-title-gap, 17px); border-radius: var(--hy-skeleton-radius, 5px); }
-      .paragraph { display: grid; gap: var(--hy-skeleton-row-gap, 11px); }
-      .row { height: var(--hy-skeleton-row-height, 11px); border-radius: var(--hy-skeleton-radius, 5px); }
-      :host([round]) .title, :host([round]) .row { border-radius: 999px; }
-      :host([size="small"]) { --hy-skeleton-title-height: 12px; --hy-skeleton-row-height: 8px; --hy-skeleton-row-gap: 9px; --hy-skeleton-gap: 11px; }
-      :host([size="large"]) { --hy-skeleton-title-height: 18px; --hy-skeleton-row-height: 14px; --hy-skeleton-row-gap: 13px; --hy-skeleton-gap: 17px; }
+      :host([avatar-shape="square"]) .avatar { border-radius: var(--hy-skeleton-avatar-radius, calc(var(--hy-radius-md, 6px) + 1px)); }
+      .title { height: var(--hy-skeleton-title-height, 15px); margin-bottom: var(--hy-skeleton-title-gap, calc(var(--hy-space-8, 16px) + 1px)); border-radius: var(--hy-skeleton-radius, calc(var(--hy-radius-sm, 4px) + 1px)); }
+      .paragraph { display: grid; gap: var(--hy-skeleton-row-gap, calc(var(--hy-space-5, 10px) + 1px)); }
+      .row { height: var(--hy-skeleton-row-height, 11px); border-radius: var(--hy-skeleton-radius, calc(var(--hy-radius-sm, 4px) + 1px)); }
+      :host([round]) .title, :host([round]) .row { border-radius: var(--hy-radius-full, 999px); }
+      :host([size="small"]) { --hy-skeleton-title-height: 12px; --hy-skeleton-row-height: 8px; --hy-skeleton-row-gap: calc(var(--hy-space-4, 8px) + 1px); --hy-skeleton-gap: calc(var(--hy-space-5, 10px) + 1px); }
+      :host([size="large"]) { --hy-skeleton-title-height: 18px; --hy-skeleton-row-height: 14px; --hy-skeleton-row-gap: calc(var(--hy-space-6, 12px) + 1px); --hy-skeleton-gap: calc(var(--hy-space-8, 16px) + 1px); }
       :host([active]) .block::after { position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, var(--hy-skeleton-highlight-color, color-mix(in srgb, var(--hy-text-color, #eef3ff) 12%, transparent)) 45%, transparent 85%); content: ''; transform: translateX(-100%); animation: hy-skeleton-wave var(--hy-skeleton-duration, 1.5s) ease-in-out infinite; }
       @keyframes hy-skeleton-wave { to { transform: translateX(100%); } }
       @media (prefers-reduced-motion: reduce) { :host([active]) .block::after { animation: none; } }

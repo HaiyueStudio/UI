@@ -20,13 +20,13 @@ export class HYExpandable extends HTMLElement {
       :host { display:block; position:relative; min-width:0; min-height:0; }
       .placeholder { display:none; pointer-events:none; }
       .panel { position:relative; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:minmax(0,1fr); width:100%; height:100%; min-width:0; min-height:0; box-sizing:border-box; color:inherit; font:inherit; }
-      .panel:popover-open { position:fixed; inset:0; margin:auto; width:var(--_width,90vw); height:var(--_height,90dvh); max-width:calc(100vw - 2 * var(--hy-expandable-margin,16px)); max-height:calc(100dvh - 2 * var(--hy-expandable-margin,16px)); padding:var(--hy-expandable-padding,16px); border:1px solid var(--hy-border-color,#536074); border-radius:var(--hy-expandable-radius,10px); background:var(--hy-surface-color,#18202e); box-shadow:var(--hy-expandable-shadow,0 16px 64px #0006); }
+      .panel:popover-open { position:fixed; inset:0; margin:auto; width:var(--_width,90vw); height:var(--_height,90dvh); max-width:calc(100vw - 2 * var(--hy-expandable-margin,var(--hy-space-8, 16px))); max-height:calc(100dvh - 2 * var(--hy-expandable-margin,var(--hy-space-8, 16px))); padding:var(--hy-expandable-padding,var(--hy-space-8, 16px)); border:1px solid var(--hy-border-color,#536074); border-radius:var(--hy-expandable-radius,calc(var(--hy-radius-lg, 8px) + 2px)); background:var(--hy-surface-color,#18202e); box-shadow:var(--hy-expandable-shadow,0 16px 64px var(--hy-shadow-color, #0006)); }
       .panel::backdrop { background:transparent; pointer-events:none; }
-      button { position:absolute; z-index:2; top:var(--hy-expandable-button-offset,8px); right:var(--hy-expandable-button-offset,8px); display:grid; place-items:center; width:var(--hy-expandable-button-size,32px); height:var(--hy-expandable-button-size,32px); padding:6px; border:1px solid var(--hy-border-color,#536074); border-radius:6px; color:var(--hy-text-color,inherit); background:var(--hy-surface-color,#18202e); cursor:pointer; }
+      button { position:absolute; z-index:2; top:var(--hy-expandable-button-offset,var(--hy-space-4, 8px)); right:var(--hy-expandable-button-offset,var(--hy-space-4, 8px)); display:grid; place-items:center; width:var(--hy-expandable-button-size,32px); height:var(--hy-expandable-button-size,32px); padding:var(--hy-space-3, 6px); border:1px solid var(--hy-border-color,#536074); border-radius:var(--hy-radius-md, 6px); color:var(--hy-text-color,inherit); background:var(--hy-surface-color,#18202e); cursor:pointer; }
       button:hover { color:var(--hy-accent-color,#7dd3fc); }
       button:focus-visible { outline:2px solid var(--hy-accent-color,#7dd3fc); outline-offset:2px; }
-      button[data-position$="left"] { left:var(--hy-expandable-button-offset,8px); right:auto; }
-      button[data-position^="bottom"] { bottom:var(--hy-expandable-button-offset,8px); top:auto; }
+      button[data-position$="left"] { left:var(--hy-expandable-button-offset,var(--hy-space-4, 8px)); right:auto; }
+      button[data-position^="bottom"] { bottom:var(--hy-expandable-button-offset,var(--hy-space-4, 8px)); top:auto; }
       svg, ::slotted([slot="expand-icon"]), ::slotted([slot="restore-icon"]) { width:100%; height:100%; pointer-events:none; }
       slot[hidden] { display:none; }
     `;

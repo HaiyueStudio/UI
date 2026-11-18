@@ -23,19 +23,19 @@ export class HYButton extends HTMLElement {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: var(--hy-button-icon-gap, 7px);
+        gap: var(--hy-button-icon-gap, calc(var(--hy-space-3, 6px) + 1px));
         width: 100%;
-        min-height: 28px;
-        padding: 0 10px;
+        min-height: var(--hy-control-height-sm, 28px);
+        padding: 0 var(--hy-space-5, 10px);
         border: 1px solid var(--hy-border-color, #3d4654);
         border-radius:
-          var(--hy-button-radius-top-left, var(--hy-button-radius, 4px))
-          var(--hy-button-radius-top-right, var(--hy-button-radius, 4px))
-          var(--hy-button-radius-bottom-right, var(--hy-button-radius, 4px))
-          var(--hy-button-radius-bottom-left, var(--hy-button-radius, 4px));
+          var(--hy-button-radius-top-left, var(--hy-button-radius, var(--hy-radius-sm, 4px)))
+          var(--hy-button-radius-top-right, var(--hy-button-radius, var(--hy-radius-sm, 4px)))
+          var(--hy-button-radius-bottom-right, var(--hy-button-radius, var(--hy-radius-sm, 4px)))
+          var(--hy-button-radius-bottom-left, var(--hy-button-radius, var(--hy-radius-sm, 4px)));
         background: var(--hy-surface-elevated-color, #202733);
         color: var(--hy-text-color, #eef3ff);
-        font: 12px system-ui, sans-serif;
+        font: var(--hy-font-size-sm, 12px) var(--hy-font-family, system-ui, sans-serif);
         cursor: pointer;
       }
       button:hover:not(:disabled) {
@@ -47,11 +47,11 @@ export class HYButton extends HTMLElement {
         outline-offset: 1px;
       }
       button.icon-only {
-        width: 28px;
+        width: var(--hy-control-height-sm, 28px);
         padding: 0;
         gap: 0;
       }
-      .icon { display: inline-grid; flex: 0 0 auto; place-items: center; line-height: 1; }
+      .icon { display: inline-grid; flex: 0 0 auto; place-items: center; line-height: var(--hy-line-height-tight, 1); }
       button.icon-end .icon { order: 2; }
       .icon[hidden], .spinner[hidden] { display: none; }
       .spinner {

@@ -52,7 +52,7 @@ export class HYDraggable extends HTMLElement {
       :host([dragging]) { z-index: var(--hy-draggable-active-z-index, 10); }
       :host([dragging]) .surface { cursor: var(--hy-draggable-active-cursor, grabbing); }
       :host([disabled]) .surface { cursor: default; }
-      .surface:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: var(--hy-draggable-focus-offset, 2px); border-radius: var(--hy-draggable-focus-radius, 6px); }
+      .surface:focus-visible { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: var(--hy-draggable-focus-offset, 2px); border-radius: var(--hy-draggable-focus-radius, var(--hy-radius-md, 6px)); }
       ::slotted([data-drag-handle]) { cursor: var(--hy-draggable-cursor, grab); }
       @media (prefers-reduced-motion: reduce) { :host { scroll-behavior: auto; } }
     `;

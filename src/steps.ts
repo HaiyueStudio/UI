@@ -54,24 +54,24 @@ export class HYSteps extends HTMLElement {
     super();
     const root = this.attachShadow({ mode: 'open' }); const style = document.createElement('style');
     style.textContent = `
-      :host { display: block; min-width: 0; color: var(--hy-text-color, #eef3ff); font: 12px/1.45 system-ui, sans-serif; }
+      :host { display: block; min-width: 0; color: var(--hy-text-color, #eef3ff); font: var(--hy-font-size-sm, 12px)/calc(var(--hy-line-height-snug, 1.4) + 0.05) var(--hy-font-family, system-ui, sans-serif); }
       .steps { display: flex; width: 100%; margin: 0; padding: 0; list-style: none; }
       .item { position: relative; flex: 1 1 0; min-width: 0; text-align: center; }
-      .step { display: flex; width: 100%; min-width: 0; flex-direction: column; align-items: center; padding: 0 10px; border: 0; color: inherit; background: transparent; font: inherit; text-align: center; }
+      .step { display: flex; width: 100%; min-width: 0; flex-direction: column; align-items: center; padding: 0 var(--hy-space-5, 10px); border: 0; color: inherit; background: transparent; font: inherit; text-align: center; }
       button.step { cursor: pointer; }
       button.step:hover .icon { transform: scale(1.08); }
       button.step:focus-visible { outline: none; }
       button.step:focus-visible .icon { box-shadow: 0 0 0 3px var(--hy-focus-ring-color, rgba(121, 168, 255, .22)); }
       button.step:disabled { cursor: not-allowed; opacity: .45; }
       .head { position: relative; z-index: 1; display: grid; place-items: center; }
-      .icon { display: grid; width: var(--hy-steps-icon-size, 30px); height: var(--hy-steps-icon-size, 30px); box-sizing: border-box; place-items: center; border: 1px solid var(--_step-color, var(--hy-muted-color, #788697)); border-radius: 50%; color: var(--_step-color, var(--hy-muted-color, #788697)); background: var(--hy-surface-color, #111722); font-weight: 650; transition: transform 120ms ease, box-shadow 120ms ease; }
+      .icon { display: grid; width: var(--hy-steps-icon-size, 30px); height: var(--hy-steps-icon-size, 30px); box-sizing: border-box; place-items: center; border: 1px solid var(--_step-color, var(--hy-muted-color, #788697)); border-radius: 50%; color: var(--_step-color, var(--hy-muted-color, #788697)); background: var(--hy-surface-color, #111722); font-weight: calc(var(--hy-font-weight-semibold, 600) + 50); transition: transform 120ms ease, box-shadow 120ms ease; }
       .tail { position: absolute; z-index: 0; top: calc(var(--hy-steps-icon-size, 30px) / 2); right: calc(-50% + var(--hy-steps-icon-size, 30px) / 2 + 10px); left: calc(50% + var(--hy-steps-icon-size, 30px) / 2 + 10px); height: var(--hy-steps-line-width, 1px); background: var(--hy-steps-line-color, var(--hy-border-color, #3d4654)); }
       .item:last-child .tail { display: none; }
-      .body { min-width: 0; margin-top: 9px; }
-      .title-row { display: flex; min-width: 0; justify-content: center; gap: 6px; }
-      .title { overflow: hidden; color: var(--hy-secondary-text-color, #aebbd0); font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
-      .subtitle { flex: 0 0 auto; color: var(--hy-muted-color, #788697); font-size: 10px; }
-      .description { max-width: 30ch; margin: 4px auto 0; color: var(--hy-muted-color, #788697); font-size: 11px; }
+      .body { min-width: 0; margin-top: calc(var(--hy-space-4, 8px) + 1px); }
+      .title-row { display: flex; min-width: 0; justify-content: center; gap: var(--hy-space-3, 6px); }
+      .title { overflow: hidden; color: var(--hy-secondary-text-color, #aebbd0); font-weight: calc(var(--hy-font-weight-semibold, 600) + 50); text-overflow: ellipsis; white-space: nowrap; }
+      .subtitle { flex: 0 0 auto; color: var(--hy-muted-color, #788697); font-size: var(--hy-font-size-xs, 10px); }
+      .description { max-width: 30ch; margin: var(--hy-space-2, 4px) auto 0; color: var(--hy-muted-color, #788697); font-size: calc(var(--hy-font-size-xs, 10px) + 1px); }
       .status-finish { --_step-color: var(--hy-success-color, #4ade80); }
       .status-process { --_step-color: var(--hy-accent-color, #79a8ff); }
       .status-error { --_step-color: var(--hy-error-color, #fb7185); }
@@ -80,15 +80,15 @@ export class HYSteps extends HTMLElement {
       .status-error .icon { color: var(--hy-selected-text-color, #fff); background: var(--_step-color); }
       .status-process .title, .status-finish .title, .status-error .title { color: var(--hy-text-color, #eef3ff); }
       :host([size="small"]) { --hy-steps-icon-size: 22px; }
-      :host([size="small"]) .step { padding-inline: 7px; }
-      :host([size="small"]) .body { margin-top: 6px; }
+      :host([size="small"]) .step { padding-inline: calc(var(--hy-space-3, 6px) + 1px); }
+      :host([size="small"]) .body { margin-top: var(--hy-space-3, 6px); }
       :host([direction="vertical"]) .steps { flex-direction: column; }
       :host([direction="vertical"]) .item { flex: none; min-height: var(--hy-steps-vertical-item-height, 78px); text-align: left; }
-      :host([direction="vertical"]) .step { display: grid; grid-template-columns: var(--hy-steps-icon-size, 30px) minmax(0, 1fr); align-items: start; gap: 12px; padding: 0 0 20px; text-align: left; }
+      :host([direction="vertical"]) .step { display: grid; grid-template-columns: var(--hy-steps-icon-size, 30px) minmax(0, 1fr); align-items: start; gap: var(--hy-space-6, 12px); padding: 0 0 var(--hy-space-10, 20px); text-align: left; }
       :host([direction="vertical"]) .head { grid-column: 1; grid-row: 1; }
-      :host([direction="vertical"]) .body { grid-column: 2; grid-row: 1; margin-top: 4px; }
+      :host([direction="vertical"]) .body { grid-column: 2; grid-row: 1; margin-top: var(--hy-space-2, 4px); }
       :host([direction="vertical"]) .title-row { justify-content: flex-start; }
-      :host([direction="vertical"]) .description { margin: 4px 0 0; }
+      :host([direction="vertical"]) .description { margin: var(--hy-space-2, 4px) 0 0; }
       :host([direction="vertical"]) .tail { top: calc(var(--hy-steps-icon-size, 30px) + 5px); bottom: 5px; left: calc(var(--hy-steps-icon-size, 30px) / 2); width: var(--hy-steps-line-width, 1px); height: auto; }
       @media (prefers-reduced-motion: reduce) { .icon { transition: none; } }
     `;

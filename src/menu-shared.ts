@@ -18,9 +18,9 @@ export const GE_MENU_ITEM_STYLES = `
         height: 26px;
         display: flex;
         align-items: center;
-        padding: 0 8px;
+        padding: 0 var(--hy-space-4, 8px);
         border: 0;
-        border-radius: 3px;
+        border-radius: calc(var(--hy-radius-xs, 2px) + 1px);
         color: var(--hy-text-color, #d8e2f2);
         background: transparent;
         font: inherit;
@@ -42,7 +42,7 @@ export const GE_MENU_ITEM_STYLES = `
       }
       .separator {
         height: 1px;
-        margin: 4px 2px;
+        margin: var(--hy-space-2, 4px) var(--hy-space-1, 2px);
         background: var(--hy-border-color, #303746);
       }
 `;

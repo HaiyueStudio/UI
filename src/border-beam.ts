@@ -30,7 +30,7 @@ export class HYBorderBeam extends HTMLElement {
         position: relative;
         display: block;
         min-width: 0;
-        border-radius: var(--hy-border-beam-radius, 10px);
+        border-radius: var(--hy-border-beam-radius, calc(var(--hy-radius-lg, 8px) + 2px));
         isolation: isolate;
         --_beam-color: var(--hy-accent-color, #7dd3fc);
       }
