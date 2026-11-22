@@ -299,6 +299,50 @@ button, or the application calls `search()`. Its detail contains `{ value, valid
 available. Style the `control`, `input`, `prefix`, `suffix`, and `search-button` parts or the
 `--hy-input-affix-*` and `--hy-input-search-*` tokens.
 
+## Mentions
+
+```ts
+import { defineMentionsComponents } from '@haiyue/ui/mentions';
+defineMentionsComponents();
+
+const mentions = document.querySelector('hy-mentions');
+mentions.options = [
+  { value: 'alice', label: 'Alice Chen' },
+  { value: 'bob', label: 'Bob Lin' },
+  { value: 'archived', label: 'Archived account', disabled: true },
+];
+mentions.prefixes = ['@', '#'];
+mentions.addEventListener('mention-select', event => console.log(event.detail));
+```
+
+```html
+<hy-mentions placeholder="Type @ to mention someone" rows="3"
+  aria-label="Comment"></hy-mentions>
+```
+
+`<hy-mentions>` uses a native multiline textarea. `value`, `placeholder`, `rows`, `disabled`, and
+`readOnly` are properties; `readonly`, `required`, `maxlength`, and `name` are also forwarded attributes.
+The default trigger is `@`; set `prefix` for a single trigger or `prefixes` for multiple triggers
+(the `prefixes` attribute accepts a JSON string array). Triggers start at the beginning of the text,
+after whitespace, or after `split`. The default `split` is one space; it is inserted after a selection.
+Selecting a suggestion replaces the current token and preserves the surrounding text.
+
+Suggestions match the option's value or label without case sensitivity. Set `filterOption` to a
+`(text, option) => boolean` function to customize matching, or `false` for server-filtered results.
+The bubbling, composed `search` event exposes `{ text, prefix }`; use it to fetch options and set
+`loading` while waiting. Consumers own request cancellation and stale-response handling.
+`notFoundContent` and `loadingText` customize the empty/loading messages. `placement` prefers `top`
+or `bottom`, and the popup automatically fits the viewport. Arrow keys skip disabled options,
+Enter selects, Shift+Enter inserts a newline, and Escape/Tab dismiss. IME composition keeps its
+native editing behavior. `focus()` and `blur()` target the textarea.
+
+`value-change` emits `{ value }` on user edits and selections, while `mention-select` emits
+`{ value, option, prefix }` after a selection. Programmatic value updates do not emit change events.
+The native composed `input` event is also available. Style the `textarea`, `panel`, `list`, `option`,
+and `status` parts; colors inherit the semantic theme tokens. Popup dimensions use
+`--hy-mentions-popup-min-width`, `--hy-mentions-popup-max-width`, `--hy-mentions-popup-max-height`,
+and `--hy-mentions-z-index`. `open` is a read-only property reflecting popup visibility.
+
 ## Portable component semantics (M24 G03/G05)
 
 `@haiyue/ui/core` provides platform-independent component types, validation, selection/input/action

@@ -105,6 +105,10 @@
       "types": "./dist/input.d.ts",
       "import": "./dist/input.js"
     },
+    "./mentions": {
+      "types": "./dist/mentions.d.ts",
+      "import": "./dist/mentions.js"
+    },
     "./notification": {
       "types": "./dist/notification.d.ts",
       "import": "./dist/notification.js"

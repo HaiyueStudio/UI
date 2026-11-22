@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-hy-theme="light">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Mentions browser test</title>
+  <link rel="stylesheet" href="../../themes/haiyue-light.css" />
+  <link rel="stylesheet" href="../../themes/haiyue-dark.css" />
+  <style>body { margin: 24px; } #clip { width: min(400px, 90vw); overflow: hidden; height: 120px; } hy-mentions { margin-bottom: 12px; }</style>
+</head>
+<body>
+  <div id="clip"><hy-mentions id="mentions" aria-label="Comment" placeholder="Type @" rows="3"></hy-mentions></div>
+  <button id="outside">Outside</button>
+  <script type="module">
+    import { defineMentionsComponents } from '../../dist/mentions.js';
+    window.unregisteredOnImport = !customElements.get('hy-mentions');
+    defineMentionsComponents(); defineMentionsComponents();
+    const mentions = document.querySelector('#mentions');
+    mentions.options = [
+      { value: 'alice', label: 'Alice Chen' },
+      { value: 'archived', label: 'Archived account', disabled: true },
+      { value: 'bob', label: 'Bob Lin' },
+      { value: '海月', label: '海月 Studio' },
+    ];
+    window.events = [];
+    for (const name of ['search', 'value-change', 'mention-select', 'input']) document.addEventListener(name, event => {
+      if (event.target === mentions) window.events.push({ name, detail: event.detail, composed: event.composed, bubbles: event.bubbles });
+    });
+    window.outerEnter = 0;
+    document.addEventListener('keydown', event => { if (event.key === 'Enter') window.outerEnter++; });
+  </script>
+</body>
+</html>

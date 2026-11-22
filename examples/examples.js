@@ -375,6 +375,33 @@ for (const id of ['input-number', 'input-color']) {
 }
 byId('input-search').addEventListener('search', event => writeEvent(byId('input-event'), 'search', event.detail));
 
+// Mentions.
+const mentionsLive = byId('mentions-live');
+const mentionMembers = [
+  { value: 'alice', label: 'Alice Chen · Design' },
+  { value: 'bob', label: 'Bob Lin · Engineering' },
+  { value: '海月', label: '海月 · Studio' },
+  { value: 'archived', label: 'Archived account', disabled: true },
+];
+const mentionAssets = [{ value: 'ocean', label: 'Ocean scene' }, { value: 'moonlight', label: 'Moonlight theme' }];
+mentionsLive.prefixes = ['@', '#'];
+mentionsLive.options = mentionMembers;
+let mentionsSearchTimer = 0;
+mentionsLive.addEventListener('search', event => {
+  window.clearTimeout(mentionsSearchTimer);
+  const options = event.detail.prefix === '#' ? mentionAssets : mentionMembers;
+  writeEvent(byId('mentions-event'), 'search', event.detail);
+  if (byId('mentions-async').checked) {
+    mentionsLive.loading = true;
+    mentionsSearchTimer = window.setTimeout(() => { mentionsLive.options = options; mentionsLive.loading = false; }, 600);
+  } else { mentionsLive.options = options; mentionsLive.loading = false; }
+});
+byId('mentions-prefixes').addEventListener('change', event => { mentionsLive.prefixes = event.target.value === 'both' ? ['@', '#'] : [event.target.value]; });
+byId('mentions-placement').addEventListener('change', event => { mentionsLive.placement = event.target.value; });
+byId('mentions-disabled').addEventListener('change', event => { mentionsLive.disabled = event.target.checked; });
+byId('mentions-readonly').addEventListener('change', event => { mentionsLive.readOnly = event.target.checked; });
+for (const name of ['value-change', 'mention-select']) mentionsLive.addEventListener(name, event => writeEvent(byId('mentions-event'), name, event.detail));
+
 // Range.
 const rangeSingle = byId('range-single');
 const rangeLive = byId('range-live');

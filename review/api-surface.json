@@ -90,6 +90,10 @@
       "types": "./dist/input.d.ts",
       "import": "./dist/input.js"
     },
+    "./mentions": {
+      "types": "./dist/mentions.d.ts",
+      "import": "./dist/mentions.js"
+    },
     "./notification": {
       "types": "./dist/notification.d.ts",
       "import": "./dist/notification.js"
@@ -314,6 +318,10 @@
       },
       {
         "name": "defineMasonryComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineMentionsComponents",
         "kind": "value"
       },
       {
@@ -766,6 +774,34 @@
       },
       {
         "name": "HYMasonryLayoutChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentions",
+        "kind": "value"
+      },
+      {
+        "name": "HYMentionsChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsFilter",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsPlacement",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsSearchDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsSelectDetail",
         "kind": "type"
       },
       {
@@ -1768,6 +1804,40 @@
       },
       {
         "name": "HYInputType",
+        "kind": "type"
+      }
+    ],
+    "./mentions": [
+      {
+        "name": "defineMentionsComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYMentions",
+        "kind": "value"
+      },
+      {
+        "name": "HYMentionsChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsFilter",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsPlacement",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsSearchDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYMentionsSelectDetail",
         "kind": "type"
       }
     ],

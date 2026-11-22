@@ -31,6 +31,7 @@ import { defineDialogComponents } from './dialog.js';
 import { defineDrawerComponents } from './drawer.js';
 import { defineDraggableComponents } from './draggable.js';
 import { defineInputComponents } from './input.js';
+import { defineMentionsComponents } from './mentions.js';
 import { defineNotificationComponents } from './notification.js';
 import { defineToastComponents } from './toast.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
@@ -442,6 +443,8 @@ export { defineAnchorComponents, HYAnchor } from './anchor.js';
 export type { HYAnchorChangeDetail, HYAnchorClickDetail, HYAnchorDirection, HYAnchorItem } from './anchor.js';
 export { defineSegmentedComponents, HYSegmented } from './segmented.js';
 export type { HYSegmentedChangeDetail, HYSegmentedOption, HYSegmentedOptionInput, HYSegmentedSize } from './segmented.js';
+export { defineMentionsComponents, HYMentions } from './mentions.js';
+export type { HYMentionsOption, HYMentionsChangeDetail, HYMentionsSearchDetail, HYMentionsSelectDetail, HYMentionsPlacement, HYMentionsFilter } from './mentions.js';
 
 export function defineHaiyueUI(): void {
   defineAlertComponents();
@@ -470,6 +473,7 @@ export function defineHaiyueUI(): void {
   defineDrawerComponents();
   defineDraggableComponents();
   defineInputComponents();
+  defineMentionsComponents();
   defineNotificationComponents();
   defineToastComponents();
   defineHistoryControlsComponents();

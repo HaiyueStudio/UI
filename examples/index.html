@@ -93,6 +93,7 @@
       <a href="#checkbox" data-name="checkbox 复选框"><span>Checkbox</span><code>hy-checkbox</code></a>
       <a href="#divider" data-name="divider separator 分割线 分隔线 文字"><span>Divider</span><code>hy-divider</code></a>
       <a href="#input" data-name="input 输入框"><span>Input</span><code>hy-input</code></a>
+      <a href="#mentions" data-name="mentions mention 提及 人员 候选"><span>Mentions</span><code>hy-mentions</code></a>
       <a href="#qr-code" data-name="qr code qrcode 二维码 中央 图标 icon 扫码"><span>QR Code</span><code>hy-qr-code</code></a>
       <a href="#radio" data-name="radio 单选框"><span>Radio</span><code>hy-radio</code></a>
       <a href="#range" data-name="range slider 范围 数值 滑块"><span>Range</span><code>hy-range</code></a>
@@ -137,7 +138,7 @@
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><hy-badge status="success" text="48 components"></hy-badge><span>·</span><span>v0.2.3</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="49 components"></hy-badge><span>·</span><span>v0.2.3</span></div>
   </aside>
 
   <main id="content" slot="second">
@@ -146,7 +147,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>48</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>49</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -351,6 +352,32 @@
 
 searchInput.addEventListener('search', event =&gt; console.log(event.detail));</code></pre></details>
       <div class="parameter-strip"><code>type</code><code>value</code><code>prefix</code><code>suffix</code><code>slot="prefix"</code><code>slot="suffix"</code><code>search-label</code><code>search()</code><code>min</code><code>max</code><code>step</code><code>placeholder</code><code>disabled</code><code>readonly</code><code>required</code><code>name</code><code>autocomplete</code></div>
+    </section>
+
+    <section class="component-section" id="mentions" data-title="Mentions">
+      <div class="section-heading"><div><h2>Mentions</h2><code>&lt;hy-mentions&gt;</code></div><p>输入 @ 提及成员，输入 # 引用资源；候选跟随光标，支持键盘选择、中文输入和异步搜索。</p></div>
+      <div class="demo-card two-column overflow-visible">
+        <div class="preview form-preview">
+          <hy-mentions id="mentions-live" aria-label="Comment" placeholder="输入 @ 提及成员，或 # 引用资源…" rows="4" not-found-content="没有匹配的候选项" loading-text="正在搜索…"></hy-mentions>
+          <p>↑ ↓ 切换候选 · Enter 选择 · Shift+Enter 换行 · Esc 关闭</p>
+        </div>
+        <div class="controls stacked">
+          <label>prefixes<select id="mentions-prefixes"><option value="both">@ 和 #</option><option value="@">仅 @</option><option value="#">仅 #</option></select></label>
+          <label>placement<select id="mentions-placement"><option value="bottom">bottom</option><option value="top">top</option></select></label>
+          <div class="toggle-row"><label class="toggle"><input id="mentions-disabled" type="checkbox" /><span></span>disabled</label><label class="toggle"><input id="mentions-readonly" type="checkbox" /><span></span>readonly</label><label class="toggle"><input id="mentions-async" type="checkbox" /><span></span>async search</label></div>
+          <output id="mentions-event">输入 @ 或 # 查看候选，选择后触发 mention-select</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看提及输入用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-mentions aria-label="Comment" placeholder="输入 @ 提及成员…"&gt;&lt;/hy-mentions&gt;
+
+import { defineMentionsComponents } from '@haiyue/ui/mentions';
+defineMentionsComponents();
+const mentions = document.querySelector('hy-mentions');
+mentions.prefixes = ['@', '#'];
+mentions.options = [{ value: 'alice', label: 'Alice Chen' }, { value: 'bob', label: 'Bob Lin' }];
+mentions.addEventListener('search', event =&gt; console.log(event.detail));
+mentions.addEventListener('mention-select', event =&gt; console.log(event.detail));</code></pre></details>
+      <div class="parameter-strip"><code>value</code><code>options</code><code>prefix</code><code>prefixes</code><code>split</code><code>filterOption</code><code>placement</code><code>loading</code><code>rows</code><code>disabled</code><code>readOnly</code><code>search</code><code>value-change</code><code>mention-select</code></div>
     </section>
 
     <section class="component-section" id="qr-code" data-title="QR Code">
