@@ -47,7 +47,12 @@ export class HYForm extends HTMLElement {
       const value = values[name];
       const field = element as HTMLElement & { value?: string; checked?: boolean };
       if ('checked' in field) field.checked = typeof value === 'boolean' ? value : Array.isArray(value) ? value.includes(field.value ?? '') : String(value) === field.value;
-      else if ('value' in field) field.value = String(value ?? '');
+      else if ('value' in field) {
+        if (Array.isArray(value) && Reflect.get(field, 'multiple') === true) {
+          if (field instanceof HTMLSelectElement) for (const option of field.options) option.selected = value.includes(option.value);
+          else Reflect.set(field, 'value', [...value]);
+        } else field.value = String(value ?? '');
+      }
     }
     this._revision++;
   }

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- 新增中优先级组件 `HYAutoComplete`、`HYMenu`、`HYPagination`、`HYTreeSelect`、`HYImage` 和 `HYImagePreview`，提供独立子路径、显式注册、主题化示例与浏览器契约测试；覆盖自由文本补全、层级导航、独立分页、树形单/多选、图片加载/回退及多图模态预览。
+- AutoComplete/TreeSelect 支持原生表单提交、校验、禁用 fieldset 和重置；表单 `setValues()` 支持树选择与原生 select 的多值。共享内部浮层与图片预览实现，保持组件入口隔离和零运行时依赖。
+
 - 新增独立入口及根注册的 `HYSwitch`、`HYProgress`、`HYSpin`、`HYPopover`、`HYPopconfirm`、`HYForm`、`HYFormItem` 和 `HYUpload`：覆盖设置开关、直线/圆环进度、延迟加载遮罩、可交互浮层与异步确认、表单与异步校验、文件选择/拖放/上传进度/重试/取消。
 - Input、Select、Checkbox、Radio、Mentions 与新增 Switch、Upload 支持原生表单关联、FormData、禁用 fieldset 和重置；保留既有交互事件及按需导入边界。新增主题化参数示例、键盘/焦点/异步生命周期回归，并更新公开 API 和包体积基线。
 

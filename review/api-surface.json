@@ -126,6 +126,30 @@
       "types": "./dist/upload.d.ts",
       "import": "./dist/upload.js"
     },
+    "./auto-complete": {
+      "types": "./dist/auto-complete.d.ts",
+      "import": "./dist/auto-complete.js"
+    },
+    "./menu": {
+      "types": "./dist/menu.d.ts",
+      "import": "./dist/menu.js"
+    },
+    "./pagination": {
+      "types": "./dist/pagination.d.ts",
+      "import": "./dist/pagination.js"
+    },
+    "./tree-select": {
+      "types": "./dist/tree-select.d.ts",
+      "import": "./dist/tree-select.js"
+    },
+    "./image": {
+      "types": "./dist/image.d.ts",
+      "import": "./dist/image.js"
+    },
+    "./image-preview": {
+      "types": "./dist/image-preview.d.ts",
+      "import": "./dist/image-preview.js"
+    },
     "./notification": {
       "types": "./dist/notification.d.ts",
       "import": "./dist/notification.js"
@@ -269,6 +293,10 @@
         "kind": "value"
       },
       {
+        "name": "defineAutoCompleteComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineBadgeComponents",
         "kind": "value"
       },
@@ -353,6 +381,14 @@
         "kind": "value"
       },
       {
+        "name": "defineImageComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineImagePreviewComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineInputComponents",
         "kind": "value"
       },
@@ -365,11 +401,19 @@
         "kind": "value"
       },
       {
+        "name": "defineMenuComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineModalComponents",
         "kind": "value"
       },
       {
         "name": "defineNotificationComponents",
+        "kind": "value"
+      },
+      {
+        "name": "definePaginationComponents",
         "kind": "value"
       },
       {
@@ -469,6 +513,10 @@
         "kind": "value"
       },
       {
+        "name": "defineTreeSelectComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineUploadComponents",
         "kind": "value"
       },
@@ -534,6 +582,26 @@
       },
       {
         "name": "HYAnchorItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYAutoComplete",
+        "kind": "value"
+      },
+      {
+        "name": "HYAutoCompleteChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAutoCompleteFilter",
+        "kind": "type"
+      },
+      {
+        "name": "HYAutoCompleteOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYAutoCompleteSelectDetail",
         "kind": "type"
       },
       {
@@ -849,6 +917,38 @@
         "kind": "type"
       },
       {
+        "name": "HYImage",
+        "kind": "value"
+      },
+      {
+        "name": "HYImageErrorDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYImageLoadDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYImagePreview",
+        "kind": "value"
+      },
+      {
+        "name": "HYImagePreviewChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYImagePreviewItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYImagePreviewOpenDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYImageStatus",
+        "kind": "type"
+      },
+      {
         "name": "HYInput",
         "kind": "value"
       },
@@ -905,6 +1005,26 @@
         "kind": "type"
       },
       {
+        "name": "HYMenu",
+        "kind": "value"
+      },
+      {
+        "name": "HYMenuItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYMenuMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYMenuOpenChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYMenuSelectDetail",
+        "kind": "type"
+      },
+      {
         "name": "HYModal",
         "kind": "value"
       },
@@ -950,6 +1070,14 @@
       },
       {
         "name": "HYNotificationType",
+        "kind": "type"
+      },
+      {
+        "name": "HYPagination",
+        "kind": "value"
+      },
+      {
+        "name": "HYPaginationChangeDetail",
         "kind": "type"
       },
       {
@@ -1397,7 +1525,23 @@
         "kind": "type"
       },
       {
+        "name": "HYTreeSelect",
+        "kind": "value"
+      },
+      {
+        "name": "HYTreeSelectChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTreeSelectExpandDetail",
+        "kind": "type"
+      },
+      {
         "name": "HYTreeSelectionChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTreeSelectOption",
         "kind": "type"
       },
       {
@@ -2230,6 +2374,138 @@
       },
       {
         "name": "HYUploadStatus",
+        "kind": "type"
+      }
+    ],
+    "./auto-complete": [
+      {
+        "name": "defineAutoCompleteComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYAutoComplete",
+        "kind": "value"
+      },
+      {
+        "name": "HYAutoCompleteChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAutoCompleteFilter",
+        "kind": "type"
+      },
+      {
+        "name": "HYAutoCompleteOption",
+        "kind": "type"
+      },
+      {
+        "name": "HYAutoCompleteSelectDetail",
+        "kind": "type"
+      }
+    ],
+    "./menu": [
+      {
+        "name": "defineMenuComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYMenu",
+        "kind": "value"
+      },
+      {
+        "name": "HYMenuItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYMenuMode",
+        "kind": "type"
+      },
+      {
+        "name": "HYMenuOpenChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYMenuSelectDetail",
+        "kind": "type"
+      }
+    ],
+    "./pagination": [
+      {
+        "name": "definePaginationComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYPagination",
+        "kind": "value"
+      },
+      {
+        "name": "HYPaginationChangeDetail",
+        "kind": "type"
+      }
+    ],
+    "./tree-select": [
+      {
+        "name": "defineTreeSelectComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYTreeSelect",
+        "kind": "value"
+      },
+      {
+        "name": "HYTreeSelectChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTreeSelectExpandDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYTreeSelectOption",
+        "kind": "type"
+      }
+    ],
+    "./image": [
+      {
+        "name": "defineImageComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYImage",
+        "kind": "value"
+      },
+      {
+        "name": "HYImageErrorDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYImageLoadDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYImageStatus",
+        "kind": "type"
+      }
+    ],
+    "./image-preview": [
+      {
+        "name": "defineImagePreviewComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYImagePreview",
+        "kind": "value"
+      },
+      {
+        "name": "HYImagePreviewChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYImagePreviewItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYImagePreviewOpenDetail",
         "kind": "type"
       }
     ],

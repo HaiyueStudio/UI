@@ -40,6 +40,12 @@ import { definePopconfirmComponents } from './popconfirm.js';
 import { defineFormComponents } from './form.js';
 import { defineFormItemComponents } from './form-item.js';
 import { defineUploadComponents } from './upload.js';
+import { defineAutoCompleteComponents } from './auto-complete.js';
+import { defineMenuComponents } from './menu.js';
+import { definePaginationComponents } from './pagination.js';
+import { defineTreeSelectComponents } from './tree-select.js';
+import { defineImageComponents } from './image.js';
+import { defineImagePreviewComponents } from './image-preview.js';
 import { defineNotificationComponents } from './notification.js';
 import { defineToastComponents } from './toast.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
@@ -471,7 +477,26 @@ export type { HYFormRule, HYFormItemStatus, HYFormItemValidateDetail } from './f
 export { HYUpload, defineUploadComponents } from './upload.js';
 export type { HYUploadStatus, HYUploadChangeReason, HYUploadRejectReason, HYUploadFile, HYUploadChangeDetail, HYUploadRejectDetail, HYUploadRemoveDetail, HYUploadRequestOptions, HYUploadRequest, HYUploadBeforeUpload } from './upload.js';
 
+export { HYAutoComplete, defineAutoCompleteComponents } from './auto-complete.js';
+export type { HYAutoCompleteOption, HYAutoCompleteChangeDetail, HYAutoCompleteSelectDetail, HYAutoCompleteFilter } from './auto-complete.js';
+export { HYMenu, defineMenuComponents } from './menu.js';
+export type { HYMenuItem, HYMenuMode, HYMenuSelectDetail, HYMenuOpenChangeDetail } from './menu.js';
+export { HYPagination, definePaginationComponents } from './pagination.js';
+export type { HYPaginationChangeDetail } from './pagination.js';
+export { HYTreeSelect, defineTreeSelectComponents } from './tree-select.js';
+export type { HYTreeSelectOption, HYTreeSelectChangeDetail, HYTreeSelectExpandDetail } from './tree-select.js';
+export { HYImage, defineImageComponents } from './image.js';
+export type { HYImageStatus, HYImageLoadDetail, HYImageErrorDetail } from './image.js';
+export { HYImagePreview, defineImagePreviewComponents } from './image-preview.js';
+export type { HYImagePreviewItem, HYImagePreviewOpenDetail, HYImagePreviewChangeDetail } from './image-preview.js';
+
 export function defineHaiyueUI(): void {
+  defineAutoCompleteComponents();
+  defineMenuComponents();
+  definePaginationComponents();
+  defineTreeSelectComponents();
+  defineImageComponents();
+  defineImagePreviewComponents();
   defineSwitchComponents();
   defineProgressComponents();
   defineSpinComponents();

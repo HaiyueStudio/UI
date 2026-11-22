@@ -1,0 +1,27 @@
+<!doctype html><html lang="en" data-hy-theme="light">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Medium priority component contracts</title>
+<link rel="stylesheet" href="../../themes/haiyue-light.css" /><link rel="stylesheet" href="../../themes/haiyue-dark.css" />
+<style>body { margin: 24px; color: var(--hy-text-color); background: var(--hy-surface-color); font: 14px system-ui; } section { max-width: 440px; margin-bottom: 24px; } #clip { overflow: hidden; height: 36px; } hy-tree-select { margin-block: 12px; } </style></head>
+<body>
+<section id="clip"><hy-auto-complete id="auto" aria-label="Asset search" allow-clear placeholder="Search assets"></hy-auto-complete></section>
+<section><hy-menu id="menu" aria-label="Workspace navigation"></hy-menu></section>
+<section><hy-pagination id="pagination" total="125" show-size-changer show-quick-jumper></hy-pagination></section>
+<section><form id="native-form"><fieldset id="fields"><hy-auto-complete id="form-auto" name="query" value="initial" aria-label="Query" required></hy-auto-complete><hy-tree-select id="tree" name="location" aria-label="Asset location" required></hy-tree-select><hy-tree-select id="multi" name="tags" aria-label="Asset tags" multiple value='["ocean"]'></hy-tree-select></fieldset></form></section>
+<section><hy-form id="form"><hy-form-item name="destination" label="Destination" required><hy-tree-select id="managed-tree" multiple></hy-tree-select></hy-form-item></hy-form></section>
+<section><hy-image id="image" alt="Ocean artwork" width="240" height="140"></hy-image><button id="open-images">Open gallery</button><hy-image-preview id="viewer"></hy-image-preview></section>
+<button id="outside">Outside</button>
+<script type="module">
+  import { defineHaiyueUI } from '../../dist/index.js';
+  window.registrationIsExplicit = !customElements.get('hy-auto-complete') && !customElements.get('hy-image'); defineHaiyueUI(); defineHaiyueUI();
+  const options = [{value:'ocean',label:'Ocean scene'},{value:'old',label:'Old scene',disabled:true},{value:'orbit',label:'Orbital scene'}];
+  document.querySelector('#auto').options=options;
+  window.treeOptions=[{value:'assets',label:'Assets',selectable:false,children:[{value:'ocean',label:'Ocean scene'},{value:'locked',label:'Locked',disabled:true},{value:'textures',label:'Textures',children:[{value:'sand',label:'Sand texture'}]}]},{value:'archive',label:'Archive',disabled:true,children:[{value:'old',label:'Old scene'}]}];
+  for(const id of ['tree','multi','managed-tree']) document.getElementById(id).options=window.treeOptions;
+  document.querySelector('#menu').items=[{key:'home',label:'Home',icon:'⌂'},{key:'assets',label:'Assets',children:[{key:'scenes',label:'Scenes'},{key:'locked',label:'Locked',disabled:true},{key:'textures',label:'Textures',children:[{key:'sand',label:'Sand'}]}]},{key:'divider',type:'divider'},{key:'settings',label:'Settings'},{key:'disabled',label:'Disabled',disabled:true}];
+  window.artwork='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400"><rect width="640" height="400" fill="#255a91"/><circle cx="420" cy="110" r="65" fill="#d8e2f2"/><path d="M0 280Q160 180 320 280T640 280V400H0" fill="#21734f"/></svg>');
+  window.secondArtwork='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect width="400" height="400" fill="#554cc6"/><circle cx="200" cy="200" r="100" fill="#d8e2f2"/></svg>');
+  document.querySelector('#image').src=window.artwork; document.querySelector('#viewer').images=[{src:window.artwork,alt:'Ocean',caption:'Ocean scene'},{src:window.secondArtwork,alt:'Moon',caption:'Moon study'}];
+  document.querySelector('#open-images').addEventListener('click',()=>document.querySelector('#viewer').show());
+  window.componentEvents=[];
+  for(const name of ['value-change','option-select','search','clear','open-change','menu-select','page-change','expand-change','image-load','image-error','preview-open-change','preview-change']) document.addEventListener(name,event=>window.componentEvents.push({name,id:event.target.id,detail:event.detail,composed:event.composed}));
+</script></body></html>

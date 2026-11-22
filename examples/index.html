@@ -87,12 +87,15 @@
       <a href="#design-tokens" data-name="design tokens theme 设计 规范 皮肤 主题 颜色 排版 间距 圆角"><span>设计规范</span><code>CSS tokens</code></a>
       <p class="nav-label">基础</p>
       <a href="#alert" data-name="alert message feedback 警告 提示 反馈"><span>Alert</span><code>hy-alert</code></a>
+      <a href="#auto-complete" data-name="auto complete autocomplete 自动 补全 搜索 建议"><span>AutoComplete</span><code>hy-auto-complete</code></a>
       <a href="#badge" data-name="badge count dot status 徽标 数量 状态"><span>Badge</span><code>hy-badge</code></a>
       <a href="#button" data-name="button 按钮"><span>Button</span><code>hy-button</code></a>
       <a href="#button-group" data-name="button group 按钮组"><span>Button Group</span><code>hy-button-group</code></a>
       <a href="#checkbox" data-name="checkbox 复选框"><span>Checkbox</span><code>hy-checkbox</code></a>
       <a href="#divider" data-name="divider separator 分割线 分隔线 文字"><span>Divider</span><code>hy-divider</code></a>
       <a href="#form" data-name="form form-item 表单 字段 校验 提交"><span>Form / Form Item</span><code>hy-form</code></a>
+      <a href="#image" data-name="image 图片 加载 回退 缩略图"><span>Image</span><code>hy-image</code></a>
+      <a href="#image-preview" data-name="image preview 图片 预览 画廊 缩放 旋转"><span>Image Preview</span><code>hy-image-preview</code></a>
       <a href="#input" data-name="input 输入框"><span>Input</span><code>hy-input</code></a>
       <a href="#mentions" data-name="mentions mention 提及 人员 候选"><span>Mentions</span><code>hy-mentions</code></a>
       <a href="#qr-code" data-name="qr code qrcode 二维码 中央 图标 icon 扫码"><span>QR Code</span><code>hy-qr-code</code></a>
@@ -116,8 +119,10 @@
       <a href="#drawer" data-name="drawer 抽屉 侧边栏"><span>Drawer</span><code>hy-drawer</code></a>
       <a href="#dropdown" data-name="dropdown 下拉菜单"><span>Dropdown</span><code>hy-dropdown</code></a>
       <a href="#history-controls" data-name="history controls undo redo 历史 撤销 重做"><span>History Controls</span><code>hy-history-controls</code></a>
+      <a href="#menu" data-name="menu navigation 菜单 导航 侧栏"><span>Menu</span><code>hy-menu</code></a>
       <a href="#modal" data-name="modal confirm 弹窗 模态 确认 对话框"><span>Modal</span><code>hy-modal</code></a>
       <a href="#notification" data-name="notification 通知 提醒"><span>Notification</span><code>hy-notification</code></a>
+      <a href="#pagination" data-name="pagination page 分页 页码 页数"><span>Pagination</span><code>hy-pagination</code></a>
       <a href="#popconfirm" data-name="popconfirm 确认 删除 气泡"><span>Popconfirm</span><code>hy-popconfirm</code></a>
       <a href="#popover" data-name="popover 弹出 浮层 面板"><span>Popover</span><code>hy-popover</code></a>
       <a href="#progress" data-name="progress 进度 进度条 圆环"><span>Progress</span><code>hy-progress</code></a>
@@ -132,6 +137,7 @@
       <a href="#toast" data-name="toast message feedback 轻提示 消息"><span>Toast</span><code>hy-toast</code></a>
       <a href="#tooltip" data-name="tooltip 提示"><span>Tooltip</span><code>hy-tooltip</code></a>
       <a href="#tour" data-name="tour guided walkthrough 漫游 引导 新手"><span>Tour</span><code>hy-tour</code></a>
+      <a href="#tree-select" data-name="tree select 树 选择 目录 分类 多选"><span>TreeSelect</span><code>hy-tree-select</code></a>
       <a href="#virtual-keyboard" data-name="virtual keyboard qwerty 虚拟 键盘 输入"><span>Virtual Keyboard</span><code>hy-virtual-keyboard</code></a>
       <a href="#virtual-mouse" data-name="virtual mouse cursor 虚拟 鼠标 光标 演示"><span>Virtual Mouse</span><code>hy-virtual-mouse</code></a>
       <a href="#watermark" data-name="watermark 水印 文字 图片 覆盖"><span>Watermark</span><code>hy-watermark</code></a>
@@ -145,7 +151,7 @@
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><hy-badge status="success" text="57 components"></hy-badge><span>·</span><span>v0.2.3</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="63 components"></hy-badge><span>·</span><span>v0.2.3</span></div>
   </aside>
 
   <main id="content" slot="second">
@@ -154,7 +160,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>57</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>63</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -213,6 +219,16 @@
   &lt;hy-button slot="action" label="Open"&gt;&lt;/hy-button&gt;
 &lt;/hy-alert&gt;</code></pre></details>
       <div class="parameter-strip"><code>type</code><code>message</code><code>description</code><code>show-icon</code><code>closable</code><code>close-text</code><code>banner</code><code>icon slot</code><code>action slot</code><code>close()</code><code>alert-close</code></div>
+    </section>
+
+    <section class="component-section" id="auto-complete" data-title="AutoComplete">
+      <div class="section-heading"><div><h2>AutoComplete</h2><code>&lt;hy-auto-complete&gt;</code></div><p>自由输入和候选补全，支持键盘选择、输入法、延迟搜索、加载态与表单关联。</p></div>
+      <div class="demo-card two-column overflow-visible"><div class="preview form-preview"><hy-auto-complete id="auto-complete-live" aria-label="资源搜索" placeholder="输入 ocean 或 orbit…" allow-clear></hy-auto-complete><p>↑ ↓ 选择候选 · Enter 填入 · Esc 关闭</p></div>
+      <div class="controls stacked"><label>search delay (ms)<input id="auto-complete-delay" type="number" min="0" max="2000" value="150" /></label><div class="toggle-row"><label class="toggle"><input id="auto-complete-async" type="checkbox" /><span></span>async results</label><label class="toggle"><input id="auto-complete-disabled" type="checkbox" /><span></span>disabled</label></div><output id="auto-complete-event">输入后显示 search，选择后显示 option-select</output></div></div>
+      <details class="code"><summary>查看自动补全用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-auto-complete name="asset" placeholder="搜索资源…" allow-clear&gt;&lt;/hy-auto-complete&gt;
+autoComplete.options = [{ value: 'ocean', label: 'Ocean scene' }];
+autoComplete.addEventListener('search', event =&gt; console.log(event.detail.value));
+autoComplete.addEventListener('option-select', event =&gt; console.log(event.detail));</code></pre></details>
     </section>
 
     <section class="component-section" id="badge" data-title="Badge">
@@ -351,6 +367,26 @@ form.addEventListener('form-submit', event =&gt; {
   event.preventDefault();
   console.log(event.detail.values, event.detail.formData);
 });</code></pre></details>
+    </section>
+
+    <section class="component-section" id="image" data-title="Image">
+      <div class="section-heading"><div><h2>Image</h2><code>&lt;hy-image&gt;</code></div><p>图片加载、占位和失败回退，支持响应式图片与点击放大预览。</p></div>
+      <div class="demo-card two-column"><div class="preview form-preview"><hy-image id="image-live" alt="海面与月亮" width="280" height="180"></hy-image></div>
+      <div class="controls stacked"><label>fit<select id="image-fit"><option>contain</option><option>cover</option><option>fill</option><option>none</option></select></label><div class="toggle-row"><label class="toggle"><input id="image-preview-enabled" type="checkbox" checked /><span></span>preview</label><label class="toggle"><input id="image-fallback" type="checkbox" checked /><span></span>fallback image</label></div><hy-button id="image-break" label="切换到失效图片"></hy-button><hy-button id="image-restore" label="恢复图片"></hy-button><output id="image-event">加载成功或失败后显示事件</output></div></div>
+      <details class="code"><summary>查看图片用法 <span>HTML</span></summary><pre><code>&lt;hy-image src="https://example.com/scene.png" alt="海洋场景" width="280" height="180"
+  fallback="https://example.com/placeholder.png" fit="cover" loading="lazy"&gt;&lt;/hy-image&gt;</code></pre></details>
+    </section>
+
+    <section class="component-section" id="image-preview" data-title="Image Preview">
+      <div class="section-heading"><div><h2>Image Preview</h2><code>&lt;hy-image-preview&gt;</code></div><p>独立图片画廊，支持前后切换、缩放、旋转、拖动、键盘和焦点恢复。</p></div>
+      <div class="demo-card two-column"><div class="preview form-preview"><div id="image-preview-thumbnails" style="display: flex; flex-wrap: wrap; gap: 12px;"><hy-button data-preview-index="0" label="预览海面"></hy-button><hy-button data-preview-index="1" label="预览月亮"></hy-button><hy-button data-preview-index="2" label="预览远山"></hy-button></div><hy-image-preview id="image-preview-live" aria-label="场景画廊"></hy-image-preview></div>
+      <div class="controls stacked"><label>start index<select id="image-preview-index"><option value="0">海面</option><option value="1">月亮</option><option value="2">远山</option></select></label><hy-button id="image-preview-open" label="打开画廊"></hy-button><output id="image-preview-event">← → 切换图片 · 滚轮缩放 · Esc 关闭</output></div></div>
+      <details class="code"><summary>查看画廊用法 <span>JavaScript</span></summary><pre><code>preview.images = [
+  { src: 'ocean.png', alt: '海面', caption: '海洋场景' },
+  { src: 'moon.png', alt: '月亮' },
+];
+preview.show(0);
+preview.addEventListener('preview-change', event =&gt; console.log(event.detail.index));</code></pre></details>
     </section>
 
     <section class="component-section" id="input" data-title="Input">
@@ -800,6 +836,18 @@ collapse.animationDuration = 250; // milliseconds, 0 = instant</code></pre></det
       </div>
     </section>
 
+    <section class="component-section" id="menu" data-title="Menu">
+      <div class="section-heading"><div><h2>Menu</h2><code>&lt;hy-menu&gt;</code></div><p>侧栏和横向导航，支持多级子菜单、分组、禁用、多选、方向键与文字定位。</p></div>
+      <div class="demo-card two-column overflow-visible"><div class="preview form-preview"><hy-menu id="menu-live" aria-label="工作区导航"></hy-menu></div>
+      <div class="controls stacked"><label>mode<select id="menu-mode"><option>inline</option><option>vertical</option><option>horizontal</option></select></label><div class="toggle-row"><label class="toggle"><input id="menu-collapsed" type="checkbox" /><span></span>collapsed</label><label class="toggle"><input id="menu-multiple" type="checkbox" /><span></span>multiple</label><label class="toggle"><input id="menu-disabled" type="checkbox" /><span></span>disabled</label></div><output id="menu-event">选择菜单项后显示 key 和 selectedKeys</output></div></div>
+      <details class="code"><summary>查看菜单用法 <span>JavaScript</span></summary><pre><code>menu.items = [
+  { key: 'home', label: '首页', icon: '⌂' },
+  { key: 'assets', label: '资源', children: [{ key: 'scenes', label: '场景' }] },
+];
+menu.selectedKeys = ['home'];
+menu.addEventListener('menu-select', event =&gt; console.log(event.detail));</code></pre></details>
+    </section>
+
     <section class="component-section" id="modal" data-title="Modal">
       <div class="section-heading"><div><h2>Modal</h2><code>&lt;hy-modal&gt;</code></div><p>带默认确认/取消操作的模态窗口，支持异步确认、关闭策略、插槽与焦点恢复。</p></div>
       <div class="demo-card two-column modal-card">
@@ -859,6 +907,17 @@ center.success({
   showProgress: true,
 });</code></pre></details>
       <div class="parameter-strip"><code>type</code><code>message</code><code>description</code><code>placement</code><code>duration</code><code>showProgress</code><code>open()</code><code>success()</code><code>info()</code><code>warning()</code><code>error()</code></div>
+    </section>
+
+    <section class="component-section" id="pagination" data-title="Pagination">
+      <div class="section-heading"><div><h2>Pagination</h2><code>&lt;hy-pagination&gt;</code></div><p>独立分页导航，支持页码省略、每页数量、跳转、简洁模式和边界归一化。</p></div>
+      <div class="demo-card two-column"><div class="preview form-preview"><hy-pagination id="pagination-live" total="153" show-size-changer show-quick-jumper aria-label="资源列表分页"></hy-pagination><p id="pagination-range">资源 1–10，共 153 个</p></div>
+      <div class="controls stacked"><label>total<input id="pagination-total" type="number" min="0" value="153" /></label><div class="toggle-row"><label class="toggle"><input id="pagination-simple" type="checkbox" /><span></span>simple</label><label class="toggle"><input id="pagination-disabled" type="checkbox" /><span></span>disabled</label></div><output id="pagination-event">用户翻页或调整数量后显示 page-change</output></div></div>
+      <details class="code"><summary>查看分页用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-pagination total="153" page-size="10" show-size-changer show-quick-jumper&gt;&lt;/hy-pagination&gt;
+pagination.addEventListener('page-change', event =&gt; {
+  const { page, pageSize } = event.detail;
+  loadPage(page, pageSize);
+});</code></pre></details>
     </section>
 
     <section class="component-section" id="popconfirm" data-title="Popconfirm">
@@ -1078,6 +1137,18 @@ tour.steps = [
 ];
 tour.start();</code></pre></details>
       <div class="parameter-strip"><code>steps</code><code>open</code><code>current</code><code>placement</code><code>mask</code><code>close-on-mask</code><code>close-on-escape</code><code>scroll-into-view</code><code>gap</code><code>start()</code><code>next()</code><code>previous()</code><code>close()</code></div>
+    </section>
+
+    <section class="component-section" id="tree-select" data-title="TreeSelect">
+      <div class="section-heading"><div><h2>TreeSelect</h2><code>&lt;hy-tree-select&gt;</code></div><p>在树形候选中选择目录或资源；支持单选、多选标签、搜索保留祖先、禁用分支与表单提交。</p></div>
+      <div class="demo-card two-column overflow-visible"><div class="preview form-preview"><hy-tree-select id="tree-select-live" name="location" aria-label="资源位置" placeholder="选择目录或资源…"></hy-tree-select><p>→ 展开 · ← 折叠 · ↑ ↓ 导航 · Enter 选择</p></div>
+      <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-select-multiple" type="checkbox" /><span></span>multiple</label><label class="toggle"><input id="tree-select-searchable" type="checkbox" checked /><span></span>searchable</label><label class="toggle"><input id="tree-select-loading" type="checkbox" /><span></span>loading</label><label class="toggle"><input id="tree-select-disabled" type="checkbox" /><span></span>disabled</label></div><output id="tree-select-event">选择后显示 values 与节点信息</output></div></div>
+      <details class="code"><summary>查看树选择用法 <span>JavaScript</span></summary><pre><code>treeSelect.options = [{
+  value: 'assets', label: '资源', selectable: false,
+  children: [{ value: 'ocean', label: '海洋场景' }],
+}];
+treeSelect.multiple = true;
+treeSelect.values = ['ocean'];</code></pre></details>
     </section>
 
     <section class="component-section" id="virtual-keyboard" data-title="Virtual Keyboard">
@@ -1317,7 +1388,7 @@ table.pageSize = 10;</code></pre></details>
       <div class="section-heading"><div><span class="index">44</span><h2>Tree</h2><code>&lt;hy-tree&gt;</code></div><p>层级数据、展开、范围多选、键盘导航、剪贴板操作和拖放排序。</p></div>
       <div class="demo-card tree-card">
         <div class="preview tree-stage"><hy-tree id="tree-live" allow-drag></hy-tree></div>
-        <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-drag" type="checkbox" checked /><span></span>allow-drag</label></div><hy-button id="tree-select" class="native-trigger" label="Select lights"></hy-button><hy-button id="tree-reset" class="native-trigger secondary" label="Reset data"></hy-button><output id="tree-event">选择节点；Ctrl/⌘ 与 Shift 支持多选</output></div>
+        <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-drag" type="checkbox" checked /><span></span>allow-drag</label></div><hy-button id="tree-select-lights" class="native-trigger" label="Select lights"></hy-button><hy-button id="tree-reset" class="native-trigger secondary" label="Reset data"></hy-button><output id="tree-event">选择节点；Ctrl/⌘ 与 Shift 支持多选</output></div>
       </div>
     </section>
 

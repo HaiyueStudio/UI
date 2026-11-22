@@ -441,7 +441,8 @@ defineInputComponents();
 
 Form owns one real light-DOM `<form>` exposed as `formElement`. Children added to the host are moved into
 that form, so native controls and form-associated custom controls share one owner. Do not nest forms.
-`hy-input`, `hy-select`, `hy-checkbox`, `hy-radio`, `hy-mentions`, `hy-switch` and `hy-upload` participate
+`hy-input`, `hy-select`, `hy-checkbox`, `hy-radio`, `hy-mentions`, `hy-switch`, `hy-upload`,
+`hy-auto-complete` and `hy-tree-select` participate
 in native `FormData`, disabled fieldsets and reset, including inside an ordinary `<form>`. Other custom
 components require an application-owned named native input if they need submission. Reset restores the
 initial connected values silently. Existing input events and isolated component entry points are preserved.
@@ -511,6 +512,154 @@ Native form submission includes actual File objects under `name`; metadata-only 
 are displayed but do not fabricate files. `required` checks whether the list is empty.
 Style `dropzone`, `trigger`, `list`, `file`, `file-name`, `file-status`, `progress`, `remove`, `retry`,
 and `message` parts through the existing semantic theme tokens.
+
+## AutoComplete
+
+Import `defineAutoCompleteComponents` from `@haiyue/ui/auto-complete`.
+
+```html
+<hy-auto-complete name="asset" aria-label="Asset search" allow-clear search-delay="150"></hy-auto-complete>
+```
+
+```ts
+autoComplete.options = [
+  { value: 'ocean', label: 'Ocean scene' },
+  { value: 'archived', label: 'Archived scene', disabled: true },
+];
+autoComplete.addEventListener('search', event => fetchSuggestions(event.detail.value));
+autoComplete.addEventListener('option-select', event => console.log(event.detail.option));
+```
+
+Free text remains valid without selecting an option. `value`, `options`, `open`, `disabled`, `readOnly`,
+`loading`, `allowClear`, `placeholder`, and `searchDelay` are properties. Options can also be supplied
+as JSON in `options`. Default matching searches label/value without case sensitivity; `filterOption`
+accepts a function or `false` for application-filtered results. Set `loading` while fetching and use
+`not-found-content` to customize empty feedback. `search` emits `{ value }` after the configured delay;
+superseded timers and IME intermediate searches are canceled. The application owns request cancellation
+and stale network-response handling. Arrow keys skip disabled options, Enter selects, and Escape/Tab
+dismiss. Native editing and composition keys are preserved.
+
+`value-change` emits `{ value }` for user edits/selections; `option-select` emits `{ value, option }`;
+`clear` and `open-change` are also composed events. Programmatic value assignments are silent.
+Selection and clear preserve native input notifications. `name`, `required`, `minlength`, `maxlength`
+and `pattern` support native forms and constraints; reset and disabled fieldsets work. `focus()`/`blur()`
+target the real input. Parts are `control`, `input`, `clear`, `panel`, `list`, `option`, and `status`.
+
+## Menu
+
+The isolated `@haiyue/ui/menu` entry exposes `HYMenu` and `defineMenuComponents()`.
+
+```ts
+menu.items = [
+  { key: 'home', label: 'Home', icon: '⌂' },
+  { key: 'assets', label: 'Assets', children: [{ key: 'scenes', label: 'Scenes' }] },
+  { key: 'divider', type: 'divider' },
+  { key: 'settings', label: 'Settings', href: '/settings' },
+];
+menu.selectedKeys = ['home'];
+```
+
+Items have unique string keys and optional labels, text icons, hrefs, disabled state, children and
+`type: 'group' | 'divider'`. Disabled parents disable their descendants. Cycles, duplicate keys and
+invalid input are discarded. Link navigation permits http/https/mailto/tel and ordinary relative URLs.
+`mode` is `inline` (default), `vertical`, or `horizontal`; `collapsed` provides a compact icon rail.
+Inline children expand in place, while vertical/horizontal submenus use top-layer popups. `multiple`,
+`selectedKeys` and `openKeys` control selection/expansion (array attributes use JSON). Programmatic updates
+are silent; cancelable `menu-select` emits `{ key, item, selectedKeys }` before selection/navigation,
+and `open-change` emits `{ openKeys }` for user expansion. Cancel a selection to prevent navigation.
+Menus provide roving tab focus, arrow/Home/End navigation, Escape return to parent, and text typeahead.
+Outside clicks close floating submenus. Parts are `menu`, `item`, `submenu`; width tokens include
+`--hy-menu-width`, `--hy-menu-collapsed-width`, and `--hy-menu-popup-width`.
+
+## Pagination
+
+Import `definePaginationComponents` from `@haiyue/ui/pagination` for lists or server-side pages.
+
+```html
+<hy-pagination total="153" page="1" page-size="10" show-size-changer show-quick-jumper></hy-pagination>
+```
+
+`page`, `pageSize`, `total`, `pageSizeOptions`, `disabled`, `simple`, `showSizeChanger` and
+`showQuickJumper` have properties and corresponding kebab-case attributes. `pageCount` is read-only;
+empty data still uses page 1. Invalid pages/sizes normalize, and huge totals render a bounded page window.
+`page-size-options` accepts comma-separated numbers or a JSON numeric array. `show-total="false"`
+hides the range, `hide-on-single-page` hides unnecessary navigation, and `size="small"` makes it compact.
+User actions emit composed `page-change` with `{ page, pageSize, total, source }`, where source is
+`page`, `size`, or `jump`. Programmatic changes are silent. Page-size changes retain the first visible
+record within the new page. Native buttons/selects and the Enter-committed jumper work with keyboard;
+Left/Right follow writing direction and Home/End reach the boundaries. No data fetching is implicit.
+Parts are `nav`, `pages`, `page`, `previous`, `next`, `total`, `page-size`, and `jumper`.
+
+## TreeSelect
+
+Import `defineTreeSelectComponents` from `@haiyue/ui/tree-select`. Its entry does not import/register Tree.
+
+```ts
+treeSelect.options = [{ value: 'assets', label: 'Assets', selectable: false, children: [
+  { value: 'ocean', label: 'Ocean scene' },
+  { value: 'locked', label: 'Archived', disabled: true },
+] }];
+treeSelect.multiple = true;
+treeSelect.values = ['ocean'];
+```
+
+Options have unique `value`, `label`, optional `disabled`, `selectable`, `expanded`, and `children`.
+`value` is a string in single mode and a string array in multiple mode; `values` always exposes an array.
+The multiple `value` attribute uses JSON. Multiple selection is independent: selecting a parent does not
+implicitly select its descendants. Selected values survive async option replacement; unknown labels
+temporarily show their values. `expandedKeys` / `expanded-keys` controls expansion.
+`searchable` and `clearable` default to true (use `="false"` to disable); `loading`, `disabled`,
+`readOnly`, `open`, and `placeholder` control interaction. Search preserves matching ancestors and
+temporarily expands paths; it does not change stored expansion. `search` emits `{ text }`; consumers
+own async requests and option updates. `not-found-content` customizes empty feedback.
+
+The input keeps focus while aria-activedescendant identifies the active tree item. Arrows expand,
+collapse and navigate, Enter selects, and Escape/Tab close. IME confirmation does not select a node.
+`value-change` carries `{ value, values, options }` and is followed by a composed `change` event;
+`expand-change` carries `{ expandedKeys }`. Programmatic assignments are silent. Named values participate
+in FormData (repeated names for multiple values), required/custom validation, reset and disabled fieldsets.
+`HYForm.setValues()` accepts arrays for multiple TreeSelect and native multiple select fields.
+Parts include `control`, `input`, `tags`, `tag`, `clear`, `panel`, `tree`, `option`, `toggle`, and `status`.
+AutoComplete/TreeSelect inherit semantic theme tokens and `--hy-popup-max-height`/`--hy-popup-z-index`.
+
+## Image and Image Preview
+
+Use the independent `@haiyue/ui/image` and `@haiyue/ui/image-preview` entries to register
+`defineImageComponents()` and `defineImagePreviewComponents()` respectively.
+
+```html
+<hy-image src="ocean.png" alt="Ocean scene" width="280" height="180"
+  fit="cover" loading="lazy" fallback="placeholder.png"></hy-image>
+```
+
+Image supports native `srcset`/`sizes` attributes, `src`, `alt`, `width`, `height`, `fit`, `loading`,
+`fallback`, `preview` (default true), and `previewSrc` (`preview-src`) for a higher-resolution source.
+Width/height accept numbers or CSS lengths. `status` is read-only: `empty`, `loading`, `loaded`, or `error`.
+`placeholder` and `fallback` slots customize loading/error content; `fallback` URL is tried once after
+the original fails. Source changes detach old listeners so stale resources cannot replace new state.
+`image-load` carries `{ src, naturalWidth, naturalHeight }`, and `image-error` carries `{ src, fallback }`.
+`showPreview()`/`hidePreview()` control the single-image viewer, with `preview-open-change` notifications.
+Parts include `frame`, `image`, `placeholder`, `error`, and `preview-trigger`; the radius/background use
+`--hy-image-radius`/`--hy-image-bg` and semantic tokens.
+
+```ts
+preview.images = [
+  { src: 'ocean.png', alt: 'Ocean', caption: 'Ocean scene' },
+  { src: 'moon.png', alt: 'Moon' },
+];
+preview.show(0);
+```
+
+Standalone Image Preview takes `images` (objects or URL strings; JSON attribute supported), `current`
+(zero-based), `open`, `show(index?)`, and `hide()`. It uses a native modal dialog with keyboard focus
+containment, Escape/backdrop dismissal and return focus. Toolbar controls provide previous/next,
+zoom, rotation and reset; Left/Right switch images, wheel zooms, and dragging pans a zoomed image.
+Navigation resets transforms. Loading and failures have visible feedback; empty lists close the viewer.
+`open-change` carries `{ open, index }`; `preview-change` carries `{ index, item }`. Disconnect releases
+modality and image listeners. Common preview parts are `preview`, `toolbar`, `stage`, `preview-image`,
+`preview-status`, `caption`, `counter`, `previous`, `next`, `in`, `out`, `left`, `right`, `reset`, and `close`.
+`--hy-image-preview-bg`, `--hy-image-preview-text-color` and `--hy-image-preview-mask-color`
+customize its surface, overlay text and backdrop.
 
 ## Portable component semantics (M24 G03/G05)
 

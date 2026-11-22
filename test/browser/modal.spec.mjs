@@ -200,7 +200,7 @@ test('gallery exposes configuration and async confirmation and preserves categor
   await expect(live.locator('dialog')).toBeHidden();
   await expect(page.locator('#modal-event')).toContainText('"reason":"ok"');
   const links = await page.locator('#component-nav a').evaluateAll(links => links.map(link => link.hash.slice(1)));
-  expect(links.slice(links.indexOf('history-controls'), links.indexOf('notification') + 1)).toEqual(['history-controls', 'modal', 'notification']);
+  expect(links.slice(links.indexOf('history-controls'), links.indexOf('notification') + 1)).toEqual(['history-controls', 'menu', 'modal', 'notification']);
   expect(await page.locator('.component-section').evaluateAll(sections => sections.map(section => section.id))).toEqual(links);
   expect(errors).toEqual([]);
 });

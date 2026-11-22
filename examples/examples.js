@@ -467,6 +467,60 @@ byId('upload-abort').addEventListener('click', () => uploadLive.abort());
 uploadLive.addEventListener('upload-change', event => writeEvent(byId('upload-event'), event.detail.reason, { name: event.detail.file.name, status: event.detail.file.status, percent: event.detail.file.percent }));
 uploadLive.addEventListener('file-reject', event => writeEvent(byId('upload-event'), 'file-reject', { name: event.detail.file.name, reason: event.detail.reason, message: event.detail.message }));
 
+// AutoComplete and asynchronous suggestions.
+const autoCompleteLive = byId('auto-complete-live');
+const autoCompleteOptions = [{ value: 'ocean', label: 'Ocean scene · 海洋' }, { value: 'orbit', label: 'Orbital scene · 轨道' }, { value: 'archived', label: 'Archived scene', disabled: true }];
+autoCompleteLive.options = autoCompleteOptions; autoCompleteLive.searchDelay = 150;
+let autoCompleteTimer = 0;
+byId('auto-complete-delay').addEventListener('input', event => { autoCompleteLive.searchDelay = Number(event.target.value); });
+byId('auto-complete-disabled').addEventListener('change', event => { autoCompleteLive.disabled = event.target.checked; });
+autoCompleteLive.addEventListener('search', event => {
+  window.clearTimeout(autoCompleteTimer); writeEvent(byId('auto-complete-event'), 'search', event.detail);
+  if (byId('auto-complete-async').checked) { autoCompleteLive.loading = true; autoCompleteTimer = window.setTimeout(() => { autoCompleteTimer = 0; autoCompleteLive.options = autoCompleteOptions; autoCompleteLive.loading = false; }, 500); }
+  else { autoCompleteLive.options = autoCompleteOptions; autoCompleteLive.loading = false; }
+});
+autoCompleteLive.addEventListener('option-select', event => writeEvent(byId('auto-complete-event'), 'option-select', event.detail));
+window.addEventListener('pagehide', () => window.clearTimeout(autoCompleteTimer));
+
+// Menu and standalone pagination.
+const menuLive = byId('menu-live');
+menuLive.items = [{ key: 'home', label: '首页', icon: '⌂' }, { key: 'assets', label: '资源', icon: '▦', children: [{ key: 'scenes', label: '场景' }, { key: 'textures', label: '纹理' }, { key: 'archive', label: '已归档', disabled: true }] }, { key: 'divider', type: 'divider' }, { key: 'settings', label: '设置', icon: '⚙' }];
+menuLive.selectedKeys = ['home'];
+byId('menu-mode').addEventListener('change', event => { menuLive.mode = event.target.value; });
+for (const property of ['collapsed', 'multiple', 'disabled']) byId(`menu-${property}`).addEventListener('change', event => { menuLive[property] = event.target.checked; });
+menuLive.addEventListener('menu-select', event => writeEvent(byId('menu-event'), 'menu-select', event.detail));
+const paginationLive = byId('pagination-live');
+const renderPaginationRange = () => { byId('pagination-range').textContent = `资源 ${paginationLive.total ? (paginationLive.page - 1) * paginationLive.pageSize + 1 : 0}–${Math.min(paginationLive.total, paginationLive.page * paginationLive.pageSize)}，共 ${paginationLive.total} 个`; };
+byId('pagination-total').addEventListener('input', event => { paginationLive.total = Number(event.target.value); renderPaginationRange(); });
+for (const property of ['simple', 'disabled']) byId(`pagination-${property}`).addEventListener('change', event => { paginationLive[property] = event.target.checked; });
+paginationLive.addEventListener('page-change', event => { renderPaginationRange(); writeEvent(byId('pagination-event'), 'page-change', event.detail); });
+
+// Tree selection with independent multi-selection.
+const treeSelectLive = byId('tree-select-live');
+treeSelectLive.options = [{ value: 'assets', label: '资源', selectable: false, expanded: true, children: [{ value: 'ocean', label: '海洋场景' }, { value: 'textures', label: '纹理', children: [{ value: 'sand', label: '沙滩纹理' }, { value: 'stone', label: '岩石纹理' }] }] }, { value: 'archive', label: '已归档', disabled: true, children: [{ value: 'old', label: '旧场景' }] }];
+for (const property of ['multiple', 'searchable', 'loading', 'disabled']) byId(`tree-select-${property}`).addEventListener('change', event => { treeSelectLive[property] = event.target.checked; });
+treeSelectLive.addEventListener('value-change', event => writeEvent(byId('tree-select-event'), 'value-change', event.detail));
+
+// Local SVG scenes keep image examples self-contained.
+const previewSvg = source => 'data:image/svg+xml,' + encodeURIComponent(source);
+const imageScenes = [
+  { src: previewSvg('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400"><rect width="640" height="400" fill="#255a91"/><circle cx="440" cy="100" r="54" fill="#e1edff"/><path d="M0 280Q160 190 320 280T640 280V400H0" fill="#21734f"/></svg>'), alt: '海面与月亮', caption: 'Ocean · 海洋场景' },
+  { src: previewSvg('<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500"><rect width="500" height="500" fill="#181a40"/><circle cx="250" cy="230" r="110" fill="#d8e2f2"/><circle cx="290" cy="200" r="90" fill="#181a40"/></svg>'), alt: '夜空中的月亮', caption: 'Moon · 月亮研究' },
+  { src: previewSvg('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400"><rect width="640" height="400" fill="#cce7f5"/><path d="M0 400 220 80 430 400M250 400 480 150 640 400" fill="#554cc6"/></svg>'), alt: '紫色远山', caption: 'Mountains · 远山' },
+];
+const imageLive = byId('image-live');
+for (const name of ['image-load', 'image-error']) imageLive.addEventListener(name, event => writeEvent(byId('image-event'), name, name === 'image-load' ? { naturalWidth: event.detail.naturalWidth, naturalHeight: event.detail.naturalHeight } : { fallback: event.detail.fallback }));
+imageLive.fallback = imageScenes[1].src; imageLive.src = imageScenes[0].src;
+byId('image-fit').addEventListener('change', event => { imageLive.fit = event.target.value; });
+byId('image-preview-enabled').addEventListener('change', event => { imageLive.preview = event.target.checked; });
+byId('image-fallback').addEventListener('change', event => { imageLive.fallback = event.target.checked ? imageScenes[1].src : ''; });
+byId('image-break').addEventListener('click', () => { imageLive.src = 'data:image/png;base64,broken'; });
+byId('image-restore').addEventListener('click', () => { imageLive.src = imageScenes[0].src; });
+const imagePreviewLive = byId('image-preview-live'); imagePreviewLive.images = imageScenes;
+byId('image-preview-open').addEventListener('click', () => imagePreviewLive.show(Number(byId('image-preview-index').value)));
+byId('image-preview-thumbnails').addEventListener('click', event => { const button = event.target.closest('[data-preview-index]'); if (button) imagePreviewLive.show(Number(button.dataset.previewIndex)); });
+for (const name of ['open-change', 'preview-change']) imagePreviewLive.addEventListener(name, event => writeEvent(byId('image-preview-event'), name, { open: imagePreviewLive.open, index: event.detail.index }));
+
 // Range.
 const rangeSingle = byId('range-single');
 const rangeLive = byId('range-live');
@@ -1046,7 +1100,7 @@ const initialTreeData = [
 const resetTree = () => { treeLive.data = structuredClone(initialTreeData); treeLive.selectedIds = []; };
 resetTree();
 byId('tree-drag').addEventListener('change', event => { treeLive.allowDrag = event.target.checked; });
-byId('tree-select').addEventListener('click', () => { treeLive.selectedIds = ['sun', 'fill']; writeEvent(byId('tree-event'), 'selectedIds', treeLive.selectedIds); });
+byId('tree-select-lights').addEventListener('click', () => { treeLive.selectedIds = ['sun', 'fill']; writeEvent(byId('tree-event'), 'selectedIds', treeLive.selectedIds); });
 byId('tree-reset').addEventListener('click', () => { resetTree(); writeEvent(byId('tree-event'), 'data', { reset: true }); });
 treeLive.addEventListener('selection-change', event => writeEvent(byId('tree-event'), 'selection-change', { selectedIds: event.detail.selectedIds }));
 treeLive.addEventListener('data-change', event => writeEvent(byId('tree-event'), 'data-change', { action: event.detail.action, sourceId: event.detail.sourceId, targetId: event.detail.targetId }));

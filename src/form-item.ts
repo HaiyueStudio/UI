@@ -104,7 +104,7 @@ export class HYFormItem extends HTMLElement {
   }
 
   private _field(): Field | null {
-    return [...this.querySelectorAll<Field>('input,textarea,select,[name],hy-input,hy-select,hy-checkbox,hy-radio,hy-switch,hy-mentions,hy-upload')]
+    return [...this.querySelectorAll<Field>('input,textarea,select,[name],hy-input,hy-select,hy-checkbox,hy-radio,hy-switch,hy-mentions,hy-upload,hy-auto-complete,hy-tree-select')]
       .find(field => field.closest('hy-form-item') === this && field.tagName !== 'HY-FORM-ITEM') ?? null;
   }
   private _manage(node: HTMLElement, name: string, value: string | null): void {
@@ -137,7 +137,7 @@ export class HYFormItem extends HTMLElement {
     if (this._status === 'validating') { this._status = ''; this._sync(); }
     if (this.validateTrigger === 'change' && !(event instanceof InputEvent && event.isComposing)) void this.validate();
   };
-  private _onChange = (event: Event): void => { if (this._isOwnEvent(event) && this.validateTrigger === 'change') void this.validate(); };
+  private _onChange = (event: Event): void => { this._onInput(event); };
   private _onBlur = (event: FocusEvent): void => { if (this._isOwnEvent(event) && this.validateTrigger === 'blur') void this.validate(); };
 }
 export function defineFormItemComponents(): void { if (!customElements.get('hy-form-item')) customElements.define('hy-form-item', HYFormItem); }

@@ -141,6 +141,30 @@
       "types": "./dist/upload.d.ts",
       "import": "./dist/upload.js"
     },
+    "./auto-complete": {
+      "types": "./dist/auto-complete.d.ts",
+      "import": "./dist/auto-complete.js"
+    },
+    "./menu": {
+      "types": "./dist/menu.d.ts",
+      "import": "./dist/menu.js"
+    },
+    "./pagination": {
+      "types": "./dist/pagination.d.ts",
+      "import": "./dist/pagination.js"
+    },
+    "./tree-select": {
+      "types": "./dist/tree-select.d.ts",
+      "import": "./dist/tree-select.js"
+    },
+    "./image": {
+      "types": "./dist/image.d.ts",
+      "import": "./dist/image.js"
+    },
+    "./image-preview": {
+      "types": "./dist/image-preview.d.ts",
+      "import": "./dist/image-preview.js"
+    },
     "./notification": {
       "types": "./dist/notification.d.ts",
       "import": "./dist/notification.js"
