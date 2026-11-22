@@ -46,6 +46,11 @@ import { definePaginationComponents } from './pagination.js';
 import { defineTreeSelectComponents } from './tree-select.js';
 import { defineImageComponents } from './image.js';
 import { defineImagePreviewComponents } from './image-preview.js';
+import { defineEmptyComponents } from './empty.js';
+import { defineResultComponents } from './result.js';
+import { defineAvatarComponents } from './avatar.js';
+import { defineCardComponents } from './card.js';
+import { defineDescriptionsComponents } from './descriptions.js';
 import { defineNotificationComponents } from './notification.js';
 import { defineToastComponents } from './toast.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
@@ -490,7 +495,23 @@ export type { HYImageStatus, HYImageLoadDetail, HYImageErrorDetail } from './ima
 export { HYImagePreview, defineImagePreviewComponents } from './image-preview.js';
 export type { HYImagePreviewItem, HYImagePreviewOpenDetail, HYImagePreviewChangeDetail } from './image-preview.js';
 
+export { HYEmpty, defineEmptyComponents } from './empty.js';
+export type { HYEmptyImage, HYEmptySize } from './empty.js';
+export { HYResult, defineResultComponents } from './result.js';
+export type { HYResultStatus } from './result.js';
+export { HYAvatar, defineAvatarComponents } from './avatar.js';
+export type { HYAvatarShape, HYAvatarSize, HYAvatarFit, HYAvatarStatus, HYAvatarLoadDetail, HYAvatarErrorDetail } from './avatar.js';
+export { HYCard, defineCardComponents } from './card.js';
+export type { HYCardSize } from './card.js';
+export { HYDescriptions, defineDescriptionsComponents } from './descriptions.js';
+export type { HYDescriptionItem, HYDescriptionsLayout, HYDescriptionsSize } from './descriptions.js';
+
 export function defineHaiyueUI(): void {
+  defineEmptyComponents();
+  defineResultComponents();
+  defineAvatarComponents();
+  defineCardComponents();
+  defineDescriptionsComponents();
   defineAutoCompleteComponents();
   defineMenuComponents();
   definePaginationComponents();

@@ -254,6 +254,26 @@
       "types": "./dist/tree.d.ts",
       "import": "./dist/tree.js"
     },
+    "./empty": {
+      "types": "./dist/empty.d.ts",
+      "import": "./dist/empty.js"
+    },
+    "./result": {
+      "types": "./dist/result.d.ts",
+      "import": "./dist/result.js"
+    },
+    "./avatar": {
+      "types": "./dist/avatar.d.ts",
+      "import": "./dist/avatar.js"
+    },
+    "./card": {
+      "types": "./dist/card.d.ts",
+      "import": "./dist/card.js"
+    },
+    "./descriptions": {
+      "types": "./dist/descriptions.d.ts",
+      "import": "./dist/descriptions.js"
+    },
     "./themes/light.css": "./themes/haiyue-light.css",
     "./themes/dark.css": "./themes/haiyue-dark.css",
     "./package.json": "./package.json",
@@ -297,6 +317,10 @@
         "kind": "value"
       },
       {
+        "name": "defineAvatarComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineBadgeComponents",
         "kind": "value"
       },
@@ -314,6 +338,10 @@
       },
       {
         "name": "defineButtonGroupComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineCardComponents",
         "kind": "value"
       },
       {
@@ -341,6 +369,10 @@
         "kind": "value"
       },
       {
+        "name": "defineDescriptionsComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineDialogComponents",
         "kind": "value"
       },
@@ -358,6 +390,10 @@
       },
       {
         "name": "defineDropdownComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineEmptyComponents",
         "kind": "value"
       },
       {
@@ -446,6 +482,10 @@
       },
       {
         "name": "defineResizableComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineResultComponents",
         "kind": "value"
       },
       {
@@ -605,6 +645,34 @@
         "kind": "type"
       },
       {
+        "name": "HYAvatar",
+        "kind": "value"
+      },
+      {
+        "name": "HYAvatarErrorDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarFit",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarLoadDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarShape",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarSize",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarStatus",
+        "kind": "type"
+      },
+      {
         "name": "HYBadge",
         "kind": "value"
       },
@@ -654,6 +722,14 @@
       },
       {
         "name": "HYButtonIconPosition",
+        "kind": "type"
+      },
+      {
+        "name": "HYCard",
+        "kind": "value"
+      },
+      {
+        "name": "HYCardSize",
         "kind": "type"
       },
       {
@@ -765,6 +841,22 @@
         "kind": "type"
       },
       {
+        "name": "HYDescriptionItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYDescriptions",
+        "kind": "value"
+      },
+      {
+        "name": "HYDescriptionsLayout",
+        "kind": "type"
+      },
+      {
+        "name": "HYDescriptionsSize",
+        "kind": "type"
+      },
+      {
         "name": "HYDialog",
         "kind": "value"
       },
@@ -858,6 +950,18 @@
       },
       {
         "name": "HYDropdownSelectDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYEmpty",
+        "kind": "value"
+      },
+      {
+        "name": "HYEmptyImage",
+        "kind": "type"
+      },
+      {
+        "name": "HYEmptySize",
         "kind": "type"
       },
       {
@@ -1210,6 +1314,14 @@
       },
       {
         "name": "HYResizableSource",
+        "kind": "type"
+      },
+      {
+        "name": "HYResult",
+        "kind": "value"
+      },
+      {
+        "name": "HYResultStatus",
         "kind": "type"
       },
       {
@@ -3210,6 +3322,108 @@
       },
       {
         "name": "HYTreeSelectionChangeDetail",
+        "kind": "type"
+      }
+    ],
+    "./empty": [
+      {
+        "name": "defineEmptyComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYEmpty",
+        "kind": "value"
+      },
+      {
+        "name": "HYEmptyImage",
+        "kind": "type"
+      },
+      {
+        "name": "HYEmptySize",
+        "kind": "type"
+      }
+    ],
+    "./result": [
+      {
+        "name": "defineResultComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYResult",
+        "kind": "value"
+      },
+      {
+        "name": "HYResultStatus",
+        "kind": "type"
+      }
+    ],
+    "./avatar": [
+      {
+        "name": "defineAvatarComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYAvatar",
+        "kind": "value"
+      },
+      {
+        "name": "HYAvatarErrorDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarFit",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarLoadDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarShape",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarSize",
+        "kind": "type"
+      },
+      {
+        "name": "HYAvatarStatus",
+        "kind": "type"
+      }
+    ],
+    "./card": [
+      {
+        "name": "defineCardComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYCard",
+        "kind": "value"
+      },
+      {
+        "name": "HYCardSize",
+        "kind": "type"
+      }
+    ],
+    "./descriptions": [
+      {
+        "name": "defineDescriptionsComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYDescriptionItem",
+        "kind": "type"
+      },
+      {
+        "name": "HYDescriptions",
+        "kind": "value"
+      },
+      {
+        "name": "HYDescriptionsLayout",
+        "kind": "type"
+      },
+      {
+        "name": "HYDescriptionsSize",
         "kind": "type"
       }
     ],

@@ -635,6 +635,11 @@ Use the independent `@haiyue/ui/image` and `@haiyue/ui/image-preview` entries to
 Image supports native `srcset`/`sizes` attributes, `src`, `alt`, `width`, `height`, `fit`, `loading`,
 `fallback`, `preview` (default true), and `previewSrc` (`preview-src`) for a higher-resolution source.
 Width/height accept numbers or CSS lengths. `status` is read-only: `empty`, `loading`, `loaded`, or `error`.
+The frame also follows CSS width/height set on the host. With both dimensions constrained, `fit` uses
+native `object-fit` semantics: `contain` shows the complete image with letterboxing, `cover` crops to fill,
+`fill` stretches, `none` keeps the original size, and `scale-down` never enlarges. For oversized images,
+`scale-down` matches `contain`; for smaller images it matches `none`. Constraining only the width retains
+the image's natural aspect ratio.
 `placeholder` and `fallback` slots customize loading/error content; `fallback` URL is tried once after
 the original fails. Source changes detach old listeners so stale resources cannot replace new state.
 `image-load` carries `{ src, naturalWidth, naturalHeight }`, and `image-error` carries `{ src, fallback }`.
@@ -1206,11 +1211,66 @@ npm run examples
 Then open <http://localhost:4173/>. The gallery provides a left-side component index and live examples for
 every exported component, including editable parameters and event output. Open **设计规范** to compare
 Moonlight, Nightfall, and a custom skin on the same controls and inspect the CSS and current token values.
+The compact skin picker also offers **自定义**, starting from Terracotta. Its gear button opens a live
+preview panel for colors (including alpha values), fonts, spacing, radii, and control heights. Changes and
+the selected skin are saved locally; **恢复陶土** resets the custom values, and **应用皮肤** applies them to the
+gallery. The same picker remains available above the introduction on mobile screens.
 The gallery shell itself dogfoods
 Haiyue UI: theme actions, component search, command results, status, and example action controls use the
 published Web Components rather than parallel page-only widgets. The navigation/content shell and eligible
 preview/control cards use `hy-split` for keyboard- and pointer-adjustable sizing. Usage blocks are rendered as
 read-only CodeMirror editors with HTML, JavaScript, and CSS syntax highlighting.
+
+## Empty, Result, Avatar, Card and Descriptions
+
+These five presentation components have focused, side-effect-free entries (`@haiyue/ui/empty`,
+`/result`, `/avatar`, `/card`, `/descriptions`) and are included in `defineHaiyueUI()`.
+Each entry exposes its `HY…` class and `define…Components()` registration function. Styling inherits
+the semantic color, font, spacing and radius tokens; no runtime dependency is added.
+
+| Component | Properties / attributes | Content slots |
+| --- | --- | --- |
+| `HYEmpty` / `hy-empty` | `description` (default `No data`), `image` (`default`, `simple`, `none`), `size` (`small`, `default`) | `image`, `description`, default actions |
+| `HYResult` / `hy-result` | `status` (`success`, `info`, `warning`, `error`, `403`, `404`, `500`), `heading`, `description` | `icon`, `heading`, `description`, default details, `extra` actions |
+| `HYAvatar` / `hy-avatar` | `src`, native `srcset`/`sizes` attributes, `alt`, `text`, `size` (`small`, `default`, `large`, or 16–256 pixels), `shape` (`circle`, `square`), `fit` (`cover`, `contain`, `fill`), read-only `status` | default image fallback |
+| `HYCard` / `hy-card` | `heading`, `bordered` (default true; `bordered="false"` removes it), `hoverable`, `loading`, `size` (`small`, `default`) | `heading`, `extra`, `cover`, default body, `footer` |
+| `HYDescriptions` / `hy-descriptions` | `items`, `heading`, `column` (1–6, default 3), `layout` (`horizontal`, `vertical`), `bordered`, `size`, `responsive` (default true), `emptyText` (`empty-text`) | `heading`, `extra`, `label-{key}`, `value-{key}` |
+
+```js
+import { defineDescriptionsComponents } from '@haiyue/ui/descriptions';
+defineDescriptionsComponents();
+const details = document.querySelector('hy-descriptions');
+details.items = [
+  { key: 'name', label: 'Project', value: 'Ocean' },
+  { key: 'files', label: 'Files', value: 0 },
+  { key: 'notes', label: 'Notes', value: 'More room for this value', span: 'filled' },
+];
+```
+
+`HYDescriptionItem` uses optional unique string `key` (defaults to the item index), `label`, primitive
+`value` and optional `span` (1–6 or `filled` to consume the remaining row). Items are copied; duplicate
+keys reject a property update, while invalid JSON in the `items` attribute produces an empty list.
+Values render as text; use the named value/label slots for links, tags or inputs. `0` and `false` remain
+visible; null, missing and empty string values use `emptyText` (default `—`). Responsive layout follows
+the component's container: one column below 480px, up to two below 720px, otherwise `column`.
+Set `responsive="false"` to retain the configured columns. Resize observers disconnect on removal.
+
+Avatar shows its default slot, `text`, or a person icon while loading and after failure. `status` is
+`empty`, `loading`, `loaded` or `error`. `avatar-load` carries `{ src, naturalWidth, naturalHeight }` and
+`avatar-error` carries `{ src }`; both bubble across shadow roots. Superseded requests and disconnected
+instances ignore stale image events. Supply `alt` or `aria-label` for the user name; explicit `alt=""`
+makes the avatar decorative. `--hy-avatar-size`, `--hy-avatar-font-size`, `--hy-avatar-radius`,
+`--hy-avatar-bg-color` and `--hy-avatar-text-color` provide local overrides.
+
+Card loading hides and makes its body inert without destroying inputs, and hides the footer until
+loading ends. `hoverable` adds a visual hover treatment; use actual slotted links/buttons for actions.
+Empty and Result preserve slotted controls, and Result exposes a labelled region without unsolicited
+live announcements. All fallback strings render as text. Useful surface parts are `empty`, `image`,
+`description`, `actions`; `result`, `icon`, `heading`, `content`, `extra`; `avatar`, `image`, `fallback`,
+`text`; `card`, `header`, `heading`, `cover`, `body`, `loading`, `footer`; and `list`, `item`, `label`,
+`value` respectively. Component CSS hooks also include `--hy-empty-padding`, `--hy-empty-image-size`,
+`--hy-result-padding`, `--hy-result-icon-size`, `--hy-card-radius`, `--hy-card-bg-color`,
+`--hy-card-body-padding`, `--hy-descriptions-label-width`, `--hy-descriptions-cell-padding` and gap tokens.
 
 ## Expandable container
 

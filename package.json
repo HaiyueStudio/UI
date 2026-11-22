@@ -269,6 +269,11 @@
       "types": "./dist/tree.d.ts",
       "import": "./dist/tree.js"
     },
+    "./empty": { "types": "./dist/empty.d.ts", "import": "./dist/empty.js" },
+    "./result": { "types": "./dist/result.d.ts", "import": "./dist/result.js" },
+    "./avatar": { "types": "./dist/avatar.d.ts", "import": "./dist/avatar.js" },
+    "./card": { "types": "./dist/card.d.ts", "import": "./dist/card.js" },
+    "./descriptions": { "types": "./dist/descriptions.d.ts", "import": "./dist/descriptions.js" },
     "./themes/light.css": "./themes/haiyue-light.css",
     "./themes/dark.css": "./themes/haiyue-dark.css",
     "./package.json": "./package.json",

@@ -1,7 +1,11 @@
 import { defineHaiyueUI } from '../dist/index.js';
 import { installCodeEditors } from './vendor/codemirror.js';
+import { initializeGalleryThemes } from './theme-editor.js';
+import { initializePresentationExamples } from './presentation-examples.js';
 
 defineHaiyueUI();
+initializeGalleryThemes();
+initializePresentationExamples();
 
 const byId = id => document.getElementById(id);
 const setBoolean = (element, name, value) => element.toggleAttribute(name, Boolean(value));
@@ -160,14 +164,6 @@ byId('masonry-remove').addEventListener('click', () => masonryLive.lastElementCh
 masonryLive.addEventListener('layout-change', event => writeEvent(byId('masonry-event'), 'layout-change', event.detail));
 
 // Theme preview. Theme styles are independent package exports and flow into component shadow roots via tokens.
-const themeButtons = [...document.querySelectorAll('.theme-picker hy-button')];
-function setTheme(theme) {
-  document.documentElement.dataset.hyTheme = theme;
-  document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#edf8ff' : '#080b21';
-  for (const button of themeButtons) button.setAttribute('aria-pressed', String(button.dataset.theme === theme));
-}
-for (const button of themeButtons) button.addEventListener('click', () => setTheme(button.dataset.theme));
-
 const designPreview = byId('design-preview');
 const designThemeButtons = document.querySelectorAll('[data-design-theme]');
 const designTokenValues = designPreview.querySelectorAll('[data-design-token]');
@@ -511,7 +507,8 @@ const imageScenes = [
 const imageLive = byId('image-live');
 for (const name of ['image-load', 'image-error']) imageLive.addEventListener(name, event => writeEvent(byId('image-event'), name, name === 'image-load' ? { naturalWidth: event.detail.naturalWidth, naturalHeight: event.detail.naturalHeight } : { fallback: event.detail.fallback }));
 imageLive.fallback = imageScenes[1].src; imageLive.src = imageScenes[0].src;
-byId('image-fit').addEventListener('change', event => { imageLive.fit = event.target.value; });
+const imageFitDescriptions = { contain: '保持比例完整显示，空余区域留白。', cover: '保持比例铺满显示区域，超出部分裁剪。', fill: '拉伸铺满显示区域，图片比例可能改变。', none: '按图片原始尺寸居中显示，超出部分裁剪。', 'scale-down': '保持比例且不放大图片；大图缩小后与 contain 一致。' };
+byId('image-fit').addEventListener('change', event => { imageLive.fit = event.target.value; byId('image-fit-description').textContent = imageFitDescriptions[event.target.value]; });
 byId('image-preview-enabled').addEventListener('change', event => { imageLive.preview = event.target.checked; });
 byId('image-fallback').addEventListener('change', event => { imageLive.fallback = event.target.checked ? imageScenes[1].src : ''; });
 byId('image-break').addEventListener('click', () => { imageLive.src = 'data:image/png;base64,broken'; });

@@ -15,19 +15,46 @@
   --hy-canvas-color: #f4e8dc;
   --hy-surface-color: #fff8ef;
   --hy-surface-elevated-color: #fffdf8;
+  --hy-panel-bg-color: #f8ede1;
   --hy-input-bg-color: #fffdf8;
+  --hy-menu-bg-color: #fffdf8;
   --hy-text-color: #33241e;
   --hy-secondary-text-color: #694a3d;
   --hy-muted-color: #766052;
   --hy-disabled-text-color: #857167;
   --hy-border-color: #c6a28c;
+  --hy-border-strong-color: #a76d54;
   --hy-hover-border-color: #a76d54;
   --hy-hover-bg-color: #f7e4d6;
+  --hy-menu-item-hover-bg-color: #f7e4d6;
   --hy-accent-color: #a44932;
+  --hy-accent-strong-color: #8d3d29;
+  --hy-selected-bg-color: #a44932;
+  --hy-selected-text-color: #fffdf8;
   --hy-active-text-color: #74301e;
   --hy-focus-border-color: #a44932;
   --hy-focus-ring-color: #a4493240;
+  --hy-invalid-border-color: #b13d3d;
+  --hy-menu-shadow-color: #694a3d30;
+  --hy-dialog-shadow-color: #694a3d38;
+  --hy-dialog-backdrop-color: #33241e40;
+  --hy-dialog-bg-color: #fffdf8;
+  --hy-dialog-body-color: #694a3d;
+  --hy-dialog-footer-bg-color: #fff8ef;
+  --hy-tooltip-bg-color: #53392d;
+  --hy-tooltip-text-color: #fffdf8;
+  --hy-tooltip-border-color: #fffdf847;
+  --hy-tooltip-shadow-color: #694a3d33;
+  --hy-drop-indicator-color: #a44932;
+  --hy-drop-target-bg-color: #f7e4d6;
+  --hy-theme-glow-color: #e5b79a;
+  --hy-theme-highlight-color: #c48b52;
+  --hy-info-color: #476d82;
   --hy-success-color: #376749;
+  --hy-warning-color: #956322;
+  --hy-error-color: #b13d3d;
+  --hy-on-status-color: #fffdf8;
+  --hy-on-accent-color: #fffdf8;
   --hy-shadow-color: #694a3d30;
 
   --hy-space-1: 3px;
@@ -70,12 +97,16 @@
   <hy-split id="gallery-shell" class="gallery-shell" direction="horizontal" ratio="0.22" min-first="224" min-second="480" bar-size="5" aria-label="示例导航与内容分栏">
   <aside class="sidebar" slot="first" aria-label="组件导航">
     <div class="brand">
-      <span class="brand-mark" aria-hidden="true">HY</span>
+      <img class="brand-mark" src="./assets/haiyue-logo.png" width="34" height="34" alt="" />
       <span><strong>Haiyue UI</strong><small>Component gallery</small></span>
     </div>
     <div class="theme-picker" role="group" aria-label="组件配色皮肤">
-      <hy-button data-theme="light" aria-pressed="false"><i class="moonlight-swatch"></i><span>月白</span><small>Moonlight</small></hy-button>
-      <hy-button data-theme="dark" aria-pressed="true"><i class="nightfall-swatch"></i><span>夜阑</span><small>Nightfall</small></hy-button>
+      <hy-button data-theme="light" aria-pressed="false"><span class="theme-choice-content"><i class="moonlight-swatch" aria-hidden="true"></i><span>月白</span></span></hy-button>
+      <hy-button data-theme="dark" aria-pressed="true"><span class="theme-choice-content"><i class="nightfall-swatch" aria-hidden="true"></i><span>夜阑</span></span></hy-button>
+      <div class="theme-custom-choice">
+        <hy-button data-theme="custom" aria-pressed="false"><span class="theme-choice-content"><span>自定义</span></span></hy-button>
+        <hy-button id="theme-settings-open" aria-label="自定义皮肤设置" title="自定义皮肤设置" aria-haspopup="dialog" aria-controls="theme-settings" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 3-.5 2-2 .9-1.9-.6-2 3.4 1.4 1.5v2.6L2.6 14l2 3.4 1.9-.6 2 .9L9 20h4l.5-2.3 2-.9 1.9.6 2-3.4-1.4-1.2v-2.6l1.4-1.5-2-3.4-1.9.6-2-.9L13 3Z"/><circle cx="11" cy="11.5" r="3"/></svg></hy-button>
+      </div>
     </div>
     <label class="component-search">
       <span class="sr-only">筛选组件</span>
@@ -88,11 +119,15 @@
       <p class="nav-label">基础</p>
       <a href="#alert" data-name="alert message feedback 警告 提示 反馈"><span>Alert</span><code>hy-alert</code></a>
       <a href="#auto-complete" data-name="auto complete autocomplete 自动 补全 搜索 建议"><span>AutoComplete</span><code>hy-auto-complete</code></a>
+      <a href="#avatar" data-name="avatar user profile 头像 用户 图片 回退"><span>Avatar</span><code>hy-avatar</code></a>
       <a href="#badge" data-name="badge count dot status 徽标 数量 状态"><span>Badge</span><code>hy-badge</code></a>
       <a href="#button" data-name="button 按钮"><span>Button</span><code>hy-button</code></a>
       <a href="#button-group" data-name="button group 按钮组"><span>Button Group</span><code>hy-button-group</code></a>
+      <a href="#card" data-name="card 卡片 内容 封面"><span>Card</span><code>hy-card</code></a>
       <a href="#checkbox" data-name="checkbox 复选框"><span>Checkbox</span><code>hy-checkbox</code></a>
+      <a href="#descriptions" data-name="descriptions details 属性 详情 描述 列表"><span>Descriptions</span><code>hy-descriptions</code></a>
       <a href="#divider" data-name="divider separator 分割线 分隔线 文字"><span>Divider</span><code>hy-divider</code></a>
+      <a href="#empty" data-name="empty 空状态 无数据 搜索 结果"><span>Empty</span><code>hy-empty</code></a>
       <a href="#form" data-name="form form-item 表单 字段 校验 提交"><span>Form / Form Item</span><code>hy-form</code></a>
       <a href="#image" data-name="image 图片 加载 回退 缩略图"><span>Image</span><code>hy-image</code></a>
       <a href="#image-preview" data-name="image preview 图片 预览 画廊 缩放 旋转"><span>Image Preview</span><code>hy-image-preview</code></a>
@@ -126,6 +161,7 @@
       <a href="#popconfirm" data-name="popconfirm 确认 删除 气泡"><span>Popconfirm</span><code>hy-popconfirm</code></a>
       <a href="#popover" data-name="popover 弹出 浮层 面板"><span>Popover</span><code>hy-popover</code></a>
       <a href="#progress" data-name="progress 进度 进度条 圆环"><span>Progress</span><code>hy-progress</code></a>
+      <a href="#result" data-name="result success error 结果 成功 失败 403 404 500"><span>Result</span><code>hy-result</code></a>
       <a href="#select" data-name="select 选择器"><span>Select</span><code>hy-select</code></a>
       <a href="#segmented" data-name="segmented switch 分段 单选 切换"><span>Segmented</span><code>hy-segmented</code></a>
       <a href="#skeleton" data-name="skeleton loading 骨架屏 加载 占位"><span>Skeleton</span><code>hy-skeleton</code></a>
@@ -151,7 +187,7 @@
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><hy-badge status="success" text="63 components"></hy-badge><span>·</span><span>v0.2.3</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="68 components"></hy-badge><span>·</span><span>v0.2.3</span></div>
   </aside>
 
   <main id="content" slot="second">
@@ -160,7 +196,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>63</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>68</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -229,6 +265,16 @@
 autoComplete.options = [{ value: 'ocean', label: 'Ocean scene' }];
 autoComplete.addEventListener('search', event =&gt; console.log(event.detail.value));
 autoComplete.addEventListener('option-select', event =&gt; console.log(event.detail));</code></pre></details>
+    </section>
+
+    <section class="component-section" id="avatar" data-title="Avatar">
+      <div class="section-heading"><div><h2>Avatar</h2><code>&lt;hy-avatar&gt;</code></div><p>用户或团队标识，支持图片、文字、自定义内容与加载失败回退。</p></div>
+      <div class="demo-card two-column presentation-demo"><div class="preview avatar-stage"><hy-avatar id="avatar-live" text="HY" alt="海月用户" size="72"></hy-avatar><div class="avatar-samples"><hy-avatar src="./assets/haiyue-logo.png" alt="Haiyue" size="small"></hy-avatar><hy-avatar text="林" shape="square"></hy-avatar><hy-avatar alt="访客"></hy-avatar></div></div>
+      <div class="controls stacked"><label>source<select id="avatar-source"><option value="text">文字</option><option value="image">图片</option><option value="broken">失效图片</option></select></label><label>text<input id="avatar-text" value="HY" /></label><label>shape<select id="avatar-shape"><option>circle</option><option>square</option></select></label><label>size<input id="avatar-size" type="range" min="20" max="96" value="72" /></label><output id="avatar-event">选择图片可查看加载与回退事件</output></div></div>
+      <details class="code"><summary>查看头像用法 <span>HTML</span></summary><pre><code>&lt;hy-avatar text="HY" alt="海月用户" size="56"&gt;&lt;/hy-avatar&gt;
+&lt;hy-avatar shape="square" alt="设计师"&gt;林&lt;/hy-avatar&gt;
+&lt;!-- src 加载失败后回退到 text 或默认插槽内容 --&gt;</code></pre></details>
+      <div class="parameter-strip"><code>src / srcset / sizes</code><code>alt</code><code>text</code><code>size</code><code>shape</code><code>fit</code><code>status</code><code>avatar-load</code><code>avatar-error</code></div>
     </section>
 
     <section class="component-section" id="badge" data-title="Badge">
@@ -312,6 +358,18 @@ autoComplete.addEventListener('option-select', event =&gt; console.log(event.det
       <div class="parameter-strip"><code>orientation</code><code>aria-label</code><code>group</code></div>
     </section>
 
+    <section class="component-section" id="card" data-title="Card">
+      <div class="section-heading"><div><h2>Card</h2><code>&lt;hy-card&gt;</code></div><p>组合标题、封面、正文和页脚；加载占位保留正文状态。</p></div>
+      <div class="demo-card two-column presentation-demo"><div class="preview presentation-stage"><hy-card id="card-live" heading="月光计划" hoverable><a slot="extra" href="#descriptions">详情 ↗</a><div slot="cover" class="low-card-cover" aria-hidden="true">∿</div><p>把灵感整理成下一份作品。</p><div class="low-card-owner"><hy-avatar text="林" size="small" alt="林设计师"></hy-avatar><span>Lin · Design studio</span></div><hy-button slot="footer" id="card-collect">收藏计划</hy-button></hy-card></div>
+      <div class="controls stacked"><label>heading<input id="card-heading" value="月光计划" /></label><label>size<select id="card-size"><option>default</option><option>small</option></select></label><div class="toggle-row"><label class="toggle"><input id="card-bordered" type="checkbox" checked /><span></span>bordered</label><label class="toggle"><input id="card-hoverable" type="checkbox" checked /><span></span>hoverable</label><label class="toggle"><input id="card-loading" type="checkbox" /><span></span>loading</label></div><output id="card-event">点击收藏体验页脚操作</output></div></div>
+      <details class="code"><summary>查看卡片用法 <span>HTML</span></summary><pre><code>&lt;hy-card heading="项目" hoverable&gt;
+  &lt;a slot="extra" href="#descriptions"&gt;详情&lt;/a&gt;
+  &lt;p&gt;正文内容&lt;/p&gt;
+  &lt;hy-button slot="footer"&gt;保存&lt;/hy-button&gt;
+&lt;/hy-card&gt;</code></pre></details>
+      <div class="parameter-strip"><code>heading</code><code>bordered</code><code>hoverable</code><code>loading</code><code>size</code><code>heading / extra / cover / footer slots</code></div>
+    </section>
+
     <section class="component-section" id="checkbox" data-title="Checkbox">
       <div class="section-heading"><div><span class="index">04</span><h2>Checkbox</h2><code>&lt;hy-checkbox&gt;</code></div><p>布尔选择，包含未选、选中、不确定和禁用四种状态。</p></div>
       <div class="demo-card two-column">
@@ -327,6 +385,19 @@ autoComplete.addEventListener('option-select', event =&gt; console.log(event.det
           <output id="checkbox-event">{ "checked": true, "value": "gi" }</output>
         </div>
       </div>
+    </section>
+
+    <section class="component-section" id="descriptions" data-title="Descriptions">
+      <div class="section-heading"><div><h2>Descriptions</h2><code>&lt;hy-descriptions&gt;</code></div><p>语义化的属性详情列表，支持跨列、边框、纵向标签与容器响应式布局。</p></div>
+      <div class="demo-card descriptions-card presentation-demo"><div class="preview descriptions-stage"><hy-descriptions id="descriptions-live" heading="项目信息" column="3" bordered><hy-tag slot="value-status" variant="success">已同步</hy-tag></hy-descriptions></div>
+      <div class="controls"><label>column<input id="descriptions-column" type="number" min="1" max="6" value="3" /></label><label>layout<select id="descriptions-layout"><option>horizontal</option><option>vertical</option></select></label><div class="toggle-row"><label class="toggle"><input id="descriptions-bordered" type="checkbox" checked /><span></span>bordered</label><label class="toggle"><input id="descriptions-responsive" type="checkbox" checked /><span></span>responsive</label><label class="toggle"><input id="descriptions-small" type="checkbox" /><span></span>small</label></div></div></div>
+      <details class="code"><summary>查看属性列表用法 <span>JavaScript</span></summary><pre><code>descriptions.items = [
+  { key: 'name', label: '名称', value: '月光计划' },
+  { key: 'files', label: '文件数', value: 0 },
+  { key: 'notes', label: '备注', value: '跨列内容', span: 'filled' },
+];
+// 使用 slot="value-name" 或 slot="label-name" 提供富内容。</code></pre></details>
+      <div class="parameter-strip"><code>items</code><code>heading</code><code>column</code><code>layout</code><code>bordered</code><code>responsive</code><code>size</code><code>empty-text</code><code>span</code><code>value-{key} / label-{key} slots</code></div>
     </section>
 
     <section class="component-section" id="divider" data-title="Divider">
@@ -347,6 +418,17 @@ autoComplete.addEventListener('option-select', event =&gt; console.log(event.det
       <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-divider line-style="dashed" text-placement="start"&gt;Rendering&lt;/hy-divider&gt;
 &lt;hy-divider orientation="vertical"&gt;&lt;/hy-divider&gt;</code></pre></details>
       <div class="parameter-strip"><code>orientation</code><code>lineStyle</code><code>textPlacement</code><code>label</code><code>thickness</code><code>color</code><code>spacing</code><code>line</code><code>text</code></div>
+    </section>
+
+    <section class="component-section" id="empty" data-title="Empty">
+      <div class="section-heading"><div><h2>Empty</h2><code>&lt;hy-empty&gt;</code></div><p>为空列表和无搜索结果提供清晰的说明与下一步操作。</p></div>
+      <div class="demo-card two-column presentation-demo"><div class="preview presentation-stage"><hy-empty id="empty-live" description="还没有任何灵感"><hy-button id="empty-create">创建第一份作品</hy-button></hy-empty></div>
+      <div class="controls stacked"><label>description<input id="empty-description" value="还没有任何灵感" /></label><label>image<select id="empty-image"><option>default</option><option>simple</option><option>none</option></select></label><label>size<select id="empty-size"><option>default</option><option>small</option></select></label><output id="empty-event">点击创建按钮后显示操作</output></div></div>
+      <details class="code"><summary>查看空状态用法 <span>HTML</span></summary><pre><code>&lt;hy-empty description="没有匹配的结果" image="simple"&gt;
+  &lt;hy-button&gt;清除筛选&lt;/hy-button&gt;
+&lt;/hy-empty&gt;
+&lt;!-- image / description 插槽支持自定义内容 --&gt;</code></pre></details>
+      <div class="parameter-strip"><code>description</code><code>image</code><code>size</code><code>image / description slots</code><code>default slot: actions</code></div>
     </section>
 
     <section class="component-section" id="form" data-title="Form / Form Item">
@@ -371,9 +453,9 @@ form.addEventListener('form-submit', event =&gt; {
 
     <section class="component-section" id="image" data-title="Image">
       <div class="section-heading"><div><h2>Image</h2><code>&lt;hy-image&gt;</code></div><p>图片加载、占位和失败回退，支持响应式图片与点击放大预览。</p></div>
-      <div class="demo-card two-column"><div class="preview form-preview"><hy-image id="image-live" alt="海面与月亮" width="280" height="180"></hy-image></div>
-      <div class="controls stacked"><label>fit<select id="image-fit"><option>contain</option><option>cover</option><option>fill</option><option>none</option></select></label><div class="toggle-row"><label class="toggle"><input id="image-preview-enabled" type="checkbox" checked /><span></span>preview</label><label class="toggle"><input id="image-fallback" type="checkbox" checked /><span></span>fallback image</label></div><hy-button id="image-break" label="切换到失效图片"></hy-button><hy-button id="image-restore" label="恢复图片"></hy-button><output id="image-event">加载成功或失败后显示事件</output></div></div>
-      <details class="code"><summary>查看图片用法 <span>HTML</span></summary><pre><code>&lt;hy-image src="https://example.com/scene.png" alt="海洋场景" width="280" height="180"
+      <div class="demo-card two-column"><div class="preview form-preview"><hy-image id="image-live" alt="海面与月亮" width="240" height="240"></hy-image><p>原图 640 × 400，显示区域 240 × 240</p></div>
+      <div class="controls stacked"><label>fit<select id="image-fit"><option>contain</option><option>cover</option><option>fill</option><option>none</option><option>scale-down</option></select></label><p id="image-fit-description">保持比例完整显示，空余区域留白。</p><div class="toggle-row"><label class="toggle"><input id="image-preview-enabled" type="checkbox" checked /><span></span>preview</label><label class="toggle"><input id="image-fallback" type="checkbox" checked /><span></span>fallback image</label></div><hy-button id="image-break" label="切换到失效图片"></hy-button><hy-button id="image-restore" label="恢复图片"></hy-button><output id="image-event">加载成功或失败后显示事件</output></div></div>
+      <details class="code"><summary>查看图片用法 <span>HTML</span></summary><pre><code>&lt;hy-image src="https://example.com/scene.png" alt="海洋场景" width="240" height="240"
   fallback="https://example.com/placeholder.png" fit="cover" loading="lazy"&gt;&lt;/hy-image&gt;</code></pre></details>
     </section>
 
@@ -952,6 +1034,16 @@ progress.percent = 100;
 progress.status = 'success';</code></pre></details>
     </section>
 
+    <section class="component-section" id="result" data-title="Result">
+      <div class="section-heading"><div><h2>Result</h2><code>&lt;hy-result&gt;</code></div><p>展示成功、失败或异常页面，保留详细说明和可操作的后续入口。</p></div>
+      <div class="demo-card two-column presentation-demo"><div class="preview presentation-stage"><hy-result id="result-live" status="success" heading="作品已准备就绪" description="你的下一次创作，从这里开始。"><hy-button slot="extra" id="result-retry">再试一次</hy-button></hy-result></div>
+      <div class="controls stacked"><label>status<select id="result-status"><option>success</option><option>info</option><option>warning</option><option>error</option><option>403</option><option>404</option><option>500</option></select></label><label>heading<input id="result-heading" value="作品已准备就绪" /></label><label>description<input id="result-description" value="你的下一次创作，从这里开始。" /></label><output id="result-event">切换状态或点击操作按钮</output></div></div>
+      <details class="code"><summary>查看结果页用法 <span>HTML</span></summary><pre><code>&lt;hy-result status="success" heading="导出成功" description="文件已准备就绪。"&gt;
+  &lt;hy-button slot="extra"&gt;下载文件&lt;/hy-button&gt;
+&lt;/hy-result&gt;</code></pre></details>
+      <div class="parameter-strip"><code>status</code><code>heading</code><code>description</code><code>icon / heading / description / extra slots</code><code>default slot: details</code></div>
+    </section>
+
     <section class="component-section" id="select" data-title="Select">
       <div class="section-heading"><div><span class="index">26</span><h2>Select</h2><code>&lt;hy-select&gt;</code></div><p>由 options 属性或 JavaScript 属性提供选项，可开启搜索并禁用单项。</p></div>
       <div class="demo-card two-column">
@@ -1418,6 +1510,23 @@ list.scrollToIndex(50_000, 'center');</code></pre></details>
     <footer class="page-footer"><span>Haiyue UI</span><p>Dependency-free interface primitives for creative tools.</p><a href="#content">回到顶部 ↑</a></footer>
   </main>
   </hy-split>
+
+  <hy-modal id="theme-settings" heading="自定义皮肤" width="480" data-hy-theme="light">
+    <div class="theme-editor-intro"><span class="theme-editor-eyebrow">THEME STUDIO</span><p>以陶土为起点，调出你的界面风格。修改实时预览，自动保存在当前浏览器。</p></div>
+    <div class="theme-editor-preview" data-hy-theme="light" data-design-skin="custom" aria-label="自定义皮肤实时预览">
+      <div class="theme-preview-heading"><span>你的下一种灵感</span><small>LIVE PREVIEW</small></div>
+      <p>温润的色彩，恰到好处的留白。</p>
+      <div class="theme-preview-controls"><hy-input value="一份新的创作" aria-label="皮肤预览输入框"></hy-input><hy-button id="theme-preview-button">开始创作</hy-button></div>
+      <hy-alert type="success" message="所有灵感，都值得被记录。" show-icon></hy-alert>
+    </div>
+    <div id="theme-editor-categories" class="theme-editor-categories" role="group" aria-label="皮肤参数分类"></div>
+    <div class="theme-editor-section-title"><h3 id="theme-editor-category-title">颜色</h3><span id="theme-editor-count"></span></div>
+    <div id="theme-editor-fields" class="theme-editor-fields"></div>
+    <div slot="footer" class="theme-editor-footer">
+      <div class="theme-editor-save-state" id="theme-editor-status" role="status">修改后自动保存</div>
+      <div class="theme-editor-actions"><hy-button id="theme-reset">恢复陶土</hy-button><hy-button id="theme-apply">应用皮肤</hy-button></div>
+    </div>
+  </hy-modal>
 
   <div class="command" id="command" hidden><div class="command-backdrop"></div><div class="command-panel" role="dialog" aria-modal="true" aria-label="快速跳转"><hy-input id="command-input" prefix="⌕" placeholder="输入组件名称…" autocomplete="off" aria-label="快速查找组件"></hy-input><div id="command-results"></div><small><kbd>↑↓</kbd> Navigate <kbd>Enter</kbd> Open <kbd>Esc</kbd> Close</small></div></div>
 

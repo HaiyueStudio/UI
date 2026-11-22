@@ -20,8 +20,8 @@ export class HYImage extends HTMLElement {
     super(); const root = this.attachShadow({ mode: 'open' }); const style = document.createElement('style');
     style.textContent = `
       :host { display: inline-block; max-width: 100%; vertical-align: middle; color: var(--hy-text-color, #d8e2f2); font: var(--hy-font-size-sm, 12px)/1.5 var(--hy-font-family, system-ui, sans-serif); }
-      .frame { display: grid; position: relative; max-width: 100%; min-width: 32px; min-height: 32px; overflow: hidden; border-radius: var(--hy-image-radius, var(--hy-radius-sm, 4px)); background: var(--hy-image-bg, var(--hy-surface-color, #121822)); }
-      .image-host { display: contents; } .image { display: block; width: 100%; height: 100%; max-width: 100%; object-fit: var(--_fit, contain); }
+      .frame { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); position: relative; width: 100%; height: 100%; max-width: 100%; min-width: 32px; min-height: 32px; overflow: hidden; border-radius: var(--hy-image-radius, var(--hy-radius-sm, 4px)); background: var(--hy-image-bg, var(--hy-surface-color, #121822)); }
+      .image-host { display: contents; } .image { display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; max-width: 100%; object-fit: var(--_fit, contain); }
       .placeholder, .error { position: absolute; inset: 0; display: grid; place-items: center; padding: 8px; text-align: center; color: var(--hy-muted-text-color, #8290a3); background: var(--hy-image-bg, var(--hy-surface-color, #121822)); }
       .preview-trigger { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; border-radius: inherit; color: var(--hy-selected-text-color, #fff); background: transparent; cursor: zoom-in; font: inherit; }
       .preview-trigger span { opacity: 0; padding: 5px 10px; border-radius: var(--hy-radius-sm, 4px); background: var(--hy-image-preview-mask-color, rgba(0,0,0,.6)); }

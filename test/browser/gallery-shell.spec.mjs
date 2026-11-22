@@ -3,7 +3,8 @@ import { test, expect } from '@playwright/test';
 test.beforeEach(async ({ page }) => { await page.goto('/examples/'); });
 
 test('gallery shell dogfoods Haiyue inputs, buttons, and status components', async ({ page }) => {
-  await expect(page.locator('.theme-picker hy-button')).toHaveCount(2);
+  await expect(page.locator('.theme-picker hy-button[data-theme]')).toHaveCount(3);
+  await expect(page.locator('#theme-settings-open')).toHaveCount(1);
   await expect(page.locator('#component-search')).toHaveJSProperty('tagName', 'HY-INPUT');
   await expect(page.locator('.sidebar-foot hy-badge')).toHaveCount(1);
   expect(await page.locator('hy-button.native-trigger').count()).toBeGreaterThan(15);

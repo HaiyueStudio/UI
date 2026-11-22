@@ -1,0 +1,29 @@
+<!doctype html><html lang="en" data-hy-theme="light">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Presentation component contracts</title>
+<link rel="stylesheet" href="../../themes/haiyue-light.css" /><link rel="stylesheet" href="../../themes/haiyue-dark.css" />
+<style>body { margin: 20px; color: var(--hy-text-color); background: var(--hy-canvas-color); font: 14px system-ui; } section { margin-block: 20px; } #card { width: 340px; max-width: 100%; } #descriptions { width: 800px; max-width: 100%; } </style></head>
+<body>
+<section><hy-empty id="empty" description="No matching assets"><button id="create">Create asset</button></hy-empty></section>
+<section><hy-result id="result" status="success" heading="Export completed" description="Your file is ready"><p id="result-detail">3 assets exported</p><button slot="extra" id="download">Download</button></hy-result></section>
+<section><hy-avatar id="avatar" text="HY" alt="Haiyue user"></hy-avatar><hy-avatar id="slotted-avatar" alt="Designer"><span>林</span></hy-avatar><hy-avatar id="decorative-avatar" alt=""></hy-avatar></section>
+<section><hy-card id="card" heading="Asset details"><button slot="extra">Edit</button><input id="card-input" value="original" aria-label="Asset name" /><div slot="footer"><button id="save">Save</button></div></hy-card></section>
+<section><hy-descriptions id="descriptions" heading="Project information" bordered column="3"><input slot="value-owner" id="owner" value="Alice" aria-label="Owner" /><button slot="extra" id="edit-project">Edit project</button></hy-descriptions></section>
+<button id="outside">Outside</button>
+<script type="module">
+  import { defineEmptyComponents } from '../../dist/empty.js';
+  import { defineResultComponents } from '../../dist/result.js';
+  import { defineAvatarComponents } from '../../dist/avatar.js';
+  import { defineCardComponents } from '../../dist/card.js';
+  import { defineDescriptionsComponents } from '../../dist/descriptions.js';
+  window.registrationIsExplicit = ['empty','result','avatar','card','descriptions'].every(name => !customElements.get('hy-' + name));
+  for (const define of [defineEmptyComponents, defineResultComponents, defineAvatarComponents, defineCardComponents, defineDescriptionsComponents]) { define(); define(); }
+  window.artwork = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="60"><rect width="100" height="60" fill="#287d65"/></svg>');
+  document.querySelector('#descriptions').items = [
+    { key:'name',label:'Name',value:'Ocean' }, { key:'owner',label:'Owner',value:'Alice',span:2 },
+    { key:'zero',label:'Files',value:0 }, { key:'boolean',label:'Archived',value:false },
+    { key:'blank',label:'Notes',value:null,span:'filled' }, { key:'full',label:'Description',value:'A long project description',span:3 },
+  ];
+  window.componentEvents = [];
+  for (const name of ['avatar-load','avatar-error']) document.addEventListener(name, event => window.componentEvents.push({ name, detail: event.detail, composed: event.composed }));
+  window.ready = true;
+</script></body></html>
