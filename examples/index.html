@@ -92,13 +92,16 @@
       <a href="#button-group" data-name="button group 按钮组"><span>Button Group</span><code>hy-button-group</code></a>
       <a href="#checkbox" data-name="checkbox 复选框"><span>Checkbox</span><code>hy-checkbox</code></a>
       <a href="#divider" data-name="divider separator 分割线 分隔线 文字"><span>Divider</span><code>hy-divider</code></a>
+      <a href="#form" data-name="form form-item 表单 字段 校验 提交"><span>Form / Form Item</span><code>hy-form</code></a>
       <a href="#input" data-name="input 输入框"><span>Input</span><code>hy-input</code></a>
       <a href="#mentions" data-name="mentions mention 提及 人员 候选"><span>Mentions</span><code>hy-mentions</code></a>
       <a href="#qr-code" data-name="qr code qrcode 二维码 中央 图标 icon 扫码"><span>QR Code</span><code>hy-qr-code</code></a>
       <a href="#radio" data-name="radio 单选框"><span>Radio</span><code>hy-radio</code></a>
       <a href="#range" data-name="range slider 范围 数值 滑块"><span>Range</span><code>hy-range</code></a>
       <a href="#rate" data-name="rate rating stars 星星 评分 半星"><span>Rate</span><code>hy-rate</code></a>
+      <a href="#switch" data-name="switch toggle 开关 启停"><span>Switch</span><code>hy-switch</code></a>
       <a href="#tag" data-name="tag label close check 标签 可关闭 可选中"><span>Tag</span><code>hy-tag</code></a>
+      <a href="#upload" data-name="upload file 文件 上传 拖放"><span>Upload</span><code>hy-upload</code></a>
       <p class="nav-label">选择与反馈</p>
       <a href="#affix" data-name="affix sticky 固钉 吸附 固定"><span>Affix</span><code>hy-affix</code></a>
       <a href="#anchor" data-name="anchor navigation scroll 锚点 导航 滚动"><span>Anchor</span><code>hy-anchor</code></a>
@@ -115,9 +118,13 @@
       <a href="#history-controls" data-name="history controls undo redo 历史 撤销 重做"><span>History Controls</span><code>hy-history-controls</code></a>
       <a href="#modal" data-name="modal confirm 弹窗 模态 确认 对话框"><span>Modal</span><code>hy-modal</code></a>
       <a href="#notification" data-name="notification 通知 提醒"><span>Notification</span><code>hy-notification</code></a>
+      <a href="#popconfirm" data-name="popconfirm 确认 删除 气泡"><span>Popconfirm</span><code>hy-popconfirm</code></a>
+      <a href="#popover" data-name="popover 弹出 浮层 面板"><span>Popover</span><code>hy-popover</code></a>
+      <a href="#progress" data-name="progress 进度 进度条 圆环"><span>Progress</span><code>hy-progress</code></a>
       <a href="#select" data-name="select 选择器"><span>Select</span><code>hy-select</code></a>
       <a href="#segmented" data-name="segmented switch 分段 单选 切换"><span>Segmented</span><code>hy-segmented</code></a>
       <a href="#skeleton" data-name="skeleton loading 骨架屏 加载 占位"><span>Skeleton</span><code>hy-skeleton</code></a>
+      <a href="#spin" data-name="spin loading 加载 等待 遮罩"><span>Spin</span><code>hy-spin</code></a>
       <a href="#steps" data-name="steps stepper 步骤条 流程 横向 纵向"><span>Steps</span><code>hy-steps</code></a>
       <a href="#tabs" data-name="tabs 标签页"><span>Tabs</span><code>hy-tabs</code></a>
       <a href="#time-picker" data-name="time picker 时间 时分秒 选择器"><span>Time Picker</span><code>hy-time-picker</code></a>
@@ -138,7 +145,7 @@
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><hy-badge status="success" text="49 components"></hy-badge><span>·</span><span>v0.2.3</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="57 components"></hy-badge><span>·</span><span>v0.2.3</span></div>
   </aside>
 
   <main id="content" slot="second">
@@ -147,7 +154,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>49</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>57</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -326,6 +333,26 @@
       <div class="parameter-strip"><code>orientation</code><code>lineStyle</code><code>textPlacement</code><code>label</code><code>thickness</code><code>color</code><code>spacing</code><code>line</code><code>text</code></div>
     </section>
 
+    <section class="component-section" id="form" data-title="Form / Form Item">
+      <div class="section-heading"><div><h2>Form / Form Item</h2><code>&lt;hy-form&gt; &lt;hy-form-item&gt;</code></div><p>组合原生和 Haiyue 控件，统一标签、校验、错误提示、提交与重置；支持异步规则和三种布局。</p></div>
+      <div class="demo-card two-column"><div class="preview form-preview"><hy-form id="form-live" aria-label="项目设置">
+        <hy-form-item id="form-name-item" label="项目名称" name="project" required help="至少 3 个字符；输入 taken 可体验异步校验"><hy-input placeholder="Ocean project"></hy-input></hy-form-item>
+        <hy-form-item id="form-email-item" label="联系邮箱" name="email"><hy-input placeholder="name@example.com"></hy-input></hy-form-item>
+        <hy-switch name="autosave" label="自动保存" checked></hy-switch>
+        <div style="display: flex; gap: 8px;"><hy-button type="submit" label="保存设置"></hy-button><hy-button type="reset" label="重置"></hy-button></div>
+      </hy-form></div><div class="controls stacked"><label>layout<select id="form-layout"><option>vertical</option><option>horizontal</option><option>inline</option></select></label><label class="toggle"><input id="form-async" type="checkbox" /><span></span>async validation</label><output id="form-event">提交后显示 values，校验失败后显示 errors</output></div></div>
+      <details class="code"><summary>查看表单用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-form&gt;
+  &lt;hy-form-item label="项目名称" name="project" required&gt;
+    &lt;hy-input&gt;&lt;/hy-input&gt;
+  &lt;/hy-form-item&gt;
+  &lt;hy-button type="submit" label="保存"&gt;&lt;/hy-button&gt;
+&lt;/hy-form&gt;
+form.addEventListener('form-submit', event =&gt; {
+  event.preventDefault();
+  console.log(event.detail.values, event.detail.formData);
+});</code></pre></details>
+    </section>
+
     <section class="component-section" id="input" data-title="Input">
       <div class="section-heading"><div><span class="index">06</span><h2>Input</h2><code>&lt;hy-input&gt;</code></div><p>文本、数字、颜色与搜索输入；支持 prefix/suffix 属性和同名插槽，原生校验状态会映射到组件外观与事件详情。</p></div>
       <div class="demo-card two-column">
@@ -468,6 +495,15 @@ hy-range {
       <div class="parameter-strip"><code>value</code><code>count</code><code>allowHalf</code><code>allowClear</code><code>disabled</code><code>readOnly</code><code>character</code><code>tooltips</code><code>value-change</code><code>hover-change</code></div>
     </section>
 
+    <section class="component-section" id="switch" data-title="Switch">
+      <div class="section-heading"><div><h2>Switch</h2><code>&lt;hy-switch&gt;</code></div><p>即时切换设置，支持加载、禁用、尺寸、状态文字与原生表单关联。</p></div>
+      <div class="demo-card two-column"><div class="preview form-preview"><hy-switch id="switch-live" label="自动保存" checked checked-text="开" unchecked-text="关"></hy-switch><hy-switch label="小尺寸" size="small" checked></hy-switch></div>
+      <div class="controls stacked"><label>size<select id="switch-size"><option>default</option><option>small</option></select></label><div class="toggle-row"><label class="toggle"><input id="switch-loading" type="checkbox" /><span></span>loading</label><label class="toggle"><input id="switch-disabled" type="checkbox" /><span></span>disabled</label></div><output id="switch-event">切换后触发 checked-change</output></div></div>
+      <details class="code"><summary>查看开关用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-switch name="autosave" label="自动保存" checked&gt;&lt;/hy-switch&gt;
+switchControl.addEventListener('checked-change', event =&gt; console.log(event.detail.checked));</code></pre></details>
+      <div class="parameter-strip"><code>checked</code><code>loading</code><code>disabled</code><code>size</code><code>checked-text</code><code>unchecked-text</code><code>name</code><code>checked-change</code></div>
+    </section>
+
     <section class="component-section" id="tag" data-title="Tag">
       <div class="section-heading"><div><h2>Tag</h2><code>&lt;hy-tag&gt;</code></div><p>用于分类、筛选和状态标记；支持语义色、自定义颜色、icon、关闭与可选择状态。</p></div>
       <div class="demo-card two-column">
@@ -494,6 +530,18 @@ hy-range {
 &lt;hy-tag variant="primary" checkable checked value="featured"&gt;Featured&lt;/hy-tag&gt;
 &lt;hy-tag color="#a78bfa" size="large"&gt;Custom&lt;/hy-tag&gt;</code></pre></details>
       <div class="parameter-strip"><code>variant</code><code>color</code><code>size</code><code>label</code><code>icon</code><code>closable</code><code>checkable</code><code>checked</code><code>disabled</code><code>tag-close</code><code>checked-change</code></div>
+    </section>
+
+    <section class="component-section" id="upload" data-title="Upload">
+      <div class="section-heading"><div><h2>Upload</h2><code>&lt;hy-upload&gt;</code></div><p>选择或拖放文件，校验类型、大小和数量，支持进度、重试、移除及取消。此示例在本地模拟进度。</p></div>
+      <div class="demo-card two-column"><div class="preview form-preview"><hy-upload id="upload-live" drag multiple accept=".png,.jpg,.txt" max-count="3" max-size="1048576" auto-upload="false" label="选择文件">拖放 PNG、JPG 或 TXT，每个文件最多 1 MB，最多 3 个</hy-upload></div>
+      <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="upload-auto" type="checkbox" /><span></span>auto upload</label><label class="toggle"><input id="upload-disabled" type="checkbox" /><span></span>disabled</label></div><hy-button id="upload-start" label="开始上传"></hy-button><hy-button id="upload-abort" label="取消上传"></hy-button><output id="upload-event">选择文件后显示状态和进度</output></div></div>
+      <details class="code"><summary>查看上传用法 <span>JavaScript</span></summary><pre><code>upload.beforeUpload = file =&gt; file.size &lt;= 1024 * 1024;
+upload.request = async ({ file, signal, onProgress }) =&gt; {
+  // 使用应用自己的上传服务；将 signal 和进度回调传给该服务。
+  return uploadAsset(file, { signal, onProgress });
+};
+upload.addEventListener('upload-change', event =&gt; console.log(event.detail));</code></pre></details>
     </section>
 
     <section class="component-section" id="affix" data-title="Affix">
@@ -813,6 +861,38 @@ center.success({
       <div class="parameter-strip"><code>type</code><code>message</code><code>description</code><code>placement</code><code>duration</code><code>showProgress</code><code>open()</code><code>success()</code><code>info()</code><code>warning()</code><code>error()</code></div>
     </section>
 
+    <section class="component-section" id="popconfirm" data-title="Popconfirm">
+      <div class="section-heading"><div><h2>Popconfirm</h2><code>&lt;hy-popconfirm&gt;</code></div><p>在操作附近进行确认；支持取消、异步确认加载态和可阻止的确认事件。</p></div>
+      <div class="demo-card two-column overflow-visible"><div class="preview"><hy-popconfirm id="popconfirm-live" heading="删除这个资源？" description="请确认不再需要这个资源。" ok-text="删除" cancel-text="保留"><hy-button slot="trigger" label="删除资源"></hy-button></hy-popconfirm></div>
+      <div class="controls stacked"><label class="toggle"><input id="popconfirm-async" type="checkbox" /><span></span>async confirm</label><output id="popconfirm-event">确认或取消后显示事件</output></div></div>
+      <details class="code"><summary>查看异步确认用法 <span>JavaScript</span></summary><pre><code>popconfirm.addEventListener('confirm', async event =&gt; {
+  event.preventDefault();
+  popconfirm.confirmLoading = true;
+  try { await removeAsset(); popconfirm.hide(); }
+  finally { popconfirm.confirmLoading = false; }
+});</code></pre></details>
+    </section>
+
+    <section class="component-section" id="popover" data-title="Popover">
+      <div class="section-heading"><div><h2>Popover</h2><code>&lt;hy-popover&gt;</code></div><p>承载按钮、输入框等可交互内容，支持四向对齐、自动避让、触发方式和焦点恢复。</p></div>
+      <div class="demo-card two-column overflow-visible"><div class="preview form-preview"><hy-popover id="popover-live" heading="快速设置"><hy-button slot="trigger" label="打开快速设置"></hy-button><div style="display: grid; gap: 12px;"><hy-input aria-label="预设名称" placeholder="预设名称"></hy-input><hy-switch label="自动应用" checked></hy-switch></div></hy-popover></div>
+      <div class="controls stacked"><label>placement<select id="popover-placement"><option>bottom</option><option>top</option><option>left</option><option>right</option><option>bottom-start</option><option>bottom-end</option></select></label><label>trigger<select id="popover-trigger"><option>click</option><option>hover</option><option>focus</option><option>manual</option></select></label><hy-button id="popover-open" label="API 打开"></hy-button><output id="popover-event">打开或关闭后触发 open-change</output></div></div>
+      <details class="code"><summary>查看浮层用法 <span>HTML</span></summary><pre><code>&lt;hy-popover heading="快速设置" placement="bottom-start"&gt;
+  &lt;hy-button slot="trigger" label="设置"&gt;&lt;/hy-button&gt;
+  &lt;hy-input aria-label="预设名称"&gt;&lt;/hy-input&gt;
+&lt;/hy-popover&gt;</code></pre></details>
+    </section>
+
+    <section class="component-section" id="progress" data-title="Progress">
+      <div class="section-heading"><div><h2>Progress</h2><code>&lt;hy-progress&gt;</code></div><p>直线和圆环进度，支持状态色、不确定进度、尺寸与无障碍数值。</p></div>
+      <div class="demo-card two-column"><div class="preview form-preview"><hy-progress id="progress-line" percent="42" aria-label="资源构建进度"></hy-progress><hy-progress id="progress-circle" type="circle" percent="42" aria-label="资源构建进度"></hy-progress></div>
+      <div class="controls stacked"><label>percent<input id="progress-percent" type="range" min="0" max="100" value="42" /></label><label>status<select id="progress-status"><option>normal</option><option>active</option><option>success</option><option>exception</option></select></label><div class="toggle-row"><label class="toggle"><input id="progress-indeterminate" type="checkbox" /><span></span>indeterminate</label><label class="toggle"><input id="progress-info" type="checkbox" checked /><span></span>show info</label></div></div></div>
+      <details class="code"><summary>查看进度用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-progress percent="42" aria-label="构建进度"&gt;&lt;/hy-progress&gt;
+&lt;hy-progress type="circle" percent="75" status="active"&gt;&lt;/hy-progress&gt;
+progress.percent = 100;
+progress.status = 'success';</code></pre></details>
+    </section>
+
     <section class="component-section" id="select" data-title="Select">
       <div class="section-heading"><div><span class="index">26</span><h2>Select</h2><code>&lt;hy-select&gt;</code></div><p>由 options 属性或 JavaScript 属性提供选项，可开启搜索并禁用单项。</p></div>
       <div class="demo-card two-column">
@@ -862,6 +942,16 @@ segmented.options = [
   &lt;article&gt;加载完成后的真实内容&lt;/article&gt;
 &lt;/hy-skeleton&gt;</code></pre></details>
       <div class="parameter-strip"><code>loading</code><code>active</code><code>avatar</code><code>avatarShape</code><code>avatarSize</code><code>showTitle</code><code>titleWidth</code><code>showParagraph</code><code>rows</code><code>paragraphWidths</code><code>round</code><code>size</code></div>
+    </section>
+
+    <section class="component-section" id="spin" data-title="Spin">
+      <div class="section-heading"><div><h2>Spin</h2><code>&lt;hy-spin&gt;</code></div><p>独立加载指示或内容加载遮罩；可延迟显示，等待时阻止内容操作，并尊重减少动态效果偏好。</p></div>
+      <div class="demo-card two-column"><div class="preview form-preview"><hy-spin id="spin-live" spinning="false" tip="正在加载预览…" delay="200"><div style="min-height: 120px; display: grid; place-items: center; gap: 12px;"><span>场景资源预览</span><hy-button label="打开预览"></hy-button></div></hy-spin></div>
+      <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="spin-spinning" type="checkbox" /><span></span>spinning</label></div><label>delay (ms)<input id="spin-delay" type="number" value="200" min="0" max="3000" /></label><label>size<select id="spin-size"><option>default</option><option>small</option><option>large</option></select></label><label>tip<input id="spin-tip" value="正在加载预览…" /></label></div></div>
+      <details class="code"><summary>查看加载用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-spin spinning="false" delay="200" tip="正在加载…"&gt;
+  &lt;div&gt;内容区域&lt;/div&gt;
+&lt;/hy-spin&gt;
+spin.spinning = true;</code></pre></details>
     </section>
 
     <section class="component-section" id="steps" data-title="Steps">

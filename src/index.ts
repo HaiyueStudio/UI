@@ -32,6 +32,14 @@ import { defineDrawerComponents } from './drawer.js';
 import { defineDraggableComponents } from './draggable.js';
 import { defineInputComponents } from './input.js';
 import { defineMentionsComponents } from './mentions.js';
+import { defineSwitchComponents } from './switch.js';
+import { defineProgressComponents } from './progress.js';
+import { defineSpinComponents } from './spin.js';
+import { definePopoverComponents } from './popover.js';
+import { definePopconfirmComponents } from './popconfirm.js';
+import { defineFormComponents } from './form.js';
+import { defineFormItemComponents } from './form-item.js';
+import { defineUploadComponents } from './upload.js';
 import { defineNotificationComponents } from './notification.js';
 import { defineToastComponents } from './toast.js';
 import { defineHistoryControlsComponents } from './history-controls.js';
@@ -446,7 +454,32 @@ export type { HYSegmentedChangeDetail, HYSegmentedOption, HYSegmentedOptionInput
 export { defineMentionsComponents, HYMentions } from './mentions.js';
 export type { HYMentionsOption, HYMentionsChangeDetail, HYMentionsSearchDetail, HYMentionsSelectDetail, HYMentionsPlacement, HYMentionsFilter } from './mentions.js';
 
+export { HYSwitch, defineSwitchComponents } from './switch.js';
+export type { HYSwitchChangeDetail, HYSwitchSize } from './switch.js';
+export { HYProgress, defineProgressComponents } from './progress.js';
+export type { HYProgressType, HYProgressStatus } from './progress.js';
+export { HYSpin, defineSpinComponents } from './spin.js';
+export type { HYSpinSize } from './spin.js';
+export { HYPopover, definePopoverComponents } from './popover.js';
+export type { HYPopoverPlacement, HYPopoverTrigger, HYPopoverCloseReason, HYPopoverOpenChangeDetail } from './popover.js';
+export { HYPopconfirm, definePopconfirmComponents } from './popconfirm.js';
+export type { HYPopconfirmActionDetail } from './popconfirm.js';
+export { HYForm, defineFormComponents } from './form.js';
+export type { HYFormValue, HYFormSubmitDetail, HYFormInvalidDetail, HYFormLayout } from './form.js';
+export { HYFormItem, defineFormItemComponents } from './form-item.js';
+export type { HYFormRule, HYFormItemStatus, HYFormItemValidateDetail } from './form-item.js';
+export { HYUpload, defineUploadComponents } from './upload.js';
+export type { HYUploadStatus, HYUploadChangeReason, HYUploadRejectReason, HYUploadFile, HYUploadChangeDetail, HYUploadRejectDetail, HYUploadRemoveDetail, HYUploadRequestOptions, HYUploadRequest, HYUploadBeforeUpload } from './upload.js';
+
 export function defineHaiyueUI(): void {
+  defineSwitchComponents();
+  defineProgressComponents();
+  defineSpinComponents();
+  definePopoverComponents();
+  definePopconfirmComponents();
+  defineFormComponents();
+  defineFormItemComponents();
+  defineUploadComponents();
   defineAlertComponents();
   defineAnchorComponents();
   defineExpandableComponents();

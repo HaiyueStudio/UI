@@ -1,3 +1,5 @@
+import { HYFormControl } from './internal/form-control.js';
+
 export type HYInputType = 'text' | 'number' | 'color' | 'search' | 'password';
 export type HYInputSearchSource = 'enter' | 'button' | 'api';
 
@@ -14,6 +16,7 @@ export interface HYInputSearchDetail {
 }
 
 export class HYInput extends HTMLElement {
+  static readonly formAssociated = true;
   private readonly _control = document.createElement('div');
   private readonly _prefix = document.createElement('span');
   private readonly _prefixSlot = document.createElement('slot');
@@ -23,11 +26,12 @@ export class HYInput extends HTMLElement {
   private readonly _suffixSlot = document.createElement('slot');
   private readonly _suffixText = document.createElement('span');
   private readonly _searchButton = document.createElement('button');
+  private readonly _formControl = new HYFormControl(this, this._input);
 
   static get observedAttributes(): string[] {
     return [
       'type', 'value', 'min', 'max', 'step', 'placeholder', 'disabled', 'readonly',
-      'required', 'name', 'autocomplete', 'aria-label', 'title', 'prefix', 'suffix',
+      'required', 'name', 'autocomplete', 'aria-label', 'title', 'prefix', 'suffix', 'minlength', 'maxlength', 'pattern',
       'search-label',
     ];
   }
@@ -137,6 +141,7 @@ export class HYInput extends HTMLElement {
     this._prefixSlot.addEventListener('slotchange', this._onSlotChange);
     this._suffixSlot.addEventListener('slotchange', this._onSlotChange);
     this._sync();
+    this._formControl.connect();
   }
 
   disconnectedCallback(): void {
@@ -179,6 +184,15 @@ export class HYInput extends HTMLElement {
   set readOnly(value: boolean) { this.toggleAttribute('readonly', value); }
 
   get valid(): boolean { return this._input.validity.valid; }
+  get form(): HTMLFormElement | null { return this._formControl.internals.form; }
+  get validity(): ValidityState { return this._formControl.internals.validity; }
+  get validationMessage(): string { return this._formControl.internals.validationMessage; }
+  checkValidity(): boolean { return this._formControl.internals.checkValidity(); }
+  reportValidity(): boolean { return this._formControl.internals.reportValidity(); }
+  setCustomValidity(message: string): void { this._formControl.setCustomValidity(message); this._syncValidity(); }
+  formDisabledCallback(disabled: boolean): void { this._formControl.disabled = disabled; this._sync(); }
+  formResetCallback(): void { this._formControl.reset(); this._syncValidity(); }
+  formStateRestoreCallback(state: string | File | FormData | null): void { this._formControl.restore(state); }
 
   override focus(options?: FocusOptions): void { this._input.focus(options); }
   select(): void { this._input.select(); }
@@ -189,14 +203,15 @@ export class HYInput extends HTMLElement {
     if (this._input.type !== type) this._input.type = type;
     const value = this.value;
     if (this._input.value !== value) this._input.value = type === 'color' && !/^#[0-9a-f]{6}$/iu.test(value) ? '#000000' : value;
-    for (const name of ['min', 'max', 'step', 'placeholder', 'name', 'autocomplete', 'aria-label', 'title']) {
+    for (const name of ['min', 'max', 'step', 'placeholder', 'name', 'autocomplete', 'aria-label', 'title', 'minlength', 'maxlength', 'pattern']) {
       const attribute = this.getAttribute(name);
       if (attribute === null) {
         if (this._input.hasAttribute(name)) this._input.removeAttribute(name);
       } else if (this._input.getAttribute(name) !== attribute) this._input.setAttribute(name, attribute);
     }
     // Reassigning even an unchanged placeholder or state can split Chromium's undo group.
-    if (this._input.disabled !== this.disabled) this._input.disabled = this.disabled;
+    const disabled = this.disabled || this._formControl.disabled;
+    if (this._input.disabled !== disabled) this._input.disabled = disabled;
     if (this._input.readOnly !== this.readOnly) this._input.readOnly = this.readOnly;
     if (this._input.required !== this.hasAttribute('required')) this._input.required = this.hasAttribute('required');
     this._searchButton.hidden = type !== 'search';
@@ -220,7 +235,7 @@ export class HYInput extends HTMLElement {
     container.hidden = !hasAssignedContent && !text;
   }
 
-  private _syncValidity(): void { this._control.classList.toggle('invalid', !this.valid); }
+  private _syncValidity(): void { this._control.classList.toggle('invalid', !this.valid); this._formControl.sync(); }
 
   private _setOptionalAttribute(name: string, value: string): void {
     const normalized = String(value ?? '').trim();

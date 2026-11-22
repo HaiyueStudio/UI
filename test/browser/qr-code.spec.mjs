@@ -146,7 +146,7 @@ test('gallery changes payload, switches icon modes and maintains alphabetical ca
   await expect(page.locator('#qr-code-level')).toHaveValue('M'); await expect(page.locator('#qr-code-level')).toBeEnabled();
   await page.locator('#qr-code-value').fill('海月 UI'); expect(await decode(page, qr)).toBe('海月 UI');
   const links = await page.locator('#component-nav a').evaluateAll(links => links.map(link => link.hash.slice(1)));
-  expect(links.slice(links.indexOf('input'), links.indexOf('radio') + 1)).toEqual(['input', 'qr-code', 'radio']);
+  expect(links.slice(links.indexOf('input'), links.indexOf('radio') + 1)).toEqual(['input', 'mentions', 'qr-code', 'radio']);
   expect(await page.locator('.component-section').evaluateAll(sections => sections.map(section => section.id))).toEqual(links);
   expect(errors).toEqual([]);
 });

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- 新增独立入口及根注册的 `HYSwitch`、`HYProgress`、`HYSpin`、`HYPopover`、`HYPopconfirm`、`HYForm`、`HYFormItem` 和 `HYUpload`：覆盖设置开关、直线/圆环进度、延迟加载遮罩、可交互浮层与异步确认、表单与异步校验、文件选择/拖放/上传进度/重试/取消。
+- Input、Select、Checkbox、Radio、Mentions 与新增 Switch、Upload 支持原生表单关联、FormData、禁用 fieldset 和重置；保留既有交互事件及按需导入边界。新增主题化参数示例、键盘/焦点/异步生命周期回归，并更新公开 API 和包体积基线。
+
 - 新增 `HYMentions` / `<hy-mentions>` 及独立 `@haiyue/ui/mentions` 入口：支持多行提及输入、单个或多个触发前缀、候选过滤与禁用项、光标定位弹层、键盘选择、中文输入法、异步搜索与加载态；补齐主题变量、交互示例和浏览器回归。
 
 ## 0.2.3 - 2026-10-27

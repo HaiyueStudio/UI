@@ -1,3 +1,5 @@
+import { HYFormControl } from './internal/form-control.js';
+
 export interface HYSelectOption {
   label: string;
   value: string;
@@ -10,14 +12,16 @@ export interface HYSelectChangeDetail {
 }
 
 export class HYSelect extends HTMLElement {
+  static readonly formAssociated = true;
   private readonly _wrap = document.createElement('div');
   private readonly _search = document.createElement('input');
   private readonly _select = document.createElement('select');
   private _options: HYSelectOption[] = [];
   private _filterText = '';
+  private readonly _formControl = new HYFormControl(this, this._select);
 
   static get observedAttributes(): string[] {
-    return ['options', 'value', 'disabled', 'searchable', 'aria-label', 'label'];
+    return ['options', 'value', 'disabled', 'searchable', 'aria-label', 'label', 'name', 'required'];
   }
 
   constructor() {
@@ -112,6 +116,7 @@ export class HYSelect extends HTMLElement {
     this._search.addEventListener('input', this._onSearchInput);
     this._syncFromAttributes();
     this._render();
+    this._formControl.connect();
   }
 
   disconnectedCallback(): void {
@@ -127,6 +132,8 @@ export class HYSelect extends HTMLElement {
     if (name === 'disabled' || name === 'searchable') this._syncDisabled();
     if (name === 'aria-label' || name === 'label') this._syncAriaLabel();
     if (name === 'options' || name === 'searchable') this._render();
+    this._select.required = this.hasAttribute('required');
+    this._formControl.sync();
   }
 
   get options(): HYSelectOption[] {
@@ -220,9 +227,22 @@ export class HYSelect extends HTMLElement {
   }
 
   private _syncDisabled(): void {
-    this._select.disabled = this.disabled;
-    this._search.disabled = this.disabled;
+    this._select.disabled = this.disabled || this._formControl.disabled;
+    this._search.disabled = this.disabled || this._formControl.disabled;
+    this._select.required = this.hasAttribute('required');
+    this._formControl.sync();
   }
+
+  get form(): HTMLFormElement | null { return this._formControl.internals.form; }
+  get validity(): ValidityState { return this._formControl.internals.validity; }
+  get validationMessage(): string { return this._formControl.internals.validationMessage; }
+  checkValidity(): boolean { return this._formControl.internals.checkValidity(); }
+  reportValidity(): boolean { return this._formControl.internals.reportValidity(); }
+  setCustomValidity(message: string): void { this._formControl.setCustomValidity(message); }
+  formDisabledCallback(disabled: boolean): void { this._formControl.disabled = disabled; this._syncDisabled(); }
+  formResetCallback(): void { this._formControl.reset(); }
+  formStateRestoreCallback(state: string | File | FormData | null): void { this._formControl.restore(state); }
+  override focus(options?: FocusOptions): void { (this.searchable ? this._search : this._select).focus(options); }
 
   private _syncAriaLabel(): void {
     const label = this.getAttribute('aria-label') ?? this.getAttribute('label') ?? '';

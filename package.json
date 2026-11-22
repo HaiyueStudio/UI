@@ -109,6 +109,38 @@
       "types": "./dist/mentions.d.ts",
       "import": "./dist/mentions.js"
     },
+    "./switch": {
+      "types": "./dist/switch.d.ts",
+      "import": "./dist/switch.js"
+    },
+    "./progress": {
+      "types": "./dist/progress.d.ts",
+      "import": "./dist/progress.js"
+    },
+    "./spin": {
+      "types": "./dist/spin.d.ts",
+      "import": "./dist/spin.js"
+    },
+    "./popover": {
+      "types": "./dist/popover.d.ts",
+      "import": "./dist/popover.js"
+    },
+    "./popconfirm": {
+      "types": "./dist/popconfirm.d.ts",
+      "import": "./dist/popconfirm.js"
+    },
+    "./form": {
+      "types": "./dist/form.d.ts",
+      "import": "./dist/form.js"
+    },
+    "./form-item": {
+      "types": "./dist/form-item.d.ts",
+      "import": "./dist/form-item.js"
+    },
+    "./upload": {
+      "types": "./dist/upload.d.ts",
+      "import": "./dist/upload.js"
+    },
     "./notification": {
       "types": "./dist/notification.d.ts",
       "import": "./dist/notification.js"

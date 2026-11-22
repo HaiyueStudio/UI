@@ -1,3 +1,5 @@
+import { HYFormControl } from './internal/form-control.js';
+
 export interface HYMentionsOption {
   value: string;
   label?: string;
@@ -19,7 +21,9 @@ let mentionsId = 0;
 
 /** A multiline text input with caret-anchored mention suggestions. Registration is explicit. */
 export class HYMentions extends HTMLElement {
+  static readonly formAssociated = true;
   private readonly _textarea = document.createElement('textarea');
+  private readonly _formControl = new HYFormControl(this, this._textarea);
   private readonly _panel = document.createElement('div');
   private readonly _list = document.createElement('div');
   private readonly _status = document.createElement('div');
@@ -132,6 +136,7 @@ export class HYMentions extends HTMLElement {
     this._resizeObserver = new ResizeObserver(this._positionPanel);
     this._resizeObserver.observe(this._textarea);
     this._sync();
+    this._formControl.connect();
   }
 
   disconnectedCallback(): void {
@@ -193,10 +198,20 @@ export class HYMentions extends HTMLElement {
 
   override focus(options?: FocusOptions): void { this._textarea.focus(options); }
   override blur(): void { this._textarea.blur(); }
+  get form(): HTMLFormElement | null { return this._formControl.internals.form; }
+  get validity(): ValidityState { return this._formControl.internals.validity; }
+  get validationMessage(): string { return this._formControl.internals.validationMessage; }
+  checkValidity(): boolean { return this._formControl.internals.checkValidity(); }
+  reportValidity(): boolean { return this._formControl.internals.reportValidity(); }
+  setCustomValidity(message: string): void { this._formControl.setCustomValidity(message); }
+  formDisabledCallback(disabled: boolean): void { this._formControl.disabled = disabled; this._sync(); this._refreshSearch(); }
+  formResetCallback(): void { this._formControl.reset(); this._close(); }
+  formStateRestoreCallback(state: string | File | FormData | null): void { this._formControl.restore(state); }
 
   private _sync(): void {
     if (this._textarea.value !== this.value) this._textarea.value = this.value;
-    if (this._textarea.disabled !== this.disabled) this._textarea.disabled = this.disabled;
+    const disabled = this.disabled || this._formControl.disabled;
+    if (this._textarea.disabled !== disabled) this._textarea.disabled = disabled;
     if (this._textarea.readOnly !== this.readOnly) this._textarea.readOnly = this.readOnly;
     if (this._textarea.rows !== this.rows) this._textarea.rows = this.rows;
     if (this._textarea.required !== this.hasAttribute('required')) this._textarea.required = this.hasAttribute('required');
@@ -206,10 +221,11 @@ export class HYMentions extends HTMLElement {
       else if (this._textarea.getAttribute(name) !== value) this._textarea.setAttribute(name, value);
     }
     this._list.setAttribute('aria-label', this.getAttribute('aria-label') || 'Mention suggestions');
+    this._formControl.sync();
   }
 
   private _findSearch(): MentionSearch | null {
-    if (!this.isConnected || this.disabled || this.readOnly || this._composing || this.shadowRoot?.activeElement !== this._textarea) return null;
+    if (!this.isConnected || this._textarea.disabled || this.readOnly || this._composing || this.shadowRoot?.activeElement !== this._textarea) return null;
     const end = this._textarea.selectionStart;
     if (end !== this._textarea.selectionEnd) return null;
     const before = this._textarea.value.slice(0, end);

@@ -94,6 +94,38 @@
       "types": "./dist/mentions.d.ts",
       "import": "./dist/mentions.js"
     },
+    "./switch": {
+      "types": "./dist/switch.d.ts",
+      "import": "./dist/switch.js"
+    },
+    "./progress": {
+      "types": "./dist/progress.d.ts",
+      "import": "./dist/progress.js"
+    },
+    "./spin": {
+      "types": "./dist/spin.d.ts",
+      "import": "./dist/spin.js"
+    },
+    "./popover": {
+      "types": "./dist/popover.d.ts",
+      "import": "./dist/popover.js"
+    },
+    "./popconfirm": {
+      "types": "./dist/popconfirm.d.ts",
+      "import": "./dist/popconfirm.js"
+    },
+    "./form": {
+      "types": "./dist/form.d.ts",
+      "import": "./dist/form.js"
+    },
+    "./form-item": {
+      "types": "./dist/form-item.d.ts",
+      "import": "./dist/form-item.js"
+    },
+    "./upload": {
+      "types": "./dist/upload.d.ts",
+      "import": "./dist/upload.js"
+    },
     "./notification": {
       "types": "./dist/notification.d.ts",
       "import": "./dist/notification.js"
@@ -305,6 +337,14 @@
         "kind": "value"
       },
       {
+        "name": "defineFormComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineFormItemComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineHaiyueUI",
         "kind": "value"
       },
@@ -330,6 +370,18 @@
       },
       {
         "name": "defineNotificationComponents",
+        "kind": "value"
+      },
+      {
+        "name": "definePopconfirmComponents",
+        "kind": "value"
+      },
+      {
+        "name": "definePopoverComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineProgressComponents",
         "kind": "value"
       },
       {
@@ -365,11 +417,19 @@
         "kind": "value"
       },
       {
+        "name": "defineSpinComponents",
+        "kind": "value"
+      },
+      {
         "name": "defineSplitComponents",
         "kind": "value"
       },
       {
         "name": "defineStepsComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineSwitchComponents",
         "kind": "value"
       },
       {
@@ -406,6 +466,10 @@
       },
       {
         "name": "defineTreeComponents",
+        "kind": "value"
+      },
+      {
+        "name": "defineUploadComponents",
         "kind": "value"
       },
       {
@@ -741,6 +805,42 @@
         "kind": "type"
       },
       {
+        "name": "HYForm",
+        "kind": "value"
+      },
+      {
+        "name": "HYFormInvalidDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormItem",
+        "kind": "value"
+      },
+      {
+        "name": "HYFormItemStatus",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormItemValidateDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormLayout",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormRule",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormSubmitDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormValue",
+        "kind": "type"
+      },
+      {
         "name": "HYHistoryControls",
         "kind": "value"
       },
@@ -850,6 +950,46 @@
       },
       {
         "name": "HYNotificationType",
+        "kind": "type"
+      },
+      {
+        "name": "HYPopconfirm",
+        "kind": "value"
+      },
+      {
+        "name": "HYPopconfirmActionDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYPopover",
+        "kind": "value"
+      },
+      {
+        "name": "HYPopoverCloseReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYPopoverOpenChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYPopoverPlacement",
+        "kind": "type"
+      },
+      {
+        "name": "HYPopoverTrigger",
+        "kind": "type"
+      },
+      {
+        "name": "HYProgress",
+        "kind": "value"
+      },
+      {
+        "name": "HYProgressStatus",
+        "kind": "type"
+      },
+      {
+        "name": "HYProgressType",
         "kind": "type"
       },
       {
@@ -989,6 +1129,14 @@
         "kind": "type"
       },
       {
+        "name": "HYSpin",
+        "kind": "value"
+      },
+      {
+        "name": "HYSpinSize",
+        "kind": "type"
+      },
+      {
         "name": "HYSplit",
         "kind": "value"
       },
@@ -1022,6 +1170,18 @@
       },
       {
         "name": "HYStepStatus",
+        "kind": "type"
+      },
+      {
+        "name": "HYSwitch",
+        "kind": "value"
+      },
+      {
+        "name": "HYSwitchChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYSwitchSize",
         "kind": "type"
       },
       {
@@ -1238,6 +1398,50 @@
       },
       {
         "name": "HYTreeSelectionChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYUpload",
+        "kind": "value"
+      },
+      {
+        "name": "HYUploadBeforeUpload",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadChangeReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadFile",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRejectDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRejectReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRemoveDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRequest",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRequestOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadStatus",
         "kind": "type"
       },
       {
@@ -1838,6 +2042,194 @@
       },
       {
         "name": "HYMentionsSelectDetail",
+        "kind": "type"
+      }
+    ],
+    "./switch": [
+      {
+        "name": "defineSwitchComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYSwitch",
+        "kind": "value"
+      },
+      {
+        "name": "HYSwitchChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYSwitchSize",
+        "kind": "type"
+      }
+    ],
+    "./progress": [
+      {
+        "name": "defineProgressComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYProgress",
+        "kind": "value"
+      },
+      {
+        "name": "HYProgressStatus",
+        "kind": "type"
+      },
+      {
+        "name": "HYProgressType",
+        "kind": "type"
+      }
+    ],
+    "./spin": [
+      {
+        "name": "defineSpinComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYSpin",
+        "kind": "value"
+      },
+      {
+        "name": "HYSpinSize",
+        "kind": "type"
+      }
+    ],
+    "./popover": [
+      {
+        "name": "definePopoverComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYPopover",
+        "kind": "value"
+      },
+      {
+        "name": "HYPopoverCloseReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYPopoverOpenChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYPopoverPlacement",
+        "kind": "type"
+      },
+      {
+        "name": "HYPopoverTrigger",
+        "kind": "type"
+      }
+    ],
+    "./popconfirm": [
+      {
+        "name": "definePopconfirmComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYPopconfirm",
+        "kind": "value"
+      },
+      {
+        "name": "HYPopconfirmActionDetail",
+        "kind": "type"
+      }
+    ],
+    "./form": [
+      {
+        "name": "defineFormComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYForm",
+        "kind": "value"
+      },
+      {
+        "name": "HYFormInvalidDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormLayout",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormSubmitDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormValue",
+        "kind": "type"
+      }
+    ],
+    "./form-item": [
+      {
+        "name": "defineFormItemComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYFormItem",
+        "kind": "value"
+      },
+      {
+        "name": "HYFormItemStatus",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormItemValidateDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYFormRule",
+        "kind": "type"
+      }
+    ],
+    "./upload": [
+      {
+        "name": "defineUploadComponents",
+        "kind": "value"
+      },
+      {
+        "name": "HYUpload",
+        "kind": "value"
+      },
+      {
+        "name": "HYUploadBeforeUpload",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadChangeDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadChangeReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadFile",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRejectDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRejectReason",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRemoveDetail",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRequest",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadRequestOptions",
+        "kind": "type"
+      },
+      {
+        "name": "HYUploadStatus",
         "kind": "type"
       }
     ],

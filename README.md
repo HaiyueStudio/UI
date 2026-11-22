@@ -343,6 +343,175 @@ and `status` parts; colors inherit the semantic theme tokens. Popup dimensions u
 `--hy-mentions-popup-min-width`, `--hy-mentions-popup-max-width`, `--hy-mentions-popup-max-height`,
 and `--hy-mentions-z-index`. `open` is a read-only property reflecting popup visibility.
 
+## Switch, Progress, and Spin
+
+```ts
+import { defineSwitchComponents } from '@haiyue/ui/switch';
+import { defineProgressComponents } from '@haiyue/ui/progress';
+import { defineSpinComponents } from '@haiyue/ui/spin';
+defineSwitchComponents();
+defineProgressComponents();
+defineSpinComponents();
+```
+
+```html
+<hy-switch name="autosave" label="Auto save" checked checked-text="On" unchecked-text="Off"></hy-switch>
+<hy-progress percent="42" aria-label="Build progress"></hy-progress>
+<hy-progress type="circle" percent="75" status="active"></hy-progress>
+<hy-spin spinning="false" delay="200" tip="Loading preview"><div>Preview content</div></hy-spin>
+```
+
+Switch has `checked`, `disabled`, `loading`, `size` (`small`/`default`), `value`, `name`, and `label`
+properties. A default slot can supply its label. `checked-text`/`unchecked-text` customize the state text.
+It uses a native checkbox with `role="switch"`; Space and Enter toggle it, while loading disables interaction.
+User changes emit composed `checked-change` (`{ checked, value }`) and `change` events. Property updates
+are silent. It participates in native forms, required validation, disabled fieldsets and reset.
+
+Progress accepts `percent` (clamped to 0–100), `type` (`line`/`circle`), `status`
+(`normal`/`active`/`success`/`exception`), `indeterminate`, `showInfo`, `strokeWidth`, and circle `size`.
+The corresponding attributes are kebab-case. Indeterminate progress omits `aria-valuenow`.
+Style `meter`, `trail`, `fill`, `circle` and `info` parts, or `--hy-progress-color`/`--hy-progress-trail-color`.
+
+Spin is spinning by default; use `spinning="false"` or `.spinning = false` to stop it. `delay` in milliseconds
+postpones the indicator (capped at 60 seconds), and `tip`/`size` (`small`/`default`/`large`) customize it.
+With slotted content it displays an overlay and makes that content inert while loading, including during
+the delay. Without content it is a standalone indicator. Owned timers are canceled on detach.
+Both loading components respect reduced-motion preferences and inherit semantic theme colors.
+
+## Popover and Popconfirm
+
+The independent `@haiyue/ui/popover` and `@haiyue/ui/popconfirm` entries expose
+`definePopoverComponents()` and `definePopconfirmComponents()` respectively.
+
+```html
+<hy-popover heading="Quick settings" placement="bottom-start">
+  <button slot="trigger">Settings</button>
+  <input aria-label="Preset name" />
+</hy-popover>
+<hy-popconfirm heading="Delete asset?" description="This removes the selected asset">
+  <button slot="trigger">Delete</button>
+</hy-popconfirm>
+```
+
+Both expose `open`, `disabled`, `heading`, `content`, `description`, `trigger`, `placement`, `show()` and
+`hide()`. The `trigger` slot accepts a native button or a focusable custom control; the default slot supplies
+interactive content, and the `heading` slot overrides the heading text. Triggers are `click` (default),
+`hover`, `focus`, or `manual`. Hover delays use `show-delay`/`hide-delay` in milliseconds. Placement supports
+top/bottom/left/right with optional `-start`/`-end`; popups flip and fit the viewport and use the native
+popover top layer when available, escaping clipped ancestors. Escape, outside clicks and focus leaving
+the surface close it; keyboard interaction inside remains available and closing restores owned focus.
+`open-change` is composed and carries `{ open, reason }`. Disconnect releases listeners, timers and observers.
+
+Popconfirm adds `okText`, `cancelText`, `confirmLoading`, `confirmDisabled`, `confirm()` and `cancel()`.
+Its cancelable, composed `confirm`/`cancel` events carry `{ source: 'button' | 'api' }`. A prevented event
+keeps the panel open; during `confirmLoading`, buttons, outside dismissal and Escape are blocked.
+
+```ts
+popconfirm.addEventListener('confirm', async event => {
+  event.preventDefault();
+  popconfirm.confirmLoading = true;
+  try { await removeAsset(); popconfirm.hide(); }
+  finally { popconfirm.confirmLoading = false; }
+});
+```
+
+Style `trigger`, `panel`, `heading`, `description`, `content`, `footer`, `confirm`, and `cancel` parts.
+`--hy-popover-width`, `--hy-popover-shadow` and `--hy-popover-z-index` customize the surface.
+
+## Form and Form Item
+
+```ts
+import { defineFormComponents } from '@haiyue/ui/form';
+import { defineFormItemComponents } from '@haiyue/ui/form-item';
+import { defineInputComponents } from '@haiyue/ui/input';
+defineFormComponents();
+defineFormItemComponents();
+defineInputComponents();
+```
+
+```html
+<hy-form aria-label="Project settings">
+  <hy-form-item name="project" label="Project name" required help="At least 3 characters">
+    <hy-input></hy-input>
+  </hy-form-item>
+  <button type="submit">Save</button>
+  <button type="reset">Reset</button>
+</hy-form>
+```
+
+Form owns one real light-DOM `<form>` exposed as `formElement`. Children added to the host are moved into
+that form, so native controls and form-associated custom controls share one owner. Do not nest forms.
+`hy-input`, `hy-select`, `hy-checkbox`, `hy-radio`, `hy-mentions`, `hy-switch` and `hy-upload` participate
+in native `FormData`, disabled fieldsets and reset, including inside an ordinary `<form>`. Other custom
+components require an application-owned named native input if they need submission. Reset restores the
+initial connected values silently. Existing input events and isolated component entry points are preserved.
+
+`layout` is `vertical` (default), `horizontal`, or `inline`; `--hy-form-gap` and `--hy-form-label-width`
+control spacing and horizontal labels. `values` and `formData` are fresh snapshots; repeated names become
+arrays in `values`. `setValues(record)` updates supported native/value/checked fields silently.
+Native and `hy-button` submit/reset actions work inside `hy-form`, as does Enter in single-line inputs.
+`validate()` returns `Promise<boolean>`; `submit()` validates and emits the cancelable, composed
+`form-submit` event with `{ values, formData }`. It resolves to the event's accepted status, and never
+navigates or sends a network request. `form-invalid` carries `{ errors }`; `form-reset` signals reset.
+Later edits, replacement submissions or disconnect prevent an old async validation from submitting.
+
+Form Item owns one field. `name` supplies the field name when it has none; `label`, `required`, `help`,
+and external `error` configure its presentation. Labels focus the field, and labels/error descriptions
+are applied to the actual accessible control. `validateTrigger` (`validate-trigger`) is `blur` by default,
+or `change`/`submit`. `rules` accepts `{ required, min, max, pattern, message, validator }`; min/max
+measure string/array length or a numeric value. A validator receives `(value, signal)` and returns a
+message or no message, synchronously or as a Promise. The signal cancels superseded validation.
+`status` is read-only (`''`, `validating`, `success`, `error`); `clearValidation()` clears feedback.
+`field-validate` emits `{ name, valid, error }`. Explicit native constraints remain in effect.
+
+```ts
+item.rules = [{ min: 3, message: 'Use at least 3 characters' }, {
+  validator: async (value, signal) => {
+    const available = await checkName(value, { signal });
+    return available ? '' : 'Name already used';
+  },
+}];
+form.addEventListener('form-submit', event => {
+  event.preventDefault();
+  saveProject(event.detail.values);
+});
+```
+
+## Upload
+
+Import `defineUploadComponents` from `@haiyue/ui/upload`. File transport stays application-owned;
+the component never chooses a server or sends a request by itself.
+
+```html
+<hy-upload name="assets" drag multiple accept=".png,.jpg,.txt"
+  max-count="3" max-size="1048576" auto-upload="false">Drop files here</hy-upload>
+```
+
+```ts
+upload.beforeUpload = async (file, files) => file.size <= 1024 * 1024;
+upload.request = ({ file, signal, onProgress }) => uploadAsset(file, { signal, onProgress });
+await upload.upload();
+```
+
+`accept`, `multiple`, `disabled`, `drag`, `maxCount`, `maxSize` (bytes), `autoUpload`, and `showFileList`
+configure selection; a zero limit means unlimited. The file input's type/size/count checks are applied
+to both selection and drag/drop. `beforeUpload` can asynchronously veto a file; stale selection work is
+discarded after disable, reset, replacement or disconnect. `autoUpload` defaults to true and only starts
+work if an application `request` function exists. Input and drop content can be customized with `label`
+and the default slot. `openFileDialog()` opens the picker; `focus()` targets its button.
+
+`fileList` is a copied list of `{ uid, name, status, percent?, file?, size?, type?, response?, error? }`.
+Statuses are `ready`, `uploading`, `done`, and `error`. `files` returns actual `File` instances.
+`upload(uid?)` starts/retries files; `abort(uid?)` cancels and returns them to `ready`;
+`removeFile(uid)` emits cancelable `file-remove` before removing and aborting a file.
+`upload-change` carries `{ file, fileList, reason }`, including progress/success/error/abort, and
+`file-reject` carries `{ file, reason, message }`. Request callbacks receive an AbortSignal and a
+0–100 progress callback; removed/replaced/disconnected requests cannot report stale success.
+Native form submission includes actual File objects under `name`; metadata-only preloaded entries
+are displayed but do not fabricate files. `required` checks whether the list is empty.
+Style `dropzone`, `trigger`, `list`, `file`, `file-name`, `file-status`, `progress`, `remove`, `retry`,
+and `message` parts through the existing semantic theme tokens.
+
 ## Portable component semantics (M24 G03/G05)
 
 `@haiyue/ui/core` provides platform-independent component types, validation, selection/input/action

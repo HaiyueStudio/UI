@@ -1,3 +1,5 @@
+import { HYFormControl } from './internal/form-control.js';
+
 export interface HYRadioChangeDetail {
   checked: boolean;
   value: string;
@@ -5,10 +7,12 @@ export interface HYRadioChangeDetail {
 }
 
 export class HYRadio extends HTMLElement {
+  static readonly formAssociated = true;
   private readonly _input = document.createElement('input');
   private readonly _marker = document.createElement('span');
   private readonly _label = document.createElement('span');
   private readonly _slot = document.createElement('slot');
+  private readonly _formControl = new HYFormControl(this, this._input);
 
   static get observedAttributes(): string[] {
     return ['checked', 'disabled', 'label', 'value', 'name', 'aria-label'];
@@ -106,6 +110,7 @@ export class HYRadio extends HTMLElement {
   connectedCallback(): void {
     this._input.addEventListener('change', this._onChange);
     this._sync();
+    this._formControl.connect();
     if (this.checked) this._uncheckNamedPeers();
   }
 
@@ -166,7 +171,7 @@ export class HYRadio extends HTMLElement {
 
   private _sync(): void {
     this._input.checked = this.checked;
-    this._input.disabled = this.disabled;
+    this._input.disabled = this.disabled || this._formControl.disabled;
     this._input.value = this.value;
     this._input.name = this.name;
 
@@ -177,7 +182,17 @@ export class HYRadio extends HTMLElement {
     const ariaLabel = this.getAttribute('aria-label') ?? label ?? '';
     if (ariaLabel) this._input.setAttribute('aria-label', ariaLabel);
     else this._input.removeAttribute('aria-label');
+    this._formControl.sync();
   }
+
+  get form(): HTMLFormElement | null { return this._formControl.internals.form; }
+  checkValidity(): boolean { return this._formControl.internals.checkValidity(); }
+  reportValidity(): boolean { return this._formControl.internals.reportValidity(); }
+  setCustomValidity(message: string): void { this._formControl.setCustomValidity(message); }
+  formDisabledCallback(disabled: boolean): void { this._formControl.disabled = disabled; this._sync(); }
+  formResetCallback(): void { this._formControl.reset(); }
+  formStateRestoreCallback(state: string | File | FormData | null): void { this._formControl.restore(state); }
+  override focus(options?: FocusOptions): void { this._input.focus(options); }
 
   private _onChange = (): void => {
     if (!this._input.checked) return;
@@ -198,7 +213,7 @@ export class HYRadio extends HTMLElement {
       ? root.querySelectorAll<HYRadio>(`hy-radio[name="${cssEscape(this.name)}"]`)
       : [];
     for (const peer of peers) {
-      if (peer === this || peer.disabled) continue;
+      if (peer === this || peer.disabled || peer.form !== this.form) continue;
       peer.removeAttribute('checked');
     }
   }

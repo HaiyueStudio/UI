@@ -402,6 +402,71 @@ byId('mentions-disabled').addEventListener('change', event => { mentionsLive.dis
 byId('mentions-readonly').addEventListener('change', event => { mentionsLive.readOnly = event.target.checked; });
 for (const name of ['value-change', 'mention-select']) mentionsLive.addEventListener(name, event => writeEvent(byId('mentions-event'), name, event.detail));
 
+// Switch, progress, and loading.
+const switchLive = byId('switch-live');
+byId('switch-size').addEventListener('change', event => { switchLive.size = event.target.value; });
+for (const name of ['loading', 'disabled']) byId(`switch-${name}`).addEventListener('change', event => { switchLive[name] = event.target.checked; });
+switchLive.addEventListener('checked-change', event => writeEvent(byId('switch-event'), 'checked-change', event.detail));
+const progressControls = [byId('progress-line'), byId('progress-circle')];
+byId('progress-percent').addEventListener('input', event => { for (const progress of progressControls) progress.percent = Number(event.target.value); });
+byId('progress-status').addEventListener('change', event => { for (const progress of progressControls) progress.status = event.target.value; });
+byId('progress-indeterminate').addEventListener('change', event => { for (const progress of progressControls) progress.indeterminate = event.target.checked; });
+byId('progress-info').addEventListener('change', event => { for (const progress of progressControls) progress.showInfo = event.target.checked; });
+const spinLive = byId('spin-live');
+byId('spin-spinning').addEventListener('change', event => { spinLive.spinning = event.target.checked; });
+byId('spin-delay').addEventListener('input', event => { spinLive.delay = Number(event.target.value); });
+byId('spin-size').addEventListener('change', event => { spinLive.size = event.target.value; });
+byId('spin-tip').addEventListener('input', event => { spinLive.tip = event.target.value; });
+
+// Interactive floating panels and async confirmation.
+const popoverLive = byId('popover-live');
+byId('popover-placement').addEventListener('change', event => { popoverLive.placement = event.target.value; });
+byId('popover-trigger').addEventListener('change', event => { popoverLive.trigger = event.target.value; });
+byId('popover-open').addEventListener('click', () => popoverLive.show());
+popoverLive.addEventListener('open-change', event => writeEvent(byId('popover-event'), 'open-change', event.detail));
+const popconfirmLive = byId('popconfirm-live');
+let popconfirmTimer = 0;
+popconfirmLive.addEventListener('confirm', event => {
+  writeEvent(byId('popconfirm-event'), 'confirm', event.detail);
+  if (!byId('popconfirm-async').checked) return;
+  event.preventDefault(); popconfirmLive.confirmLoading = true;
+  popconfirmTimer = window.setTimeout(() => { popconfirmTimer = 0; popconfirmLive.confirmLoading = false; popconfirmLive.hide(); }, 800);
+});
+popconfirmLive.addEventListener('cancel', event => writeEvent(byId('popconfirm-event'), 'cancel', event.detail));
+window.addEventListener('pagehide', () => window.clearTimeout(popconfirmTimer));
+
+// Form rules, values and native reset.
+const formLive = byId('form-live');
+const syncFormRules = () => {
+  const rules = [{ min: 3, message: '项目名称至少需要 3 个字符' }];
+  if (byId('form-async').checked) rules.push({ validator: (value, signal) => new Promise(resolve => {
+    const timer = window.setTimeout(() => resolve(String(value).toLowerCase() === 'taken' ? '这个名称已被使用' : ''), 600);
+    signal.addEventListener('abort', () => { window.clearTimeout(timer); resolve(''); }, { once: true });
+  }) });
+  byId('form-name-item').rules = rules;
+};
+syncFormRules();
+byId('form-email-item').rules = [{ pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/u, message: '请输入有效的邮箱地址' }];
+byId('form-async').addEventListener('change', syncFormRules);
+byId('form-layout').addEventListener('change', event => { formLive.layout = event.target.value; });
+formLive.addEventListener('form-submit', event => { event.preventDefault(); writeEvent(byId('form-event'), 'form-submit', event.detail.values); });
+formLive.addEventListener('form-invalid', event => writeEvent(byId('form-event'), 'form-invalid', event.detail));
+formLive.addEventListener('form-reset', () => writeEvent(byId('form-event'), 'form-reset', {}));
+
+// Upload transport is application-owned. This gallery simulates it locally.
+const uploadLive = byId('upload-live');
+uploadLive.request = ({ file, signal, onProgress }) => new Promise((resolve, reject) => {
+  let percent = 0;
+  const timer = window.setInterval(() => { percent += 20; onProgress(percent); if (percent >= 100) { window.clearInterval(timer); resolve({ name: file.name }); } }, 160);
+  signal.addEventListener('abort', () => { window.clearInterval(timer); reject(new DOMException('Cancelled', 'AbortError')); }, { once: true });
+});
+byId('upload-auto').addEventListener('change', event => { uploadLive.autoUpload = event.target.checked; });
+byId('upload-disabled').addEventListener('change', event => { uploadLive.disabled = event.target.checked; });
+byId('upload-start').addEventListener('click', () => { void uploadLive.upload(); });
+byId('upload-abort').addEventListener('click', () => uploadLive.abort());
+uploadLive.addEventListener('upload-change', event => writeEvent(byId('upload-event'), event.detail.reason, { name: event.detail.file.name, status: event.detail.file.status, percent: event.detail.file.percent }));
+uploadLive.addEventListener('file-reject', event => writeEvent(byId('upload-event'), 'file-reject', { name: event.detail.file.name, reason: event.detail.reason, message: event.detail.message }));
+
 // Range.
 const rangeSingle = byId('range-single');
 const rangeLive = byId('range-live');

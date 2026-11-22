@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-hy-theme="light">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Priority component contracts</title>
+<link rel="stylesheet" href="../../themes/haiyue-light.css" /><link rel="stylesheet" href="../../themes/haiyue-dark.css" />
+<style>body { margin: 24px; font: 14px system-ui; color: var(--hy-text-color); background: var(--hy-surface-color); } section { margin-bottom: 24px; max-width: 480px; } hy-form { max-width: 400px; } #clip { overflow: hidden; height: 36px; } button { min-height: 28px; }</style></head>
+<body>
+  <section><hy-switch id="switch" label="Auto save" checked-text="On" unchecked-text="Off"></hy-switch></section>
+  <section><hy-progress id="progress" percent="35" aria-label="Build progress"></hy-progress><hy-spin id="spin" spinning="false" delay="100" tip="Loading preview"><button id="spin-action">Preview action</button></hy-spin></section>
+  <section id="clip"><hy-popover id="popover" heading="Settings"><button id="popover-trigger" slot="trigger">Settings</button><input id="popover-input" aria-label="Preset name" /></hy-popover>
+  <hy-popconfirm id="popconfirm" heading="Delete asset?" description="This removes the selected asset"><button id="confirm-trigger" slot="trigger">Delete asset</button></hy-popconfirm></section>
+  <button id="outside">Outside</button>
+  <section>
+    <form id="native-form"><fieldset id="fieldset">
+      <hy-input id="native-input" name="title" value="Initial title" aria-label="Native title" required></hy-input>
+      <hy-checkbox id="native-checkbox" name="tags" value="featured" label="Featured" checked></hy-checkbox>
+      <hy-switch id="native-switch" name="enabled" checked label="Enabled"></hy-switch>
+      <hy-select id="native-select" name="quality" value="high" aria-label="Quality"></hy-select>
+      <hy-mentions id="native-mentions" name="comment" value="Initial comment" aria-label="Comment"></hy-mentions>
+      <hy-radio name="mode" value="first" checked label="First"></hy-radio><hy-radio name="mode" value="second" label="Second"></hy-radio>
+    </fieldset></form>
+  </section>
+  <section><hy-form id="form" aria-label="Project settings">
+    <hy-form-item id="title-item" name="title" label="Project title" required help="Use a descriptive title"><hy-input id="form-title" value="" /></hy-form-item>
+    <hy-form-item id="owner-item" name="owner" label="Owner"><input id="form-owner" name="owner" value="Alice" /></hy-form-item>
+    <hy-switch name="public" label="Public project" checked></hy-switch>
+    <hy-button id="submit" type="submit" label="Save project"></hy-button><button id="reset" type="reset">Reset</button>
+  </hy-form></section>
+  <section><hy-upload id="upload" drag multiple accept=".txt,text/plain" max-count="3" max-size="100" auto-upload="false" name="assets">Drop text files here</hy-upload></section>
+  <script type="module">
+    import { defineHaiyueUI } from '../../dist/index.js';
+    window.explicitRegistration = !customElements.get('hy-switch') && !customElements.get('hy-form');
+    defineHaiyueUI(); defineHaiyueUI();
+    document.querySelector('#native-select').options = [{value:'high',label:'High'}, {value:'low',label:'Low'}];
+    window.componentEvents = [];
+    for (const name of ['checked-change','open-change','confirm','cancel','field-validate','form-submit','form-invalid','form-reset','upload-change','file-reject','file-remove']) document.addEventListener(name, event => {
+      window.componentEvents.push({ name, id: event.target.id, detail: event.detail, composed: event.composed });
+    });
+    document.querySelector('#form').addEventListener('form-submit', event => event.preventDefault());
+  </script>
+</body></html>
