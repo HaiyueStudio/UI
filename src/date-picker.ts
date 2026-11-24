@@ -158,6 +158,7 @@ export class HYDatePicker extends HTMLElement {
     return new Intl.DateTimeFormat(this.locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(date);
   }
   private _render(): void {
+    if (this.disabled && this.open) { this.open = false; return; }
     const text = this._formatDate(this._value); this._label.textContent = text || this.placeholder; this._label.classList.toggle('placeholder', !text);
     this._trigger.disabled = this.disabled; this._trigger.setAttribute('aria-expanded', String(this.open));
     const name = this.getAttribute('aria-label'); if (name) this._trigger.setAttribute('aria-label', name); else this._trigger.removeAttribute('aria-label');
@@ -208,6 +209,7 @@ export class HYDatePicker extends HTMLElement {
   }
   private _focusPreferredDate(): void { const preferred = parseISODate(this._value) ?? new Date(); if (this._isAllowed(toISODate(preferred))) this._focusDate(preferred); else this._panel.querySelector<HTMLButtonElement>('.day:not(:disabled)')?.focus(); }
   private _commit(value: string): void {
+    if (this.disabled) return;
     this._value = this._normalizeValue(value); this._reflectValue(); if (this.open) this.open = false; else this._render();
     this.dispatchEvent(new CustomEvent<HYDatePickerChangeDetail>('value-change', { bubbles: true, composed: true, detail: { value: this._value, date: parseISODate(this._value) } }));
   }

@@ -1,6 +1,6 @@
 import type { HYDispose, HYReason, HYSelectionEvent, HYSelectionProps, HYSelectionView } from './types.js';
-import { equalData, snapshot } from './data.js';
-import { HYUIError, hyKey, hyValidateProps } from './validation.js';
+import { equalData } from './data.js';
+import { HYUIError, hyKey, snapshotValidatedProps } from './validation.js';
 
 /** Controlled Select/Tabs semantics. Views report user actions, never delayed setter echoes. */
 export class HYSelectionController {
@@ -16,9 +16,9 @@ export class HYSelectionController {
   }
   update(props: HYSelectionProps): void {
     if (this.#disposed) return;
-    hyValidateProps('Select', props, { key: this.key });
+    props = snapshotValidatedProps('Select', props, { key: this.key });
     if (equalData(props, this.#props)) return;
-    this.#props = snapshot(props); this.#generation++; this.#apply();
+    this.#props = props; this.#generation++; this.#apply();
   }
   #apply(): void {
     if (!this.#view || this.#disposed || equalData(this.#lastApplied, this.#props)) return;

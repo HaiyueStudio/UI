@@ -1,3 +1,5 @@
+import { finiteNumber as readFiniteNumber } from './internal/numbers.js';
+
 export type HYVirtualMouseButton = 'left' | 'middle' | 'right';
 export type HYVirtualMouseState = 'idle' | 'left-down' | 'middle-down' | 'right-down';
 
@@ -37,7 +39,7 @@ const BUTTONS: readonly HYVirtualMouseButton[] = ['left', 'middle', 'right'];
 const STATES: readonly HYVirtualMouseState[] = ['idle', 'left-down', 'middle-down', 'right-down'];
 
 function finiteNumber(value: unknown, fallback: number): number {
-  const number = Number(value);
+  const number = readFiniteNumber(value, fallback);
   return Number.isFinite(number) ? number : fallback;
 }
 

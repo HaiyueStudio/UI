@@ -129,6 +129,7 @@ export class HYTimePicker extends HTMLElement {
     const now = new Date(); this._draft = { hour: now.getHours(), minute: Math.floor(now.getMinutes() / this.minuteStep) * this.minuteStep, second: Math.floor(now.getSeconds() / this.secondStep) * this.secondStep };
   }
   private _render(): void {
+    if (this.disabled && this.open) { this.open = false; return; }
     this._label.textContent = this._value || this.placeholder; this._label.classList.toggle('placeholder', !this._value); this._trigger.disabled = this.disabled; this._trigger.setAttribute('aria-expanded', String(this.open));
     const name = this.getAttribute('aria-label'); if (name) this._trigger.setAttribute('aria-label', name); else this._trigger.removeAttribute('aria-label');
     this._clear.hidden = !this.clearable || !this._value; this._clear.disabled = this.disabled; this._panel.hidden = !this.open; if (this.open) this._renderPanel(); else this._panel.replaceChildren();
@@ -154,6 +155,7 @@ export class HYTimePicker extends HTMLElement {
   }
   private _focusSelected(columnIndex: number): void { this._panel.querySelectorAll<HTMLElement>('.column')[columnIndex]?.querySelector<HTMLElement>('[aria-selected="true"]')?.focus(); }
   private _commit(value: string): void {
+    if (this.disabled) return;
     this._value = this._normalizeValue(value); this._reflectValue(); if (this.open) this.open = false; else this._render(); const parts = parseTime(this._value);
     this.dispatchEvent(new CustomEvent<HYTimePickerChangeDetail>('value-change', { bubbles: true, composed: true, detail: { value: this._value, hour: parts?.hour ?? null, minute: parts?.minute ?? null, second: parts && this.showSeconds ? parts.second : null } }));
   }

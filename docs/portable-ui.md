@@ -16,7 +16,7 @@ G03 实现纯逻辑层。公开入口为 `@haiyue/ui/core` 和 `@haiyue/ui/porta
 
 ## 后端实现协议
 
-后端显式声明 contract=1、18 种基础组件中已实现的组件集合，以及冻结的 features 白名单。使用 `hySupports()` 显式选择回退，例如没有 `icons.system` 时只传 resource，不静默忽略 systemName。需要 IME 的输入节点声明 `requires:['text.composition']`；不能因为测试后端支持就声明真实平台已具备能力。
+后端显式声明 contract=1、23 种语义组件中已实现的组件集合，以及冻结的 features 白名单。使用 `hySupports()` 显式选择回退，例如没有 `icons.system` 时只传 resource，不静默忽略 systemName。需要 IME 的输入节点声明 `requires:['text.composition']`；不能因为测试后端支持就声明真实平台已具备能力。
 
 `commit(revision, mutations)` 在 UI 线程执行；create 只分配浅节点，insert 确定 parent/before/可选 slot。update 完整替换 props；move 保留实例；remove 递归解绑和释放整棵子树（页面不会再对子孙发送重复 remove）。后端不能自行遍历作者 children 创建第二套节点。未挂载节点也必须在失败后的 dispose 中释放。
 

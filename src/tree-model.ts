@@ -110,14 +110,26 @@ export class HYTreeModel {
   }
 
   removeNode(id: string): boolean {
-    const found = this.findNode(id);
-    if (!found) return false;
-    const list = found.parent?.children ?? this._data;
-    const index = this._nodeIndex.get(id)?.index ?? -1;
-    if (index < 0) return false;
-    list.splice(index, 1);
+    return this.removeNodes([id]).length !== 0;
+  }
+
+  removeNodes(ids: Iterable<string>): string[] {
+    const selected = this.topLevelSelection(ids);
+    if (!selected.length) return [];
+    const groups = new Map<HYTreeNodeData[], Set<number>>();
+    for (const id of selected) {
+      const indexed = this._nodeIndex.get(id)!;
+      const list = indexed.parent?.children ?? this._data;
+      if (!groups.has(list)) groups.set(list, new Set());
+      groups.get(list)!.add(indexed.index);
+    }
+    for (const [list, removed] of groups) {
+      let write = 0;
+      for (let read = 0; read < list.length; read++) if (!removed.has(read)) list[write++] = list[read]!;
+      list.length = write;
+    }
     this.setData(this._data);
-    return true;
+    return selected;
   }
 
   moveNode(sourceId: string, targetId: string, position: HYTreeDropPosition): boolean {
@@ -279,8 +291,8 @@ export class HYTreeModel {
     const moved: IndexedTreeNode[] = [];
     for (const root of roots) this._collectVisibleSubtree(root, moved);
     if (moved.length === 0) return;
-    this._visibleNodes.splice(insertAt, 0, ...moved);
-    this._visibleIds.splice(insertAt, 0, ...moved.map(item => item.node.id));
+    this._insertMany(this._visibleNodes, insertAt, moved);
+    this._insertMany(this._visibleIds, insertAt, moved.map(item => item.node.id));
     this._refreshVisibleIndexes(insertAt);
   }
 
@@ -290,6 +302,12 @@ export class HYTreeModel {
     result.push(indexed);
     if (!this._expandedIds.has(node.id)) return;
     for (const child of node.children ?? []) this._collectVisibleSubtree(child, result);
+  }
+
+  private _insertMany<T>(list: T[], index: number, items: readonly T[]): void {
+    const length = list.length; list.length += items.length;
+    for (let i = length - 1; i >= index; i--) list[i + items.length] = list[i]!;
+    for (let i = 0; i < items.length; i++) list[index + i] = items[i]!;
   }
 
   private _visibleSubtreeEnd(id: string | undefined): number {

@@ -1,3 +1,5 @@
+import { focusedElement, focusableElements } from './internal/focus.js';
+
 export type HYDrawerPlacement = 'top' | 'right' | 'bottom' | 'left';
 export type HYDrawerCloseReason = 'action' | 'mask' | 'escape' | 'programmatic';
 
@@ -6,14 +8,7 @@ export interface HYDrawerCloseDetail {
 }
 
 const CONTENT_DESTROY_DELAY = 220;
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(',');
+
 
 const DRAWER_STYLES = `
       :host {
@@ -299,7 +294,7 @@ export class HYDrawer extends HTMLElement {
     if (this.open) {
       this._cancelContentDestroy();
       this._restoreContent();
-      this._returnFocus ??= document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      this._returnFocus ??= focusedElement(this.ownerDocument);
       this._panel.setAttribute('aria-hidden', 'false');
       this._syncPanelSemantics();
       this._attachDocumentListener();
@@ -351,14 +346,13 @@ export class HYDrawer extends HTMLElement {
     }
     if (event.key !== 'Tab' || !this.mask) return;
 
-    const focusable = [this._closeButton, ...this.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)]
-      .filter(element => !element.hidden && element.getAttribute('aria-hidden') !== 'true');
+    const focusable = focusableElements(this._panel);
     if (focusable.length === 0) {
       event.preventDefault();
       this._panel.focus();
       return;
     }
-    const active = this.shadowRoot?.activeElement ?? document.activeElement;
+    const active = focusedElement(this.ownerDocument);
     const index = focusable.indexOf(active as HTMLElement);
     if (event.shiftKey && index <= 0) {
       event.preventDefault();

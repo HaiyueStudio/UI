@@ -1,3 +1,4 @@
+import { finiteNumber } from './internal/numbers.js';
 import { HYPaginationControls, HY_PAGINATION_STYLES } from './internal/pagination.js';
 
 export type HYTableAlign = 'left' | 'center' | 'right';
@@ -60,7 +61,7 @@ const DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50] as const;
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
 function finiteInteger(value: unknown, fallback: number, minimum = 1): number {
-  const number = Number(value);
+  const number = finiteNumber(value, fallback);
   return Number.isFinite(number) ? Math.max(minimum, Math.floor(number)) : fallback;
 }
 
@@ -290,13 +291,13 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
 
   connectedCallback(): void {
     this._syncAttributes();
-    this._render();
+    this._render(true);
   }
 
-  attributeChangedCallback(): void {
+  attributeChangedCallback(name?: string): void {
     if (this._reflecting) return;
     this._syncAttributes();
-    this._render();
+    this._render(name === undefined || name === 'show-filters');
   }
 
   get columns(): readonly HYTableColumn<T>[] { return this._columns; }
@@ -305,14 +306,12 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     const keys = new Set(this._columns.map(column => column.key));
     this._filters = Object.fromEntries(Object.entries(this._filters).filter(([key]) => keys.has(key)));
     if (this._sort && !keys.has(this._sort.key)) this._sort = null;
-    this._clampPage();
-    this._render();
+    this._render(true);
   }
 
   get dataSource(): readonly T[] { return this._dataSource; }
   set dataSource(value: readonly T[]) {
     this._dataSource = Array.isArray(value) ? [...value] : [];
-    this._clampPage();
     this._renderBodyAndPagination();
   }
 
@@ -327,8 +326,7 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     this._page = 1;
     this._reflectNumber('page-size', next);
     this._reflectNumber('page', 1);
-    this._renderBodyAndPagination();
-    this._dispatchChange('paginate');
+    this._update('paginate');
   }
 
   get pageSizeOptions(): readonly number[] { return this._pageSizeOptions; }
@@ -336,7 +334,6 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     const options = positiveIntegerOptions(Array.isArray(value) ? value : []);
     this._pageSizeOptions = options.length ? options : DEFAULT_PAGE_SIZE_OPTIONS;
     this.setAttribute('page-size-options', this._pageSizeOptions.join(','));
-    this._renderPagination();
   }
 
   get pagination(): boolean { return this.getAttribute('pagination') !== 'false'; }
@@ -356,8 +353,7 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     }
     this._page = 1;
     this._reflectNumber('page', 1);
-    this._render();
-    this._dispatchChange('sort');
+    this._update('sort');
   }
 
   get filters(): HYTableFilterState { return { ...this._filters }; }
@@ -368,20 +364,21 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     );
     this._page = 1;
     this._reflectNumber('page', 1);
-    this._render();
-    this._dispatchChange('filter');
+    this._update('filter');
   }
 
   get filteredData(): readonly T[] { return this._processedRecords().map(item => item.record); }
   get visibleData(): readonly T[] { return this._visibleRecords().map(item => item.record); }
 
   goToPage(value: number): void {
-    const next = Math.min(this.pageCount, finiteInteger(value, 1));
+    const processed = this._processedRecords();
+    const count = this.pagination ? Math.max(1, Math.ceil(processed.length / this._pageSize)) : 1;
+    const next = Math.min(count, finiteInteger(value, 1));
     if (next === this._page) return;
     this._page = next;
     this._reflectNumber('page', next);
-    this._renderBodyAndPagination();
-    this._dispatchChange('paginate');
+    this._renderBodyAndPagination(processed);
+    this._dispatchChange('paginate', processed);
   }
 
   get pageCount(): number {
@@ -414,8 +411,7 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     else delete this._filters[key];
     this._page = 1;
     this._reflectNumber('page', 1);
-    this._render();
-    this._dispatchChange('filter');
+    this._update('filter');
   }
 
   clearFilters(): void {
@@ -423,13 +419,12 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     this._filters = {};
     this._page = 1;
     this._reflectNumber('page', 1);
-    this._render();
-    this._dispatchChange('filter');
+    this._update('filter');
   }
 
   private _syncAttributes(): void {
-    this._pageSize = finiteInteger(this.getAttribute('page-size'), this._pageSize);
-    this._page = finiteInteger(this.getAttribute('page'), this._page);
+    this._pageSize = finiteInteger(this.getAttribute('page-size'), DEFAULT_PAGE_SIZE);
+    this._page = finiteInteger(this.getAttribute('page'), 1);
     if (this.hasAttribute('page-size-options')) {
       const options = positiveIntegerOptions((this.getAttribute('page-size-options') ?? '').split(','));
       if (options.length) this._pageSizeOptions = [...new Set(options)].sort((a, b) => a - b);
@@ -437,12 +432,40 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     const label = this.getAttribute('aria-label');
     if (label) this._table.setAttribute('aria-label', label);
     else this._table.removeAttribute('aria-label');
-    this._clampPage();
   }
 
-  private _render(): void {
-    this._renderHeader();
-    this._renderBodyAndPagination();
+  private _update(reason: HYTableChangeReason): void {
+    const processed = this._processedRecords();
+    this._render(false, processed);
+    this._dispatchChange(reason, processed);
+  }
+
+  private _render(rebuildHeader = false, processed = this._processedRecords()): void {
+    if (rebuildHeader) this._renderHeader();
+    this._syncHeaderState();
+    this._renderBodyAndPagination(processed);
+  }
+
+  private _syncHeaderState(): void {
+    // Index alignment preserves duplicate column keys and each control's DOM identity.
+    const headers = this._head.querySelectorAll('th');
+    this._columns.forEach((column, index) => {
+      const header = headers[index];
+      if (!header) return;
+      const indicator = header.querySelector('.sort-indicator');
+      if (indicator) {
+        const direction = this._sort?.key === column.key ? this._sort.direction : null;
+        indicator.textContent = direction === 'asc' ? '▲' : direction === 'desc' ? '▼' : '◆';
+        header.setAttribute('aria-sort', direction === 'asc' ? 'ascending' : direction === 'desc' ? 'descending' : 'none');
+      }
+      const value = this._filters[column.key] ?? '';
+      const control = header.querySelector<HTMLInputElement | HTMLSelectElement>('.filter');
+      if (control && control.value !== value) control.value = value;
+      const trigger = header.querySelector<HTMLElement>('.filter-trigger');
+      if (trigger) trigger.dataset.active = String(Boolean(value));
+      const clear = header.querySelector<HTMLButtonElement>('.filter-clear');
+      if (clear) clear.disabled = !value;
+    });
   }
 
   private _renderHeader(): void {
@@ -569,13 +592,12 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     else delete this._filters[key];
     this._page = 1;
     this._reflectNumber('page', 1);
-    this._renderBodyAndPagination();
-    this._dispatchChange('filter');
+    this._update('filter');
   }
 
-  private _renderBodyAndPagination(): void {
-    this._clampPage();
-    const rows = this._visibleRecords();
+  private _renderBodyAndPagination(processed = this._processedRecords()): void {
+    this._clampPage(processed);
+    const rows = this._visibleRecords(processed);
     if (rows.length === 0) {
       const row = document.createElement('tr');
       row.part.add('empty-row');
@@ -592,7 +614,7 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     } else {
       this._body.replaceChildren(...rows.map(item => this._createRow(item)));
     }
-    this._renderPagination();
+    this._renderPagination(processed);
   }
 
   private _createRow(item: IndexedRecord<T>): HTMLTableRowElement {
@@ -617,9 +639,9 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     return row;
   }
 
-  private _renderPagination(): void {
+  private _renderPagination(processed = this._processedRecords()): void {
     this._pagination.update({
-      page: this._page, pageSize: this._pageSize, total: this._processedRecords().length,
+      page: this._page, pageSize: this._pageSize, total: processed.length,
       pageSizeOptions: this._pageSizeOptions, label: 'Table pagination',
       hidden: !this.pagination, showSizeChanger: true,
     });
@@ -657,15 +679,14 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     return records;
   }
 
-  private _visibleRecords(): IndexedRecord<T>[] {
-    const records = this._processedRecords();
+  private _visibleRecords(records = this._processedRecords()): IndexedRecord<T>[] {
     if (!this.pagination) return records;
     const start = (this._page - 1) * this._pageSize;
     return records.slice(start, start + this._pageSize);
   }
 
-  private _clampPage(): void {
-    const total = this._processedRecords().length;
+  private _clampPage(processed: IndexedRecord<T>[]): void {
+    const total = processed.length;
     const pageCount = this.pagination ? Math.max(1, Math.ceil(total / this._pageSize)) : 1;
     const next = Math.min(pageCount, Math.max(1, this._page));
     if (next !== this._page) {
@@ -688,8 +709,7 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
     this._reflecting = false;
   }
 
-  private _dispatchChange(reason: HYTableChangeReason): void {
-    const processed = this._processedRecords();
+  private _dispatchChange(reason: HYTableChangeReason, processed: IndexedRecord<T>[]): void {
     const detail: HYTableChangeDetail<T> = {
       reason,
       page: this._page,
@@ -699,7 +719,7 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
       filteredTotal: processed.length,
       sort: this.sort,
       filters: this.filters,
-      visibleData: this.visibleData,
+      visibleData: this._visibleRecords(processed).map(item => item.record),
     };
     this.dispatchEvent(new CustomEvent<HYTableChangeDetail<T>>('table-change', {
       bubbles: true, composed: true, detail,

@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## 0.3.1 - 2026-11-24
+
+- 完成剩余审查项：统一缺省数值属性，修复 Drawer/Dialog/Tour/Tooltip 的焦点、无障碍与生命周期，以及选择器禁用和 Radio 组互斥行为。
+- Table 每次操作仅筛选/排序一次；表头、Anchor 与 VirtualList 保留可复用节点，Tree 批量删除只重建一次索引并支持超宽分支移动。
+- VirtualKeyboard 按字素移动和删除，安全处理不支持选区 API 的输入类型，并统一禁用/只读检查。
+- 完善 portable RadioGroup 的键盘/RTL 导航、Checkbox/RadioGroup/Rate 的模态初始焦点及 Rate 错误描述；修复订阅自定义比较器、不可变协议快照、事务复制开销与 PlatformView 双重失败诊断。
+- 行为说明：Dialog 每次有效关闭同步发送一次 `dialog-close`；Tour 保留高亮目标交互，明确为非模态引导；core/portable 在不可变快照上校验并拒绝访问器、不可枚举字段及稀疏/扩展数组。
+- API 门禁增加可达声明签名比较，覆盖接口、参数、联合类型与事件 detail；更新当前 23 种语义和 11 类 Web 复用组件的文档与回归。
+- 修复 Tree 自定义渲染器与 Draggable/Resizable 子控件的键盘事件被容器快捷键截获；Resizable 的键盘移动遵守 `movable=false`。
+- 保留 Tree、Dropdown 和 ContextMenu 在挂载前的程序赋值，以及断开重连后的当前数据；声明式属性初始化和后续属性更新继续生效。
+- Upload 在接受文件选择/拖放或移除后发送一次 composed `change`，使 FormItem 校验和 Form 的异步提交使用已提交的文件列表；上传进度不使字段校验失效。
+
 ## 0.3.0 - 2026-11-24
 
 - 发布检查兼容 npm 11／12 的打包结果格式。

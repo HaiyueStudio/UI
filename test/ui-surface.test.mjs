@@ -442,7 +442,6 @@ test('virtual list keeps data off-DOM and cleans up owned observers and listener
   assert.match(source, /for \(let index = range\.startIndex; index < range\.endIndex/);
   assert.match(source, /this\._items\[index\]/);
   assert.match(source, /row\.dataset\.hyVirtualListGenerated/);
-  assert.match(source, /this\._window\.replaceChildren\(\.\.\.rows\)/);
   assert.doesNotMatch(source, /row\.slot = 'items'/);
   assert.match(source, /this\._resizeObserver\?\.disconnect\(\)/);
   assert.match(source, /removeEventListener\('scroll', this\._onScroll\)/);

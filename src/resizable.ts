@@ -1,3 +1,5 @@
+import { isKeyboardControlEvent } from './internal/keyboard.js';
+
 export type HYResizableHandle = 'move' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
 export type HYResizableBoundsMode = 'none' | 'parent' | 'viewport';
 export type HYResizableBounds = HYResizableBoundsMode | HTMLElement;
@@ -267,8 +269,9 @@ export class HYResizable extends HTMLElement {
   }
 
   private _handleKeydown(event: KeyboardEvent): void {
-    if (this.disabled || !this.keyboard) return;
+    if (this.disabled || !this.keyboard || event.defaultPrevented || isKeyboardControlEvent(event, this._frame)) return;
     const handle = event.composedPath().find((node): node is HTMLElement => node instanceof HTMLElement && Boolean(node.dataset.resizeHandle))?.dataset.resizeHandle as HYResizableHandle | undefined ?? 'move';
+    if (handle === 'move' && !this.movable) return;
     const step = this.grid * (event.shiftKey ? 10 : 1);
     let deltaX = 0;
     let deltaY = 0;

@@ -213,7 +213,7 @@ export class HYRadio extends HTMLElement {
       ? root.querySelectorAll<HYRadio>(`hy-radio[name="${cssEscape(this.name)}"]`)
       : [];
     for (const peer of peers) {
-      if (peer === this || peer.disabled || peer.form !== this.form) continue;
+      if (peer === this || peer.form !== this.form) continue;
       peer.removeAttribute('checked');
     }
   }

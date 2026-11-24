@@ -1,6 +1,6 @@
 import type { HYBounds, HYPlatformView } from './types.js';
 import { equalData, snapshot } from './data.js';
-import { HYUIError } from './validation.js';
+import { HYUIError, snapshotProtocolData } from './validation.js';
 
 /** Backend-owned resource lifetime. No GPU acquire/present or platform handles in page state. */
 export class HYPlatformViewController {
@@ -17,7 +17,11 @@ export class HYPlatformViewController {
       this.#view.mount(); this.#view.update(this.resourceId);
       if (this.#bounds) this.#view.layout(this.#bounds);
       this.#view.visible(this.shown && !this.#suspended);
-    } catch (error) { this.dispose(); throw error; }
+    } catch (error) {
+      try { this.dispose(); }
+      catch (cleanup) { throw new AggregateError([error, cleanup], 'PlatformView initialization and cleanup failed', { cause: error }); }
+      throw error;
+    }
   }
   update(resourceId: string): void {
     if (this.#disposed) return;
@@ -27,6 +31,7 @@ export class HYPlatformViewController {
   }
   layout(bounds: HYBounds): void {
     if (this.#disposed) return;
+    bounds = snapshotProtocolData(bounds);
     if (![bounds.x, bounds.y, bounds.width, bounds.height, bounds.scale].every(Number.isFinite)
       || bounds.width < 0 || bounds.height < 0 || bounds.scale <= 0) throw new HYUIError('invalid-props', 'Invalid PlatformView bounds');
     if (equalData(bounds, this.#bounds)) return;

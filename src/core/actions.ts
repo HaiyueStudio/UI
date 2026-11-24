@@ -1,6 +1,5 @@
 import type { HYComponentProps, HYReason, HYUIEvent } from './types.js';
-import { snapshot } from './data.js';
-import { hyKey, hyValidateProps } from './validation.js';
+import { hyKey, snapshotValidatedProps } from './validation.js';
 
 export class HYButtonController {
   #props!: HYComponentProps['Button']; #disposed = false; #emitting = false; #transaction = 0;
@@ -8,7 +7,7 @@ export class HYButtonController {
   constructor(readonly key: string, props: HYComponentProps['Button'], private readonly emit: (event: HYUIEvent) => void) { hyKey(key); this.update(props); }
   update(props: HYComponentProps['Button']): void {
     if (this.#disposed) return;
-    hyValidateProps('Button', props, { key: this.key }); this.#props = snapshot(props);
+    props = snapshotValidatedProps('Button', props, { key: this.key }); this.#props = props;
   }
   /** Adapters pass the same gesture id for overlapping tap/click/accessibility callbacks. */
   activate(reason: HYReason = 'pointer', gesture?: string | number): boolean {
@@ -30,7 +29,7 @@ export class HYToggleController {
   constructor(readonly key: string, props: HYComponentProps['Toggle'], private readonly emit: (event: HYUIEvent) => void) { hyKey(key); this.update(props); }
   update(props: HYComponentProps['Toggle']): void {
     if (this.#disposed) return;
-    hyValidateProps('Toggle', props, { key: this.key }); this.#props = snapshot(props);
+    props = snapshotValidatedProps('Toggle', props, { key: this.key }); this.#props = props;
   }
   choose(checked: boolean, reason: HYReason = 'pointer'): boolean {
     if (typeof checked !== 'boolean' || this.#disposed || this.#emitting || this.#props.disabled || this.#props.visible === false || checked === this.#props.checked) return false;
@@ -51,11 +50,11 @@ export class HYSliderController {
   get value(): number { return this.#draft; }
   update(props: HYComponentProps['Slider']): void {
     if (this.#disposed) return;
-    hyValidateProps('Slider', props, { key: this.key });
+    props = snapshotValidatedProps('Slider', props, { key: this.key });
     if (!this.#props || props.value !== this.#props.value || props.min !== this.#props.min || props.max !== this.#props.max || props.step !== this.#props.step || props.disabled || props.visible === false) {
       this.#draft = props.value; this.#active = 0;
     }
-    this.#props = snapshot(props);
+    this.#props = props;
   }
   change(value: number, reason: HYReason = 'pointer'): boolean {
     if (this.#disposed || this.#props.disabled || this.#props.visible === false || !Number.isFinite(value)) return false;

@@ -1,7 +1,9 @@
+import { finiteNumber as readFiniteNumber } from './internal/numbers.js';
+
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 
 function finiteNumber(value: unknown, fallback: number, min: number, max: number): number {
-  const number = Number(value);
+  const number = readFiniteNumber(value, fallback);
   return Number.isFinite(number) ? Math.min(max, Math.max(min, number)) : fallback;
 }
 

@@ -508,6 +508,11 @@ Statuses are `ready`, `uploading`, `done`, and `error`. `files` returns actual `
 `upload-change` carries `{ file, fileList, reason }`, including progress/success/error/abort, and
 `file-reject` carries `{ file, reason, message }`. Request callbacks receive an AbortSignal and a
 0–100 progress callback; removed/replaced/disconnected requests cannot report stale success.
+After accepting a selection/drop batch or completing an uncanceled removal, the host emits one
+bubbling, composed `change` event after synchronizing its file list and native form value. Form Item
+change validation and pending Form submissions therefore observe the accepted list. Native picker
+input does not bubble to field listeners before acceptance; rejected selections, vetoed removals, request
+progress/status updates, and programmatic `fileList` assignment do not emit this field-edit event.
 Native form submission includes actual File objects under `name`; metadata-only preloaded entries
 are displayed but do not fabricate files. `required` checks whether the list is empty.
 Style `dropzone`, `trigger`, `list`, `file`, `file-name`, `file-status`, `progress`, `remove`, `retry`,
@@ -695,7 +700,7 @@ no writes; reordering preserves instances. Applications persist values on `commi
 
 The Web backend is available from `@haiyue/ui/adapters/web`: explicitly call
 `definePortableWebComponents()`, construct `new HYWebRenderer(connectedElement, options)`, then pass it
-to `HYPage`. It reuses seven existing Web Components and maps the other semantic kinds to browser
+to `HYPage`. It reuses eleven existing Web Components and maps the other semantic kinds to browser
 elements. It introduces no runtime package dependencies or automatic registration. See the
 [Web adapter guide](docs/web-adapter.md) and [interactive example](examples/portable-ui/index.html).
 Run `npm run test:web-adapter` for Chromium/WebKit regression coverage.
@@ -1339,7 +1344,7 @@ npm run release:check
 ```
 
 Candidates: `.artifacts/packages/`. Review API changes before `npm run api:update`.
-See [release review](review/release-0.2.2.md).
+See [release review](review/release-0.3.1.md).
 
 ### 共享组件目录（开发中）
 
@@ -1376,3 +1381,13 @@ or validation errors preserves the existing input, selection and composition.
 `hyResponsiveWorkspace`, `HYResponsiveGridOptions` and
 `HYResponsiveWorkspaceOptions`. These return logical-pixel layout data without
 reading window or platform globals, so hosts can use actual split-window sizes.
+
+### 审查后的交互契约
+
+数值属性缺省或为空时使用文档默认值；显式 `0` 继续按各控件范围处理。Table 每次同步操作共享一次筛选/排序结果，公开数据 getter 仍读取最新记录和筛选闭包；更新列结构会重建表头，排序/筛选保留表头控件。VirtualList 滚动复用重叠行，`refresh()` 或替换数据/渲染器会重建内容；焦点行移出窗口时焦点回到列表视口。
+
+Drawer 的模态 Tab 环绕包含插槽中的 Shadow DOM 控件。Dialog 断开时释放原生 modal 状态，重新连接后按 `open` 恢复；每次有效关闭同步发送一次 `dialog-close`，重新打开不会被旧原生 close 事件撤销。Tour 是允许高亮目标交互的非模态引导，不声明 `aria-modal`；打开时清空步骤会以 `programmatic` 关闭并清理监听。Tooltip 在真实触发目标所在树中提供可访问描述，保留应用自己的 `aria-describedby`，禁用或移除时清理关系。
+
+VirtualKeyboard 对 textarea 及支持选区 API 的 text/search/url/tel/password input 编辑；其他 input 类型安全忽略编辑。移动和删除按完整字素处理，包括 emoji、组合字符与 ZWJ 序列；禁用或只读目标不会被修改。portable RadioGroup 仅保留一个 Tab 停靠点，方向键跳过禁用项并按 RTL 导航；所有选择仍经过受控状态回填。
+
+core/portable 仅接受普通数据对象与无空洞数组；拒绝访问器、不可枚举属性、符号键和额外数组属性，在不可变快照上验证，调用方后续修改不影响已接受的数据。新增辅助模块保持私有，不新增公开入口；API 基线现同时记录导出名与可达声明签名。

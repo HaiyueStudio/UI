@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>High priority component regressions</title>
+  <style>body { margin: 20px; font: 14px sans-serif; } hy-tree { width: 500px; height: 200px; } hy-draggable { width: 300px; } hy-form { width: 400px; }</style>
+</head>
+<body>
+  <hy-tree id="declarative-tree" selected-id="seed" data='[{"id":"seed","label":"Seed"}]'></hy-tree>
+  <hy-dropdown id="declarative-dropdown" items='[{"label":"Seed","value":"seed"}]'><button slot="trigger">Menu</button></hy-dropdown>
+  <hy-context-menu id="declarative-context-menu" items='[{"label":"Seed","value":"seed"}]'></hy-context-menu>
+  <script type="module">
+    import { defineTreeComponents } from '../../dist/tree.js';
+    import { defineDropdownComponents } from '../../dist/dropdown.js';
+    import { defineContextMenuComponents } from '../../dist/context-menu.js';
+    import { defineDraggableComponents } from '../../dist/draggable.js';
+    import { defineResizableComponents } from '../../dist/resizable.js';
+    import { defineUploadComponents } from '../../dist/upload.js';
+    import { defineFormComponents } from '../../dist/form.js';
+    import { defineFormItemComponents } from '../../dist/form-item.js';
+    customElements.define('audit-keyboard-editor', class extends HTMLElement {
+      constructor() {
+        super();
+        const root = this.attachShadow({ mode: 'open' });
+        const input = document.createElement('input'); input.value = 'abc'; input.style.width = '80px';
+        const button = document.createElement('button'); button.textContent = 'Action';
+        const editable = document.createElement('span'); editable.contentEditable = 'true'; editable.textContent = 'Text';
+        root.append(input, button, editable);
+      }
+    });
+    defineTreeComponents(); defineDropdownComponents(); defineContextMenuComponents();
+    defineDraggableComponents(); defineResizableComponents(); defineUploadComponents();
+    defineFormComponents(); defineFormItemComponents();
+    window.highPriorityReady = true;
+  </script>
+</body>
+</html>

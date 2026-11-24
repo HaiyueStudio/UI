@@ -1,3 +1,5 @@
+import { finiteNumber } from './internal/numbers.js';
+
 export type HYNotificationType = 'success' | 'info' | 'warning' | 'error';
 export type HYNotificationPlacement =
   | 'topLeft'
@@ -235,7 +237,7 @@ export class HYNotification extends HTMLElement {
   }
 
   get duration(): number {
-    const value = Number(this.getAttribute('duration'));
+    const value = finiteNumber(this.getAttribute('duration'), DEFAULT_DURATION);
     return Number.isFinite(value) && value >= 0 ? value : DEFAULT_DURATION;
   }
   set duration(value: number) {

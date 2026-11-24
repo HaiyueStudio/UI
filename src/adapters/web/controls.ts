@@ -16,7 +16,7 @@ import {defineRateComponents} from '../../rate.js';
 import {defineBadgeComponents} from '../../badge.js';
 import {defineDividerComponents} from '../../divider.js';
 import type { HYWebControl, HYWebControlContext } from './types.js';
-import { attribute, flag, focusable } from './dom.js';
+import { attribute, flag, focusable, captureFocus } from './dom.js';
 
 /** Registration is explicit and limited to the reused components. */
 export function definePortableWebComponents(): void {
@@ -41,12 +41,35 @@ export function createControl(node: HYNode, context: HYWebControlContext, revisi
     let props=node.props;
     const buttons=new Map<string,HTMLElement>(),groupName=`hy-portable-radio-${++radioGroupSequence}`;
     host.setAttribute('role','radiogroup');
-    const render=()=>{for(const [value,button] of buttons){flag(button,'checked',props.value===value);flag(button,'disabled',!!props.disabled||!!props.options.find(o=>o.value===value)?.disabled);}};
+    const enabled=()=>props.disabled?[]:props.options.filter(option=>!option.disabled);
+    const focusValue=()=>enabled().find(option=>option.value===props.value)?.value??enabled()[0]?.value;
+    const focus=()=>buttons.get(focusValue()??'')?.shadowRoot?.querySelector<HTMLInputElement>('input')?.focus();
+    const render=()=>{
+      const tabValue=focusValue();
+      for(const [value,button] of buttons){
+        flag(button,'checked',props.value===value);flag(button,'disabled',!!props.disabled||!!props.options.find(o=>o.value===value)?.disabled);
+        const input=button.shadowRoot?.querySelector<HTMLInputElement>('input');if(input)input.tabIndex=value===tabValue?0:-1;
+      }
+    };
     listen(host,'checked-change',event=>{const detail=(event as CustomEvent<{checked:boolean,value:string}>).detail;if(detail.checked)controller.choose(detail.value,reason);render();});
+    listen(host,'keydown',event=>{
+      const key=event as KeyboardEvent;if(key.defaultPrevented||key.altKey||key.ctrlKey||key.metaKey)return;
+      const options=enabled();if(!options.length)return;
+      const target=key.composedPath().find((node):node is HTMLElement=>node instanceof HTMLElement&&[...buttons.values()].includes(node));
+      const current=options.findIndex(option=>buttons.get(option.value)===target);const rtl=getComputedStyle(host).direction==='rtl';
+      let next:number;
+      if(key.key==='Home')next=0;else if(key.key==='End')next=options.length-1;
+      else if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(key.key)){
+        const forward=key.key==='ArrowDown'||key.key===(rtl?'ArrowLeft':'ArrowRight');
+        next=current<0?0:(current+(forward?1:-1)+options.length)%options.length;
+      }else return;
+      key.preventDefault();controller.choose(options[next]!.value,'keyboard');render();focus();
+    });
     return {update(next){if(next.kind!=='RadioGroup')return;props=next.props;controller.update(selectionProps(props));
       for(const [value,button] of buttons)if(!props.options.some(o=>o.value===value)){button.remove();buttons.delete(value);}
-      for(const option of props.options){let button=buttons.get(option.value);if(!button){button=document.createElement('hy-radio');buttons.set(option.value,button);}attribute(button,'value',option.value);attribute(button,'label',option.label);attribute(button,'name',groupName);host.append(button);}render();},
-      focus(){focusable(host)[0]?.focus();},dispose(){controller.dispose();buttons.clear();}};
+      const restoreFocus=captureFocus(host.ownerDocument);let cursor=host.firstElementChild;
+      for(const option of props.options){let button=buttons.get(option.value);if(!button){button=document.createElement('hy-radio');buttons.set(option.value,button);}attribute(button,'value',option.value);attribute(button,'label',option.label);attribute(button,'name',groupName);if(button!==cursor)host.insertBefore(button,cursor);cursor=button.nextElementSibling;}render();restoreFocus();},
+      focus,dispose(){controller.dispose();buttons.clear();}};
   }
   if(node.kind==='Rate') {
     let props=node.props,disposed=false,choosing=false;
@@ -54,7 +77,7 @@ export function createControl(node: HYNode, context: HYWebControlContext, revisi
     listen(host,'value-change',event=>{const value=(event as CustomEvent<{value:number}>).detail.value;
       if(disposed||choosing||props.disabled||props.readOnly||value===props.value)return;
       choosing=true;const tx=++transaction;try{emit({key:node.key,type:'valueChange',value,reason,transaction:tx});if(!disposed)emit({key:node.key,type:'commit',value,reason,transaction:tx});}finally{choosing=false;if(!disposed)restore();}});
-    return {update(next){if(next.kind!=='Rate')return;props=next.props;attribute(host,'count',String(props.count));flag(host,'disabled',!!props.disabled);flag(host,'readonly',!!props.readOnly);restore();},focus(){focusable(host)[0]?.focus();},dispose(){disposed=true;}};
+    return {update(next){if(next.kind!=='Rate')return;props=next.props;attribute(host,'count',String(props.count));flag(host,'disabled',!!props.disabled);flag(host,'readonly',!!props.readOnly);restore();},focus(){host.shadowRoot?.querySelector<HTMLElement>('[role="slider"]')?.focus();},dispose(){disposed=true;}};
   }
   if (node.kind === 'Button') {
     const button=host as HYButton;

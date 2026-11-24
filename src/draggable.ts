@@ -1,3 +1,6 @@
+import { finiteNumber as readFiniteNumber } from './internal/numbers.js';
+import { isKeyboardControlEvent } from './internal/keyboard.js';
+
 export type HYDraggableAxis = 'both' | 'x' | 'y';
 export type HYDraggableBoundsMode = 'none' | 'parent' | 'viewport';
 export type HYDraggableBounds = HYDraggableBoundsMode | HTMLElement;
@@ -19,7 +22,7 @@ export interface HYDraggableEndDetail extends HYDraggableMoveDetail {
 const DEFAULT_CANCEL = 'input, textarea, select, button, a, [contenteditable="true"], [data-no-drag]';
 
 function finiteNumber(value: unknown, fallback = 0): number {
-  const number = Number(value); return Number.isFinite(number) ? number : fallback;
+  const number = readFiniteNumber(value, fallback); return Number.isFinite(number) ? number : fallback;
 }
 function safeMatches(element: Element, selector: string): boolean {
   try { return element.matches(selector); } catch { return false; }
@@ -130,7 +133,7 @@ export class HYDraggable extends HTMLElement {
     if (this._pointerId == null) return; this._completePointerDrag(this._pointerId, cancelled);
   }
   private _handleKeydown(event: KeyboardEvent): void {
-    if (this.disabled || !this.keyboard) return; const multiplier = event.shiftKey ? 10 : 1; const step = this.grid * multiplier; let x = this._x; let y = this._y;
+    if (this.disabled || !this.keyboard || event.defaultPrevented || isKeyboardControlEvent(event, this._surface)) return; const multiplier = event.shiftKey ? 10 : 1; const step = this.grid * multiplier; let x = this._x; let y = this._y;
     if (event.key === 'ArrowLeft' && this.axis !== 'y') x -= step; else if (event.key === 'ArrowRight' && this.axis !== 'y') x += step; else if (event.key === 'ArrowUp' && this.axis !== 'x') y -= step; else if (event.key === 'ArrowDown' && this.axis !== 'x') y += step; else if (event.key === 'Home') { x = 0; y = 0; } else return;
     event.preventDefault(); this._moveTo(x, y, 'keyboard');
   }

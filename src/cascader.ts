@@ -317,6 +317,7 @@ export class HYCascader extends HTMLElement {
   }
 
   private _render(): void {
+    if (this.disabled && this.open) { this.open = false; return; }
     const selected = this._resolveOptions(this._value);
     const text = selected.map(option => option.label).join(this.displaySeparator);
     this._label.textContent = text || this.placeholder;
@@ -391,7 +392,7 @@ export class HYCascader extends HTMLElement {
   }
 
   private _activateOption(option: HYCascaderOption, depth: number, focusNext = false): void {
-    if (option.disabled) return;
+    if (this.disabled || option.disabled) return;
     const next = [...this._activePath.slice(0, depth), option.value];
     this._activePath = next;
     if (option.children?.length) {
@@ -404,6 +405,7 @@ export class HYCascader extends HTMLElement {
   }
 
   private _commit(value: readonly HYCascaderValue[], close: boolean): void {
+    if (this.disabled) return;
     this._value = this._normalizePath(value);
     this._activePath = [...this._value];
     this._reflectValue();

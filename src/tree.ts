@@ -1,5 +1,6 @@
 import { HYTreeModel } from './tree-model.js';
 import { HYTreeNode } from './tree-node.js';
+import { isKeyboardControlEvent } from './internal/keyboard.js';
 import type {
   FlatTreeNode,
   HYTreeDataChangeDetail,
@@ -194,7 +195,9 @@ export class HYTree extends HTMLElement {
   connectedCallback(): void {
     if (!this.hasAttribute('tabindex')) this.tabIndex = 0;
     if (!this.hasAttribute('role')) this.setAttribute('role', 'tree');
-    this._syncFromAttributes();
+    // Attribute callbacks initialize declarative data; reconnect with the current state.
+    if (this.hasAttribute('selected-ids')) this._setSelectionFromSelectedIdsAttribute();
+    else this._setSelectionFromSelectedIdAttribute();
     this.addEventListener('keydown', this._onKeyDown);
     this._list.addEventListener('click', this._onListClick);
     this._list.addEventListener('contextmenu', this._onListContextMenu);
@@ -320,12 +323,6 @@ export class HYTree extends HTMLElement {
   cutSelection(): boolean {
     if (!this._copySelection()) return false;
     return this._deleteSelection();
-  }
-
-  private _syncFromAttributes(): void {
-    this._readDataAttribute();
-    if (this.hasAttribute('selected-ids')) this._setSelectionFromSelectedIdsAttribute();
-    else this._setSelectionFromSelectedIdAttribute();
   }
 
   private _readDataAttribute(): void {
@@ -719,7 +716,7 @@ export class HYTree extends HTMLElement {
   }
 
   private _onKeyDown = (event: KeyboardEvent): void => {
-    if (event.defaultPrevented || this._isEditableTarget(event.target)) return;
+    if (event.defaultPrevented || isKeyboardControlEvent(event, this)) return;
     const key = event.key.toLowerCase();
     const command = event.metaKey || event.ctrlKey;
 
@@ -873,12 +870,6 @@ export class HYTree extends HTMLElement {
     if (this._getVisibleFlatNodes().length >= HYTree.VIRTUALIZATION_THRESHOLD) this._render();
   };
 
-  private _isEditableTarget(target: EventTarget | null): boolean {
-    if (!(target instanceof HTMLElement)) return false;
-    const tag = target.tagName.toLowerCase();
-    return tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
-  }
-
   private _copySelection(): boolean {
     const nodes = this._getSelectedTopLevelNodes();
     if (nodes.length === 0) return false;
@@ -910,15 +901,9 @@ export class HYTree extends HTMLElement {
   }
 
   private _deleteSelection(): boolean {
-    const ids = this._getTopLevelSelectedIds();
-    if (ids.length === 0) return false;
-    const deletedIds: string[] = [];
-    for (const id of ids) {
-      if (this._model.removeNode(id)) deletedIds.push(id);
-    }
+    const deletedIds = this._model.removeNodes(this._selectedIds);
     if (deletedIds.length === 0) return false;
 
-    this._model.setData(this._data);
     this._setSelection([], null, true);
     this.dispatchEvent(new CustomEvent<HYTreeDataChangeDetail>('data-change', {
       detail: { data: this._data, action: 'delete', deletedIds },

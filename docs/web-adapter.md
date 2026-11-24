@@ -38,7 +38,7 @@ page.mount(view());
 | API | 用途 |
 | --- | --- |
 | `HYWebRenderer(host, options?)` | 实现 HYRenderer，交给 HYPage 管理提交与生命期 |
-| `definePortableWebComponents()` | 仅注册下表复用的 7 类组件；不注册全库 |
+| `definePortableWebComponents()` | 仅注册下表复用的 11 类组件；不注册全库 |
 | `setEnvironment(environment)` | 替换当前环境配置；保留节点/草稿/资源，不是增量 merge |
 | `diagnostics` | 累计提交、创建、更新、移动、移除、布局测量及当前节点/资源/适配层监听数 |
 | `HYWebEnvironment` | theme、fontScale、direction、reducedMotion、safeArea |
@@ -54,7 +54,10 @@ page.mount(view());
 | Text | span | 安全文本，自动换行/保留换行 |
 | Image / Icon | img | 注入资源 URL；alt；Image contain/cover |
 | Button | hy-button | click → activate；键盘与可访问性点击共用一条路径 |
-| Toggle | hy-checkbox | checked-change → valueChange + commit |
+| Toggle / Checkbox | hy-checkbox | checked-change → valueChange + commit |
+| RadioGroup | div + hy-radio | 单一 Tab 停靠点；方向键跳过禁用项、环绕并遵循 RTL；受控值回填 |
+| Rate | hy-rate | 评分选择与受控值回填；描述与错误关联到实际 slider |
+| Badge / Divider | hy-badge / hy-divider | 文本徽标与分隔线 |
 | Select / Tabs | hy-select / hy-tabs | 共享选择控制器；权威值回填；RTL 标签方向键 |
 | TextInput | hy-input | 文本/密码、只读、禁用、草稿、合成输入 |
 | TextArea | textarea | 多行输入；Enter 换行，失焦提交 |
@@ -98,7 +101,7 @@ page.mount(view());
 
 ## 验证与后续
 
-启动 `npm run examples`，访问 `/examples/portable-ui/`；示例包含全部 18 种语义、浅深色、字号、RTL、预览及 modal。示例/测试不进入 npm。
+启动 `npm run examples`，访问 `/examples/portable-ui/`；示例演示最初 18 种语义；当前 catalog 共 23 种语义、浅深色、字号、RTL、预览及 modal。示例/测试不进入 npm。
 
 - `npm run test:web-adapter`：Chromium、WebKit 的真实 DOM/键盘/交互；运行前需要安装对应 Playwright 浏览器。
 - `npm run verify:package`：类型、全库单测、API、打包边界；全新临时目录离线安装测试同时检查 Web 类型和独立依赖图。

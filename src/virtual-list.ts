@@ -70,6 +70,7 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
   private _height = DEFAULT_HEIGHT;
   private _overscan = DEFAULT_OVERSCAN;
   private _range: HYVirtualListRange | null = null;
+  private readonly _rows = new Map<number, HTMLElement>();
   private _resizeObserver: ResizeObserver | null = null;
   private _connected = false;
   private readonly _onScroll = () => this._renderWindow();
@@ -316,6 +317,8 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
     const rows: HTMLElement[] = [];
     for (let index = range.startIndex; index < range.endIndex; index += 1) {
       const item = this._items[index] as T;
+      const retained = !force ? this._rows.get(index) : undefined;
+      if (retained) { rows.push(retained); continue; }
       const row = document.createElement('div');
       row.className = 'hy-virtual-list-item';
       row.dataset.hyVirtualListGenerated = '';
@@ -356,10 +359,18 @@ export class HYVirtualList<T = unknown> extends HTMLElement {
   }
 
   private _replaceRows(rows: readonly HTMLElement[]): void {
-    // Keep the recycled window entirely inside the shadow tree. Slotted light
-    // DOM rows can be redistributed asynchronously while a host application is
-    // also updating, which may briefly paint rows from the previous range.
-    this._window.replaceChildren(...rows);
+    const retained = new Set(rows), active = this.shadowRoot?.activeElement;
+    for (const row of this._rows.values()) if (!retained.has(row)) {
+      if (this.isConnected && active && row.contains(active)) this._viewport.focus({ preventScroll: true });
+      row.remove();
+    }
+    this._rows.clear();
+    let cursor = this._window.firstElementChild;
+    for (const row of rows) {
+      this._rows.set(Number(row.dataset.index), row);
+      if (row !== cursor) this._window.insertBefore(row, cursor);
+      cursor = row.nextElementSibling;
+    }
   }
 }
 

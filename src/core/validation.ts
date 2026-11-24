@@ -87,17 +87,26 @@ const schemas: Record<HYComponentKind, Check> = {
   PlatformView: shape({ ...common, slot: name, resourceId: name }, ['slot','resourceId']),
 };
 export const HY_COMPONENTS: readonly HYComponentKind[] = Object.freeze(Object.keys(schemas) as HYComponentKind[]);
+const validatedCapabilities = new WeakSet<object>();
 
+/** Internal descriptor-safe handoff: validation and consumers see the same immutable values. */
+export function snapshotProtocolData<T>(value: T, context: HYDiagnosticContext = {}): T {
+  return snapshot(value, (message, property) => fail(message, property ? field(context, property) : context));
+}
 export function hyValidateCapabilities(capabilities: HYCapabilities): void {
   const context = { property: 'capabilities' };
+  capabilities = snapshotProtocolData(capabilities, context);
+  if (validatedCapabilities.has(capabilities)) return;
   shape({ contract: choice(1), backend: choice('web','nativescript','desktop'), components: list(choice(...HY_COMPONENTS)),
     features: list((v, c) => { if (!HY_FEATURES.includes(v as HYFeature)) throw new HYUIError('capability', 'Unknown capability', c); }) },
   ['contract','backend','components','features'])(capabilities, context);
   if (new Set(capabilities.components).size !== capabilities.components.length || new Set(capabilities.features).size !== capabilities.features.length) {
     throw new HYUIError('capability', 'Duplicate capability declaration', context);
   }
+  validatedCapabilities.add(capabilities);
 }
 export function hySupports(capabilities: HYCapabilities, feature: HYFeature): boolean {
+  capabilities = snapshotProtocolData(capabilities, { property: 'capabilities' });
   hyValidateCapabilities(capabilities);
   if (!HY_FEATURES.includes(feature)) throw new HYUIError('capability', 'Unknown capability', { property: feature });
   return capabilities.features.includes(feature);
@@ -107,11 +116,14 @@ function remember(props:object,kind:HYComponentKind):void {
   let kinds=validatedSnapshots.get(props);if(!kinds){kinds=new Set();validatedSnapshots.set(props,kinds);}kinds.add(kind);
 }
 /** Internal immutable hand-off. Mutable and merely shallow-frozen inputs are always validated. */
-export function snapshotValidatedProps<K extends HYComponentKind>(kind:K,props:HYComponentProps[K],context:HYDiagnosticContext,capabilities:HYCapabilities):HYComponentProps[K] {
+export function snapshotValidatedProps<K extends HYComponentKind>(kind:K,props:HYComponentProps[K],context:HYDiagnosticContext,capabilities?:HYCapabilities):HYComponentProps[K] {
+  props = snapshotProtocolData(props, context);
   hyValidateProps(kind,props,context,capabilities);
-  const result=snapshot(props);remember(result,kind);return result;
+  remember(props,kind);return props;
 }
 export function hyValidateProps<K extends HYComponentKind>(kind: K, props: HYComponentProps[K], context: HYDiagnosticContext = {}, capabilities?: HYCapabilities): void {
+  props = snapshotProtocolData(props, context);
+  if (capabilities) { capabilities = snapshotProtocolData(capabilities, { property: 'capabilities' }); hyValidateCapabilities(capabilities); }
   if (!Object.hasOwn(schemas, kind)) fail('Unknown component kind', context);
   if (!validatedSnapshots.get(props)?.has(kind)) {
   schemas[kind](props, context);
@@ -147,7 +159,8 @@ export function hyKey(...parts: readonly string[]): string {
 }
 
 export function hyValidateNode(node: HYNode, capabilities?: HYCapabilities): HYNode {
-  if (capabilities) hyValidateCapabilities(capabilities);
+  if (capabilities) { capabilities = snapshotProtocolData(capabilities, { property: 'capabilities' }); hyValidateCapabilities(capabilities); }
+  node = snapshotProtocolData(node, { property: 'node' });
   const ancestors = new Set<unknown>();
   const walk = (value: HYNode, parent: readonly string[]): void => {
     const raw = record(value, { property: 'node' });
@@ -188,5 +201,5 @@ export function hyValidateNode(node: HYNode, capabilities?: HYCapabilities): HYN
 
 export function hyNode<K extends HYComponentKind>(kind: K, key: string, props: HYComponentProps[K],
   content: { readonly children?: readonly HYNode[]; readonly slots?: Readonly<Record<string, readonly HYNode[]>>; readonly source?: HYSourceLocation; readonly requires?: readonly HYFeature[] } = {}): Extract<HYNode, { kind: K }> {
-  return hyValidateNode({ kind, key, props, ...content } as HYNode) as Extract<HYNode, { kind: K }>;
+  return hyValidateNode({ kind, key, props, ...snapshotProtocolData(content, { key }) } as HYNode) as Extract<HYNode, { kind: K }>;
 }
