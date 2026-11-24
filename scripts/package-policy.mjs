@@ -1,3 +1,12 @@
+export function parseNpmPackResult(output, packageName) {
+  const result = JSON.parse(output);
+  const pack = Array.isArray(result) ? result.find(item => item?.name === packageName) : result?.[packageName];
+  if (!pack || pack.name !== packageName || typeof pack.filename !== 'string' || !Array.isArray(pack.files)) {
+    throw new Error(`Invalid npm pack result for ${packageName}`);
+  }
+  return pack;
+}
+
 export function matchesPackageGlob(path, glob) {
   let pattern = '^';
   for (let index = 0; index < glob.length; index++) {

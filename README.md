@@ -847,6 +847,34 @@ semantic status. Numeric counts are capped by `overflowCount` (99 by default); u
 preferences. Structural styling hooks include `wrapper`, `badge`, `badge-content`, `status`, `status-dot`, and
 `status-text` shadow parts.
 
+## Ribbon
+
+`@haiyue/ui/ribbon` exports `HYRibbon`, `HYRibbonPlacement` and `defineRibbonComponents()`.
+Register it explicitly, or use the root `defineHaiyueUI()` registration.
+
+```html
+<hy-ribbon text="Featured" placement="end">
+  <article>Your content</article>
+</hy-ribbon>
+
+<hy-ribbon placement="start" color="var(--hy-success-color)">
+  <strong slot="text">★ Recommended</strong>
+  <article>Your content</article>
+</hy-ribbon>
+```
+
+`text` supplies the label, and the named `text` slot takes precedence when provided. An empty label hides
+the ribbon while retaining its content. `placement` defaults to `end` and accepts `start`, using the inherited
+text direction. `color` accepts a CSS color, including custom-property references. Clearing it restores the
+theme background. Content in the default slot retains its DOM, input state and keyboard interaction.
+
+Style `::part(wrapper)`, `::part(content)`, `::part(ribbon)`, `::part(text)` and `::part(fold)`.
+Inherited `--hy-ribbon-bg-color`, `--hy-ribbon-text-color`, `--hy-ribbon-font-size`, `--hy-ribbon-radius`,
+`--hy-ribbon-height`, `--hy-ribbon-padding`, `--hy-ribbon-offset` and `--hy-ribbon-fold-size` override the
+shared color, typography, spacing and sizing tokens. A valid `color` attribute takes precedence over
+`--hy-ribbon-bg-color`. The fold darkens the ribbon color. Allow room for the label near the top of the content
+and for the fold beyond its edge when composing surrounding layouts.
+
 ## Collapse
 
 Import `@haiyue/ui/collapse` and assign typed `items` containing `key`, `title`, optional `content`, `extra`,

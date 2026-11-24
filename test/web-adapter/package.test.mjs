@@ -6,6 +6,7 @@ import {resolve,relative,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {rollup} from 'rollup';
+import {parseNpmPackResult} from '../../scripts/package-policy.mjs';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 function run(args,cwd) {
   // A parent `npm publish --dry-run` must not turn this nested fixture pack into a no-write dry run.
@@ -15,7 +16,7 @@ function run(args,cwd) {
 test('Web adapter tarball has independent exports/types, no eager registration and only focused browser dependencies',async()=>{
   const temp=mkdtempSync(resolve(tmpdir(),'haiyue-ui-web-'));
   try{
-    const pack=JSON.parse(run([process.env.npm_execpath,'pack','--ignore-scripts','--json','--offline','--cache='+temp+'/cache','--pack-destination='+temp],root))[0];
+    const pack=parseNpmPackResult(run([process.env.npm_execpath,'pack','--ignore-scripts','--json','--offline','--cache='+temp+'/cache','--pack-destination='+temp],root),'@haiyue/ui');
     const consumer=resolve(temp,'consumer');mkdirSync(consumer);
     writeFileSync(resolve(consumer,'package.json'),JSON.stringify({name:'web-consumer',version:'1.0.0',private:true,type:'module'}));
     run([process.env.npm_execpath,'install',resolve(temp,pack.filename),'--offline','--ignore-scripts','--no-audit','--no-fund','--cache='+temp+'/cache'],consumer);

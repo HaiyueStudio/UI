@@ -6,6 +6,7 @@ import { resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { rollup } from 'rollup';
+import { parseNpmPackResult } from '../../scripts/package-policy.mjs';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 function run(cmd,args,cwd) {
   // A parent `npm publish --dry-run` must not turn this nested fixture pack into a no-write dry run.
@@ -16,7 +17,7 @@ test('fresh tarball installs offline; core/portable import and types need no pla
   const temp=mkdtempSync(resolve(tmpdir(),'haiyue-ui-portable-'));
   try {
     assert.ok(process.env.npm_execpath,'Run tests through npm');
-    const pack=JSON.parse(run(process.execPath,[process.env.npm_execpath,'pack','--ignore-scripts','--json','--offline',`--cache=${temp}/cache`,`--pack-destination=${temp}`],root))[0];
+    const pack=parseNpmPackResult(run(process.execPath,[process.env.npm_execpath,'pack','--ignore-scripts','--json','--offline',`--cache=${temp}/cache`,`--pack-destination=${temp}`],root),'@haiyue/ui');
     assert.equal(pack.files.some(f=>/^(src|test|review|examples)\//.test(f.path)),false);
     const consumer=resolve(temp,'consumer');mkdirSync(consumer);
     writeFileSync(resolve(consumer,'package.json'),JSON.stringify({name:'portable-consumer',version:'1.0.0',private:true,type:'module'}));

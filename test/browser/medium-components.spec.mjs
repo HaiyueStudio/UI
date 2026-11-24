@@ -75,6 +75,35 @@ test('pagination stays bounded for enormous totals, supports keyboard and disabl
   await host.evaluate(e=>{e.total=1;e.setAttribute('hide-on-single-page','');}); await expect(host.getByRole('navigation')).toBeHidden();
 });
 
+test('shared pagination controls preserve standalone size and jump event behavior', async ({ page }) => {
+  const pagination = page.locator('#pagination');
+  await pagination.evaluate(element => { element.page = 5; });
+  const events = () => page.evaluate(() => window.componentEvents.filter(event => event.id === 'pagination' && event.name === 'page-change').map(event => event.detail));
+  expect(await events()).toEqual([]);
+  const size = pagination.getByRole('combobox', { name: 'Items per page' });
+  await size.focus();
+  await size.selectOption('20');
+  await expect(pagination).toHaveJSProperty('page', 3);
+  await expect(size).toBeFocused();
+  await expect(pagination.locator('[part="total"]')).toHaveText('41–60 / 125');
+  expect(await events()).toEqual([{ page: 3, pageSize: 20, total: 125, source: 'size' }]);
+  const jump = pagination.getByRole('spinbutton', { name: 'Go to page' });
+  await jump.fill('1000');
+  await jump.press('Enter');
+  await expect(pagination).toHaveJSProperty('page', 7);
+  await expect(jump).toHaveValue('7');
+  expect(await events()).toEqual([
+    { page: 3, pageSize: 20, total: 125, source: 'size' },
+    { page: 7, pageSize: 20, total: 125, source: 'jump' },
+  ]);
+  await pagination.evaluate(element => { element.total = 0; element.simple = true; element.setAttribute('size', 'small'); });
+  await expect(pagination.locator('[part="pages"]')).toHaveText('1 / 1');
+  await expect(pagination.locator('[part="total"]')).toHaveText('0–0 / 0');
+  await expect(pagination.getByRole('button', { name: 'Next page' })).toBeDisabled();
+  await expect(size).toHaveCSS('min-height', '22px');
+  expect(await events()).toHaveLength(2);
+});
+
 test('tree select filters ancestors, selects leaves and supports expansion keyboard commands', async ({ page }) => {
   const tree=page.locator('#tree'); const input=tree.getByRole('combobox'); await input.focus(); await input.press('ArrowRight'); await input.press('ArrowDown'); await input.press('Enter');
   await expect(input).toHaveValue('Ocean scene'); expect(await tree.evaluate(e=>e.value)).toBe('ocean');

@@ -1,3 +1,5 @@
+import { HYPaginationControls, HY_PAGINATION_STYLES } from './internal/pagination.js';
+
 export type HYTableAlign = 'left' | 'center' | 'right';
 export type HYTableSortDirection = 'asc' | 'desc';
 export type HYTableChangeReason = 'paginate' | 'sort' | 'filter';
@@ -105,7 +107,10 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
   private readonly _table = document.createElement('table');
   private readonly _head = document.createElement('thead');
   private readonly _body = document.createElement('tbody');
-  private readonly _pagination = document.createElement('nav');
+  private readonly _pagination = new HYPaginationControls((page, pageSize, source) => {
+    if (source === 'size') this.pageSize = pageSize;
+    else this.goToPage(page);
+  }, 'table');
   private _columns: readonly HYTableColumn<T>[] = [];
   private _dataSource: readonly T[] = [];
   private _filters: Record<string, string> = {};
@@ -250,40 +255,37 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
       .filter-clear:hover:not(:disabled) { border-color: var(--hy-accent-color, #79a8ff); color: var(--hy-accent-color, #79a8ff); }
       .filter-clear:disabled { cursor: default; opacity: 0.45; }
       .empty { height: 112px; color: var(--hy-muted-text-color, var(--hy-muted-color, #788697)); text-align: center; }
-      .pagination {
-        display: flex;
-        align-items: center;
+      ${HY_PAGINATION_STYLES}
+      .pagination-controls.pagination {
         justify-content: flex-end;
         gap: var(--hy-space-3, 6px);
         padding: calc(var(--hy-space-5, 10px) + 1px) 0 0;
+        font: calc(var(--hy-font-size-xs, 10px) + 1px) var(--hy-font-family, system-ui, sans-serif);
       }
-      .pagination[hidden] { display: none; }
+      .pagination .pages { display: contents; }
       .pagination button, .pagination select {
         height: 30px;
-        box-sizing: border-box;
-        border: 1px solid var(--hy-border-color, #3d4654);
+        min-height: 0;
+        border-color: var(--hy-border-color, #3d4654);
         border-radius: calc(var(--hy-radius-sm, 4px) + 1px);
         color: var(--hy-secondary-text-color, #aebbd0);
         background: var(--hy-surface-color, #171d27);
-        font: calc(var(--hy-font-size-xs, 10px) + 1px) var(--hy-font-family, system-ui, sans-serif);
       }
-      .pagination button { min-width: 30px; padding: 0 var(--hy-space-4, 8px); cursor: pointer; }
+      .pagination button { min-width: 30px; padding: 0 var(--hy-space-4, 8px); }
       .pagination button:hover:not(:disabled), .pagination button[aria-current="page"] { border-color: var(--hy-accent-color, #79a8ff); color: var(--hy-accent-color, #79a8ff); }
       .pagination button:disabled { cursor: not-allowed; opacity: 0.45; }
       .pagination select { margin-left: var(--hy-space-3, 6px); padding: 0 calc(var(--hy-space-3, 6px) + 1px); }
-      .summary { margin-right: auto; color: var(--hy-muted-text-color, var(--hy-muted-color, #788697)); font-size: var(--hy-font-size-xs, 10px); }
+      .pagination .summary { margin-inline-end: auto; color: var(--hy-muted-text-color, var(--hy-muted-color, #788697)); font-size: var(--hy-font-size-xs, 10px); }
     `;
     this._scroller.className = 'scroller';
     this._scroller.part.add('scroller');
     this._table.part.add('table');
     this._head.part.add('header');
     this._body.part.add('body');
-    this._pagination.className = 'pagination';
-    this._pagination.part.add('pagination');
-    this._pagination.setAttribute('aria-label', 'Table pagination');
+    this._pagination.element.classList.add('pagination');
     this._table.append(this._head, this._body);
     this._scroller.append(this._table);
-    root.append(style, this._scroller, this._pagination);
+    root.append(style, this._scroller, this._pagination.element);
   }
 
   connectedCallback(): void {
@@ -616,55 +618,11 @@ export class HYTable<T extends object = Record<string, unknown>> extends HTMLEle
   }
 
   private _renderPagination(): void {
-    if (!this.pagination) {
-      this._pagination.hidden = true;
-      this._pagination.replaceChildren();
-      return;
-    }
-    this._pagination.hidden = false;
-    const processed = this._processedRecords();
-    const pageCount = Math.max(1, Math.ceil(processed.length / this._pageSize));
-    const summary = document.createElement('span');
-    summary.className = 'summary';
-    summary.part.add('summary');
-    const start = processed.length ? (this._page - 1) * this._pageSize + 1 : 0;
-    const end = Math.min(processed.length, this._page * this._pageSize);
-    summary.textContent = `${start}–${end} of ${processed.length}`;
-    const previous = this._pageButton('‹', 'Previous page', this._page - 1, this._page <= 1);
-    const pages = this._pageNumbers(pageCount).map(page => this._pageButton(String(page), `Page ${page}`, page, false, page === this._page));
-    const next = this._pageButton('›', 'Next page', this._page + 1, this._page >= pageCount);
-    const pageSize = document.createElement('select');
-    pageSize.part.add('page-size');
-    pageSize.setAttribute('aria-label', 'Rows per page');
-    const options = this._pageSizeOptions.includes(this._pageSize)
-      ? this._pageSizeOptions
-      : [...this._pageSizeOptions, this._pageSize].sort((a, b) => a - b);
-    pageSize.append(...options.map(value => {
-      const option = document.createElement('option');
-      option.value = String(value);
-      option.textContent = `${value} / page`;
-      option.selected = value === this._pageSize;
-      return option;
-    }));
-    pageSize.addEventListener('change', () => { this.pageSize = Number(pageSize.value); });
-    this._pagination.replaceChildren(summary, previous, ...pages, next, pageSize);
-  }
-
-  private _pageButton(text: string, label: string, page: number, disabled: boolean, current = false): HTMLButtonElement {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.textContent = text;
-    button.disabled = disabled;
-    button.setAttribute('aria-label', label);
-    if (current) button.setAttribute('aria-current', 'page');
-    button.addEventListener('click', () => this.goToPage(page));
-    return button;
-  }
-
-  private _pageNumbers(pageCount: number): number[] {
-    if (pageCount <= 7) return Array.from({ length: pageCount }, (_, index) => index + 1);
-    const start = Math.max(1, Math.min(pageCount - 4, this._page - 2));
-    return Array.from({ length: 5 }, (_, index) => start + index);
+    this._pagination.update({
+      page: this._page, pageSize: this._pageSize, total: this._processedRecords().length,
+      pageSizeOptions: this._pageSizeOptions, label: 'Table pagination',
+      hidden: !this.pagination, showSizeChanger: true,
+    });
   }
 
   private _processedRecords(): IndexedRecord<T>[] {

@@ -71,6 +71,7 @@ import { defineStepsComponents } from './steps.js';
 import { defineAffixComponents } from './affix.js';
 import { defineTourComponents } from './tour.js';
 import { defineBadgeComponents } from './badge.js';
+import { defineRibbonComponents } from './ribbon.js';
 import { defineTagComponents } from './tag.js';
 import { defineCollapseComponents } from './collapse.js';
 import { defineAlertComponents } from './alert.js';
@@ -503,6 +504,8 @@ export { HYAvatar, defineAvatarComponents } from './avatar.js';
 export type { HYAvatarShape, HYAvatarSize, HYAvatarFit, HYAvatarStatus, HYAvatarLoadDetail, HYAvatarErrorDetail } from './avatar.js';
 export { HYCard, defineCardComponents } from './card.js';
 export type { HYCardSize } from './card.js';
+export { HYRibbon, defineRibbonComponents } from './ribbon.js';
+export type { HYRibbonPlacement } from './ribbon.js';
 export { HYDescriptions, defineDescriptionsComponents } from './descriptions.js';
 export type { HYDescriptionItem, HYDescriptionsLayout, HYDescriptionsSize } from './descriptions.js';
 
@@ -573,6 +576,7 @@ export function defineHaiyueUI(): void {
   defineAffixComponents();
   defineTourComponents();
   defineBadgeComponents();
+  defineRibbonComponents();
   defineTagComponents();
   defineCollapseComponents();
 }

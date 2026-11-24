@@ -1,6 +1,6 @@
 {
   "name": "@haiyue/ui",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "private": false,
   "description": "Dependency-free Web Components for HaiyueStudio tools and products.",
   "license": "MIT",
@@ -32,6 +32,10 @@
     "./badge": {
       "types": "./dist/badge.d.ts",
       "import": "./dist/badge.js"
+    },
+    "./ribbon": {
+      "types": "./dist/ribbon.d.ts",
+      "import": "./dist/ribbon.js"
     },
     "./tag": {
       "types": "./dist/tag.d.ts",

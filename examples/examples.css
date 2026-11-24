@@ -316,6 +316,13 @@ code { padding: 2px 5px; border-radius: 4px; color: #8fd3ee; background: rgba(64
 .presentation-stage { display: grid; place-items: start center; align-content: safe center; min-height: 320px; }
 .presentation-demo.demo-split > .preview, .presentation-demo > .controls { min-height: 0; overflow: auto; }
 .presentation-stage > hy-card { width: min(320px, 100%); }
+.ribbon-stage { display: grid; place-items: center; min-height: 320px; }
+.ribbon-stage > hy-ribbon { width: min(320px, 100%); }
+.ribbon-stage hy-card { --hy-card-body-padding: var(--hy-space-16) var(--hy-space-10) var(--hy-space-10); }
+.ribbon-stage h3 { margin: var(--hy-space-6) 0 var(--hy-space-4); font-size: var(--hy-font-size-lg); }
+.ribbon-stage p { margin: 0 0 var(--hy-space-8); color: var(--hy-secondary-text-color); line-height: var(--hy-line-height-relaxed); }
+.ribbon-card > .controls { justify-content: flex-start; }
+.ribbon-card > .controls label, .ribbon-card > .controls output { flex: 0 0 auto; }
 .presentation-stage > hy-empty, .presentation-stage > hy-result { width: 100%; }
 .avatar-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; min-height: 310px; }
 .avatar-samples, .low-card-owner { display: flex; align-items: center; gap: 12px; }

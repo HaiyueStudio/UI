@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" data-hy-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ribbon component contracts</title>
+  <link rel="stylesheet" href="../../themes/haiyue-light.css" />
+  <link rel="stylesheet" href="../../themes/haiyue-dark.css" />
+  <style>
+    body { margin: 24px; background: var(--hy-canvas-color); }
+    hy-ribbon { width: 320px; max-width: 100%; margin-block-end: 32px; }
+    .surface { box-sizing: border-box; min-height: 180px; padding: 52px 20px 20px; border: 1px solid var(--hy-border-color); background: var(--hy-surface-color); }
+    input { width: 100%; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <hy-ribbon id="ribbon" text="Featured">
+    <div class="surface"><input id="name" value="Original" aria-label="Asset name" /><button id="collect">Collect</button></div>
+  </hy-ribbon>
+  <hy-ribbon id="rich" text="Fallback" placement="start"><strong slot="text" id="rich-text">★ Recommended</strong><div class="surface">Rich label</div></hy-ribbon>
+  <output id="actions">0</output>
+  <script type="module">
+    import { HYRibbon, defineRibbonComponents } from '../../dist/ribbon.js';
+    window.registrationIsExplicit = !customElements.get('hy-ribbon');
+    defineRibbonComponents();
+    defineRibbonComponents();
+    window.constructedRibbon = new HYRibbon();
+    window.actionCount = 0;
+    document.querySelector('#collect').addEventListener('click', () => {
+      document.querySelector('#actions').textContent = String(++window.actionCount);
+    });
+    window.ready = true;
+  </script>
+</body>
+</html>

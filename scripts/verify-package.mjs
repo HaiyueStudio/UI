@@ -7,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { rollup } from 'rollup';
-import { matchesPackageGlob } from './package-policy.mjs';
+import { matchesPackageGlob, parseNpmPackResult } from './package-policy.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(readFileSync(resolve(root, 'package.json')));
 const policy = JSON.parse(readFileSync(resolve(root, 'review/package-budget.json')));
@@ -28,7 +28,7 @@ function run(command, args) {
   return result.stdout;
 }
 assert.ok(process.env.npm_execpath, 'Run through npm run verify:package');
-const [pack] = JSON.parse(run(process.execPath, [process.env.npm_execpath, 'pack', '--ignore-scripts', '--json', '--pack-destination', output, '--cache=.npm-cache']));
+const pack = parseNpmPackResult(run(process.execPath, [process.env.npm_execpath, 'pack', '--ignore-scripts', '--json', '--pack-destination', output, '--cache=.npm-cache']), pkg.name);
 for (const [metric, maximum] of [['size',budget.maxPackedBytes],['unpackedSize',budget.maxUnpackedBytes],['entryCount',budget.maxFileCount]]) {
   assert.ok(pack[metric] <= maximum, `${metric}: ${pack[metric]} exceeds ${maximum}`);
 }

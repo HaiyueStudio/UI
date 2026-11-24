@@ -15,6 +15,19 @@ export function initializePresentationExamples() {
   bind('card-heading', card, 'heading'); bind('card-size', card, 'size', 'change');
   for (const property of ['bordered', 'hoverable', 'loading']) bind(`card-${property}`, card, property, 'change', element => element.checked);
   byId('card-collect').addEventListener('click', () => { byId('card-event').textContent = '已收藏月光计划'; });
+  const ribbon = byId('ribbon-live');
+  bind('ribbon-text', ribbon, 'text');
+  bind('ribbon-placement', ribbon, 'placement', 'change');
+  bind('ribbon-color', ribbon, 'color', 'change');
+  const ribbonText = document.createElement('strong');
+  ribbonText.slot = 'text';
+  ribbonText.textContent = '★ 编辑推荐';
+  byId('ribbon-rich').addEventListener('change', event => {
+    if (event.target.checked) ribbon.append(ribbonText);
+    else ribbonText.remove();
+  });
+  byId('ribbon-rtl').addEventListener('change', event => { ribbon.dir = event.target.checked ? 'rtl' : 'ltr'; });
+  byId('ribbon-collect').addEventListener('click', () => { byId('ribbon-event').textContent = '已收藏星海素材包'; });
   const descriptions = byId('descriptions-live');
   descriptions.items = [
     { key: 'name', label: '名称', value: '月光计划' }, { key: 'owner', label: '负责人', value: 'Lin' },

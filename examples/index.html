@@ -137,6 +137,7 @@
       <a href="#radio" data-name="radio 单选框"><span>Radio</span><code>hy-radio</code></a>
       <a href="#range" data-name="range slider 范围 数值 滑块"><span>Range</span><code>hy-range</code></a>
       <a href="#rate" data-name="rate rating stars 星星 评分 半星"><span>Rate</span><code>hy-rate</code></a>
+      <a href="#ribbon" data-name="ribbon badge 缎带 丝带 标签 卡片 角标"><span>Ribbon</span><code>hy-ribbon</code></a>
       <a href="#switch" data-name="switch toggle 开关 启停"><span>Switch</span><code>hy-switch</code></a>
       <a href="#tag" data-name="tag label close check 标签 可关闭 可选中"><span>Tag</span><code>hy-tag</code></a>
       <a href="#upload" data-name="upload file 文件 上传 拖放"><span>Upload</span><code>hy-upload</code></a>
@@ -187,7 +188,7 @@
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><hy-badge status="success" text="68 components"></hy-badge><span>·</span><span>v0.2.3</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="69 components"></hy-badge><span>·</span><span>v0.3.0</span></div>
   </aside>
 
   <main id="content" slot="second">
@@ -196,7 +197,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>68</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>69</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -611,6 +612,38 @@ hy-range {
       </div>
       <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-rate value="3.5" allow-half aria-label="Scene rating"&gt;&lt;/hy-rate&gt;</code></pre></details>
       <div class="parameter-strip"><code>value</code><code>count</code><code>allowHalf</code><code>allowClear</code><code>disabled</code><code>readOnly</code><code>character</code><code>tooltips</code><code>value-change</code><code>hover-change</code></div>
+    </section>
+
+    <section class="component-section" id="ribbon" data-title="Ribbon">
+      <div class="section-heading"><div><h2>Ribbon</h2><code>&lt;hy-ribbon&gt;</code></div><p>为卡片或内容容器加上折角缎带；支持起始侧和末尾侧、主题色、自定义颜色与富文本插槽。</p></div>
+      <div class="demo-card two-column ribbon-card overflow-visible">
+        <div class="preview ribbon-stage">
+          <hy-ribbon id="ribbon-live" text="精选素材">
+            <hy-card>
+              <h3>星海素材包</h3>
+              <p>收集海面、月光与远山，构建你的下一处场景。</p>
+              <hy-button id="ribbon-collect">收藏素材</hy-button>
+            </hy-card>
+          </hy-ribbon>
+        </div>
+        <div class="controls stacked">
+          <label>text<input id="ribbon-text" value="精选素材" /></label>
+          <label>placement<select id="ribbon-placement"><option value="end">end · 末尾侧</option><option value="start">start · 起始侧</option></select></label>
+          <label>color<select id="ribbon-color"><option value="">主题色</option><option value="var(--hy-success-color)">成功色</option><option value="var(--hy-warning-color)">警告色</option><option value="#a44932">陶土色</option></select></label>
+          <label class="toggle"><input id="ribbon-rich" type="checkbox" /><span></span>使用 text 插槽</label>
+          <label class="toggle"><input id="ribbon-rtl" type="checkbox" /><span></span>RTL</label>
+          <output id="ribbon-event">点击收藏体验卡片操作</output>
+        </div>
+      </div>
+      <details class="code"><summary>查看缎带用法 <span>HTML</span></summary><pre><code>&lt;hy-ribbon text="精选素材" placement="end"&gt;
+  &lt;hy-card&gt;&lt;p&gt;内容区域&lt;/p&gt;&lt;/hy-card&gt;
+&lt;/hy-ribbon&gt;
+
+&lt;hy-ribbon placement="start" color="var(--hy-success-color)"&gt;
+  &lt;span slot="text"&gt;★ 推荐&lt;/span&gt;
+  &lt;hy-card&gt;&lt;p&gt;内容区域&lt;/p&gt;&lt;/hy-card&gt;
+&lt;/hy-ribbon&gt;</code></pre></details>
+      <div class="parameter-strip"><code>text</code><code>placement</code><code>color</code><code>slot="text"</code></div>
     </section>
 
     <section class="component-section" id="switch" data-title="Switch">
