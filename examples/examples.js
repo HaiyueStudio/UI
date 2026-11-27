@@ -2,10 +2,12 @@ import { defineHaiyueUI } from '../dist/index.js';
 import { installCodeEditors } from './vendor/codemirror.js';
 import { initializeGalleryThemes } from './theme-editor.js';
 import { initializePresentationExamples } from './presentation-examples.js';
+import { initializeDragDropExamples } from './drag-drop-examples.js';
 
 defineHaiyueUI();
 initializeGalleryThemes();
 initializePresentationExamples();
+initializeDragDropExamples();
 
 const byId = id => document.getElementById(id);
 const setBoolean = (element, name, value) => element.toggleAttribute(name, Boolean(value));

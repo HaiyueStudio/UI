@@ -313,6 +313,20 @@ code { padding: 2px 5px; border-radius: 4px; color: #8fd3ee; background: rgba(64
   box-shadow: 0 16px 45px rgba(0, 0, 0, 0.13);
 }
 .demo-card.two-column { grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr); }
+.dnd-demo > .controls { flex-wrap: wrap; justify-content: flex-start; align-items: stretch; }
+.dnd-demo > .controls label, .dnd-demo > .controls output { flex: 0 0 auto; }
+.dnd-demo output { white-space: pre-wrap; }
+.dnd-source-stage { display: flex; gap: var(--hy-space-6); flex-wrap: wrap; align-items: center; }
+.dnd-source-stage hy-dropzone { flex-basis: 100%; --hy-dropzone-min-height: 84px; }
+.dnd-drop-stage { display: grid; gap: var(--hy-space-8); align-content: center; }
+.dnd-asset, .sortable-item { padding: var(--hy-space-6) var(--hy-space-8); border: 1px solid var(--hy-border-color); border-radius: var(--hy-radius-md); background: var(--hy-surface-elevated-color); color: var(--hy-text-color); }
+.dnd-asset p, .dnd-drop-stage p { color: var(--hy-secondary-text-color); margin-bottom: 0; }
+.dnd-drop-stage hy-dropzone { width: 100%; }
+.sortable-stage { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: var(--hy-space-12); }
+.sortable-stage > div { min-width: 0; }
+.sortable-stage h3 { margin-top: 0; font-size: var(--hy-font-size-md); }
+.sortable-stage hy-sortable { --hy-sortable-min-height: 120px; }
+.sortable-item { cursor: grab; }
 .presentation-stage { display: grid; place-items: start center; align-content: safe center; min-height: 320px; }
 .presentation-demo.demo-split > .preview, .presentation-demo > .controls { min-height: 0; overflow: auto; }
 .presentation-stage > hy-card { width: min(320px, 100%); }

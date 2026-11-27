@@ -179,16 +179,19 @@
       <a href="#virtual-mouse" data-name="virtual mouse cursor 虚拟 鼠标 光标 演示"><span>Virtual Mouse</span><code>hy-virtual-mouse</code></a>
       <a href="#watermark" data-name="watermark 水印 文字 图片 覆盖"><span>Watermark</span><code>hy-watermark</code></a>
       <p class="nav-label">布局与数据</p>
+      <a href="#drag-source" data-name="drag source dnd 拖拽 源 数据 触屏"><span>Drag Source</span><code>hy-drag-source</code></a>
       <a href="#draggable" data-name="draggable drag container 拖拽 容器 移动 位置"><span>Draggable</span><code>hy-draggable</code></a>
+      <a href="#dropzone" data-name="dropzone drop dnd 拖拽 放置 接收 文件"><span>Dropzone</span><code>hy-dropzone</code></a>
       <a href="#expandable" data-name="expandable 展开 放大 还原"><span>Expandable</span><code>hy-expandable</code></a>
       <a href="#masonry" data-name="masonry waterfall 瀑布流 布局 多列"><span>Masonry</span><code>hy-masonry</code></a>
       <a href="#resizable" data-name="resizable resize transform handles 调整 大小 位置 缩放"><span>Resizable</span><code>hy-resizable</code></a>
+      <a href="#sortable" data-name="sortable sort dnd 拖拽 排序 列表 看板 跨列表"><span>Sortable</span><code>hy-sortable</code></a>
       <a href="#split" data-name="split 分栏"><span>Split</span><code>hy-split</code></a>
       <a href="#table" data-name="table 表格 分页 过滤 排序"><span>Table</span><code>hy-table</code></a>
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><hy-badge status="success" text="69 components"></hy-badge><span>·</span><span>v0.3.0</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="72 components"></hy-badge><span>·</span><span>v0.3.1</span></div>
   </aside>
 
   <main id="content" slot="second">
@@ -197,7 +200,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>69</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>72</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -1363,6 +1366,26 @@ hy-virtual-mouse {
       <div class="parameter-strip"><code>content</code><code>image</code><code>rotate</code><code>gapX</code><code>gapY</code><code>offsetX</code><code>offsetY</code><code>markWidth</code><code>markHeight</code><code>fontSize</code><code>fontFamily</code><code>fontWeight</code><code>color</code><code>opacity</code><code>zIndex</code></div>
     </section>
 
+    <section class="component-section" id="drag-source" data-title="Drag Source">
+      <div class="section-heading"><div><h2>Drag Source</h2><code>&lt;hy-drag-source&gt;</code></div><p>为任意内容附加可拖拽的数据，支持鼠标、触屏、键盘、手柄和可取消的拖拽生命周期。</p></div>
+      <div class="demo-card two-column overflow-visible dnd-demo">
+        <div class="preview dnd-source-stage">
+          <hy-drag-source type="asset" value="海面材质" aria-label="海面材质"><article class="dnd-asset"><strong>海面材质</strong><p>Asset · 拖到接收区</p></article></hy-drag-source>
+          <hy-drag-source type="asset" value="月光环境" aria-label="月光环境"><article class="dnd-asset"><strong>月光环境</strong><p>Asset · 支持键盘拿起</p></article></hy-drag-source>
+          <hy-dropzone id="drag-source-target" accept="asset" aria-label="数据拖拽体验区"><p id="drag-source-result">拖入素材，或用 Space 拿起、Tab 切换、Enter 放下</p></hy-dropzone>
+        </div>
+        <div class="controls stacked"><label class="toggle"><input type="checkbox" id="drag-source-disabled" /><span></span>disabled</label><output id="drag-source-event"></output></div>
+      </div>
+      <details class="code"><summary>查看数据拖拽用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-drag-source id="asset" type="asset"&gt;海面材质&lt;/hy-drag-source&gt;
+&lt;hy-dropzone id="dropzone" accept="asset"&gt;放到这里&lt;/hy-dropzone&gt;
+const asset = document.getElementById('asset');
+const dropzone = document.getElementById('dropzone');
+asset.data = { id: 'ocean', name: '海面材质' };
+dropzone.addEventListener('data-drop', event =&gt; {
+  addAsset(event.detail.data);
+});</code></pre></details>
+    </section>
+
     <section class="component-section" id="draggable" data-title="Draggable">
       <div class="section-heading"><div><h2>Draggable</h2><code>&lt;hy-draggable&gt;</code></div><p>让任意内容通过指针或键盘移动；支持拖拽手柄、排除区域、轴向限制、边界约束与网格吸附。</p></div>
       <div class="demo-card draggable-card">
@@ -1395,6 +1418,19 @@ panel.grid = 8;
 panel.moveTo(24, 24);
 panel.addEventListener('drag-move', event =&gt; console.log(event.detail));</code></pre></details>
       <div class="parameter-strip"><code>x</code><code>y</code><code>axis</code><code>bounds</code><code>grid</code><code>handle</code><code>cancel</code><code>disabled</code><code>keyboard</code><code>moveTo()</code><code>moveBy()</code><code>reset()</code><code>refresh()</code></div>
+    </section>
+
+    <section class="component-section" id="dropzone" data-title="Dropzone">
+      <div class="section-heading"><div><h2>Dropzone</h2><code>&lt;hy-dropzone&gt;</code></div><p>接收 Drag Source 的数据或从系统拖入的文件。通过 accept 限定数据类型，应用在 data-drop 中处理放置结果。</p></div>
+      <div class="demo-card two-column overflow-visible dnd-demo">
+        <div class="preview dnd-drop-stage"><hy-drag-source type="asset" value="海面材质" aria-label="可放置的海面材质"><article class="dnd-asset">海面材质 · 拖到接收区</article></hy-drag-source><hy-dropzone id="dropzone-live" accept="asset,Files" aria-label="素材接收区"><strong>将素材或本地文件拖到这里</strong><p id="dropzone-result">等待接收内容</p></hy-dropzone></div>
+        <div class="controls stacked"><label>accept<select id="dropzone-accept"><option value="asset,Files">asset,Files</option><option value="asset">仅应用素材</option><option value="Files">仅本地文件</option></select></label><label class="toggle"><input type="checkbox" id="dropzone-disabled" /><span></span>disabled</label><output id="dropzone-event">等待 data-drop</output><p class="control-note">文件上传和校验可使用 <a href="#upload">Upload</a>。</p></div>
+      </div>
+      <details class="code"><summary>查看接收用法 <span>JavaScript</span></summary><pre><code>dropzone.addEventListener('data-drop', event =&gt; {
+  const { data, files } = event.detail;
+  if (!canPlace(data, files)) event.preventDefault();
+  else handleDrop(data, files);
+});</code></pre></details>
     </section>
 
     <section class="component-section" id="expandable" data-title="Expandable">
@@ -1473,6 +1509,27 @@ frame.aspectRatio = 16 / 9;
 frame.setRect({ x: 48, y: 48, width: 240, height: 135 });
 frame.addEventListener('resize', event =&gt; console.log(event.detail));</code></pre></details>
       <div class="parameter-strip"><code>x</code><code>y</code><code>width</code><code>height</code><code>min-width</code><code>min-height</code><code>max-width</code><code>max-height</code><code>bounds</code><code>grid</code><code>aspect-ratio</code><code>movable</code><code>keyboard</code><code>disabled</code><code>setRect()</code><code>moveTo()</code><code>resizeTo()</code><code>reset()</code></div>
+    </section>
+
+    <section class="component-section" id="sortable" data-title="Sortable">
+      <div class="section-heading"><div><h2>Sortable</h2><code>&lt;hy-sortable&gt;</code></div><p>拖动列表项排序，同组列表之间可转移内容。支持纵向、横向、网格、拖拽手柄、键盘排序和 Escape 取消。</p></div>
+      <div class="demo-card overflow-visible dnd-demo">
+        <div class="preview sortable-stage">
+          <div><h3>待处理</h3><hy-sortable id="sortable-backlog" group="assets" aria-label="待处理"><article class="sortable-item" data-id="ocean">海面材质</article><article class="sortable-item" data-id="moon">月光环境</article><article class="sortable-item" data-id="mountain">远山模型</article></hy-sortable></div>
+          <div><h3>已就绪</h3><hy-sortable id="sortable-ready" group="assets" aria-label="已就绪"><article class="sortable-item" data-id="sky">天空贴图</article></hy-sortable></div>
+        </div>
+        <div class="controls"><label>direction<select id="sortable-direction"><option value="vertical">vertical</option><option value="horizontal">horizontal</option><option value="grid">grid</option></select></label><label class="toggle"><input type="checkbox" id="sortable-disabled" /><span></span>disabled</label><hy-button id="sortable-api">将第一项移到末尾</hy-button><output id="sortable-order"></output><output id="sortable-event">聚焦项目后按 Space 拿起、方向键定位、Enter 放下</output></div>
+      </div>
+      <details class="code"><summary>查看排序用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-sortable group="tasks" aria-label="待处理"&gt;
+  &lt;article data-id="a"&gt;任务 A&lt;/article&gt;
+  &lt;article data-id="b"&gt;任务 B&lt;/article&gt;
+&lt;/hy-sortable&gt;
+const sortable = document.querySelector('hy-sortable');
+sortable.addEventListener('sort-change', event =&gt; {
+  const { fromOrder, toOrder, from, to } = event.detail;
+  saveOrder(fromOrder, toOrder);
+});
+sortable.move(0, 1);</code></pre></details>
     </section>
 
     <section class="component-section" id="split" data-title="Split">

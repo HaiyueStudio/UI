@@ -1,5 +1,6 @@
 import { finiteNumber as readFiniteNumber } from './internal/numbers.js';
 import { isKeyboardControlEvent } from './internal/keyboard.js';
+import { HYPointerDrag } from './internal/pointer-drag.js';
 
 export type HYDraggableAxis = 'both' | 'x' | 'y';
 export type HYDraggableBoundsMode = 'none' | 'parent' | 'viewport';
@@ -35,7 +36,7 @@ export class HYDraggable extends HTMLElement {
   private _y = 0;
   private _reflecting = false;
   private _boundsTarget: HTMLElement | null = null;
-  private _dragAbort: AbortController | null = null;
+  private readonly _pointer = new HYPointerDrag();
   private _pointerId: number | null = null;
   private _originX = 0;
   private _originY = 0;
@@ -109,28 +110,27 @@ export class HYDraggable extends HTMLElement {
 
   private _startPointerDrag(event: PointerEvent): void {
     if (this.disabled || event.button !== 0 || this._pointerId != null || !this._allowsTarget(event)) return;
-    const start = new CustomEvent<HYDraggableStartDetail>('drag-start', { bubbles: true, composed: true, cancelable: true, detail: { x: this._x, y: this._y, pointerId: event.pointerId } });
-    if (!this.dispatchEvent(start)) return; event.preventDefault(); this._surface.focus({ preventScroll: true }); this._surface.setPointerCapture(event.pointerId);
-    this._pointerId = event.pointerId; this._originX = this._x; this._originY = this._y; this._pointerX = event.clientX; this._pointerY = event.clientY; this.toggleAttribute('dragging', true);
-    const abort = new AbortController(); this._dragAbort = abort;
-    this._surface.addEventListener('pointermove', move => this._handlePointerMove(move), { signal: abort.signal });
-    this._surface.addEventListener('pointerup', up => this._finishPointerDrag(up, false), { signal: abort.signal });
-    this._surface.addEventListener('pointercancel', cancel => this._finishPointerDrag(cancel, true), { signal: abort.signal });
-    this._surface.addEventListener('lostpointercapture', () => this._cancelDrag(true), { signal: abort.signal });
+    this._pointer.start(event, this._surface, {
+      start: () => {
+        const start = new CustomEvent<HYDraggableStartDetail>('drag-start', { bubbles: true, composed: true, cancelable: true, detail: { x: this._x, y: this._y, pointerId: event.pointerId } });
+        if (!this.dispatchEvent(start) || this.disabled || !this.isConnected) return false;
+        this._surface.focus({ preventScroll: true });
+        this._pointerId = event.pointerId; this._originX = this._x; this._originY = this._y; this._pointerX = event.clientX; this._pointerY = event.clientY; this.toggleAttribute('dragging', true);
+        return true;
+      },
+      move: move => this._handlePointerMove(move),
+      end: (up, cancelled) => this._completePointerDrag(up.pointerId, cancelled),
+    });
   }
   private _handlePointerMove(event: PointerEvent): void {
     if (event.pointerId !== this._pointerId) return; event.preventDefault(); const x = this.axis === 'y' ? this._originX : this._originX + event.clientX - this._pointerX; const y = this.axis === 'x' ? this._originY : this._originY + event.clientY - this._pointerY; this._moveTo(x, y, 'pointer');
   }
-  private _finishPointerDrag(event: PointerEvent, cancelled: boolean): void {
-    this._completePointerDrag(event.pointerId, cancelled);
-  }
   private _completePointerDrag(pointerId: number, cancelled: boolean): void {
-    if (pointerId !== this._pointerId) return; const originX = this._originX; const originY = this._originY; this._dragAbort?.abort(); this._dragAbort = null; this._pointerId = null; this.toggleAttribute('dragging', false);
-    if (this._surface.hasPointerCapture(pointerId)) this._surface.releasePointerCapture(pointerId);
+    if (pointerId !== this._pointerId) return; const originX = this._originX; const originY = this._originY; this._pointerId = null; this.toggleAttribute('dragging', false);
     this.dispatchEvent(new CustomEvent<HYDraggableEndDetail>('drag-end', { bubbles: true, composed: true, detail: { x: this._x, y: this._y, deltaX: this._x - originX, deltaY: this._y - originY, source: 'pointer', cancelled } }));
   }
   private _cancelDrag(cancelled: boolean): void {
-    if (this._pointerId == null) return; this._completePointerDrag(this._pointerId, cancelled);
+    if (cancelled) this._pointer.cancel();
   }
   private _handleKeydown(event: KeyboardEvent): void {
     if (this.disabled || !this.keyboard || event.defaultPrevented || isKeyboardControlEvent(event, this._surface)) return; const multiplier = event.shiftKey ? 10 : 1; const step = this.grid * multiplier; let x = this._x; let y = this._y;

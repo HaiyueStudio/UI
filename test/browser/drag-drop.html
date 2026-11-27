@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-hy-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Drag-and-drop contracts</title>
+  <link rel="stylesheet" href="../../themes/haiyue-light.css" /><link rel="stylesheet" href="../../themes/haiyue-dark.css" />
+  <style>
+    body { margin: 24px; color: var(--hy-text-color); background: var(--hy-canvas-color); font: 14px system-ui; }
+    .row { display: flex; gap: 28px; margin-bottom: 24px; align-items: start; }
+    hy-sortable { width: 280px; --hy-sortable-min-height: 100px; }
+    hy-sortable article { box-sizing: border-box; min-height: 64px; padding: 12px; border: 1px solid var(--hy-border-color); background: var(--hy-surface-elevated-color); }
+    input { max-width: 100px; } .grab { display: block; padding-bottom: 6px; }
+    hy-drag-source { margin-bottom: 16px; padding: 16px; border: 1px solid var(--hy-border-color); }
+    hy-dropzone { width: 280px; } #scroll { height: 140px; overflow: auto; width: 300px; }
+    @media(max-width:620px) { .row { flex-wrap: wrap; } }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <hy-sortable id="list" group="tasks" aria-label="Backlog">
+      <article id="a" data-id="a"><span class="grab">Task A</span><input id="field" value="Original" aria-label="Task name" /></article>
+      <article id="b" data-id="b"><span class="grab">Task B</span><button>Child action</button></article>
+      <article id="c" data-id="c"><span class="grab">Task C</span></article>
+    </hy-sortable>
+    <hy-sortable id="ready" group="tasks" aria-label="Ready"></hy-sortable>
+    <hy-sortable id="other" group="other" aria-label="Other"><article data-id="x">Other task</article></hy-sortable>
+  </div>
+  <hy-drag-source id="source" type="asset" value="ocean" aria-label="Ocean asset">Ocean asset <button id="source-button">Inspect</button></hy-drag-source>
+  <div class="row">
+    <hy-dropzone id="zone" accept="asset,Files,text/plain" aria-label="Destination"><span id="zone-child">Drop here</span></hy-dropzone>
+    <hy-dropzone id="outer" accept="asset,Files" aria-label="Outer"><hy-dropzone id="inner" accept="asset,Files" aria-label="Inner">Nested destination</hy-dropzone></hy-dropzone>
+  </div>
+  <hy-upload id="upload" drag multiple accept=".txt" auto-upload="false" name="assets"><span id="upload-child">Drop text files</span></hy-upload>
+  <div id="scroll"><hy-sortable id="scroll-list" aria-label="Scrollable list"></hy-sortable></div>
+  <script type="module">
+    import { HYSortable, defineSortableComponents } from '../../dist/sortable.js';
+    import { HYDragSource, defineDragSourceComponents } from '../../dist/drag-source.js';
+    import { HYDropzone, defineDropzoneComponents } from '../../dist/dropzone.js';
+    import { defineUploadComponents } from '../../dist/upload.js';
+    window.explicit = !customElements.get('hy-sortable') && !customElements.get('hy-drag-source') && !customElements.get('hy-dropzone');
+    for (const define of [defineSortableComponents, defineDragSourceComponents, defineDropzoneComponents, defineUploadComponents]) { define(); define(); }
+    window.constructorsClean = [new HYSortable(), new HYDragSource(), new HYDropzone()].every(element => element.getAttributeNames().length === 0);
+    document.querySelector('#source').data = { id: 'ocean', name: 'Ocean asset' };
+    for (let index = 0; index < 20; index++) { const item = document.createElement('article'); item.dataset.id = `scroll-${index}`; item.textContent = `Task ${index}`; document.querySelector('#scroll-list').append(item); }
+    window.events = [];
+    for (const name of ['sort-start','sort-change','sort-end','drag-start','drag-end','drag-enter','drag-leave','data-drop','change']) document.addEventListener(name, event => {
+      const detail = event.detail ?? {};
+      window.events.push({ name, target: event.target.id, oldIndex: detail.oldIndex, newIndex: detail.newIndex, fromOrder: detail.fromOrder, toOrder: detail.toOrder, accepted: detail.accepted, cancelled: detail.cancelled, data: detail.data, files: detail.files?.map(file => file.name), input: detail.input, composed: event.composed });
+    });
+    window.ready = true;
+  </script>
+</body>
+</html>

@@ -101,6 +101,18 @@
       "types": "./dist/draggable.d.ts",
       "import": "./dist/draggable.js"
     },
+    "./drag-source": {
+      "types": "./dist/drag-source.d.ts",
+      "import": "./dist/drag-source.js"
+    },
+    "./dropzone": {
+      "types": "./dist/dropzone.d.ts",
+      "import": "./dist/dropzone.js"
+    },
+    "./sortable": {
+      "types": "./dist/sortable.d.ts",
+      "import": "./dist/sortable.js"
+    },
     "./dropdown": {
       "types": "./dist/dropdown.d.ts",
       "import": "./dist/dropdown.js"

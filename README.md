@@ -1104,6 +1104,73 @@ the exported `HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT` with digits, decimal, minus, d
 `virtual-keyboard-up`, and `virtual-keyboard-input`, or style `keyboard`, `row`, `key`, and per-code key parts
 with the `--hy-virtual-keyboard-*` tokens.
 
+## Drag-and-drop
+
+`@haiyue/ui/sortable`, `@haiyue/ui/drag-source` and `@haiyue/ui/dropzone` provide independent entries
+and explicit `defineSortableComponents()`, `defineDragSourceComponents()` and `defineDropzoneComponents()`
+registration. They are also included in `defineHaiyueUI()`.
+
+```html
+<hy-sortable group="tasks" aria-label="Backlog">
+  <article data-id="a">Task A</article>
+  <article data-id="b">Task B</article>
+</hy-sortable>
+<hy-sortable group="tasks" aria-label="Ready"></hy-sortable>
+
+<hy-drag-source id="asset" type="asset" value="ocean" aria-label="Ocean material">
+  Ocean material
+</hy-drag-source>
+<hy-dropzone id="target" accept="asset,Files" aria-label="Asset destination">
+  Drop an asset or files here
+</hy-dropzone>
+```
+
+```js
+const source = document.querySelector('#asset');
+source.data = { id: 'ocean', name: 'Ocean material' };
+document.querySelector('#target').addEventListener('data-drop', event => {
+  const { data, files, type, source, effect, input } = event.detail;
+  if (!canPlace(data, files)) event.preventDefault();
+  else placeAsset(data, files);
+});
+document.addEventListener('sort-change', event => {
+  const { from, to, item, oldIndex, newIndex, fromOrder, toOrder } = event.detail;
+  saveListOrders(fromOrder, toOrder);
+});
+```
+
+Sortable uses the visible, unnamed direct children as items. `data-id` or `id` supplies a stable key in
+`order`, `fromOrder` and `toOrder`; items without either receive an internal stable key. `direction` accepts
+`vertical` (default), `horizontal` and `grid`; `columns` defaults to 3 for the grid. Lists with the same
+nonempty `group` accept transfers between them, including into empty lists. `handle` restricts pointer
+activation to a CSS selector, `data-sort-disabled` prevents picking up an individual item, and `disabled`
+prevents sorting. `keyboard="false"` disables keyboard sorting. `move(fromIndex, toIndex)` reorders through
+the API. `refresh()` synchronizes item accessibility after changing item-level attributes.
+
+`sort-start` and `sort-before-change` are cancelable. Sortable commits the original DOM elements on a
+successful drop, then emits one composed `sort-change` from the destination. It retains editable content
+and restores focus. `sort-end` is emitted from the origin and includes `accepted` and `cancelled`.
+Press Space or Enter on an item to pick it up, arrows/Home/End to choose a position, and Enter to commit.
+Tab can focus another list; Escape cancels. Horizontal and grid navigation follow RTL. Drop indicators
+and polite announcements communicate the current operation. Pointer gestures activate after 6px and
+support edge scrolling. Touch gestures use `touch-action: none`; `--hy-sortable-touch-action` can override it.
+
+Drag Source supplies a `type`, arbitrary JavaScript `data` (or a string `value` attribute), `effect`
+(`move` by default, or `copy`), optional `handle`, and `disabled`. Its composed `drag-start` is cancelable;
+`drag-end` includes the payload, `target`, `accepted` and `cancelled`. Keyboard users pick up with Space,
+Tab to a Dropzone and press Enter to drop. The receiving application handles content placement.
+
+Dropzone accepts comma-separated payload or native transfer types through `accept` (default `*`).
+`Files` accepts operating-system file drags; native file drops expose real `File` objects in `files`.
+Application payloads retain their original `data` object. `data-drop` is cancelable, and `drag-enter` /
+`drag-leave` expose application payload hover changes. Nested targets choose the innermost accepting zone.
+For file selection, type/size/count validation, upload progress and retry, use `hy-upload drag`.
+
+Sortable exposes `items`, `indicator` and `status` parts and `--hy-sortable-gap`, `--hy-sortable-min-height`,
+`--hy-sortable-drag-opacity`. Drag Source and Dropzone expose a `surface` part. Dropzone also accepts
+`--hy-dropzone-padding`, `--hy-dropzone-radius`, `--hy-dropzone-min-height` and `--hy-dropzone-bg-color`.
+Colors, typography, focus rings and drop feedback inherit the shared theme tokens.
+
 ## Draggable container
 
 Import the transform-based container independently, then use any slotted element as its handle:
