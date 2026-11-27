@@ -202,8 +202,10 @@ test('shadow-root drop zones are hit-tested through composed boundaries', async 
 });
 
 test('edge scrolling advances an overflowing list while the pointer stays at its edge', async ({ page }) => {
+  await page.locator('#scroll').scrollIntoViewIfNeeded();
   const item = page.locator('#scroll-list article').first(); await item.scrollIntoViewIfNeeded();
   const start = await item.boundingBox(); const bounds = await page.locator('#scroll').boundingBox();
+  expect(bounds.y + bounds.height).toBeLessThanOrEqual(await page.evaluate(() => innerHeight));
   await page.mouse.move(start.x + 15, start.y + 15); await page.mouse.down();
   await page.mouse.move(bounds.x + 50, bounds.y + bounds.height - 4, { steps: 4 });
   await expect.poll(() => page.locator('#scroll').evaluate(element => element.scrollTop)).toBeGreaterThan(24);
