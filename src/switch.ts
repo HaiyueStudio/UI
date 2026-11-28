@@ -22,7 +22,7 @@ export class HYSwitch extends HTMLElement {
       input { position: absolute; width: 1px; height: 1px; opacity: 0; clip-path: inset(50%); }
       .track { position: relative; display: inline-flex; align-items: center; box-sizing: border-box; min-width: 38px; height: 22px; padding: 0 7px 0 24px; border-radius: 999px; background: var(--hy-switch-off-bg, var(--hy-disabled-text-color, #65738a)); color: var(--hy-selected-text-color, #fff); transition: background 120ms; }
       .thumb { position: absolute; inset-inline-start: 3px; top: 3px; width: 16px; height: 16px; box-sizing: border-box; border-radius: 50%; background: var(--hy-switch-thumb-color, var(--hy-selected-text-color, #fff)); transition: inset-inline-start 120ms; }
-      .state { font-size: 11px; white-space: nowrap; }
+      .state { display: inline-flex; align-self: stretch; align-items: center; justify-content: center; font-size: 11px; line-height: 1; white-space: nowrap; }
       input:checked + .track { padding-inline: 7px 24px; background: var(--hy-switch-on-bg, var(--hy-accent-strong-color, #554cc6)); }
       input:checked + .track .thumb { inset-inline-start: calc(100% - 19px); }
       input:focus-visible + .track { outline: 2px solid var(--hy-focus-border-color, #79a8ff); outline-offset: 2px; }

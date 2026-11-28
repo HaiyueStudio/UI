@@ -1,5 +1,6 @@
 import { HYFormControl } from './internal/form-control.js';
 import { HYAnchoredPopup, HY_COMBOBOX_STYLES } from './internal/anchored-popup.js';
+import { finiteNumber } from './internal/numbers.js';
 
 export interface HYAutoCompleteOption { value: string; label?: string; disabled?: boolean; }
 export interface HYAutoCompleteChangeDetail { value: string; }
@@ -17,7 +18,7 @@ export class HYAutoComplete extends HTMLElement {
   private readonly _status = document.createElement('div');
   private readonly _id = `hy-autocomplete-${++autoCompleteId}`;
   private readonly _formControl = new HYFormControl(this, this._input);
-  private readonly _popup = new HYAnchoredPopup(this, this._control, this._panel, () => this._setOpen(false));
+  private readonly _popup = new HYAnchoredPopup(this, this._control, this._panel, () => this._setOpen(false), 'bottom', () => this._motionSettings());
   private _options: HYAutoCompleteOption[] = [];
   private _items: HTMLElement[] = [];
   private _visible: number[] = [];
@@ -28,7 +29,7 @@ export class HYAutoComplete extends HTMLElement {
   private _composing = false;
   private _lastSearch: string | null = null;
   private _committing = false;
-  static get observedAttributes(): string[] { return ['value', 'options', 'open', 'disabled', 'readonly', 'loading', 'allow-clear', 'required', 'name', 'placeholder', 'aria-label', 'maxlength', 'minlength', 'pattern', 'search-delay', 'not-found-content']; }
+  static get observedAttributes(): string[] { return ['value', 'options', 'open', 'disabled', 'readonly', 'loading', 'allow-clear', 'required', 'name', 'placeholder', 'aria-label', 'maxlength', 'minlength', 'pattern', 'search-delay', 'not-found-content', 'animated', 'animation-duration']; }
   constructor() {
     super(); const root = this.attachShadow({ mode: 'open' }); const style = document.createElement('style'); style.textContent = HY_COMBOBOX_STYLES;
     this._control.className = 'control'; this._control.part.add('control'); this._input.type = 'text'; this._input.autocomplete = 'off'; this._input.part.add('input');
@@ -46,14 +47,15 @@ export class HYAutoComplete extends HTMLElement {
     this._input.addEventListener('compositionstart', () => { this._composing = true; this._cancelSearch(); this._setOpen(false); }, { signal });
     this._input.addEventListener('compositionend', () => { this._composing = false; this._setOpen(true); this._scheduleSearch(); }, { signal });
     this._panel.addEventListener('pointerdown', event => event.preventDefault(), { signal });
-    this._panel.addEventListener('click', event => { const item = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-index]') : null; if (item) this._select(Number(item.dataset.index)); }, { signal });
+    this._panel.addEventListener('click', event => { const item = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-index]') : null; if (item && this.open && !this._panel.inert) this._select(Number(item.dataset.index)); }, { signal });
     this._panel.addEventListener('pointermove', event => { const item = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-index]') : null; const index = item ? Number(item.dataset.index) : -1; if (index >= 0 && !this._options[index]?.disabled) { this._active = index; this._syncActive(); } }, { signal });
     this._clear.addEventListener('click', () => { if (this._input.disabled || this.readOnly) return; this.value = ''; this._input.focus(); this._setOpen(false); this._committing = true; try { this._input.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true, inputType: 'deleteContentBackward', data: null })); } finally { this._committing = false; } this._emitChange(); this._scheduleSearch(); this.dispatchEvent(new Event('clear', { bubbles: true, composed: true })); }, { signal });
-    this._popup.connect(); this._sync(); this._formControl.connect();
+    this._popup.connect(); this._sync(); this._formControl.connect(); this._popup.finishAnimation();
   }
   disconnectedCallback(): void { this._listeners?.abort(); this._listeners = null; this._popup.dispose(); this._cancelSearch(); this._composing = false; }
   attributeChangedCallback(name: string, previous: string | null, next: string | null): void {
     if (previous === next) return;
+    if (name === 'animated' || name === 'animation-duration') this._popup.finishAnimation();
     if (name === 'options') { let value: unknown = []; try { value = JSON.parse(next ?? '[]'); } catch { /* Invalid data is empty. */ } this._setOptions(value); }
     this._sync();
     if (name === 'disabled' || name === 'readonly') this._cancelSearch();
@@ -79,6 +81,10 @@ export class HYAutoComplete extends HTMLElement {
   set placeholder(value: string) { this.setAttribute('placeholder', value); }
   get searchDelay(): number { const value = Number(this.getAttribute('search-delay')); return Number.isFinite(value) ? Math.max(0, Math.min(60000, value)) : 0; }
   set searchDelay(value: number) { this.setAttribute('search-delay', String(value)); }
+  get animated(): boolean { return this.hasAttribute('animated') && this.getAttribute('animated') !== 'false'; }
+  set animated(value: boolean) { if (value) this.setAttribute('animated', ''); else this.removeAttribute('animated'); }
+  get animationDuration(): number { return Math.max(0, Math.min(10000, finiteNumber(this.getAttribute('animation-duration'), 180))); }
+  set animationDuration(value: number) { this.setAttribute('animation-duration', String(value)); }
   get form(): HTMLFormElement | null { return this._formControl.internals.form; }
   get validity(): ValidityState { return this._formControl.internals.validity; }
   get validationMessage(): string { return this._formControl.internals.validationMessage; }
@@ -115,7 +121,17 @@ export class HYAutoComplete extends HTMLElement {
     if (this._status.textContent !== message) this._status.textContent = message;
     this._status.hidden = this._visible.length > 0; this._list.setAttribute('aria-busy', String(this.loading)); this._list.setAttribute('aria-label', this.getAttribute('aria-label') || 'Suggestions');
     const shown = this.open && !this._input.disabled && !this.readOnly && !this._composing && this.isConnected;
-    this._input.setAttribute('aria-expanded', String(shown)); if (shown) this._popup.show(); else this._popup.hide(); this._syncActive();
+    this._input.setAttribute('aria-expanded', String(shown)); if (shown) this._popup.show(); else this._popup.hide(this._input.disabled || this.readOnly || this._composing || !this.isConnected); this._syncActive();
+  }
+  private _motionSettings(): { duration: number; easing: string } {
+    const style = getComputedStyle(this); let duration = this.animationDuration;
+    if (!this.hasAttribute('animation-duration')) {
+      const match = /^([+-]?(?:\d+\.?\d*|\.\d+))\s*(ms|s)$/u.exec(style.getPropertyValue('--hy-auto-complete-animation-duration').trim());
+      const value = match ? Number(match[1]) * (match[2] === 's' ? 1000 : 1) : NaN;
+      if (Number.isFinite(value)) duration = Math.max(0, Math.min(10000, value));
+    }
+    const token = style.getPropertyValue('--hy-auto-complete-animation-easing').trim() || 'ease';
+    return { duration: this.animated ? duration : 0, easing: CSS.supports('transition-timing-function', token) ? token : 'ease' };
   }
   private _syncActive(): void { this._items.forEach((item, index) => { item.classList.toggle('active', index === this._active); item.setAttribute('aria-selected', String(index === this._active)); }); if (this.open && this._active >= 0) this._input.setAttribute('aria-activedescendant', `${this._id}-${this._active}`); else this._input.removeAttribute('aria-activedescendant'); }
   private _setOpen(open: boolean): void { if (open && (this.disabled || this._formControl.disabled || this.readOnly || this._composing)) return; if (this.open === open) return; this.toggleAttribute('open', open); this.dispatchEvent(new CustomEvent('open-change', { detail: { open }, bubbles: true, composed: true })); }

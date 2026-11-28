@@ -320,13 +320,15 @@ code { padding: 2px 5px; border-radius: 4px; color: #8fd3ee; background: rgba(64
 .dnd-source-stage hy-dropzone { flex-basis: 100%; --hy-dropzone-min-height: 84px; }
 .dnd-drop-stage { display: grid; gap: var(--hy-space-8); align-content: center; }
 .dnd-asset, .sortable-item { padding: var(--hy-space-6) var(--hy-space-8); border: 1px solid var(--hy-border-color); border-radius: var(--hy-radius-md); background: var(--hy-surface-elevated-color); color: var(--hy-text-color); }
+.dnd-asset { user-select: none; }
 .dnd-asset p, .dnd-drop-stage p { color: var(--hy-secondary-text-color); margin-bottom: 0; }
+.dnd-custom-preview { width: 240px; --hy-card-body-padding: var(--hy-space-8); }
 .dnd-drop-stage hy-dropzone { width: 100%; }
 .sortable-stage { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: var(--hy-space-12); }
 .sortable-stage > div { min-width: 0; }
 .sortable-stage h3 { margin-top: 0; font-size: var(--hy-font-size-md); }
 .sortable-stage hy-sortable { --hy-sortable-min-height: 120px; }
-.sortable-item { cursor: grab; }
+.sortable-item { cursor: grab; user-select: none; }
 .presentation-stage { display: grid; place-items: start center; align-content: safe center; min-height: 320px; }
 .presentation-demo.demo-split > .preview, .presentation-demo > .controls { min-height: 0; overflow: auto; }
 .presentation-stage > hy-card { width: min(320px, 100%); }
@@ -435,19 +437,27 @@ code { padding: 2px 5px; border-radius: 4px; color: #8fd3ee; background: rgba(64
 .toggle input:checked + span::after { left: 14px; background: #d8f4ff; }
 .control-note { width: 100%; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
 
-.code { margin-top: 10px; border: 1px solid var(--line-soft); border-radius: 7px; background: #0f141b; }
-.code summary { display: flex; align-items: center; justify-content: space-between; padding: 10px 13px; color: #788697; cursor: pointer; font-size: 10px; list-style: none; }
+.code { margin-top: var(--hy-space-5, 10px); min-width: 0; border: 1px solid var(--line-soft); border-radius: var(--hy-radius-lg, 8px); background: var(--hy-input-bg-color); }
+.code summary { display: flex; align-items: center; justify-content: space-between; padding: var(--hy-space-5, 10px) var(--hy-space-7, 14px); color: var(--muted); cursor: pointer; font-size: var(--hy-font-size-sm, 12px); list-style: none; }
 .code summary::-webkit-details-marker { display: none; }
-.code summary::before { content: "+"; margin-right: 8px; color: #5e7181; }
+.code summary::before { content: "+"; margin-right: var(--hy-space-4, 8px); color: var(--accent); }
 .code[open] summary::before { content: "−"; }
-.code summary span { margin-left: auto; color: #4d5968; font: 9px ui-monospace, monospace; }
+.code summary span { margin-left: auto; color: var(--muted); font: var(--hy-font-size-xs, 10px) var(--hy-font-family-mono, ui-monospace, monospace); }
 #design-tokens .code summary { justify-content: flex-start; color: var(--hy-text-color); }
 #design-tokens .code summary::before { color: var(--hy-accent-color); }
 #design-tokens .code summary span { margin-left: 0; color: inherit; font: var(--hy-font-size-sm) var(--hy-font-family); }
 .code pre { margin: 0; padding: 16px; border-top: 1px solid var(--line-soft); overflow: auto; }
-.code pre code { padding: 0; color: #9fb1c3; background: none; font-size: 11px; line-height: 1.8; }
-.code-editor-host { height: min(340px, 55vh); border-top: 1px solid var(--line-soft); overflow: hidden; }
-.code-editor-host .cm-editor { height: 100%; }
+.code pre code { padding: 0; color: var(--ink); background: none; font-size: var(--hy-font-size-sm, 12px); line-height: 1.75; }
+.code-editor-host { min-width: 0; border-top: 1px solid var(--line-soft); overflow: hidden; }
+.code-editor-host .hy-code-keyword { color: var(--hy-code-keyword-color, color-mix(in srgb, var(--accent) 45%, var(--ink))); font-weight: 600; }
+.code-editor-host .hy-code-tag { color: var(--hy-code-tag-color, color-mix(in srgb, var(--hy-info-color) 80%, var(--ink))); }
+.code-editor-host .hy-code-string { color: var(--hy-code-string-color, color-mix(in srgb, var(--hy-success-color) 80%, var(--ink))); }
+.code-editor-host .hy-code-number { color: var(--hy-code-number-color, color-mix(in srgb, var(--hy-warning-color) 80%, var(--ink))); }
+.code-editor-host .hy-code-function { color: var(--hy-code-function-color, color-mix(in srgb, var(--warm) 60%, var(--ink))); }
+.code-editor-host .hy-code-property { color: var(--hy-code-property-color, color-mix(in srgb, var(--accent) 55%, var(--ink))); }
+.code-editor-host .hy-code-comment { color: var(--hy-code-comment-color, color-mix(in srgb, var(--muted) 80%, var(--ink))); font-style: italic; }
+.code-editor-host .hy-code-punctuation { color: color-mix(in srgb, var(--muted) 80%, var(--ink)); }
+.code-editor-host .hy-code-invalid { color: var(--hy-error-color); text-decoration: underline; }
 .parameter-strip { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 .parameter-strip code { color: #6f8090; background: #111820; }
 
@@ -567,7 +577,13 @@ fieldset.options-preview legend { margin-bottom: 12px; padding: 0; color: #68778
 .split-pane small { margin-top: 3px; color: #5d6c7c; font: 9px ui-monospace, monospace; }
 .pane-a { background: var(--panel); }
 .pane-b { background: var(--preview-bg); }
-.split-controls { display: grid; grid-template-columns: 0.65fr 1fr 1fr 1.2fr; }
+.split-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); }
+.split-controls output { grid-column: 1 / -1; }
+#split-live[data-bar-style="rounded"] { --hy-split-bar-radius: var(--hy-radius-full); --hy-split-bar-color: color-mix(in srgb, var(--hy-accent-color) 35%, var(--hy-surface-color)); }
+#split-live[data-bar-style="grip"] { --hy-split-bar-color: var(--hy-surface-elevated-color); --hy-split-bar-active-color: color-mix(in srgb, var(--hy-accent-color) 25%, var(--hy-surface-elevated-color)); }
+#split-live[data-bar-style="grip"]::part(bar) { border: 1px solid var(--hy-border-color); border-radius: var(--hy-radius-md); }
+#split-live[data-bar-style="grip"]::part(bar-active) { border-color: var(--hy-accent-color); }
+.split-grip { font: 16px/1 var(--hy-font-family); }
 .tree-card { grid-template-columns: minmax(0, 1fr) 240px; }
 .tree-stage { height: 410px; padding: 18px; }
 .tree-stage hy-tree { width: 100%; height: 100%; border: 1px solid #2d3845; border-radius: 6px; }

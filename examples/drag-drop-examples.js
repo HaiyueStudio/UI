@@ -13,6 +13,16 @@ export function initializeDragDropExamples() {
   byId('sortable-direction').addEventListener('change', event => {
     for (const list of lists) list.direction = event.target.value;
   });
+  byId('sortable-preview').addEventListener('change', event => {
+    for (const list of lists) list.preview = event.target.value;
+    byId('sortable-preview-opacity').value = String(lists[0].previewOpacity); byId('sortable-preview-opacity-value').textContent = String(lists[0].previewOpacity);
+  });
+  for (const [id, property] of [['animation', 'animation'], ['preview-opacity', 'previewOpacity'], ['source-opacity', 'sourceOpacity']]) {
+    byId('sortable-' + id).addEventListener('input', event => {
+      for (const list of lists) list[property] = Number(event.target.value);
+      byId('sortable-' + id + '-value').textContent = event.target.value + (id === 'animation' ? ' ms' : '');
+    });
+  }
   byId('sortable-disabled').addEventListener('change', event => {
     for (const list of lists) list.disabled = event.target.checked;
   });
@@ -23,6 +33,19 @@ export function initializeDragDropExamples() {
 
   const sources = document.querySelectorAll('hy-drag-source');
   for (const source of sources) source.data = { name: source.getAttribute('value'), category: '素材' };
+  byId('drag-source-custom').renderPreview = ({ data }) => {
+    const card = document.createElement('hy-card'); card.className = 'dnd-custom-preview';
+    card.heading = '自定义拖拽组件'; card.textContent = `${data.name} · ${data.category}`; return card;
+  };
+  const sourceLive = byId('drag-source-live');
+  byId('drag-source-preview').addEventListener('change', event => {
+    sourceLive.preview = event.target.value;
+    sourceLive.querySelector('.dnd-asset p').textContent = { clone: 'clone · 半透明原样预览', custom: 'custom · 使用 preview 插槽', move: 'move · 原组件跟随指针', text: 'text · 紧凑文字预览' }[event.target.value];
+    byId('drag-source-preview-opacity').value = String(sourceLive.previewOpacity); byId('drag-source-preview-opacity-value').textContent = String(sourceLive.previewOpacity);
+  });
+  for (const [id, property] of [['preview-opacity', 'previewOpacity'], ['source-opacity', 'sourceOpacity']]) {
+    byId('drag-source-' + id).addEventListener('input', event => { sourceLive[property] = Number(event.target.value); byId('drag-source-' + id + '-value').textContent = event.target.value; });
+  }
   byId('drag-source-disabled').addEventListener('change', event => {
     for (const source of document.querySelectorAll('#drag-source hy-drag-source')) source.disabled = event.target.checked;
   });

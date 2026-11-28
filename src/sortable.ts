@@ -3,8 +3,12 @@ import { activeDrag, beginDrag, cancelDragSource, composedContains, finishDrag, 
 import type { HYDragPayload } from './internal/drag-drop.js';
 import { finiteNumber } from './internal/numbers.js';
 import { focusedElement } from './internal/focus.js';
+import { cloneDragPreview, liveDragPreview, previewSnapshot, textDragPreview } from './internal/drag-preview.js';
+import type { HYDragPoint, HYDragPreview } from './internal/drag-preview.js';
+import { HYSortableAnimation } from './internal/sortable-animation.js';
 
 export type HYSortableDirection = 'vertical' | 'horizontal' | 'grid';
+export type HYSortablePreview = 'text' | 'clone' | 'move';
 export interface HYSortableChangeDetail {
   readonly item: HTMLElement;
   readonly from: HYSortable;
@@ -38,11 +42,17 @@ export class HYSortable extends HTMLElement {
   private readonly _pointer = new HYPointerDrag();
   private readonly _owned = new Map<HTMLElement, Map<string, OwnedAttribute>>();
   private readonly _observer = new MutationObserver(() => this.refresh());
+  private readonly _motion = new HYSortableAnimation();
+  private readonly _visited = new Set<HYSortable>();
+  private _incoming: HTMLElement | null = null;
+  private _layoutItem: HTMLElement | null = null;
+  private _layoutIndex: number | null = null;
+  private _pendingRects: Map<HTMLElement, DOMRect> | null = null;
   private _unregister: (() => void) | null = null;
   private _candidate: number | null = null;
-  private _drag: { item: HTMLElement; oldIndex: number; input: 'pointer' | 'keyboard' } | null = null;
+  private _drag: { item: HTMLElement; oldIndex: number; input: 'pointer' | 'keyboard'; preview?: HYDragPreview; ending?: boolean } | null = null;
   private _lastChange: HYSortableChangeDetail | null = null;
-  static get observedAttributes(): string[] { return ['direction', 'group', 'disabled', 'handle', 'keyboard', 'columns', 'aria-label']; }
+  static get observedAttributes(): string[] { return ['direction', 'group', 'disabled', 'hidden', 'handle', 'keyboard', 'columns', 'aria-label', 'animation', 'preview', 'preview-opacity', 'source-opacity']; }
 
   constructor() {
     super();
@@ -56,7 +66,7 @@ export class HYSortable extends HTMLElement {
       :host([direction="grid"]) .items { display: grid; grid-template-columns: repeat(var(--_hy-sortable-columns, 3), minmax(0, 1fr)); }
       ::slotted(*) { min-width: 0; touch-action: var(--hy-sortable-touch-action, none); }
       .items:focus-visible, ::slotted(:focus-visible) { outline: 2px solid var(--hy-focus-border-color, #8177f2); outline-offset: 2px; }
-      ::slotted([data-hy-sort-active]) { opacity: var(--hy-sortable-drag-opacity, .45); }
+      ::slotted([data-hy-sort-active]:not([data-hy-live-drag])) { opacity: var(--_hy-sortable-source-opacity, var(--hy-sortable-source-opacity, var(--hy-sortable-drag-opacity, .45))); }
       .indicator { position: absolute; z-index: 2; height: 3px; background: var(--hy-drop-indicator-color, var(--hy-accent-color, #8177f2)); border-radius: var(--hy-radius-xs, 2px); pointer-events: none; }
       .indicator.cross { width: 3px; height: auto; }
       .sr { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
@@ -84,7 +94,7 @@ export class HYSortable extends HTMLElement {
         else this._candidate ??= from === this ? this.items.indexOf(item) : this.items.length;
         this._showIndicator(item);
       },
-      leave: () => { this._candidate = null; this._indicator.hidden = true; },
+      leave: () => { this._resetLayout(true); this._candidate = null; this._indicator.hidden = true; },
       drop: payload => {
         const { item, from } = payload.data as ItemDrag;
         return this._commit(item, from, this._candidate ?? this.items.length, payload.input);
@@ -95,13 +105,16 @@ export class HYSortable extends HTMLElement {
   disconnectedCallback(): void {
     this._pointer.cancel(); cancelDragSource(this); this._unregister?.(); this._unregister = null;
     this._observer.disconnect(); for (const item of [...this._owned.keys()]) this._restore(item);
+    this._resetLayout(false); this._pendingRects = null;
     this._indicator.hidden = true; this._candidate = null;
   }
-  attributeChangedCallback(): void {
+  attributeChangedCallback(name = '', previous?: string | null, next?: string | null): void {
+    if (arguments.length >= 3 && previous === next) return;
     this._pointer.cancel(); cancelDragSource(this);
+    this._resetLayout(false);
     this._candidate = null; this._indicator.hidden = true; this.refresh();
   }
-  get items(): HTMLElement[] { return [...this.children].filter((item): item is HTMLElement => item instanceof HTMLElement && !item.slot && !item.hidden); }
+  get items(): HTMLElement[] { return [...this.children].filter((item): item is HTMLElement => item instanceof HTMLElement && !item.slot && !item.hidden && !item.hasAttribute('data-hy-drag-placeholder') && !item.hasAttribute('data-hy-sort-placeholder')); }
   get order(): readonly string[] { return this.items.map(itemKey); }
   get direction(): HYSortableDirection { const value = this.getAttribute('direction'); return value === 'horizontal' || value === 'grid' ? value : 'vertical'; }
   set direction(value: HYSortableDirection) { this.setAttribute('direction', value); }
@@ -115,6 +128,14 @@ export class HYSortable extends HTMLElement {
   set handle(value: string) { this.setAttribute('handle', value); }
   get columns(): number { return Math.max(1, Math.min(12, Math.floor(finiteNumber(this.getAttribute('columns'), 3)))); }
   set columns(value: number) { this.setAttribute('columns', String(value)); }
+  get animation(): number { return Math.max(0, Math.min(10000, finiteNumber(this.getAttribute('animation'), 0))); }
+  set animation(value: number) { this.setAttribute('animation', String(value)); }
+  get preview(): HYSortablePreview { const value = this.getAttribute('preview'); return value === 'clone' || value === 'move' ? value : 'text'; }
+  set preview(value: HYSortablePreview) { this.setAttribute('preview', value); }
+  get previewOpacity(): number { return Math.max(0, Math.min(1, finiteNumber(this.getAttribute('preview-opacity'), this.preview === 'clone' ? .65 : 1))); }
+  set previewOpacity(value: number) { this.setAttribute('preview-opacity', String(value)); }
+  get sourceOpacity(): number { return Math.max(0, Math.min(1, finiteNumber(this.getAttribute('source-opacity'), .45))); }
+  set sourceOpacity(value: number) { this.setAttribute('source-opacity', String(value)); }
 
   move(fromIndex: number, toIndex: number): boolean {
     this._pointer.cancel(); cancelDragSource(this);
@@ -127,6 +148,8 @@ export class HYSortable extends HTMLElement {
     if (this._drag && !items.includes(this._drag.item)) { this._pointer.cancel(); cancelDragSource(this); }
     for (const item of [...this._owned.keys()]) if (!items.includes(item)) this._restore(item);
     this._surface.style.setProperty('--_hy-sortable-columns', String(this.columns));
+    if (this.hasAttribute('source-opacity')) this._surface.style.setProperty('--_hy-sortable-source-opacity', String(this.sourceOpacity));
+    else this._surface.style.removeProperty('--_hy-sortable-source-opacity');
     this._surface.setAttribute('aria-label', this.getAttribute('aria-label') || 'Sortable list');
     this._surface.tabIndex = this.disabled || !this.keyboard ? -1 : 0;
     if (!this.isConnected) return;
@@ -165,7 +188,7 @@ export class HYSortable extends HTMLElement {
     const item = this._eventItem(event);
     if (!item || this.disabled || item.hasAttribute('data-sort-disabled') || !dragTargetAllowed(event, this, this.handle)) return;
     if (this._pointer.start(event, this._surface, {
-      start: () => this._begin(item, 'pointer'),
+      start: origin => this._begin(item, 'pointer', { x: origin.clientX, y: origin.clientY }),
       move: move => moveDrag(this.ownerDocument, move.clientX, move.clientY),
       end: (up, cancelled) => {
         if (!cancelled) moveDrag(this.ownerDocument, up.clientX, up.clientY);
@@ -200,18 +223,27 @@ export class HYSortable extends HTMLElement {
     this._status.textContent = `Drop at position ${this._candidate + 1}.`;
   };
 
-  private _begin(item: HTMLElement, input: 'pointer' | 'keyboard'): boolean {
-    if (this.disabled || !this.isConnected || item.parentElement !== this || activeDrag(this.ownerDocument)) return false;
+  private _begin(item: HTMLElement, input: 'pointer' | 'keyboard', origin: HYDragPoint = { x: 0, y: 0 }): boolean {
+    if (this.disabled || this.hidden || !this.isConnected || item.parentElement !== this || activeDrag(this.ownerDocument)) return false;
     const oldIndex = this.items.indexOf(item);
     const detail: HYSortableChangeDetail = { item, from: this, to: this, oldIndex, newIndex: oldIndex, source: input, fromOrder: this.order, toOrder: this.order };
-    if (!this.dispatchEvent(new CustomEvent<HYSortableChangeDetail>('sort-start', { detail, bubbles: true, composed: true, cancelable: true })) || this.disabled || item.parentElement !== this) return false;
-    this._drag = { item, oldIndex, input }; this._lastChange = null;
+    if (!this.dispatchEvent(new CustomEvent<HYSortableChangeDetail>('sort-start', { detail, bubbles: true, composed: true, cancelable: true })) || this.disabled || this.hidden || item.parentElement !== this) return false;
+    this._drag = { item, oldIndex, input }; this._lastChange = null; this._visited.clear(); this._visited.add(this);
     const started = beginDrag({ type: 'hy-sortable', data: { item, from: this }, source: this, effect: 'move', input }, end => {
+      this._prepareEnd();
       this._drag = null; this._pointer.cancel(); this._restore(item, 'data-hy-sort-active');
+      for (const list of this._visited) list._settle(); this._visited.clear();
       this._status.textContent = end.accepted ? 'Item moved.' : end.cancelled ? 'Sorting cancelled.' : 'Order unchanged.';
       const finalDetail = this._lastChange ?? detail; this._lastChange = null;
       this.dispatchEvent(new CustomEvent<HYSortableEndDetail>('sort-end', { detail: { ...finalDetail, accepted: end.accepted, cancelled: end.cancelled }, bubbles: true, composed: true }));
       if (item.isConnected) item.focus({ preventScroll: true });
+    }, () => {
+      const style = getComputedStyle(this);
+      const opacity = this.hasAttribute('preview-opacity') ? this.previewOpacity : Math.max(0, Math.min(1, finiteNumber(style.getPropertyValue('--hy-sortable-preview-opacity'), this.previewOpacity)));
+      const sourceOpacity = this._sourceOpacity();
+      const visual = this.preview === 'move' ? liveDragPreview(item, origin, opacity, sourceOpacity) : this.preview === 'clone' ? cloneDragPreview(item, origin, opacity) : textDragPreview(item, opacity);
+      if (this._drag) this._drag.preview = visual;
+      return { element: visual.element, move: visual.move, destroy: () => { this._prepareEnd(); visual.destroy(); } };
     });
     if (!started) { this._drag = null; return false; }
     this._own(item, 'data-hy-sort-active', ''); item.focus({ preventScroll: true });
@@ -222,14 +254,14 @@ export class HYSortable extends HTMLElement {
   private _accepts(payload: HYDragPayload): boolean {
     if (this.disabled || payload.type !== 'hy-sortable' || !(payload.source instanceof HYSortable)) return false;
     const { item, from } = payload.data as ItemDrag;
-    return !from.disabled && item.parentElement === from && !composedContains(item, this) && (from === this || Boolean(this.group && this.group === from.group));
+    return !this.hidden && !from.disabled && !from.hidden && item.parentElement === from && !composedContains(item, this) && (from === this || Boolean(this.group && this.group === from.group));
   }
 
   private _indexAt(item: HTMLElement, x: number, y: number): number {
     const items = this.items.filter(value => value !== item);
     const rtl = getComputedStyle(this).direction === 'rtl';
     const index = items.findIndex(value => {
-      const rect = value.getBoundingClientRect();
+      const rect = this._motion.rect(value);
       if (this.direction === 'vertical') return y < rect.top + rect.height / 2;
       const before = rtl ? x > rect.left + rect.width / 2 : x < rect.left + rect.width / 2;
       return this.direction === 'horizontal' ? before : y < rect.top || (y <= rect.bottom && before);
@@ -237,22 +269,68 @@ export class HYSortable extends HTMLElement {
     return index < 0 ? items.length : index;
   }
   private _showIndicator(item: HTMLElement): void {
+    this._previewOrder(item);
     const items = this.items.filter(value => value !== item);
     const index = this._candidate ?? 0;
     const target = items[index] ?? items.at(-1);
-    const bounds = this._surface.getBoundingClientRect(); const rect = target?.getBoundingClientRect();
+    const bounds = this._surface.getBoundingClientRect(); const rect = this._layoutItem ? this._motion.rect(this._layoutItem) : target ? this._motion.rect(target) : null;
     const cross = this.direction !== 'vertical';
     this._indicator.classList.toggle('cross', cross); this._indicator.hidden = false;
     this._indicator.style.inset = 'auto';
     if (cross) {
       const rtl = getComputedStyle(this).direction === 'rtl';
-      const edge = rect ? (index < items.length ? (rtl ? rect.right : rect.left) : (rtl ? rect.left : rect.right)) : bounds.left;
+      const edge = rect ? (this._layoutItem || index < items.length ? (rtl ? rect.right : rect.left) : (rtl ? rect.left : rect.right)) : bounds.left;
       this._indicator.style.left = `${edge - bounds.left}px`; this._indicator.style.top = `${rect ? rect.top - bounds.top : 0}px`;
       this._indicator.style.height = `${rect?.height ?? 40}px`; this._indicator.style.width = '3px';
     } else {
       this._indicator.style.left = '0'; this._indicator.style.width = '100%'; this._indicator.style.height = '3px';
-      this._indicator.style.top = `${rect ? (index < items.length ? rect.top : rect.bottom) - bounds.top : 0}px`;
+      this._indicator.style.top = `${rect ? (this._layoutItem || index < items.length ? rect.top : rect.bottom) - bounds.top : 0}px`;
     }
+  }
+
+  private _duration(): number { return this.ownerDocument.defaultView?.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : this.animation; }
+  private _sourceOpacity(): number {
+    const style = getComputedStyle(this);
+    return this.hasAttribute('source-opacity') ? this.sourceOpacity : Math.max(0, Math.min(1, finiteNumber(style.getPropertyValue('--hy-sortable-source-opacity'), finiteNumber(style.getPropertyValue('--hy-sortable-drag-opacity'), this.sourceOpacity))));
+  }
+  private _visualItems(): HTMLElement[] {
+    return [...this.children].filter((item): item is HTMLElement => item instanceof HTMLElement && !item.slot && !item.hidden && !item.hasAttribute('data-hy-live-drag'));
+  }
+  private _previewOrder(item: HTMLElement): void {
+    const payload = activeDrag(this.ownerDocument);
+    if (!this.animation || payload?.type !== 'hy-sortable') return;
+    const { from } = payload.data as ItemDrag; const index = this._candidate ?? 0;
+    if (this._layoutIndex === index && this._layoutItem?.parentElement === this) return;
+    from._visited.add(this);
+    const before = this._motion.capture(this._visualItems());
+    let gap = from === this ? from._drag?.preview?.placeholder ?? item : this._incoming;
+    if (!gap) {
+      gap = previewSnapshot(from._drag?.preview?.placeholder ?? item); gap.dataset.hySortPlaceholder = '';
+      gap.inert = true; gap.setAttribute('aria-hidden', 'true');
+      gap.style.setProperty('opacity', String(from._sourceOpacity()), 'important');
+      gap.style.setProperty('width', 'auto', 'important'); gap.style.setProperty('max-width', '100%', 'important');
+      this._incoming = gap; this.append(gap);
+    }
+    const items = this.items.filter(value => value !== item); items.splice(index, 0, gap);
+    this._layoutItem = gap; this._layoutIndex = index; this._motion.order(items);
+    this._motion.animate(before, items, this._duration());
+  }
+  private _resetLayout(animate: boolean): void {
+    const before = animate ? this._motion.capture(this._visualItems()) : null;
+    this._motion.restore(); this._incoming?.remove(); this._incoming = null; this._layoutItem = null; this._layoutIndex = null;
+    if (before) this._motion.animate(before, this._visualItems(), this._duration());
+  }
+  private _prepareEnd(): void {
+    if (!this._drag || this._drag.ending) return;
+    this._drag.ending = true;
+    for (const list of this._visited) {
+      list._pendingRects = list._motion.capture(list.items);
+      list._resetLayout(false);
+    }
+  }
+  private _settle(): void {
+    if (this._pendingRects) this._motion.animate(this._pendingRects, this.items, this._duration());
+    this._pendingRects = null;
   }
 
   private _commit(item: HTMLElement, from: HYSortable, requested: number, source: HYSortableChangeDetail['source']): boolean {
@@ -272,6 +350,9 @@ export class HYSortable extends HTMLElement {
     const currentFrom = from.items; const currentTo = this.items.filter(value => value !== item);
     if (currentFrom.length !== originItems.length || currentFrom.some((value, index) => value !== originItems[index]) ||
       currentTo.length !== remaining.length || currentTo.some((value, index) => value !== remaining[index])) return false;
+    from._prepareEnd();
+    const before = new Map([...(from._pendingRects ?? from._motion.capture(from.items)), ...(this === from ? [] : this._pendingRects ?? this._motion.capture(this.items))]);
+    from._pendingRects = null; this._pendingRects = null;
     from._restore(item);
     const anchor = remaining[newIndex] ?? null;
     const focused = focusedElement(this.ownerDocument);
@@ -279,6 +360,8 @@ export class HYSortable extends HTMLElement {
     if (parent.moveBefore) parent.moveBefore(item, anchor);
     else this.insertBefore(item, anchor);
     from.refresh(); if (from !== this) this.refresh();
+    from._motion.animate(before, from.items, from._duration());
+    if (from !== this) this._motion.animate(before, this.items, this._duration());
     if (focused && composedContains(item, focused) && focused.isConnected) focused.focus({ preventScroll: true });
     if (from._drag) from._lastChange = detail;
     this.dispatchEvent(new CustomEvent<HYSortableChangeDetail>('sort-change', { detail, bubbles: true, composed: true }));

@@ -38,6 +38,32 @@ test('button group exposes group semantics and horizontal or vertical layout', a
   await expect(group.locator('[part="group"]')).toHaveCSS('flex-direction', 'column');
 });
 
+test('buttons without icons center their labels without a fallback gap', async ({page})=>{
+  const results=await page.evaluate(()=>{
+    return ['attribute','slotted'].map(mode=>{
+      const host=document.createElement('hy-button');host.style.width='180px';if(mode==='attribute')host.setAttribute('label','Centered');else host.textContent='Centered';document.body.append(host);
+      const root=host.shadowRoot,button=root.querySelector('button').getBoundingClientRect(),content=root.querySelector('[part=content]').getBoundingClientRect();
+      return [root.querySelector('[part=icon]').hidden,content.x+content.width/2-button.x-button.width/2];
+    });
+  });for(const [hidden,offset] of results){expect(hidden).toBe(true);expect(Math.abs(offset)).toBeLessThan(.6);}
+});
+
+test('removing an icon or ending loading restores a centered text-only layout',async({page})=>{
+  const host=page.locator('#attribute-icon');await host.evaluate(e=>{e.style.width='180px';e.icon='';e.loading=true;e.loading=false;});await expect(host.locator('[part=icon]')).toBeHidden();
+  await host.evaluate(e=>{const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.slot='icon';svg.id='temporary-icon';e.append(svg);});await expect(host.locator('[part=icon]')).toBeVisible();
+  await host.locator('#temporary-icon').evaluate(e=>e.remove());await expect(host.locator('[part=icon]')).toBeHidden();
+  expect(await host.evaluate(e=>{const button=e.shadowRoot.querySelector('button').getBoundingClientRect(),content=e.shadowRoot.querySelector('[part=content]').getBoundingClientRect();return Math.abs(content.x+content.width/2-button.x-button.width/2);})).toBeLessThan(.6);
+});
+
+test('an empty forwarded icon slot has no gap and tracks projected icon changes',async({page})=>{
+  await page.evaluate(()=>{
+    const wrapper=document.createElement('div');wrapper.id='icon-wrapper';wrapper.attachShadow({mode:'open'}).innerHTML='<hy-button id="forwarded" label="Centered" style="width:180px"><slot name="icon" slot="icon"></slot></hy-button>';document.body.append(wrapper);
+  });
+  const icon=page.locator('#forwarded [part=icon]');await expect(icon).toBeHidden();
+  await page.locator('#icon-wrapper').evaluate(e=>{const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.id='forwarded-svg';svg.slot='icon';e.append(svg);});await expect(icon).toBeVisible();
+  await page.locator('#forwarded-svg').evaluate(e=>e.remove());await expect(icon).toBeHidden();
+});
+
 test('component gallery demonstrates loading and button-group orientation', async ({ page }) => {
   await page.goto('/examples/#button');
   await page.locator('#button-request').click();

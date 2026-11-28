@@ -278,6 +278,38 @@ temporarily disables activation so an asynchronous request cannot be submitted t
 Use `orientation="vertical"` for a stacked group. Button styling is exposed through the `button`, `content`,
 `icon`, and `spinner` parts; the group exposes its container as the `group` part.
 
+`variant` / `.variant` accepts `outlined` (default, preserving the existing neutral surface and border)
+or `solid` (accent background with a transparent border). The border retains its layout width so switching
+styles does not move content. Set `--hy-button-bg-color: transparent` for a transparent outlined surface.
+
+Button and ButtonGroup accept `animated` / `.animated` and `animation-duration` / `.animationDuration`.
+Animation is opt-in; the default duration is `160` milliseconds, numeric settings clamp to `0..10000`, and
+zero disables transitions. Background, border and text colors transition on hover, native pointer press,
+keyboard activation and release. `--hy-button-animation-duration` and `--hy-button-animation-easing`
+provide theme defaults (`160ms`, `ease`). Disabled/loading buttons and reduced-motion preferences settle
+immediately without animating state colors. Native clicks, focus rings and loading behavior remain intact.
+
+```html
+<hy-button variant="solid" animated animation-duration="180" label="Publish"></hy-button>
+<hy-button variant="outlined" animated label="Cancel"></hy-button>
+<hy-button-group animated animation-duration="200">
+  <hy-button label="Undo"></hy-button>
+  <hy-button label="Redo" animated="false"></hy-button>
+</hy-button-group>
+```
+
+Group motion defaults inherit through slots without rewriting child attributes, and work for dynamically
+inserted buttons. A child's explicit `animated="false"` disables inherited motion; `animated="true"` enables
+it independently. A child's explicit duration overrides the group. Remove an override attribute to resume
+inheritance. Button motion getters include inherited group defaults.
+
+Outlined colors use `--hy-button-bg-color`, `--hy-button-border-color`, `--hy-button-text-color`, and
+the corresponding `--hy-button-hover-*` / `--hy-button-active-*` tokens. Solid styles use
+`--hy-button-solid-bg-color`, `--hy-button-solid-border-color`, `--hy-button-solid-text-color` and
+their `--hy-button-solid-hover-*` / `--hy-button-solid-active-*` counterparts. Defaults resolve from the
+shared surface, border, accent, selected-text and focus tokens. Group layout and rounded end caps are
+independent of each child's visual variant.
+
 ## Input and search
 
 `HYInput` supports plain-text `prefix` and `suffix` attributes as well as named slots for icons or richer
@@ -549,6 +581,16 @@ dismiss. Native editing and composition keys are preserved.
 Selection and clear preserve native input notifications. `name`, `required`, `minlength`, `maxlength`
 and `pattern` support native forms and constraints; reset and disabled fieldsets work. `focus()`/`blur()`
 target the real input. Parts are `control`, `input`, `clear`, `panel`, `list`, `option`, and `status`.
+
+Set `animated` / `.animated` to enable reversible panel opening and closing (default `false`).
+`animation-duration` / `.animationDuration` sets milliseconds, default `180`, clamped to `0..10000`;
+zero disables movement. `--hy-auto-complete-animation-duration` accepts a CSS time (`180ms`/`.18s`)
+when no duration attribute is present, and `--hy-auto-complete-animation-easing` defaults to `ease`.
+The panel reveals from the anchor edge, stays in the top layer during closing, and becomes inert and
+hidden from assistive technology immediately when logical `open` becomes false. Rapid reversals
+continue from the current reveal/opacity. Initial rendering, disabled/readonly/IME states and disconnect
+settle immediately; reduced-motion preferences suppress both effects. Filtering and async updates do
+not restart an opening animation, and `open-change` still describes the immediate logical state.
 
 ## Menu
 
@@ -852,6 +894,33 @@ semantic status. Numeric counts are capped by `overflowCount` (99 by default); u
 preferences. Structural styling hooks include `wrapper`, `badge`, `badge-content`, `status`, `status-dot`, and
 `status-text` shadow parts.
 
+Opt in to count/dot dismissal with `drag-removable` / `.dragRemovable`. `remove-distance` /
+`.removeDistance` is the final displacement in viewport CSS pixels from pointer-down (default `80`,
+range `1..10000`). The marker follows the pointer or touch in the top layer with a liquid/metaball
+silhouette: a circle stays at the origin, shrinks as the marker moves away, and joins the moving count
+or dot through a smooth, narrowing bridge. The bridge disconnects at the threshold and reconnects
+when dragged back inside. Wide count labels retain their capsule shape and text stays sharp above
+the silhouette. Releasing at or beyond the distance dismisses the marker; its inert preview gently
+shrinks and fades while the real marker immediately becomes hidden and noninteractive. Theme tokens
+`--hy-badge-remove-duration` (default `420ms`, `0` skips the effect) and `--hy-badge-remove-easing`
+(default `ease-out`) control the release fade; reduced-motion preferences skip this timed animation.
+The liquid shape follows direct pointer input without background animation. Restoring the marker,
+changing data/settings, or disconnecting cancels and cleans up the snapshot. The example threshold
+slider starts at `10px`. Pointer dragging activates after 4px to preserve ordinary clicks;
+a short drag, returning inside the distance, Escape, cancellation,
+window blur or disconnection restores it. Slotted content remains in place and interactive.
+
+The composed, cancelable `badge-remove` event exposes `HYBadgeRemoveDetail` with `count`, `dot`,
+`distance` and `source` (`pointer` or `keyboard`). Prevent default to keep the badge. Accepted dismissal
+sets `removed` / `.removed`, hiding only the count/dot and retaining its value; set `removed = false`
+to restore it. Programmatic assignments are silent. Changing the data/settings cancels an active drag;
+semantic status badges are not draggable. Opt-in markers can receive focus; Delete/Backspace dismisses
+them and returns focus to focusable slotted content. A normal pointer click does not dismiss.
+
+```html
+<hy-badge count="8" drag-removable remove-distance="80"><button>Notifications</button></hy-badge>
+```
+
 ## Ribbon
 
 `@haiyue/ui/ribbon` exports `HYRibbon`, `HYRibbonPlacement` and `defineRibbonComponents()`.
@@ -1104,6 +1173,77 @@ the exported `HY_VIRTUAL_KEYBOARD_NUMERIC_LAYOUT` with digits, decimal, minus, d
 `virtual-keyboard-up`, and `virtual-keyboard-input`, or style `keyboard`, `row`, `key`, and per-code key parts
 with the `--hy-virtual-keyboard-*` tokens.
 
+## Split
+
+`hy-split` supports `disabled` / `.disabled` (default `false`). A disabled divider ignores pointer,
+touch and keyboard resizing, cancels any active drag at its latest ratio, sets `aria-disabled="true"`
+and leaves the tab order. Both panes remain interactive. Programmatic `ratio`, direction, size and
+minimum-size updates still work; changing these properties does not emit a user `ratio-change` event.
+
+Style the divider with CSS parts and semantic tokens, and provide decorative content with `slot="handle"`:
+
+```html
+<hy-split id="layout" bar-size="12" disabled>
+  <section slot="first">First pane</section>
+  <span slot="handle">⋮</span>
+  <section slot="second">Second pane</section>
+</hy-split>
+```
+
+```css
+#layout {
+  --hy-split-bar-color: var(--hy-surface-elevated-color);
+  --hy-split-bar-active-color: var(--hy-accent-color);
+  --hy-split-handle-color: var(--hy-muted-color);
+}
+#layout::part(bar) {
+  border: 1px solid var(--hy-border-color);
+  border-radius: var(--hy-radius-md);
+}
+#layout::part(bar-active) { border-color: var(--hy-accent-color); }
+#layout[disabled]::part(bar) { opacity: .35; }
+```
+
+Parts are `bar`, `bar-active` (during dragging), `handle`, `pane`, `first` and `second`. The handle
+slot is decorative, inert and hidden from assistive technology; the divider retains the single
+keyboard-focusable separator. Use `bar-size` to change its layout thickness so pane minimum sizes
+and pointer coordinates stay consistent.
+
+Divider tokens include `--hy-split-bar-color`, `--hy-split-bar-hover-color`, `--hy-split-bar-drag-color`,
+`--hy-split-bar-active-color` (fallback for hover/drag), `--hy-split-bar-disabled-color`,
+`--hy-split-bar-disabled-opacity` (default `.5`), `--hy-split-bar-radius`, `--hy-split-bar-border`,
+`--hy-split-bar-hit-outset` and `--hy-split-bar-transition-duration`. Handle colors use
+`--hy-split-handle-color`, `--hy-split-handle-active-color` and `--hy-split-handle-disabled-color`.
+Existing focus-ring tokens remain available. Reduced-motion preferences suppress color transitions.
+Disabling, disconnecting, pointer cancellation, lost capture, window blur and Escape clean up the drag.
+
+## Tree
+
+`hy-tree` supports configurable branch expansion/collapse and arrow rotation:
+
+```html
+<hy-tree animated animation-duration="220"
+  arrow-animated="true" arrow-animation-duration="160"></hy-tree>
+```
+
+`animated` / `.animated` enables branch height and fade animations (default `false`). `animation-duration`
+/ `.animationDuration` sets milliseconds (default `200`, range `0..10000`); zero settles immediately.
+`arrow-animated` / `.arrowAnimated` independently controls arrow transitions (default `true`, use
+`arrow-animated="false"` to disable). `arrow-animation-duration` / `.arrowAnimationDuration` sets its own
+duration; without it, the arrow follows an explicit `animation-duration`, otherwise defaults to `200` ms
+when branch animation is enabled or the existing `160` ms when disabled. Invalid durations use defaults.
+
+Theme defaults come from `--hy-tree-animation-duration`, `--hy-tree-arrow-animation-duration` and
+`--hy-tree-animation-easing` (`ease`). Explicit duration attributes take precedence. Reduced-motion
+preferences suppress both effects. Initial rendering is immediate, and settings changes or disconnection
+settle any in-flight branch motion. Rapid toggles reverse from the current height and opacity.
+
+Clicking arrows, keyboard Left/Right and `expand()`, `collapse()` or `toggle()` use the same transitions.
+Logical visibility and `aria-expanded` update immediately; closing rows are inert and hidden from
+assistive technology until their removal. Unchanged row renderers remain connected. Large trees keep
+their existing virtual row geometry: branch height effects are skipped when entering, leaving or using
+the virtual window, while arrow transitions remain available.
+
 ## Drag-and-drop
 
 `@haiyue/ui/sortable`, `@haiyue/ui/drag-source` and `@haiyue/ui/dropzone` provide independent entries
@@ -1147,6 +1287,32 @@ activation to a CSS selector, `data-sort-disabled` prevents picking up an indivi
 prevents sorting. `keyboard="false"` disables keyboard sorting. `move(fromIndex, toIndex)` reorders through
 the API. `refresh()` synchronizes item accessibility after changing item-level attributes.
 
+Sortable also accepts `preview="text|clone|move"` and `animation` (milliseconds):
+
+```html
+<hy-sortable animation="250" preview="move" preview-opacity="1" source-opacity="0.4">
+  <article data-id="a">Task A</article>
+  <article data-id="b">Task B</article>
+</hy-sortable>
+```
+
+`preview="move"` floats the actual item under the pointer without changing its DOM parent and leaves an
+inert translucent placeholder. Its component instances and edited fields survive dragging. `clone` uses
+an inert visual snapshot; `text` keeps the original compact label and is the default. `preview-opacity`
+(`.previewOpacity`) controls the floating content, defaulting to `0.65` for `clone` and `1` otherwise.
+`source-opacity` (`.sourceOpacity`, default `0.45`) controls the original item or placeholder. Both clamp
+to `0..1`. The CSS tokens `--hy-sortable-preview-opacity` and `--hy-sortable-source-opacity` supply
+theme defaults; explicit attributes take precedence. The existing `--hy-sortable-drag-opacity` remains
+a fallback for source opacity.
+
+`animation` (`.animation`) defaults to `0` for existing indicator-only behavior and accepts `0..10000` ms.
+A positive value previews the candidate order while dragging: items smoothly make room for the dragged
+item/placeholder, including in horizontal/grid layouts and grouped destinations. DOM order and `order`
+stay unchanged until an accepted drop. The same duration animates API/keyboard commits and cancellation;
+reduced-motion preferences disable movement animations while preserving the previewed layout. Keyboard
+sorting keeps focus and never floats the real item. Escape, changing settings, disabling or removing a
+list restores temporary styles and placeholders without committing a change.
+
 `sort-start` and `sort-before-change` are cancelable. Sortable commits the original DOM elements on a
 successful drop, then emits one composed `sort-change` from the destination. It retains editable content
 and restores focus. `sort-end` is emitted from the origin and includes `accepted` and `cancelled`.
@@ -1159,6 +1325,46 @@ Drag Source supplies a `type`, arbitrary JavaScript `data` (or a string `value` 
 (`move` by default, or `copy`), optional `handle`, and `disabled`. Its composed `drag-start` is cancelable;
 `drag-end` includes the payload, `target`, `accepted` and `cancelled`. Keyboard users pick up with Space,
 Tab to a Dropzone and press Enter to drop. The receiving application handles content placement.
+
+Drag Source's `preview` / `.preview` selects pointer and touch feedback:
+
+- `text` (default) keeps the compact text label.
+- `clone` follows the pointer with a translucent, inert snapshot of the original content, including open
+  shadow roots, current input values and canvas drawings. It does not instantiate duplicate custom elements.
+- `custom` shows the element assigned to `slot="preview"`, or the component returned by
+  `.renderPreview(payload)`. The function takes precedence; a missing/invalid preview falls back to `clone`.
+- `move` floats the real Drag Source in the top layer and leaves a translucent snapshot at its original
+  position. Its DOM parent, child component instances and input state remain intact. The source returns
+  to its original position before `data-drop`; the receiver still decides where to place it.
+
+```html
+<hy-drag-source preview="clone" preview-opacity="0.65" source-opacity="0.4">
+  <article>Drag this card</article>
+  <hy-card slot="preview" heading="Dragging">Custom component preview</hy-card>
+</hy-drag-source>
+```
+
+```js
+source.preview = 'custom';
+source.renderPreview = ({ data }) => {
+  const card = document.createElement('hy-card');
+  card.heading = 'Dragging'; card.textContent = data.name;
+  return card;
+};
+```
+
+`preview-opacity` / `.previewOpacity` controls the moving preview (default `0.65` for `clone`, `1` otherwise).
+`source-opacity` / `.sourceOpacity` controls the original content or the stationary placeholder (default `0.55`).
+Both clamp finite values to `0..1`; missing/invalid values use defaults. CSS can also set
+`--hy-drag-preview-opacity` and `--hy-drag-source-opacity`; explicit attributes take precedence.
+The floating wrapper exposes `part="preview"` in text/clone/custom modes. Keyboard dragging retains focus and
+announcements without floating the source. Changing preview settings, disabling, hiding or disconnecting
+the source cancels the gesture and cleans up temporary DOM/styles.
+
+Named-slot previews retain their original parent and lifecycle. A renderer should return a new/detached
+element; already connected elements are snapshotted instead of being moved. Visual snapshots do not
+execute scripts or copy element IDs/form names. Use a custom preview for closed shadow roots or specialized
+content that cannot be represented by an open-DOM snapshot.
 
 Dropzone accepts comma-separated payload or native transfer types through `accept` (default `*`).
 `Files` accepts operating-system file drags; native file drops expose real `File` objects in `files`.
@@ -1319,7 +1525,8 @@ The gallery shell itself dogfoods
 Haiyue UI: theme actions, component search, command results, status, and example action controls use the
 published Web Components rather than parallel page-only widgets. The navigation/content shell and eligible
 preview/control cards use `hy-split` for keyboard- and pointer-adjustable sizing. Usage blocks are rendered as
-read-only CodeMirror editors with HTML, JavaScript, and CSS syntax highlighting.
+read-only CodeMirror editors with HTML, JavaScript, and CSS syntax highlighting, including mixed snippets.
+Syntax colors follow the selected skin; short examples fit their contents and long examples scroll within a bounded area.
 
 ## Empty, Result, Avatar, Card and Descriptions
 

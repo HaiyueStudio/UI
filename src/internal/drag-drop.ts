@@ -1,5 +1,7 @@
 import { focusedElement } from './focus.js';
 import { isKeyboardControlEvent } from './keyboard.js';
+import { textDragPreview } from './drag-preview.js';
+import type { HYDragPreview } from './drag-preview.js';
 
 export interface HYDragPayload {
   readonly type: string;
@@ -27,7 +29,7 @@ interface Session {
   payload: HYDragPayload;
   target: HYDropTarget | null;
   abort: AbortController;
-  preview: HTMLElement | null;
+  preview: HYDragPreview | null;
   frame: number | null;
   point: { x: number; y: number } | null;
   end(detail: HYDragEndDetail): void;
@@ -84,7 +86,7 @@ function setTarget(document: Document, target: HYDropTarget | null, point: { x: 
   if (context(document).session === session) target?.over(session.payload, point);
 }
 
-export function beginDrag(payload: HYDragPayload, end: (detail: HYDragEndDetail) => void): boolean {
+export function beginDrag(payload: HYDragPayload, end: (detail: HYDragEndDetail) => void, createPreview?: () => HYDragPreview | null): boolean {
   const document = payload.source.ownerDocument;
   const state = context(document);
   if (state.session || !payload.source.isConnected) return false;
@@ -92,18 +94,10 @@ export function beginDrag(payload: HYDragPayload, end: (detail: HYDragEndDetail)
   const session: Session = { payload, target: null, abort, preview: null, frame: null, point: null, end };
   state.session = session;
   if (payload.input === 'pointer') {
-    const preview = document.createElement('div');
-    const style = getComputedStyle(payload.source);
-    preview.textContent = payload.source.getAttribute('aria-label') || payload.source.textContent?.trim().slice(0, 100) || 'Dragging';
-    preview.setAttribute('aria-hidden', 'true');
-    preview.style.cssText = 'position:fixed;inset:auto;margin:0;padding:8px 12px;max-width:280px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;pointer-events:none;z-index:2147483000;border:1px solid;box-shadow:0 8px 24px #0003;';
-    preview.style.color = style.getPropertyValue('--hy-text-color') || style.color;
-    preview.style.background = style.getPropertyValue('--hy-surface-elevated-color') || '#171d27';
-    preview.style.borderColor = style.getPropertyValue('--hy-border-color') || '#3d4654';
-    preview.style.borderRadius = style.getPropertyValue('--hy-radius-md') || '6px';
-    preview.style.font = style.font;
-    preview.popover = 'manual'; document.body.append(preview);
-    try { preview.showPopover(); } catch { /* Fixed positioning also works without a top layer. */ }
+    let preview: HYDragPreview | null;
+    try { preview = createPreview ? createPreview() : textDragPreview(payload.source); }
+    catch { finishDrag(document, true); return false; }
+    if (state.session !== session) { preview?.destroy(); return false; }
     session.preview = preview;
   }
   const { signal } = abort;
@@ -128,11 +122,13 @@ export function moveDrag(document: Document, x: number, y: number): void {
   const session = context(document).session;
   if (!session) return;
   session.point = { x, y };
-  if (session.preview) { session.preview.style.left = `${x + 12}px`; session.preview.style.top = `${y + 12}px`; }
-  let hit = document.elementFromPoint(x, y);
+  session.preview?.move(x, y);
+  const ignored = session.preview?.element;
+  const atPoint = (root: Document | ShadowRoot): Element | null => root.elementsFromPoint(x, y).find(element => !ignored || !composedContains(ignored, element)) ?? null;
+  let hit = atPoint(document);
   for (;;) {
-    const nested = hit?.shadowRoot?.elementFromPoint(x, y);
-    if (!nested || nested === hit) break;
+    const nested = hit?.shadowRoot ? atPoint(hit.shadowRoot) : null;
+    if (!nested || nested === hit || !composedContains(hit!, nested)) break;
     hit = nested;
   }
   setTarget(document, targetFor(document, hit), { x, y });
@@ -151,10 +147,18 @@ function scrollAtEdge(document: Document, hit: Element | null, x: number, y: num
     const rect = root ? { left: 0, top: 0, right: document.defaultView!.innerWidth, bottom: document.defaultView!.innerHeight } : element.getBoundingClientRect();
     const dx = x < rect.left + 24 ? -12 : x > rect.right - 24 ? 12 : 0;
     const dy = y < rect.top + 24 ? -12 : y > rect.bottom - 24 ? 12 : 0;
-    const left = element.scrollLeft; const top = element.scrollTop;
-    if ((root || /auto|scroll/u.test(style.overflowY)) && element.scrollHeight > element.clientHeight) element.scrollTop += dy;
-    if ((root || /auto|scroll/u.test(style.overflowX)) && element.scrollWidth > element.clientWidth) element.scrollLeft += dx;
-    if (left !== element.scrollLeft || top !== element.scrollTop) return true;
+    const left = element.scrollLeft; const top = element.scrollTop; let requested = false;
+    if (dy && (root || /auto|scroll/u.test(style.overflowY))) {
+      const next = Math.max(0, Math.min(element.scrollHeight - element.clientHeight, top + dy));
+      if (next !== top) { element.scrollTop = next; requested = true; }
+    }
+    if (dx && (root || /auto|scroll/u.test(style.overflowX))) {
+      const extent = Math.max(0, element.scrollWidth - element.clientWidth); const rtl = style.direction === 'rtl';
+      const next = Math.max(rtl ? -extent : 0, Math.min(rtl ? 0 : extent, left + dx));
+      if (next !== left) { element.scrollLeft = next; requested = true; }
+    }
+    // Some scrolling surfaces report their new offset on the following frame.
+    if (requested) return true;
   }
   return false;
 }
@@ -164,7 +168,7 @@ export function finishDrag(document: Document, cancelled = false): void {
   const session = state.session;
   if (!session) return;
   state.session = null;
-  session.abort.abort(); session.preview?.remove();
+  session.abort.abort(); session.preview?.destroy();
   if (session.frame !== null) document.defaultView!.cancelAnimationFrame(session.frame);
   const target = session.target;
   const accepted = !cancelled && Boolean(target?.element.isConnected && target.accepts(session.payload) && target.drop(session.payload));

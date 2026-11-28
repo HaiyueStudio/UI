@@ -12,6 +12,16 @@ test('switch has native keyboard behavior, silent properties, and loading guards
   expect(await page.evaluate(() => window.componentEvents.filter(event => event.id === 'switch').length)).toBe(2);
 });
 
+test('switch state text stays vertically centered for both sizes, values and inherited line heights',async({page})=>{
+  const results=await page.locator('#switch').evaluate(element=>{
+    const results=[];element.setAttribute('checked-text','开');element.setAttribute('unchecked-text','Off');element.style.lineHeight='3';
+    for(const size of ['default','small'])for(const checked of [false,true]){
+      element.size=size;element.checked=checked;const state=element.shadowRoot.querySelector('[part=state]'),track=element.shadowRoot.querySelector('[part=track]');const text=state.getBoundingClientRect(),box=track.getBoundingClientRect();
+      results.push([text.height,box.height,text.y+text.height/2-box.y-box.height/2,getComputedStyle(state).lineHeight]);
+    }return results;
+  });for(const [height,trackHeight,offset,lineHeight] of results){expect(height).toBe(trackHeight);expect(Math.abs(offset)).toBeLessThan(.5);expect(lineHeight).toBe('11px');}
+});
+
 test('existing controls and switch submit native FormData and reset defaults', async ({ page }) => {
   const data = () => page.locator('#native-form').evaluate(form => Object.fromEntries(new FormData(form)));
   expect(await data()).toEqual({ title: 'Initial title', tags: 'featured', enabled: 'on', quality: 'high', comment: 'Initial comment', mode: 'first' });
