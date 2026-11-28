@@ -87,6 +87,8 @@ test('syntax colors follow built-in and custom skins with readable contrast', as
 
 test('short snippets fit their contents and long code stays inside a mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
+  // Keep a short fixture independent of the growing component documentation.
+  await page.locator('#button pre code').evaluate(element => { element.textContent = '<hy-button>Save</hy-button>\n<hy-button>Cancel</hy-button>'; });
   const short = await openCode(page, '#button');
   expect((await short.details.locator('.code-editor-host').boundingBox()).height).toBeLessThan(250);
   const long = await openCode(page, '#design-tokens');
