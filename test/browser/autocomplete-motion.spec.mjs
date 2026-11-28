@@ -57,7 +57,9 @@ test('selection keeps its input and form notifications with a closing animation'
 });
 
 test('configuration, reduced motion, disabled fields and IME settle outstanding effects',async({page})=>{
-  await configure(page);await host(page).getByRole('combobox').focus();await page.emulateMedia({reducedMotion:'reduce'});expect(await panel(page).evaluate(e=>e.getAnimations().length)).toBe(0);
+  await configure(page);await host(page).getByRole('combobox').focus();
+  await panel(page).evaluate(e=>{for(const animation of e.getAnimations())animation.pause();});
+  await page.emulateMedia({reducedMotion:'reduce'});await expect.poll(()=>panel(page).evaluate(e=>e.getAnimations().length)).toBe(0);
   await host(page).evaluate(e=>{e.open=false;e.open=true;});expect(await panel(page).evaluate(e=>e.getAnimations().length)).toBe(0);
   await page.emulateMedia({reducedMotion:'no-preference'});await host(page).evaluate(e=>{e.open=false;e.open=true;e.disabled=true;});await expect(panel(page)).toBeHidden();expect(await panel(page).evaluate(e=>e.getAnimations().length)).toBe(0);
   await host(page).evaluate(e=>{e.disabled=false;e.open=true;e.readOnly=true;});await expect(panel(page)).toBeHidden();
