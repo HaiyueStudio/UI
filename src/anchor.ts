@@ -1,3 +1,5 @@
+import { finiteNumber as readFiniteNumber } from './internal/numbers.js';
+
 export type HYAnchorDirection = 'vertical' | 'horizontal';
 
 export interface HYAnchorItem {
@@ -18,7 +20,7 @@ export interface HYAnchorClickDetail extends HYAnchorChangeDetail {
 }
 
 function finiteNumber(value: unknown, fallback: number, min: number, max: number): number {
-  const number = Number(value);
+  const number = readFiniteNumber(value, fallback);
   return Number.isFinite(number) ? Math.min(max, Math.max(min, number)) : fallback;
 }
 
@@ -77,8 +79,9 @@ export class HYAnchor extends HTMLElement {
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void {
     if (oldValue === newValue) return;
-    if (name === 'items') this._readItemsAttribute();
-    this._render();
+    if (name === 'items') { this._readItemsAttribute(); this._render(); }
+    else if (name === 'active-href') this._syncActive();
+    else if (name === 'aria-label') this._syncLabel();
     if (this.isConnected && ['offset-top', 'bounds'].includes(name)) this.refresh();
   }
 
@@ -152,7 +155,7 @@ export class HYAnchor extends HTMLElement {
 
   private _render(): void {
     if (!this._list) return;
-    this._nav.setAttribute('aria-label', this.getAttribute('aria-label') ?? 'On this page');
+    this._syncLabel();
     this._list.replaceChildren();
     const append = (items: readonly HYAnchorItem[], depth: number): void => {
       for (const item of items) {
@@ -171,6 +174,19 @@ export class HYAnchor extends HTMLElement {
       }
     };
     append(this._items, 0);
+  }
+
+  private _syncLabel(): void {
+    this._nav.setAttribute('aria-label', this.getAttribute('aria-label') ?? 'On this page');
+  }
+
+  private _syncActive(): void {
+    for (const link of this._list.querySelectorAll<HTMLAnchorElement>('a[data-href]')) {
+      const active = link.dataset.href === this.activeHref;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    }
   }
 
   private _onClick(event: MouseEvent, item: HYAnchorItem): void {

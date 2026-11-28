@@ -1,7 +1,8 @@
 import type { HYCapabilities, HYComponentKind, HYComponentProps, HYDispose, HYMutation, HYNode, HYReason, HYRenderer, HYStore, HYUIEvent } from '../core/types.js';
-import { HYUIError, hyValidateCapabilities, hyValidateNode, hyValidateProps, snapshotValidatedProps } from '../core/validation.js';
-import { equalData, snapshot } from '../core/data.js';
-import { diff, flatten, type Tree } from './tree.js';
+import { HYUIError, hyValidateCapabilities, hyValidateNode, hyValidateProps, snapshotValidatedProps, snapshotProtocolData } from '../core/validation.js';
+import { equalData } from '../core/data.js';
+import { componentInteraction } from '../core/semantics.js';
+import { diff, flatten, type Tree, type Entry } from './tree.js';
 
 export type HYPageStatus = 'new' | 'mounted' | 'suspended' | 'faulted' | 'disposed';
 export interface HYPageOptions {
@@ -15,7 +16,6 @@ export type HYBinding<S> = { [K in HYComponentKind]: {
   readonly equal?: (a: Readonly<HYComponentProps[K]>, b: Readonly<HYComponentProps[K]>) => boolean;
 } }[HYComponentKind];
 type Props = HYComponentProps[HYComponentKind];
-const interactive = new Set<HYComponentKind>(['Button','Toggle','Select','Tabs','TextInput','TextArea','Slider','PlatformView']);
 
 /** A synchronous, bounded page reconciler. It owns bindings/rendering, never the application store. */
 export class HYPage {
@@ -28,10 +28,12 @@ export class HYPage {
   #order = new Map<string, number>();
   #subscriptions = new Set<HYDispose>(); #focused: string | undefined;
   #boundStores = new Set<unknown>();
+  #frames: { draft?: Map<string, Entry> }[] = [];
   #openers = new Map<string, string | undefined>(); #cancelTransaction = 0;
   constructor(renderer: HYRenderer, private readonly options: HYPageOptions = {}) {
-    hyValidateCapabilities(renderer.capabilities);
-    this.#renderer = renderer; this.#capabilities = snapshot(renderer.capabilities);
+    const capabilities = snapshotProtocolData(renderer.capabilities, { property: 'capabilities' });
+    hyValidateCapabilities(capabilities);
+    this.#renderer = renderer; this.#capabilities = capabilities;
   }
   get status(): HYPageStatus { return this.#status; }
   get revision(): number { return this.#revision; }
@@ -62,19 +64,24 @@ export class HYPage {
     if (!entry || entry.node.kind !== kind) throw new HYUIError('invalid-props', 'Binding target missing or kind changed', { key });
     const context = { key, ...(entry.node.source ? { source: entry.node.source } : {}) };
     const accepted = snapshotValidatedProps(kind, props, context, this.#capabilities);
-    if (equalData(entry.node.props, props)) return;
-    const next = new Map(this.#desired);
+    if (equalData(entry.node.props, accepted)) return;
+    const frame = this.#frames.at(-1);
+    const next = frame?.draft === this.#desired ? frame.draft : new Map(this.#desired);
+    if (frame) frame.draft = next;
     next.set(key, { ...entry, node: Object.freeze({ ...entry.node, props: accepted }) as HYNode });
     this.#desired = next; this.#updates?.add(key); this.#flush();
   }
   transaction(run: () => void): void {
     this.#assertMutable();
     const before = this.#desired, updates = this.#updates && new Set(this.#updates); this.#depth++;
+    this.#frames.push({});
     try {
       const result: unknown = run();
       if (result && typeof (result as { then?: unknown }).then === 'function') throw new HYUIError('lifecycle', 'Page transactions must be synchronous');
     } catch (cause) { this.#desired = before; this.#updates = updates; throw cause; }
-    finally { this.#depth--; }
+    finally { this.#depth--; this.#frames.pop(); }
+    const parent = this.#frames.at(-1);
+    if (parent && this.#desired !== before) parent.draft = this.#desired as Map<string, Entry>;
     this.#flush();
   }
   /** One store subscription: a store transaction produces one final page batch across all bindings. */
@@ -83,7 +90,7 @@ export class HYPage {
     if (this.#boundStores.has(store)) throw new HYUIError('lifecycle', 'Group all bindings for one store in a single bind call');
     const definitions = [...bindings];
     if (new Set(definitions.map(b => b.key)).size !== definitions.length) throw new HYUIError('duplicate-key', 'Duplicate binding target');
-    const select = (state: Readonly<S>): readonly Props[] => definitions.map(b => b.select(state));
+    const select = (state: Readonly<S>): readonly Props[] => definitions.map(b => snapshotValidatedProps(b.kind, b.select(state), { key: b.key }, this.#capabilities));
     const equal = (a: readonly Props[], b: readonly Props[]): boolean => a.every((p, i) =>
       (definitions[i]!.equal as ((a: Props, b: Props) => boolean) | undefined ?? equalData)(p, b[i]!));
     let applied: (HYNode | undefined)[] = [];
@@ -94,7 +101,7 @@ export class HYPage {
         // A grouped subscription does not make every binding dirty. Reuse a
         // previously validated result only while its target is still unchanged.
         // External render/setProps and failed transactions invalidate this path.
-        if (node === applied[i] && node && equalData(node.props, props[i])) return;
+        if (node === applied[i] && node && (binding.equal as ((a: Props, b: Props) => boolean) | undefined ?? equalData)(node.props, props[i]!)) return;
         this.setProps(binding.key, binding.kind, props[i]!);
       }));
       applied = definitions.map(binding => this.#desired.get(binding.key)?.node);
@@ -163,7 +170,7 @@ export class HYPage {
   }
   #inside(key: string, parent: string): boolean { return key === parent || key.startsWith(`${parent}/`); }
   #dialogTarget(key: string): string {
-    return [...this.#rendered].find(([id, entry]) => this.#inside(id, key) && interactive.has(entry.node.kind) && this.#available(id))?.[0] ?? key;
+    return [...this.#rendered].find(([id, entry]) => this.#inside(id, key) && componentInteraction[entry.node.kind] && this.#available(id))?.[0] ?? key;
   }
   #restoreFocus(previous: Tree): void {
     const oldDialogs = this.#dialogs(previous), dialogs = this.#dialogs(this.#rendered);
@@ -219,14 +226,15 @@ export class HYPage {
   rebuild(renderer: HYRenderer): void {
     if (this.#status !== 'faulted') throw new HYUIError('lifecycle', 'Only a faulted page may rebuild');
     if (renderer === this.#renderer) throw new HYUIError('lifecycle', 'Rebuild needs a fresh renderer');
-    hyValidateCapabilities(renderer.capabilities);
+    const capabilities = snapshotProtocolData(renderer.capabilities, { property: 'capabilities' });
+    hyValidateCapabilities(capabilities);
     for (const [key, entry] of this.#desired) {
-      hyValidateProps(entry.node.kind, entry.node.props, { key }, renderer.capabilities);
-      for (const feature of entry.node.requires ?? []) if (!renderer.capabilities.features.includes(feature)) throw new HYUIError('capability', `Missing capability ${feature}`, { key });
+      hyValidateProps(entry.node.kind, entry.node.props, { key }, capabilities);
+      for (const feature of entry.node.requires ?? []) if (!capabilities.features.includes(feature)) throw new HYUIError('capability', `Missing capability ${feature}`, { key });
     }
     ++this.#epoch;
     this.#renderer.dispose();
-    this.#renderer = renderer; this.#capabilities = snapshot(renderer.capabilities);
+    this.#renderer = renderer; this.#capabilities = capabilities;
     this.#rendered = new Map(); this.#updates = undefined; this.#order.clear(); this.#focused = undefined; this.#openers.clear();
     this.#mountRenderer(); this.#flush();
   }

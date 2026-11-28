@@ -1,3 +1,5 @@
+import { HYPointerDrag } from './internal/pointer-drag.js';
+
 export type HYSplitDirection = 'horizontal' | 'vertical';
 
 const DEFAULT_BAR_SIZE = 6;
@@ -12,13 +14,12 @@ export class HYSplit extends HTMLElement {
   private readonly _first = document.createElement('div');
   private readonly _second = document.createElement('div');
   private readonly _bar = document.createElement('div');
+  private readonly _pointer = new HYPointerDrag();
   private readonly _resizeObserver = new ResizeObserver(() => this._scheduleLayout());
-  private _dragging = false;
-  private _pointerId = -1;
   private _layoutFrame = 0;
 
   static get observedAttributes(): string[] {
-    return ['direction', 'ratio', 'min-first', 'min-second', 'bar-size'];
+    return ['direction', 'ratio', 'min-first', 'min-second', 'bar-size', 'disabled'];
   }
 
   constructor() {
@@ -43,19 +44,30 @@ export class HYSplit extends HTMLElement {
         background: var(--hy-split-pane-bg-color, transparent);
       }
       .bar {
+        box-sizing: border-box;
+        min-width: 0;
+        min-height: 0;
         background: var(--hy-split-bar-color, var(--hy-border-strong-color, #273142));
+        border: var(--hy-split-bar-border, 0);
+        border-radius: var(--hy-split-bar-radius, 0);
         position: relative;
         z-index: 1;
+        touch-action: none;
+        user-select: none;
         transition: background var(--hy-split-bar-transition-duration, 0.12s) ease;
       }
       .bar:focus {
         outline: var(--hy-split-focus-ring-width, 1px) solid var(--hy-split-focus-ring-color, var(--hy-focus-border-color, var(--hy-accent-color, #3d6fa8)));
         outline-offset: -1px;
       }
-      .bar:hover,
-      .bar.dragging {
-        background: var(--hy-split-bar-active-color, var(--hy-accent-color, #3d6fa8));
+      .bar:hover {
+        background: var(--hy-split-bar-hover-color, var(--hy-split-bar-active-color, var(--hy-accent-color, #3d6fa8)));
       }
+      .bar.dragging {
+        background: var(--hy-split-bar-drag-color, var(--hy-split-bar-active-color, var(--hy-accent-color, #3d6fa8)));
+      }
+      .handle { position: absolute; inset: 0; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; pointer-events: none; color: var(--hy-split-handle-color, var(--hy-muted-color, #8fa7c8)); }
+      .bar:hover .handle, .bar.dragging .handle { color: var(--hy-split-handle-active-color, var(--hy-text-color, #d8e2f2)); }
       :host([direction="vertical"]) .bar {
         cursor: row-resize;
       }
@@ -78,17 +90,27 @@ export class HYSplit extends HTMLElement {
         left: calc(var(--hy-split-bar-hit-outset, 3px) * -1);
         right: calc(var(--hy-split-bar-hit-outset, 3px) * -1);
       }
+      :host([disabled]) .bar { cursor: default; background: var(--hy-split-bar-disabled-color, var(--hy-split-bar-color, var(--hy-border-strong-color, #273142))); opacity: var(--hy-split-bar-disabled-opacity, .5); }
+      :host([disabled]) .bar::before { pointer-events: none; }
+      :host([disabled]) .handle { color: var(--hy-split-handle-disabled-color, var(--hy-disabled-text-color, #8fa7c8)); }
+      @media (prefers-reduced-motion: reduce) { .bar { transition: none; } }
     `;
 
     this._first.className = 'pane first';
+    this._first.part.add('pane', 'first');
     this._second.className = 'pane second';
+    this._second.part.add('pane', 'second');
     this._bar.className = 'bar';
+    this._bar.part.add('bar');
     this._bar.tabIndex = 0;
     this._bar.setAttribute('role', 'separator');
     this._bar.setAttribute('aria-valuemin', '0');
     this._bar.setAttribute('aria-valuemax', '100');
     this._first.append(this._createSlot('first'));
     this._second.append(this._createSlot('second'));
+    const handle = document.createElement('span');
+    handle.className = 'handle'; handle.part.add('handle'); handle.inert = true; handle.setAttribute('aria-hidden', 'true');
+    handle.append(this._createSlot('handle')); this._bar.append(handle);
     root.append(this._style, this._first, this._bar, this._second);
   }
 
@@ -103,12 +125,10 @@ export class HYSplit extends HTMLElement {
   }
 
   disconnectedCallback(): void {
+    this._pointer.cancel();
     this._resizeObserver.disconnect();
     this._bar.removeEventListener('pointerdown', this._onPointerDown);
     this._bar.removeEventListener('keydown', this._onKeyDown);
-    window.removeEventListener('pointermove', this._onPointerMove);
-    window.removeEventListener('pointerup', this._onPointerUp);
-    window.removeEventListener('pointercancel', this._onPointerUp);
     if (this._layoutFrame) {
       cancelAnimationFrame(this._layoutFrame);
       this._layoutFrame = 0;
@@ -116,6 +136,7 @@ export class HYSplit extends HTMLElement {
   }
 
   attributeChangedCallback(): void {
+    if (this.disabled) this._pointer.cancel();
     this._syncAria();
     this._scheduleLayout();
   }
@@ -127,6 +148,9 @@ export class HYSplit extends HTMLElement {
   set direction(value: HYSplitDirection) {
     this.setAttribute('direction', value);
   }
+
+  get disabled(): boolean { return this.hasAttribute('disabled'); }
+  set disabled(value: boolean) { this.toggleAttribute('disabled', Boolean(value)); }
 
   get ratio(): number {
     return this._clampRatio(Number(this.getAttribute('ratio') ?? 0.5));
@@ -168,18 +192,16 @@ export class HYSplit extends HTMLElement {
   }
 
   private _onPointerDown = (event: PointerEvent): void => {
-    this._dragging = true;
-    this._pointerId = event.pointerId;
-    this._bar.classList.add('dragging');
-    this._bar.setPointerCapture(event.pointerId);
-    window.addEventListener('pointermove', this._onPointerMove);
-    window.addEventListener('pointerup', this._onPointerUp);
-    window.addEventListener('pointercancel', this._onPointerUp);
-    event.preventDefault();
+    if (this.disabled || event.defaultPrevented) return;
+    if (this._pointer.start(event, this._bar, {
+      start: () => { this._bar.classList.add('dragging'); this._bar.part.add('bar-active'); return true; },
+      move: this._onPointerMove,
+      end: () => { this._bar.classList.remove('dragging'); this._bar.part.remove('bar-active'); },
+    })) event.stopPropagation();
   };
 
   private _onPointerMove = (event: PointerEvent): void => {
-    if (!this._dragging || event.pointerId !== this._pointerId) return;
+    if (this.disabled) return;
     const rect = this.getBoundingClientRect();
     const size = this._getLayoutSize();
     const available = this._getAvailablePaneSize(size);
@@ -203,6 +225,7 @@ export class HYSplit extends HTMLElement {
   };
 
   private _onKeyDown = (event: KeyboardEvent): void => {
+    if (this.disabled || event.defaultPrevented) return;
     const direction = this.direction;
     const backward = direction === 'vertical' ? event.key === 'ArrowUp' : event.key === 'ArrowLeft';
     const forward = direction === 'vertical' ? event.key === 'ArrowDown' : event.key === 'ArrowRight';
@@ -214,16 +237,6 @@ export class HYSplit extends HTMLElement {
     else if (event.key === 'End') this.ratio = 1;
     else this.ratio = this.ratio + (forward ? step : -step);
     this._emitRatioChange();
-  };
-
-  private _onPointerUp = (event: PointerEvent): void => {
-    if (!this._dragging || event.pointerId !== this._pointerId) return;
-    this._dragging = false;
-    this._pointerId = -1;
-    this._bar.classList.remove('dragging');
-    window.removeEventListener('pointermove', this._onPointerMove);
-    window.removeEventListener('pointerup', this._onPointerUp);
-    window.removeEventListener('pointercancel', this._onPointerUp);
   };
 
   private _applyLayout(): void {
@@ -258,6 +271,8 @@ export class HYSplit extends HTMLElement {
     const direction = this.direction;
     this._bar.setAttribute('aria-orientation', direction === 'vertical' ? 'horizontal' : 'vertical');
     this._bar.setAttribute('aria-valuenow', String(Math.round(this.ratio * 100)));
+    this._bar.setAttribute('aria-disabled', String(this.disabled));
+    this._bar.tabIndex = this.disabled ? -1 : 0;
   }
 
   private _emitRatioChange(): void {

@@ -1,10 +1,12 @@
+import { boundedMilliseconds } from './internal/numbers.js';
+
 export type HYButtonGroupOrientation = 'horizontal' | 'vertical';
 
 export class HYButtonGroup extends HTMLElement {
   private readonly _group = document.createElement('div');
 
   static get observedAttributes(): string[] {
-    return ['orientation', 'aria-label'];
+    return ['orientation', 'aria-label', 'animated', 'animation-duration'];
   }
 
   constructor() {
@@ -64,7 +66,22 @@ export class HYButtonGroup extends HTMLElement {
     this.setAttribute('orientation', value === 'vertical' ? 'vertical' : 'horizontal');
   }
 
+  get animated(): boolean { return this.hasAttribute('animated') && this.getAttribute('animated') !== 'false'; }
+  set animated(value: boolean) { if (value) this.setAttribute('animated', ''); else this.removeAttribute('animated'); }
+  get animationDuration(): number {
+    if (this.hasAttribute('animation-duration')) return boundedMilliseconds(this.getAttribute('animation-duration'), 160);
+    const style = getComputedStyle(this);
+    return boundedMilliseconds(style.getPropertyValue('--_hy-button-motion-duration').trim() || style.getPropertyValue('--hy-button-animation-duration').trim(), 160);
+  }
+  set animationDuration(value: number) { this.setAttribute('animation-duration', String(value)); }
+
   private _sync(): void {
+    this._group.style.setProperty('--_hy-button-motion-enabled', this.animated ? '1' : '0');
+    this._group.style.setProperty('--_hy-button-motion-properties', this.animated ? 'background-color, border-color, color' : 'none');
+    if (this.hasAttribute('animation-duration') && this.animationDuration === 0) this._group.style.setProperty('--_hy-button-duration-properties', 'none');
+    else this._group.style.removeProperty('--_hy-button-duration-properties');
+    if (this.hasAttribute('animation-duration')) this._group.style.setProperty('--_hy-button-motion-duration', `${this.animationDuration}ms`);
+    else this._group.style.removeProperty('--_hy-button-motion-duration');
     const label = this.getAttribute('aria-label');
     if (label) this._group.setAttribute('aria-label', label);
     else this._group.removeAttribute('aria-label');

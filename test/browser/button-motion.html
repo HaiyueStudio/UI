@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" data-hy-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Button motion and variants</title>
+  <link rel="stylesheet" href="../../themes/haiyue-light.css" /><link rel="stylesheet" href="../../themes/haiyue-dark.css" />
+  <style>
+    body {margin:24px;font:14px system-ui;background:var(--hy-surface-color)} section {margin:20px 0} hy-button {width:130px}
+    #animated {--hy-button-bg-color:rgb(20,40,60);--hy-button-border-color:rgb(60,80,100);--hy-button-text-color:rgb(220,230,240);--hy-button-hover-bg-color:rgb(80,100,120);--hy-button-hover-border-color:rgb(120,140,160);--hy-button-hover-text-color:rgb(160,180,200);--hy-button-active-bg-color:rgb(10,20,30);--hy-button-active-border-color:rgb(30,50,70);--hy-button-active-text-color:rgb(240,245,250);--hy-button-animation-easing:linear}
+    #solid {--hy-button-solid-bg-color:rgb(20,70,120);--hy-button-solid-hover-bg-color:rgb(45,90,145);--hy-button-solid-active-bg-color:rgb(10,40,80)}
+  </style>
+</head>
+<body>
+  <section><hy-button id="plain" label="Default"></hy-button><hy-button id="animated" label="Animate" animated animation-duration="1000"></hy-button><hy-button id="solid" label="Solid" variant="solid" animated animation-duration="1000"></hy-button></section>
+  <section><hy-button-group id="group" aria-label="Actions" animated animation-duration="700"><hy-button id="inherited" label="Inherited"></hy-button><hy-button id="opt-out" label="No motion" animated="false"></hy-button><hy-button id="override" label="Override" animated animation-duration="250"></hy-button></hy-button-group></section>
+  <section><hy-button-group id="passive"><hy-button id="opt-in" label="Opt in" animated animation-duration="300"></hy-button></hy-button-group></section>
+  <script type="module">
+    import {HYButton,defineButtonComponents} from '../../dist/button.js';
+    import {HYButtonGroup,defineButtonGroupComponents} from '../../dist/button-group.js';
+    window.explicitButtons=!customElements.get('hy-button')&&!customElements.get('hy-button-group');
+    defineButtonGroupComponents();window.groupDoesNotRegisterButton=!customElements.get('hy-button');defineButtonComponents();
+    window.cleanButtons=[new HYButton(),new HYButtonGroup()].every(element=>element.getAttributeNames().length===0);
+    window.buttonActivations=[];document.addEventListener('click',event=>{const host=event.composedPath().find(node=>node instanceof HTMLElement&&node.localName==='hy-button');if(host)window.buttonActivations.push(host.id);});
+    window.buttonMotionReady=true;
+  </script>
+</body>
+</html>

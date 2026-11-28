@@ -1,5 +1,7 @@
 import { HYTreeModel } from './tree-model.js';
 import { HYTreeNode } from './tree-node.js';
+import { isKeyboardControlEvent } from './internal/keyboard.js';
+import { HYTreeMotion } from './internal/tree-motion.js';
 import type {
   FlatTreeNode,
   HYTreeDataChangeDetail,
@@ -73,6 +75,9 @@ export class HYTree extends HTMLElement {
   private readonly _style = document.createElement('style');
   private readonly _list = document.createElement('div');
   private readonly _rowCache = new Map<string, RenderedTreeRow>();
+  private readonly _motion = new HYTreeMotion(this, this._list, row => {
+    const id = row.dataset.id; if (id && this._rowCache.get(id)?.row === row) this._rowCache.delete(id);
+  });
   private _clipboard: HYTreeNodeData[] = [];
   private _data: HYTreeNodeData[] = [];
   private _selectedId: string | null = null;
@@ -86,7 +91,7 @@ export class HYTree extends HTMLElement {
   private _resizeObserver: ResizeObserver | null = null;
 
   static get observedAttributes(): string[] {
-    return ['data', 'selected-id', 'selected-ids', 'allow-drag'];
+    return ['data', 'selected-id', 'selected-ids', 'allow-drag', 'animated', 'animation-duration', 'arrow-animated', 'arrow-animation-duration'];
   }
 
   constructor() {
@@ -128,6 +133,7 @@ export class HYTree extends HTMLElement {
         width: 1px;
         pointer-events: none;
       }
+      .row[data-hy-tree-motion] { overflow: hidden; }
       .row:hover {
         background: var(--hy-hover-bg-color, #222b3a);
       }
@@ -163,7 +169,7 @@ export class HYTree extends HTMLElement {
         width: 12px;
         height: 12px;
         color: var(--hy-tree-icon-color, var(--hy-secondary-text-color, #8fa7c8));
-        transition: transform 0.16s ease, color 0.16s ease;
+        transition: transform var(--_hy-tree-arrow-duration, 160ms) var(--_hy-tree-animation-easing, ease), color var(--_hy-tree-arrow-duration, 160ms) ease;
       }
       .toggle.expanded .toggle-icon {
         transform: rotate(90deg);
@@ -186,15 +192,19 @@ export class HYTree extends HTMLElement {
         outline: 1px solid var(--hy-drop-indicator-color, #62a8ff);
         background: var(--hy-drop-target-bg-color, #223650);
       }
+      @media (prefers-reduced-motion: reduce) { .toggle-icon { transition: none; } }
     `;
     this._list.className = 'list';
     this._root.append(this._style, this._list);
   }
 
   connectedCallback(): void {
+    this._motion.connect();
     if (!this.hasAttribute('tabindex')) this.tabIndex = 0;
     if (!this.hasAttribute('role')) this.setAttribute('role', 'tree');
-    this._syncFromAttributes();
+    // Attribute callbacks initialize declarative data; reconnect with the current state.
+    if (this.hasAttribute('selected-ids')) this._setSelectionFromSelectedIdsAttribute();
+    else this._setSelectionFromSelectedIdAttribute();
     this.addEventListener('keydown', this._onKeyDown);
     this._list.addEventListener('click', this._onListClick);
     this._list.addEventListener('contextmenu', this._onListContextMenu);
@@ -212,6 +222,7 @@ export class HYTree extends HTMLElement {
   }
 
   disconnectedCallback(): void {
+    this._motion.disconnect();
     this.removeEventListener('keydown', this._onKeyDown);
     this._list.removeEventListener('click', this._onListClick);
     this._list.removeEventListener('contextmenu', this._onListContextMenu);
@@ -226,6 +237,7 @@ export class HYTree extends HTMLElement {
   }
 
   attributeChangedCallback(name: string): void {
+    if (['data', 'animated', 'animation-duration', 'arrow-animated', 'arrow-animation-duration'].includes(name)) this._motion.finish();
     if (name === 'data') this._readDataAttribute();
     if (this._syncingSelectionAttributes) return;
     if (!this._syncingSelectionAttributes) {
@@ -240,6 +252,7 @@ export class HYTree extends HTMLElement {
   }
 
   set data(value: HYTreeNodeData[]) {
+    this._motion.finish();
     this._data = Array.isArray(value) ? value : [];
     this._seedExpanded(this._data);
     this._model.setData(this._data);
@@ -272,6 +285,15 @@ export class HYTree extends HTMLElement {
     else this.removeAttribute('allow-drag');
   }
 
+  get animated(): boolean { return this._motion.animated; }
+  set animated(value: boolean) { if (value) this.setAttribute('animated', ''); else this.removeAttribute('animated'); }
+  get animationDuration(): number { return this._motion.duration(); }
+  set animationDuration(value: number) { this.setAttribute('animation-duration', String(value)); }
+  get arrowAnimated(): boolean { return this.getAttribute('arrow-animated') !== 'false'; }
+  set arrowAnimated(value: boolean) { this.setAttribute('arrow-animated', String(Boolean(value))); }
+  get arrowAnimationDuration(): number { return this._motion.duration(true); }
+  set arrowAnimationDuration(value: number) { this.setAttribute('arrow-animation-duration', String(value)); }
+
   updateData(value: HYTreeNodeData[]): void {
     this.data = value;
   }
@@ -279,20 +301,20 @@ export class HYTree extends HTMLElement {
   expand(id: string): void {
     this._expandedIds.add(id);
     this._model.invalidateVisibility();
-    this._render();
+    this._render(true);
   }
 
   collapse(id: string): void {
     this._expandedIds.delete(id);
     this._model.invalidateVisibility();
-    this._render();
+    this._render(true);
   }
 
   toggle(id: string): void {
     if (this._expandedIds.has(id)) this._expandedIds.delete(id);
     else this._expandedIds.add(id);
     this._model.invalidateVisibility();
-    this._render();
+    this._render(true);
   }
 
   reveal(id: string): boolean {
@@ -322,12 +344,6 @@ export class HYTree extends HTMLElement {
     return this._deleteSelection();
   }
 
-  private _syncFromAttributes(): void {
-    this._readDataAttribute();
-    if (this.hasAttribute('selected-ids')) this._setSelectionFromSelectedIdsAttribute();
-    else this._setSelectionFromSelectedIdAttribute();
-  }
-
   private _readDataAttribute(): void {
     const raw = this.getAttribute('data');
     if (!raw) {
@@ -355,31 +371,24 @@ export class HYTree extends HTMLElement {
     visit(nodes);
   }
 
-  private _render(): void {
+  private _render(animate = false): void {
     this._ensureActiveVisible();
     const visible = this._getVisibleFlatNodes();
     const window = this._getRenderWindow(visible.length);
-    const visibleIds = new Set<string>();
-    const fragment = document.createDocumentFragment();
-    if (window.start > 0) fragment.append(this._createVirtualSpacer(window.start * HYTree.ROW_HEIGHT));
+    const rows: HTMLElement[] = [];
+    if (window.start > 0) rows.push(this._createVirtualSpacer(window.start * HYTree.ROW_HEIGHT));
     for (let index = window.start; index < window.end; index++) {
       const item = visible[index];
       if (!item) continue;
-      visibleIds.add(item.node.id);
       const rendered = this._getOrCreateRow(item.node.id);
       this._syncRow(rendered, item);
-      fragment.append(rendered.row);
+      rows.push(rendered.row);
     }
     if (window.end < visible.length) {
-      fragment.append(this._createVirtualSpacer((visible.length - window.end) * HYTree.ROW_HEIGHT));
+      rows.push(this._createVirtualSpacer((visible.length - window.end) * HYTree.ROW_HEIGHT));
     }
 
-    for (const [id, rendered] of this._rowCache) {
-      if (visibleIds.has(id)) continue;
-      rendered.row.remove();
-      this._rowCache.delete(id);
-    }
-    this._list.replaceChildren(fragment);
+    this._motion.render(rows, animate, visible.length >= HYTree.VIRTUALIZATION_THRESHOLD && this.clientHeight > 0);
   }
 
   private _getRenderWindow(itemCount: number): { start: number; end: number } {
@@ -609,7 +618,7 @@ export class HYTree extends HTMLElement {
   private _getEventRow(target: EventTarget | null): HTMLElement | null {
     if (!(target instanceof Element)) return null;
     const row = target.closest<HTMLElement>('.row');
-    return row && this._list.contains(row) ? row : null;
+    return row && !row.inert && this._list.contains(row) ? row : null;
   }
 
   private _getRowNode(row: HTMLElement): HYTreeNodeData | null {
@@ -719,7 +728,7 @@ export class HYTree extends HTMLElement {
   }
 
   private _onKeyDown = (event: KeyboardEvent): void => {
-    if (event.defaultPrevented || this._isEditableTarget(event.target)) return;
+    if (event.defaultPrevented || isKeyboardControlEvent(event, this)) return;
     const key = event.key.toLowerCase();
     const command = event.metaKey || event.ctrlKey;
 
@@ -781,9 +790,7 @@ export class HYTree extends HTMLElement {
     const indexed = this._model.getIndexedNode(activeId);
     if (!indexed?.node.children?.length) return false;
     if (!this._expandedIds.has(activeId)) {
-      this._expandedIds.add(activeId);
-      this._model.invalidateVisibility();
-      this._render();
+      this.expand(activeId);
       this._scrollActiveIntoView();
       return true;
     }
@@ -799,9 +806,7 @@ export class HYTree extends HTMLElement {
     const indexed = this._model.getIndexedNode(activeId);
     if (!indexed) return false;
     if (indexed.node.children?.length && this._expandedIds.has(activeId)) {
-      this._expandedIds.delete(activeId);
-      this._model.invalidateVisibility();
-      this._render();
+      this.collapse(activeId);
       this._scrollActiveIntoView();
       return true;
     }
@@ -873,12 +878,6 @@ export class HYTree extends HTMLElement {
     if (this._getVisibleFlatNodes().length >= HYTree.VIRTUALIZATION_THRESHOLD) this._render();
   };
 
-  private _isEditableTarget(target: EventTarget | null): boolean {
-    if (!(target instanceof HTMLElement)) return false;
-    const tag = target.tagName.toLowerCase();
-    return tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
-  }
-
   private _copySelection(): boolean {
     const nodes = this._getSelectedTopLevelNodes();
     if (nodes.length === 0) return false;
@@ -910,15 +909,9 @@ export class HYTree extends HTMLElement {
   }
 
   private _deleteSelection(): boolean {
-    const ids = this._getTopLevelSelectedIds();
-    if (ids.length === 0) return false;
-    const deletedIds: string[] = [];
-    for (const id of ids) {
-      if (this._model.removeNode(id)) deletedIds.push(id);
-    }
+    const deletedIds = this._model.removeNodes(this._selectedIds);
     if (deletedIds.length === 0) return false;
 
-    this._model.setData(this._data);
     this._setSelection([], null, true);
     this.dispatchEvent(new CustomEvent<HYTreeDataChangeDetail>('data-change', {
       detail: { data: this._data, action: 'delete', deletedIds },

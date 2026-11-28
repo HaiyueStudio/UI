@@ -1,3 +1,11 @@
+const textSegmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+function textBoundaries(value: string): number[] {
+  return [0, ...Array.from(textSegmenter.segment(value), part => part.index + part.segment.length)];
+}
+function boundaryBefore(edges: readonly number[], position: number): number { return edges.filter(edge => edge < position).at(-1) ?? 0; }
+function boundaryFloor(edges: readonly number[], position: number): number { return edges.filter(edge => edge <= position).at(-1) ?? 0; }
+function boundaryCeil(edges: readonly number[], position: number): number { return edges.find(edge => edge >= position) ?? edges.at(-1)!; }
+
 export type HYVirtualKeyboardSource = 'pointer' | 'keyboard' | 'physical' | 'api';
 export type HYVirtualKeyboardMode = 'qwerty' | 'numeric';
 export type HYVirtualKeyboardAction =
@@ -169,7 +177,8 @@ export class HYVirtualKeyboard extends HTMLElement {
   }
   async type(text: string, options: HYVirtualKeyboardTypeOptions = {}): Promise<void> {
     const operation = ++this._operation; const requested = options.interval == null ? 45 : Number(options.interval); const interval = Number.isFinite(requested) ? Math.min(10_000, Math.max(0, requested)) : 45;
-    for (const character of String(text)) {
+    for (const part of textSegmenter.segment(String(text))) {
+      const character = part.segment;
       if (operation !== this._operation || !this.isConnected) return;
       const match = this._findCharacterKey(character);
       if (match) { const isLetter = match.key.code.startsWith('Key'); this._shift = isLetter ? match.shifted !== this._capsLock : match.shifted; this._press(match.key.code, 'api', true); this._release(match.key.code, 'api'); }
@@ -178,8 +187,8 @@ export class HYVirtualKeyboard extends HTMLElement {
     }
   }
   clear(): void {
-    if (!this._target || this.disabled || this._target.disabled || this._target.readOnly) return;
-    this._target.value = ''; this._target.setSelectionRange(0, 0); this._dispatchTargetInput('deleteContent', null); this._emitInput({ code: 'Clear', key: '', action: 'delete', source: 'api' }, 'deleteContent');
+    const target = this._editableTarget(); if (!target) return;
+    target.value = ''; target.setSelectionRange(0, 0); this._dispatchTargetInput('deleteContent', null); this._emitInput({ code: 'Clear', key: '', action: 'delete', source: 'api' }, 'deleteContent');
   }
 
   private _readLayoutAttribute(): void { try { this._layout = normalizeLayout(JSON.parse(this.getAttribute('layout') ?? '[]')); } catch { this._layout = HY_VIRTUAL_KEYBOARD_QWERTY_LAYOUT; } }
@@ -225,6 +234,7 @@ export class HYVirtualKeyboard extends HTMLElement {
     if (!this._pressed.delete(code)) return; const key = this._findKey(code); if (!key) return; const resolvedValue = this._pressedValues.get(code) ?? this._resolveKey(key).key; this._pressedValues.delete(code); this._syncVisuals(); this._dispatchKeyEvent('virtual-keyboard-up', key, resolvedValue, source);
   }
   private _applyKey(key: HYVirtualKeyboardKey, resolvedValue: string, source: HYVirtualKeyboardSource): void {
+    if (!this._editableTarget(false)) return;
     const descriptor = { code: key.code, key: resolvedValue, action: key.action ?? 'character', source } as const;
     if (key.action === 'shift' || key.action === 'caps-lock') return;
     if (key.action === 'backspace') this._deleteBackward(descriptor);
@@ -240,29 +250,57 @@ export class HYVirtualKeyboard extends HTMLElement {
     else if (key.action === 'tab') { if (this._target instanceof HTMLTextAreaElement) this._insertText('\t', 'insertText', descriptor); }
     else this._insertText(key.action === 'space' ? ' ' : resolvedValue, 'insertText', descriptor);
   }
+  private _editableTarget(edit = true): HTMLInputElement | HTMLTextAreaElement | null {
+    const target = this._target;
+    if (!target || this.disabled || target.disabled || edit && target.readOnly) return null;
+    if (target instanceof HTMLInputElement && !['text', 'search', 'url', 'tel', 'password'].includes(target.type)) return null;
+    return target;
+  }
   private _insertText(text: string, inputType: string, descriptor: Pick<HYVirtualKeyboardKeyDetail, 'code' | 'key' | 'action' | 'source'>): void {
-    const target = this._target; if (!target || target.disabled || target.readOnly) return; const start = target.selectionStart ?? target.value.length; const end = target.selectionEnd ?? start;
+    const target = this._editableTarget(); if (!target) return;
+    const edges = textBoundaries(target.value), rawStart = target.selectionStart ?? target.value.length, rawEnd = target.selectionEnd ?? rawStart;
+    const start = boundaryFloor(edges, rawStart), end = rawStart === rawEnd ? start : boundaryCeil(edges, rawEnd);
     target.setRangeText(text, start, end, 'end'); this._dispatchTargetInput(inputType, text); this._emitInput(descriptor, inputType);
   }
   private _deleteBackward(descriptor: Pick<HYVirtualKeyboardKeyDetail, 'code' | 'key' | 'action' | 'source'>): void {
-    const target = this._target; if (!target || target.disabled || target.readOnly) return; const start = target.selectionStart ?? 0; const end = target.selectionEnd ?? start; if (start === end && start === 0) return;
-    target.setRangeText('', start === end ? start - 1 : start, end, 'end'); this._dispatchTargetInput('deleteContentBackward', null); this._emitInput(descriptor, 'deleteContentBackward');
+    const target = this._editableTarget(); if (!target) return;
+    const edges = textBoundaries(target.value), rawStart = target.selectionStart ?? 0, rawEnd = target.selectionEnd ?? rawStart;
+    if (rawStart === 0 && rawEnd === 0) return;
+    const end = boundaryCeil(edges, rawEnd), start = rawStart === rawEnd ? boundaryBefore(edges, end) : boundaryFloor(edges, rawStart);
+    target.setRangeText('', start, end, 'end'); this._dispatchTargetInput('deleteContentBackward', null); this._emitInput(descriptor, 'deleteContentBackward');
   }
   private _deleteForward(descriptor: Pick<HYVirtualKeyboardKeyDetail, 'code' | 'key' | 'action' | 'source'>): void {
-    const target = this._target; if (!target || target.disabled || target.readOnly) return; const start = target.selectionStart ?? 0; const end = target.selectionEnd ?? start; if (start === end && end >= target.value.length) return;
-    target.setRangeText('', start, start === end ? end + 1 : end, 'end'); this._dispatchTargetInput('deleteContentForward', null); this._emitInput(descriptor, 'deleteContentForward');
+    const target = this._editableTarget(); if (!target) return;
+    const edges = textBoundaries(target.value), rawStart = target.selectionStart ?? 0, rawEnd = target.selectionEnd ?? rawStart;
+    if (rawStart === rawEnd && rawEnd >= target.value.length) return;
+    const start = boundaryFloor(edges, rawStart), end = rawStart === rawEnd ? edges.find(edge => edge > start)! : boundaryCeil(edges, rawEnd);
+    target.setRangeText('', start, end, 'end'); this._dispatchTargetInput('deleteContentForward', null); this._emitInput(descriptor, 'deleteContentForward');
   }
-  private _moveCaret(delta: number): void { const target = this._target; if (!target) return; const position = Math.max(0, Math.min(target.value.length, (target.selectionStart ?? 0) + delta)); this._setCaret(position); }
+  private _moveCaret(delta: number): void {
+    const target = this._editableTarget(false); if (!target) return;
+    const edges = textBoundaries(target.value), start = target.selectionStart ?? 0, end = target.selectionEnd ?? start;
+    const position = start !== end ? (delta < 0 ? boundaryFloor(edges, start) : boundaryCeil(edges, end))
+      : delta < 0 ? boundaryBefore(edges, start) : edges.find(edge => edge > start) ?? target.value.length;
+    this._setCaret(position);
+  }
   private _moveCaretVertical(direction: -1 | 1): void {
-    const target = this._target; if (!(target instanceof HTMLTextAreaElement)) return;
-    const value = target.value; const position = target.selectionStart ?? 0; const lineStart = value.lastIndexOf('\n', position - 1) + 1; const column = position - lineStart;
+    const target = this._editableTarget(false); if (!(target instanceof HTMLTextAreaElement)) return;
+    const value = target.value, position = target.selectionStart ?? 0, lineStart = value.lastIndexOf('\n', position - 1) + 1;
+    const column = Array.from(textSegmenter.segment(value.slice(lineStart, position))).length;
+    let start: number, end: number;
     if (direction < 0) {
-      if (lineStart === 0) return; const previousEnd = lineStart - 1; const previousStart = value.lastIndexOf('\n', previousEnd - 1) + 1; this._setCaret(previousStart + Math.min(column, previousEnd - previousStart));
+      if (lineStart === 0) return; end = lineStart - 1; start = value.lastIndexOf('\n', end - 1) + 1;
     } else {
-      const currentEnd = value.indexOf('\n', position); if (currentEnd < 0) return; const nextStart = currentEnd + 1; const nextEnd = value.indexOf('\n', nextStart); const length = (nextEnd < 0 ? value.length : nextEnd) - nextStart; this._setCaret(nextStart + Math.min(column, length));
+      const currentEnd = value.indexOf('\n', position); if (currentEnd < 0) return;
+      start = currentEnd + 1; const nextEnd = value.indexOf('\n', start); end = nextEnd < 0 ? value.length : nextEnd;
     }
+    const edges = textBoundaries(value.slice(start, end)); this._setCaret(start + edges[Math.min(column, edges.length - 1)]!);
   }
-  private _setCaret(position: number): void { const target = this._target; if (!target) return; target.focus({ preventScroll: true }); target.setSelectionRange(position, position); }
+  private _setCaret(position: number): void {
+    const target = this._editableTarget(false); if (!target) return;
+    const next = boundaryFloor(textBoundaries(target.value), Math.max(0, Math.min(target.value.length, position)));
+    target.focus({ preventScroll: true }); target.setSelectionRange(next, next);
+  }
   private _dispatchTargetInput(inputType: string, data: string | null): void {
     if (!this._target) return;
     try { this._target.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true, inputType, data })); }

@@ -1,3 +1,6 @@
+import { isKeyboardControlEvent } from './internal/keyboard.js';
+import { HYPointerDrag } from './internal/pointer-drag.js';
+
 export type HYResizableHandle = 'move' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw';
 export type HYResizableBoundsMode = 'none' | 'parent' | 'viewport';
 export type HYResizableBounds = HYResizableBoundsMode | HTMLElement;
@@ -53,7 +56,7 @@ export class HYResizable extends HTMLElement {
   private _origin: HYResizableRect = { x: 0, y: 0, width: 200, height: 120 };
   private _pointerX = 0;
   private _pointerY = 0;
-  private _dragAbort: AbortController | null = null;
+  private readonly _pointer = new HYPointerDrag();
 
   static get observedAttributes(): string[] {
     return [
@@ -220,25 +223,20 @@ export class HYResizable extends HTMLElement {
     if (this.disabled || event.button !== 0 || this._pointerId !== null) return;
     const handle = this._resolveHandle(event);
     if (handle === 'move' && (!this.movable || this._isCancelledTarget(event))) return;
-    const start = new CustomEvent<HYResizableChangeDetail>('resize-start', {
-      detail: { ...this.rect, handle, source: 'pointer' }, bubbles: true, composed: true, cancelable: true,
+    this._pointer.start(event, this._frame, {
+      start: () => {
+        const start = new CustomEvent<HYResizableChangeDetail>('resize-start', {
+          detail: { ...this.rect, handle, source: 'pointer' }, bubbles: true, composed: true, cancelable: true,
+        });
+        if (!this.dispatchEvent(start) || this.disabled || !this.isConnected) return false;
+        this._frame.focus({ preventScroll: true }); this._pointerId = event.pointerId; this._activeHandle = handle;
+        this._origin = this.rect; this._pointerX = event.clientX; this._pointerY = event.clientY;
+        this.toggleAttribute('resizing', true);
+        return true;
+      },
+      move: move => this._handlePointerMove(move),
+      end: (up, cancelled) => this._finishPointer(up.pointerId, cancelled),
     });
-    if (!this.dispatchEvent(start)) return;
-    event.preventDefault();
-    this._frame.focus({ preventScroll: true });
-    this._frame.setPointerCapture(event.pointerId);
-    this._pointerId = event.pointerId;
-    this._activeHandle = handle;
-    this._origin = this.rect;
-    this._pointerX = event.clientX;
-    this._pointerY = event.clientY;
-    this.toggleAttribute('resizing', true);
-    const abort = new AbortController();
-    this._dragAbort = abort;
-    this._frame.addEventListener('pointermove', move => this._handlePointerMove(move), { signal: abort.signal });
-    this._frame.addEventListener('pointerup', up => this._finishPointer(up.pointerId, false), { signal: abort.signal });
-    this._frame.addEventListener('pointercancel', cancel => this._finishPointer(cancel.pointerId, true), { signal: abort.signal });
-    this._frame.addEventListener('lostpointercapture', () => this._cancelDrag(true), { signal: abort.signal });
   }
 
   private _handlePointerMove(event: PointerEvent): void {
@@ -252,23 +250,21 @@ export class HYResizable extends HTMLElement {
   private _finishPointer(pointerId: number, cancelled: boolean): void {
     if (pointerId !== this._pointerId) return;
     const handle = this._activeHandle;
-    this._dragAbort?.abort();
-    this._dragAbort = null;
     this._pointerId = null;
     this.toggleAttribute('resizing', false);
-    if (this._frame.hasPointerCapture(pointerId)) this._frame.releasePointerCapture(pointerId);
     this.dispatchEvent(new CustomEvent<HYResizableEndDetail>('resize-end', {
       detail: { ...this.rect, handle, source: 'pointer', cancelled }, bubbles: true, composed: true,
     }));
   }
 
   private _cancelDrag(cancelled: boolean): void {
-    if (this._pointerId !== null) this._finishPointer(this._pointerId, cancelled);
+    if (cancelled) this._pointer.cancel();
   }
 
   private _handleKeydown(event: KeyboardEvent): void {
-    if (this.disabled || !this.keyboard) return;
+    if (this.disabled || !this.keyboard || event.defaultPrevented || isKeyboardControlEvent(event, this._frame)) return;
     const handle = event.composedPath().find((node): node is HTMLElement => node instanceof HTMLElement && Boolean(node.dataset.resizeHandle))?.dataset.resizeHandle as HYResizableHandle | undefined ?? 'move';
+    if (handle === 'move' && !this.movable) return;
     const step = this.grid * (event.shiftKey ? 10 : 1);
     let deltaX = 0;
     let deltaY = 0;

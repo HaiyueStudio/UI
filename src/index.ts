@@ -30,6 +30,9 @@ import { defineResizableComponents } from './resizable.js';
 import { defineDialogComponents } from './dialog.js';
 import { defineDrawerComponents } from './drawer.js';
 import { defineDraggableComponents } from './draggable.js';
+import { defineDragSourceComponents } from './drag-source.js';
+import { defineDropzoneComponents } from './dropzone.js';
+import { defineSortableComponents } from './sortable.js';
 import { defineInputComponents } from './input.js';
 import { defineMentionsComponents } from './mentions.js';
 import { defineSwitchComponents } from './switch.js';
@@ -82,7 +85,7 @@ export {
   defineButtonComponents,
   HYButton,
 } from './button.js';
-export type { HYButtonIconPosition } from './button.js';
+export type { HYButtonIconPosition, HYButtonVariant } from './button.js';
 export {
   defineButtonGroupComponents,
   HYButtonGroup,
@@ -276,6 +279,7 @@ export {
 } from './badge.js';
 export type {
   HYBadgeCount,
+  HYBadgeRemoveDetail,
   HYBadgeSize,
   HYBadgeStatus,
 } from './badge.js';
@@ -506,6 +510,12 @@ export { HYCard, defineCardComponents } from './card.js';
 export type { HYCardSize } from './card.js';
 export { HYRibbon, defineRibbonComponents } from './ribbon.js';
 export type { HYRibbonPlacement } from './ribbon.js';
+export { HYDragSource, defineDragSourceComponents } from './drag-source.js';
+export type { HYDragPayload, HYDragEndDetail, HYDragSourcePreview, HYDragSourcePreviewRenderer } from './drag-source.js';
+export { HYDropzone, defineDropzoneComponents } from './dropzone.js';
+export type { HYDropzoneDropDetail } from './dropzone.js';
+export { HYSortable, defineSortableComponents } from './sortable.js';
+export type { HYSortableDirection, HYSortablePreview, HYSortableChangeDetail, HYSortableEndDetail } from './sortable.js';
 export { HYDescriptions, defineDescriptionsComponents } from './descriptions.js';
 export type { HYDescriptionItem, HYDescriptionsLayout, HYDescriptionsSize } from './descriptions.js';
 
@@ -554,6 +564,9 @@ export function defineHaiyueUI(): void {
   defineDialogComponents();
   defineDrawerComponents();
   defineDraggableComponents();
+  defineDragSourceComponents();
+  defineDropzoneComponents();
+  defineSortableComponents();
   defineInputComponents();
   defineMentionsComponents();
   defineNotificationComponents();

@@ -1,6 +1,6 @@
 {
   "name": "@haiyue/ui",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": false,
   "description": "Dependency-free Web Components for HaiyueStudio tools and products.",
   "license": "MIT",
@@ -100,6 +100,18 @@
     "./draggable": {
       "types": "./dist/draggable.d.ts",
       "import": "./dist/draggable.js"
+    },
+    "./drag-source": {
+      "types": "./dist/drag-source.d.ts",
+      "import": "./dist/drag-source.js"
+    },
+    "./dropzone": {
+      "types": "./dist/dropzone.d.ts",
+      "import": "./dist/dropzone.js"
+    },
+    "./sortable": {
+      "types": "./dist/sortable.d.ts",
+      "import": "./dist/sortable.js"
     },
     "./dropdown": {
       "types": "./dist/dropdown.d.ts",
@@ -273,11 +285,26 @@
       "types": "./dist/tree.d.ts",
       "import": "./dist/tree.js"
     },
-    "./empty": { "types": "./dist/empty.d.ts", "import": "./dist/empty.js" },
-    "./result": { "types": "./dist/result.d.ts", "import": "./dist/result.js" },
-    "./avatar": { "types": "./dist/avatar.d.ts", "import": "./dist/avatar.js" },
-    "./card": { "types": "./dist/card.d.ts", "import": "./dist/card.js" },
-    "./descriptions": { "types": "./dist/descriptions.d.ts", "import": "./dist/descriptions.js" },
+    "./empty": {
+      "types": "./dist/empty.d.ts",
+      "import": "./dist/empty.js"
+    },
+    "./result": {
+      "types": "./dist/result.d.ts",
+      "import": "./dist/result.js"
+    },
+    "./avatar": {
+      "types": "./dist/avatar.d.ts",
+      "import": "./dist/avatar.js"
+    },
+    "./card": {
+      "types": "./dist/card.d.ts",
+      "import": "./dist/card.js"
+    },
+    "./descriptions": {
+      "types": "./dist/descriptions.d.ts",
+      "import": "./dist/descriptions.js"
+    },
     "./themes/light.css": "./themes/haiyue-light.css",
     "./themes/dark.css": "./themes/haiyue-dark.css",
     "./package.json": "./package.json",
@@ -337,6 +364,7 @@
     "@codemirror/lang-javascript": "^6.2.5",
     "@codemirror/language": "^6.13.1",
     "@codemirror/state": "^6.7.6",
+    "@lezer/common": "^1.5.3",
     "@lezer/highlight": "^1.2.5",
     "@playwright/test": "^1.63.0",
     "@rollup/plugin-node-resolve": "^16.0.3",

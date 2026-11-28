@@ -2,10 +2,12 @@ import { defineHaiyueUI } from '../dist/index.js';
 import { installCodeEditors } from './vendor/codemirror.js';
 import { initializeGalleryThemes } from './theme-editor.js';
 import { initializePresentationExamples } from './presentation-examples.js';
+import { initializeDragDropExamples } from './drag-drop-examples.js';
 
 defineHaiyueUI();
 initializeGalleryThemes();
 initializePresentationExamples();
+initializeDragDropExamples();
 
 const byId = id => document.getElementById(id);
 const setBoolean = (element, name, value) => element.toggleAttribute(name, Boolean(value));
@@ -287,6 +289,9 @@ const buttonLive = byId('button-live');
 byId('button-label').addEventListener('input', event => { buttonLive.setAttribute('label', event.target.value); });
 byId('button-icon').addEventListener('input', event => { buttonLive.icon = event.target.value; });
 byId('button-icon-position').addEventListener('change', event => { buttonLive.iconPosition = event.target.value; });
+byId('button-variant').addEventListener('change', event => { buttonLive.variant = event.target.value; });
+byId('button-animated').addEventListener('change', event => { buttonLive.animated = event.target.checked; });
+byId('button-animation-duration').addEventListener('input', event => { buttonLive.animationDuration = Number(event.target.value); });
 byId('button-loading').addEventListener('change', event => { buttonLive.loading = event.target.checked; });
 byId('button-disabled').addEventListener('change', event => { setBoolean(buttonLive, 'disabled', event.target.checked); });
 buttonLive.addEventListener('click', () => writeEvent(byId('button-event'), 'click', { label: buttonLive.getAttribute('label') }));
@@ -301,6 +306,8 @@ requestButton.addEventListener('click', async () => {
 
 // Button group.
 const buttonGroupLive = byId('button-group-live');
+byId('button-group-animated').addEventListener('change', event => { buttonGroupLive.animated = event.target.checked; });
+byId('button-group-animation-duration').addEventListener('input', event => { buttonGroupLive.animationDuration = Number(event.target.value); });
 byId('button-group-orientation').addEventListener('change', event => {
   buttonGroupLive.orientation = event.target.value;
   byId('button-group-event').textContent = `${buttonGroupLive.orientation} · 3 buttons`;
@@ -321,7 +328,7 @@ const badgeLive = byId('badge-live');
 const badgeStatusText = { success: 'Online', processing: 'Rendering', warning: 'Review', error: 'Failed', default: 'Idle' };
 const renderBadgeState = () => {
   const status = badgeLive.status;
-  byId('badge-state').textContent = status ? `${status} · ${badgeLive.text}` : badgeLive.dot ? 'dot notification' : `count · ${badgeLive.count ?? 'empty'}`;
+  byId('badge-state').textContent = status ? `${status} · ${badgeLive.text}` : badgeLive.removed ? '标记已移除 · 内容仍可操作' : badgeLive.dot ? 'dot notification' : `count · ${badgeLive.count ?? 'empty'}`;
 };
 byId('badge-count').addEventListener('input', event => { badgeLive.count = event.target.value === '' ? null : Number(event.target.value); renderBadgeState(); });
 byId('badge-overflow').addEventListener('input', event => { badgeLive.overflowCount = Number(event.target.value); });
@@ -330,6 +337,12 @@ byId('badge-color').addEventListener('input', event => { badgeLive.color = event
 byId('badge-dot').addEventListener('change', event => { badgeLive.dot = event.target.checked; renderBadgeState(); });
 byId('badge-zero').addEventListener('change', event => { badgeLive.showZero = event.target.checked; });
 byId('badge-small').addEventListener('change', event => { badgeLive.size = event.target.checked ? 'small' : 'default'; });
+byId('badge-drag-removable').addEventListener('change', event => { badgeLive.dragRemovable = event.target.checked; });
+byId('badge-remove-distance').addEventListener('input', event => {
+  badgeLive.removeDistance = Number(event.target.value); byId('badge-remove-event').textContent = `拖动时黏连形变，超过 ${badgeLive.removeDistance}px 断开，松开移除；拉回则重新融合`;
+});
+byId('badge-restore').addEventListener('click', () => { badgeLive.removed = false; renderBadgeState(); });
+badgeLive.addEventListener('badge-remove', event => { writeEvent(byId('badge-remove-event'), 'badge-remove', event.detail); queueMicrotask(renderBadgeState); });
 
 const tagLive = byId('tag-live');
 byId('tag-label').addEventListener('input', event => { tagLive.label = event.target.value; });
@@ -470,6 +483,8 @@ autoCompleteLive.options = autoCompleteOptions; autoCompleteLive.searchDelay = 1
 let autoCompleteTimer = 0;
 byId('auto-complete-delay').addEventListener('input', event => { autoCompleteLive.searchDelay = Number(event.target.value); });
 byId('auto-complete-disabled').addEventListener('change', event => { autoCompleteLive.disabled = event.target.checked; });
+byId('auto-complete-animated').addEventListener('change', event => { autoCompleteLive.animated = event.target.checked; });
+byId('auto-complete-duration').addEventListener('input', event => { autoCompleteLive.animationDuration = Number(event.target.value); });
 autoCompleteLive.addEventListener('search', event => {
   window.clearTimeout(autoCompleteTimer); writeEvent(byId('auto-complete-event'), 'search', event.detail);
   if (byId('auto-complete-async').checked) { autoCompleteLive.loading = true; autoCompleteTimer = window.setTimeout(() => { autoCompleteTimer = 0; autoCompleteLive.options = autoCompleteOptions; autoCompleteLive.loading = false; }, 500); }
@@ -1057,7 +1072,13 @@ for (const name of ['resize-start', 'resize', 'resize-end']) {
 // Split.
 const splitLive = byId('split-live');
 const splitRatio = byId('split-ratio');
-byId('split-direction').addEventListener('change', event => { splitLive.direction = event.target.value; });
+byId('split-direction').addEventListener('change', event => {
+  splitLive.direction = event.target.value; byId('split-custom-handle').textContent = event.target.value === 'vertical' ? '⋯' : '⋮';
+});
+byId('split-disabled').addEventListener('change', event => { splitLive.disabled = event.target.checked; });
+byId('split-bar-style').addEventListener('change', event => {
+  splitLive.dataset.barStyle = event.target.value; byId('split-custom-handle').hidden = event.target.value !== 'grip';
+});
 splitRatio.addEventListener('input', event => {
   splitLive.ratio = Number(event.target.value);
   byId('split-ratio-value').textContent = Number(event.target.value).toFixed(2);
@@ -1097,6 +1118,13 @@ const initialTreeData = [
 const resetTree = () => { treeLive.data = structuredClone(initialTreeData); treeLive.selectedIds = []; };
 resetTree();
 byId('tree-drag').addEventListener('change', event => { treeLive.allowDrag = event.target.checked; });
+byId('tree-animated').addEventListener('change', event => { treeLive.animated = event.target.checked; });
+byId('tree-arrow-animated').addEventListener('change', event => { treeLive.arrowAnimated = event.target.checked; });
+for (const [id, property] of [['animation-duration', 'animationDuration'], ['arrow-animation-duration', 'arrowAnimationDuration']]) {
+  byId('tree-' + id).addEventListener('input', event => {
+    treeLive[property] = Number(event.target.value); byId('tree-' + id + '-value').textContent = event.target.value + ' ms';
+  });
+}
 byId('tree-select-lights').addEventListener('click', () => { treeLive.selectedIds = ['sun', 'fill']; writeEvent(byId('tree-event'), 'selectedIds', treeLive.selectedIds); });
 byId('tree-reset').addEventListener('click', () => { resetTree(); writeEvent(byId('tree-event'), 'data', { reset: true }); });
 treeLive.addEventListener('selection-change', event => writeEvent(byId('tree-event'), 'selection-change', { selectedIds: event.detail.selectedIds }));

@@ -1,3 +1,5 @@
+import { finiteNumber } from './internal/numbers.js';
+
 export type HYToastType = 'success' | 'info' | 'warning' | 'error' | 'loading';
 export type HYToastPlacement = 'top' | 'center' | 'bottom';
 export type HYToastCloseReason = 'action' | 'timeout' | 'programmatic' | 'overflow';
@@ -45,7 +47,7 @@ function isPlacement(value: unknown): value is HYToastPlacement {
 }
 
 function finiteNonNegative(value: unknown, fallback: number): number {
-  const number = Number(value);
+  const number = finiteNumber(value, fallback);
   return Number.isFinite(number) && number >= 0 ? number : fallback;
 }
 
@@ -130,7 +132,7 @@ export class HYToast extends HTMLElement {
   set duration(value: number) { this.setAttribute('duration', String(finiteNonNegative(value, DEFAULT_DURATION))); }
 
   get maxCount(): number {
-    const value = Math.floor(Number(this.getAttribute('max-count')));
+    const value = Math.floor(finiteNumber(this.getAttribute('max-count'), 5));
     return Number.isFinite(value) ? Math.min(20, Math.max(1, value)) : 5;
   }
   set maxCount(value: number) {

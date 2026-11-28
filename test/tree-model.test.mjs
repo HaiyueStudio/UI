@@ -15,6 +15,26 @@ function fixture() {
   ];
 }
 
+test('bulk removal collapses descendants and preserves unrelated data identity', () => {
+  const data = fixture(), children = data[0].children, survivor = children[0], expanded = new Set(['root-a', 'child-b']);
+  const model = new HYTreeModel(expanded); model.setData(data);
+  assert.deepEqual(model.removeNodes(['child-b', 'grandchild', 'missing', 'child-b', 'root-b']), ['child-b', 'root-b']);
+  assert.equal(data[0].children, children); assert.equal(children[0], survivor);
+  assert.deepEqual(model.getVisibleIds(), ['root-a', 'child-a']); assert.equal(expanded.has('child-b'), false);
+  assert.equal(model.findNode('grandchild'), null);
+});
+
+test('moving into a very wide collapsed branch does not overflow argument limits', () => {
+  const children = Array.from({ length: 150_000 }, (_, i) => ({ id: `wide-${i}` }));
+  const source = { id: 'source' }, model = new HYTreeModel(new Set());
+  model.setData([{ id: 'target', children }, source]);
+  assert.deepEqual(model.getVisibleIds(), ['target', 'source']);
+  assert.equal(model.moveNode('source', 'target', 'inside'), true);
+  const ids = model.getVisibleIds(); assert.equal(ids.length, 150_002);
+  assert.equal(ids[1], 'wide-0'); assert.equal(ids[150_000], 'wide-149999'); assert.equal(ids.at(-1), 'source');
+  assert.equal(model.getIndexedNode('source').parent.children, children);
+});
+
 test('tree model builds stable hierarchy and visible indexes', () => {
   const expanded = new Set(['root-a', 'child-b', 'missing']);
   const model = new HYTreeModel(expanded);

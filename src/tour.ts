@@ -1,3 +1,5 @@
+import { finiteNumber } from './internal/numbers.js';
+
 export type HYTourPlacement = 'top' | 'right' | 'bottom' | 'left' | 'center';
 export type HYTourCloseReason = 'close' | 'mask' | 'escape' | 'finish' | 'programmatic';
 export type HYTourTarget = string | Element | (() => Element | null);
@@ -113,10 +115,10 @@ export class HYTour extends HTMLElement {
   set closeOnEscape(value: boolean) { this.setAttribute('close-on-escape', String(Boolean(value))); }
   get autoScroll(): boolean { return this.getAttribute('scroll-into-view') !== 'false'; }
   set autoScroll(value: boolean) { this.setAttribute('scroll-into-view', String(Boolean(value))); }
-  get gap(): number { const number = Number(this.getAttribute('gap')); return Number.isFinite(number) ? Math.min(80, Math.max(0, number)) : 8; }
+  get gap(): number { const number = finiteNumber(this.getAttribute('gap'), 8); return Number.isFinite(number) ? Math.min(80, Math.max(0, number)) : 8; }
   set gap(value: number) { const number = Number(value); this.setAttribute('gap', String(Number.isFinite(number) ? Math.min(80, Math.max(0, number)) : 8)); }
-  get zIndex(): number { const number = Number(this.getAttribute('z-index')); return Number.isFinite(number) ? Math.round(number) : 1000; }
-  set zIndex(value: number) { this.setAttribute('z-index', String(Math.round(Number(value) || 1000))); }
+  get zIndex(): number { const number = finiteNumber(this.getAttribute('z-index'), 1000); return Number.isFinite(number) ? Math.round(number) : 1000; }
+  set zIndex(value: number) { this.setAttribute('z-index', String(Math.round(finiteNumber(value, 1000)))); }
 
   start(current = 0): void { if (!this._steps.length) return; this.current = current; this.open = true; }
   next(): void {
@@ -130,23 +132,24 @@ export class HYTour extends HTMLElement {
   private _goTo(current: number): void { const previous = this.current; this.current = current; const step = this._steps[this.current]; if (step) this.dispatchEvent(new CustomEvent<HYTourChangeDetail>('tour-change', { bubbles: true, composed: true, detail: { current: this.current, previous, step } })); }
   private _syncOpen(): void {
     if (!this.isConnected) return; this.style.setProperty('--_hy-tour-z-index', String(this.zIndex));
+    if (this.open && !this._steps.length) { this.close('programmatic'); return; }
     if (!this.open || !this._steps.length) { this._teardown(); this._returnFocus?.focus({ preventScroll: true }); this._returnFocus = null; this.dispatchEvent(new CustomEvent<HYTourOpenChangeDetail>('tour-open-change', { bubbles: true, composed: true, detail: { open: false } })); return; }
     if (!this._documentAbort) { this._returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null; const abort = new AbortController(); this._documentAbort = abort; document.addEventListener('keydown', event => { if (event.key === 'Escape' && this.closeOnEscape) { event.preventDefault(); this.close('escape'); } }, { signal: abort.signal }); window.addEventListener('resize', () => this._schedulePosition(), { passive: true, signal: abort.signal }); window.addEventListener('scroll', () => this._schedulePosition(), { passive: true, capture: true, signal: abort.signal }); this.dispatchEvent(new CustomEvent<HYTourOpenChangeDetail>('tour-open-change', { bubbles: true, composed: true, detail: { open: true } })); }
     this._renderStep();
   }
   private _teardown(): void { this._documentAbort?.abort(); this._documentAbort = null; this._resizeObserver?.disconnect(); this._resizeObserver = null; cancelAnimationFrame(this._frame); this._frame = 0; this._target = null; this._scrolledStep = -1; }
   private _renderStep(): void {
-    const step = this._steps[this.current]; if (!step) return; this._title.textContent = step.title; this._description.textContent = step.description ?? ''; this._description.hidden = !step.description; this._counter.textContent = `${this.current + 1} / ${this._steps.length}`; this._previous.textContent = step.previousText ?? 'Previous'; this._previous.disabled = this.current === 0; this._next.textContent = step.nextText ?? (this.current === this._steps.length - 1 ? 'Finish' : 'Next'); this._popover.setAttribute('aria-label', step.title);
+    const step = this._steps[this.current]; if (!step) { if (this.open) this.close('programmatic'); return; } this._title.textContent = step.title; this._description.textContent = step.description ?? ''; this._description.hidden = !step.description; this._counter.textContent = `${this.current + 1} / ${this._steps.length}`; this._previous.textContent = step.previousText ?? 'Previous'; this._previous.disabled = this.current === 0; this._next.textContent = step.nextText ?? (this.current === this._steps.length - 1 ? 'Finish' : 'Next'); this._popover.setAttribute('aria-label', step.title);
     this.style.setProperty('--_hy-tour-z-index', String(this.zIndex));
     this._target = this._resolveTarget(step.target); if (this._target && this.autoScroll && this._scrolledStep !== this.current) { this._target.scrollIntoView({ block: 'center', inline: 'center' }); this._scrolledStep = this.current; }
     this._resizeObserver?.disconnect(); if (typeof ResizeObserver !== 'undefined') { this._resizeObserver = new ResizeObserver(() => this._schedulePosition()); this._resizeObserver.observe(this._popover); if (this._target instanceof Element) this._resizeObserver.observe(this._target); }
-    this._schedulePosition(); queueMicrotask(() => this._popover.focus({ preventScroll: true }));
+    this._schedulePosition(); queueMicrotask(() => { if (this.open && this.isConnected) this._popover.focus({ preventScroll: true }); });
   }
   private _resolveTarget(target: HYTourTarget | undefined): Element | null { if (typeof target === 'function') return target(); if (typeof target === 'string') { try { return document.querySelector(target); } catch { return null; } } return target instanceof Element ? target : null; }
   private _schedulePosition(): void { cancelAnimationFrame(this._frame); this._frame = requestAnimationFrame(() => this._position()); }
   private _position(): void {
     if (!this.open) return; const step = this._steps[this.current]; if (!step) return; const viewportWidth = window.innerWidth; const viewportHeight = window.innerHeight; const margin = 12; const gap = this.gap; const mask = step.mask ?? this.mask;
-    this._popover.setAttribute('aria-modal', String(mask));
+    this._popover.removeAttribute('aria-modal');
     if (!this._target) { this._masks.forEach(piece => { piece.hidden = !mask; piece.style.cssText = mask ? 'inset:0' : ''; }); this._highlight.hidden = true; const rect = this._popover.getBoundingClientRect(); this._popover.style.left = `${Math.max(margin, (viewportWidth - rect.width) / 2)}px`; this._popover.style.top = `${Math.max(margin, (viewportHeight - rect.height) / 2)}px`; this._popover.dataset.placement = 'center'; return; }
     const targetRect = this._target.getBoundingClientRect(); const left = Math.max(0, targetRect.left - gap); const top = Math.max(0, targetRect.top - gap); const right = Math.min(viewportWidth, targetRect.right + gap); const bottom = Math.min(viewportHeight, targetRect.bottom + gap);
     this._setBox(this._highlight, left, top, right - left, bottom - top); this._highlight.hidden = !mask;

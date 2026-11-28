@@ -179,16 +179,19 @@
       <a href="#virtual-mouse" data-name="virtual mouse cursor 虚拟 鼠标 光标 演示"><span>Virtual Mouse</span><code>hy-virtual-mouse</code></a>
       <a href="#watermark" data-name="watermark 水印 文字 图片 覆盖"><span>Watermark</span><code>hy-watermark</code></a>
       <p class="nav-label">布局与数据</p>
+      <a href="#drag-source" data-name="drag source dnd 拖拽 源 数据 触屏"><span>Drag Source</span><code>hy-drag-source</code></a>
       <a href="#draggable" data-name="draggable drag container 拖拽 容器 移动 位置"><span>Draggable</span><code>hy-draggable</code></a>
+      <a href="#dropzone" data-name="dropzone drop dnd 拖拽 放置 接收 文件"><span>Dropzone</span><code>hy-dropzone</code></a>
       <a href="#expandable" data-name="expandable 展开 放大 还原"><span>Expandable</span><code>hy-expandable</code></a>
       <a href="#masonry" data-name="masonry waterfall 瀑布流 布局 多列"><span>Masonry</span><code>hy-masonry</code></a>
       <a href="#resizable" data-name="resizable resize transform handles 调整 大小 位置 缩放"><span>Resizable</span><code>hy-resizable</code></a>
+      <a href="#sortable" data-name="sortable sort dnd 拖拽 排序 列表 看板 跨列表"><span>Sortable</span><code>hy-sortable</code></a>
       <a href="#split" data-name="split 分栏"><span>Split</span><code>hy-split</code></a>
       <a href="#table" data-name="table 表格 分页 过滤 排序"><span>Table</span><code>hy-table</code></a>
       <a href="#tree" data-name="tree 树"><span>Tree</span><code>hy-tree</code></a>
       <a href="#virtual-list" data-name="virtual list 虚拟列表 大数据"><span>Virtual List</span><code>hy-virtual-list</code></a>
     </nav>
-    <div class="sidebar-foot"><hy-badge status="success" text="69 components"></hy-badge><span>·</span><span>v0.3.0</span></div>
+    <div class="sidebar-foot"><hy-badge status="success" text="72 components"></hy-badge><span>·</span><span>v0.4.0</span></div>
   </aside>
 
   <main id="content" slot="second">
@@ -197,7 +200,7 @@
       <h1>组件，<em>在真实状态里。</em></h1>
       <p>浏览 Haiyue UI 的公开组件，调整参数并观察事件。所有示例都直接运行当前构建产物。</p>
       <div class="hero-meta">
-        <span><b>69</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
+        <span><b>72</b> components</span><span><b>0</b> runtime deps</span><span><b>⌘ K</b> quick search</span>
       </div>
     </header>
 
@@ -259,13 +262,15 @@
     </section>
 
     <section class="component-section" id="auto-complete" data-title="AutoComplete">
-      <div class="section-heading"><div><h2>AutoComplete</h2><code>&lt;hy-auto-complete&gt;</code></div><p>自由输入和候选补全，支持键盘选择、输入法、延迟搜索、加载态与表单关联。</p></div>
-      <div class="demo-card two-column overflow-visible"><div class="preview form-preview"><hy-auto-complete id="auto-complete-live" aria-label="资源搜索" placeholder="输入 ocean 或 orbit…" allow-clear></hy-auto-complete><p>↑ ↓ 选择候选 · Enter 填入 · Esc 关闭</p></div>
-      <div class="controls stacked"><label>search delay (ms)<input id="auto-complete-delay" type="number" min="0" max="2000" value="150" /></label><div class="toggle-row"><label class="toggle"><input id="auto-complete-async" type="checkbox" /><span></span>async results</label><label class="toggle"><input id="auto-complete-disabled" type="checkbox" /><span></span>disabled</label></div><output id="auto-complete-event">输入后显示 search，选择后显示 option-select</output></div></div>
-      <details class="code"><summary>查看自动补全用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-auto-complete name="asset" placeholder="搜索资源…" allow-clear&gt;&lt;/hy-auto-complete&gt;
+      <div class="section-heading"><div><h2>AutoComplete</h2><code>&lt;hy-auto-complete&gt;</code></div><p>自由输入和候选补全，支持面板展开／收起动效、键盘选择、输入法、延迟搜索与表单关联。</p></div>
+      <div class="demo-card two-column overflow-visible"><div class="preview form-preview"><hy-auto-complete id="auto-complete-live" aria-label="资源搜索" placeholder="输入 ocean 或 orbit…" allow-clear animated animation-duration="180"></hy-auto-complete><p>↑ ↓ 选择候选 · Enter 填入 · Esc 关闭</p></div>
+      <div class="controls stacked"><label>search delay (ms)<input id="auto-complete-delay" type="number" min="0" max="2000" value="150" /></label><label>animation duration (ms)<input id="auto-complete-duration" type="number" min="0" max="10000" value="180" step="20" /></label><div class="toggle-row"><label class="toggle"><input id="auto-complete-animated" type="checkbox" checked /><span></span>animated</label><label class="toggle"><input id="auto-complete-async" type="checkbox" /><span></span>async results</label><label class="toggle"><input id="auto-complete-disabled" type="checkbox" /><span></span>disabled</label></div><output id="auto-complete-event">输入后显示 search，选择后显示 option-select</output></div></div>
+      <details class="code"><summary>查看自动补全用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-auto-complete name="asset" placeholder="搜索资源…" allow-clear
+  animated animation-duration="180"&gt;&lt;/hy-auto-complete&gt;
 autoComplete.options = [{ value: 'ocean', label: 'Ocean scene' }];
 autoComplete.addEventListener('search', event =&gt; console.log(event.detail.value));
 autoComplete.addEventListener('option-select', event =&gt; console.log(event.detail));</code></pre></details>
+      <div class="parameter-strip"><code>animated</code><code>animation-duration</code><code>search-delay</code><code>allow-clear</code><code>disabled</code><code>open</code></div>
     </section>
 
     <section class="component-section" id="avatar" data-title="Avatar">
@@ -279,10 +284,10 @@ autoComplete.addEventListener('option-select', event =&gt; console.log(event.det
     </section>
 
     <section class="component-section" id="badge" data-title="Badge">
-      <div class="section-heading"><div><h2>Badge</h2><code>&lt;hy-badge&gt;</code></div><p>在内容角落展示数量或圆点提醒，也可独立表达成功、处理中、警告和错误状态。</p></div>
+      <div class="section-heading"><div><h2>Badge</h2><code>&lt;hy-badge&gt;</code></div><p>拖动数量或圆点时，原位小圆与拖动圆黏连、拉伸，拉回时重新融合；超过阈值断开，松开移除。距离可从 10px 起调整。</p></div>
       <div class="demo-card two-column">
         <div class="preview badge-stage">
-          <hy-badge id="badge-live" count="8" overflow-count="99"><button type="button" class="badge-asset"><span>◇</span><b>Moon Temple</b><small>Scene package</small></button></hy-badge>
+          <hy-badge id="badge-live" count="8" overflow-count="99" drag-removable remove-distance="80"><button type="button" class="badge-asset"><span>◇</span><b>Moon Temple</b><small>Scene package</small></button></hy-badge>
           <div class="badge-statuses" aria-label="Status badge examples">
             <hy-badge status="success" text="Synced"></hy-badge>
             <hy-badge status="processing" text="Rendering"></hy-badge>
@@ -295,23 +300,34 @@ autoComplete.addEventListener('option-select', event =&gt; console.log(event.det
           <label>overflow count<input id="badge-overflow" type="number" value="99" min="0" max="9999" /></label>
           <label>status<select id="badge-status"><option value="" selected>count</option><option value="success">success</option><option value="processing">processing</option><option value="warning">warning</option><option value="error">error</option><option value="default">default</option></select></label>
           <label>color<input id="badge-color" type="color" value="#ef5b72" /></label>
+          <label>remove distance (px)<input id="badge-remove-distance" type="range" min="10" max="200" step="10" value="80" /></label>
+          <label class="toggle"><input id="badge-drag-removable" type="checkbox" checked /><span></span>drag-removable</label>
           <div class="toggle-row"><label class="toggle"><input id="badge-dot" type="checkbox" /><span></span>dot</label><label class="toggle"><input id="badge-zero" type="checkbox" /><span></span>show zero</label><label class="toggle"><input id="badge-small" type="checkbox" /><span></span>small</label></div>
+          <hy-button id="badge-restore" label="恢复标记"></hy-button>
           <output id="badge-state">count · 8</output>
+          <output id="badge-remove-event">拖动时黏连形变，超过 80px 断开，松开移除；拉回则重新融合</output>
         </div>
       </div>
-      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-badge count="8" overflow-count="99"&gt;
+      <details class="code"><summary>查看用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-badge id="notice" count="8" drag-removable remove-distance="80"&gt;
   &lt;button&gt;Notifications&lt;/button&gt;
 &lt;/hy-badge&gt;
 
-&lt;hy-badge status="processing" text="Rendering"&gt;&lt;/hy-badge&gt;</code></pre></details>
-      <div class="parameter-strip"><code>count</code><code>overflow-count</code><code>show-zero</code><code>dot</code><code>status</code><code>color</code><code>text</code><code>offset</code><code>offset-x</code><code>offset-y</code><code>size</code><code>title</code></div>
+&lt;hy-badge status="processing" text="Rendering"&gt;&lt;/hy-badge&gt;
+notice.addEventListener('badge-remove', event =&gt; {
+  console.log(event.detail); // count, dot, distance, source
+  // event.preventDefault(); // 阻止移除
+});
+notice.removed = false; // 恢复标记，count 保持原值</code></pre></details>
+      <div class="parameter-strip"><code>count</code><code>overflow-count</code><code>show-zero</code><code>dot</code><code>drag-removable</code><code>remove-distance</code><code>removed</code><code>badge-remove</code><code>status</code><code>color</code><code>text</code><code>offset</code><code>size</code></div>
     </section>
 
     <section class="component-section" id="button" data-title="Button">
-      <div class="section-heading"><div><span class="index">02</span><h2>Button</h2><code>&lt;hy-button&gt;</code></div><p>执行即时操作；支持前后图标、加载状态、禁用和无障碍名称。</p></div>
+      <div class="section-heading"><div><span class="index">02</span><h2>Button</h2><code>&lt;hy-button&gt;</code></div><p>纯色或边框风格；悬停和按下时可平滑切换颜色，支持图标、加载状态和键盘操作。</p></div>
       <div class="demo-card">
         <div class="preview centered" id="button-preview">
-          <hy-button id="button-live" label="Publish" icon="↥"></hy-button>
+          <hy-button id="button-live" label="Publish" icon="↥" variant="outlined" animated animation-duration="160"></hy-button>
+          <hy-button label="Solid" variant="solid" animated></hy-button>
+          <hy-button label="Outlined" variant="outlined" animated></hy-button>
           <hy-button label="Next" icon="→" icon-position="end"></hy-button>
           <hy-button id="button-request" label="Sync from cloud" icon="☁"></hy-button>
           <hy-button label="Disabled" disabled></hy-button>
@@ -321,26 +337,30 @@ autoComplete.addEventListener('option-select', event =&gt; console.log(event.det
           <label>label<input id="button-label" value="Publish" /></label>
           <label>icon<input id="button-icon" value="↥" /></label>
           <label>icon position<select id="button-icon-position"><option value="start">start</option><option value="end">end</option></select></label>
+          <label>variant<select id="button-variant"><option value="outlined">outlined · 边框</option><option value="solid">solid · 纯色</option></select></label>
+          <label>animation duration (ms)<input id="button-animation-duration" type="number" min="0" max="10000" step="20" value="160" /></label>
+          <label class="toggle"><input id="button-animated" type="checkbox" checked /><span></span>animated</label>
           <label class="toggle"><input id="button-loading" type="checkbox" /><span></span>loading</label>
           <label class="toggle"><input id="button-disabled" type="checkbox" /><span></span>disabled</label>
           <output id="button-event">点击按钮查看事件</output>
         </div>
       </div>
-      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-button label="Publish"&gt;&lt;/hy-button&gt;
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-button label="Publish" variant="solid" animated animation-duration="160"&gt;&lt;/hy-button&gt;
+&lt;hy-button label="Cancel" variant="outlined" animated&gt;&lt;/hy-button&gt;
 &lt;hy-button label="Publish" icon="↥"&gt;&lt;/hy-button&gt;
 &lt;hy-button label="Next" icon="→" icon-position="end"&gt;&lt;/hy-button&gt;
 &lt;hy-button loading label="Syncing"&gt;&lt;/hy-button&gt;
 &lt;hy-button label="Upload"&gt;
   &lt;svg slot="icon"&gt;…&lt;/svg&gt;
 &lt;/hy-button&gt;</code></pre></details>
-      <div class="parameter-strip"><code>label</code><code>icon</code><code>icon-position</code><code>slot="icon"</code><code>loading</code><code>disabled</code><code>icon-only</code><code>button</code><code>icon</code><code>spinner</code></div>
+      <div class="parameter-strip"><code>variant="solid|outlined"</code><code>animated</code><code>animation-duration</code><code>label</code><code>icon</code><code>icon-position</code><code>slot="icon"</code><code>loading</code><code>disabled</code><code>icon-only</code><code>button</code><code>icon</code><code>spinner</code></div>
     </section>
 
     <section class="component-section" id="button-group" data-title="Button Group">
-      <div class="section-heading"><div><h2>Button Group</h2><code>&lt;hy-button-group&gt;</code></div><p>将相关按钮组合成连续控件，支持横向和纵向排列。</p></div>
+      <div class="section-heading"><div><h2>Button Group</h2><code>&lt;hy-button-group&gt;</code></div><p>横向或纵向组合相关按钮，统一配置颜色动效与时长，子按钮可单独覆盖。</p></div>
       <div class="demo-card two-column">
         <div class="preview centered button-group-stage">
-          <hy-button-group id="button-group-live" aria-label="Editor history actions">
+          <hy-button-group id="button-group-live" aria-label="Editor history actions" animated animation-duration="160">
             <hy-button label="Undo" icon="↶"></hy-button>
             <hy-button label="Redo" icon="↷"></hy-button>
             <hy-button label="History" icon="⌄" icon-position="end"></hy-button>
@@ -348,15 +368,17 @@ autoComplete.addEventListener('option-select', event =&gt; console.log(event.det
         </div>
         <div class="controls stacked">
           <label>orientation<select id="button-group-orientation"><option value="horizontal">horizontal</option><option value="vertical">vertical</option></select></label>
+          <label>animation duration (ms)<input id="button-group-animation-duration" type="number" min="0" max="10000" step="20" value="160" /></label>
+          <label class="toggle"><input id="button-group-animated" type="checkbox" checked /><span></span>animated</label>
           <output id="button-group-event">horizontal · 3 buttons</output>
         </div>
       </div>
-      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-button-group aria-label="History actions"&gt;
+      <details class="code"><summary>查看用法 <span>HTML</span></summary><pre><code>&lt;hy-button-group aria-label="History actions" animated animation-duration="200"&gt;
   &lt;hy-button label="Undo" icon="↶"&gt;&lt;/hy-button&gt;
   &lt;hy-button label="Redo" icon="↷"&gt;&lt;/hy-button&gt;
   &lt;hy-button label="History" icon="⌄" icon-position="end"&gt;&lt;/hy-button&gt;
 &lt;/hy-button-group&gt;</code></pre></details>
-      <div class="parameter-strip"><code>orientation</code><code>aria-label</code><code>group</code></div>
+      <div class="parameter-strip"><code>orientation</code><code>animated</code><code>animation-duration</code><code>aria-label</code><code>group</code></div>
     </section>
 
     <section class="component-section" id="card" data-title="Card">
@@ -1363,6 +1385,38 @@ hy-virtual-mouse {
       <div class="parameter-strip"><code>content</code><code>image</code><code>rotate</code><code>gapX</code><code>gapY</code><code>offsetX</code><code>offsetY</code><code>markWidth</code><code>markHeight</code><code>fontSize</code><code>fontFamily</code><code>fontWeight</code><code>color</code><code>opacity</code><code>zIndex</code></div>
     </section>
 
+    <section class="component-section" id="drag-source" data-title="Drag Source">
+      <div class="section-heading"><div><h2>Drag Source</h2><code>&lt;hy-drag-source&gt;</code></div><p>为任意内容附加可拖拽的数据，支持鼠标、触屏、键盘、手柄和可取消的拖拽生命周期。</p></div>
+      <div class="demo-card two-column overflow-visible dnd-demo">
+        <div class="preview dnd-source-stage">
+          <hy-drag-source id="drag-source-live" type="asset" value="海面材质" preview="clone" aria-label="海面材质"><article class="dnd-asset"><strong>海面材质</strong><p>clone · 半透明原样预览</p></article><hy-card slot="preview" heading="自定义预览" class="dnd-custom-preview">海面材质 · 通过 preview 插槽提供</hy-card></hy-drag-source>
+          <hy-drag-source type="asset" value="月光环境" preview="move" aria-label="月光环境"><article class="dnd-asset"><strong>月光环境</strong><p>move · 原组件跟随指针</p></article></hy-drag-source>
+          <hy-drag-source id="drag-source-custom" type="asset" value="远山模型" preview="custom" aria-label="远山模型"><article class="dnd-asset"><strong>远山模型</strong><p>custom · 渲染自定义组件</p></article></hy-drag-source>
+          <hy-dropzone id="drag-source-target" accept="asset" aria-label="数据拖拽体验区"><p id="drag-source-result">拖入素材，或用 Space 拿起、Tab 切换、Enter 放下</p></hy-dropzone>
+        </div>
+        <div class="controls stacked"><label>首张卡片 preview<select id="drag-source-preview"><option value="clone">clone · 半透明原样</option><option value="custom">custom · 自定义组件</option><option value="move">move · 移动原组件</option><option value="text">text · 文本预览</option></select></label><label>preview-opacity <span id="drag-source-preview-opacity-value">0.65</span><input id="drag-source-preview-opacity" type="range" min="0" max="1" step="0.05" value="0.65" /></label><label>source-opacity <span id="drag-source-source-opacity-value">0.55</span><input id="drag-source-source-opacity" type="range" min="0" max="1" step="0.05" value="0.55" /></label><label class="toggle"><input type="checkbox" id="drag-source-disabled" /><span></span>disabled</label><output id="drag-source-event"></output></div>
+      </div>
+      <details class="code"><summary>查看数据拖拽用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-drag-source id="asset" type="asset" preview="clone" preview-opacity="0.65"&gt;
+  &lt;article&gt;海面材质&lt;/article&gt;
+  &lt;hy-card slot="preview" heading="自定义预览"&gt;正在拖拽海面材质&lt;/hy-card&gt;
+&lt;/hy-drag-source&gt;
+&lt;hy-dropzone id="dropzone" accept="asset"&gt;放到这里&lt;/hy-dropzone&gt;
+const asset = document.getElementById('asset');
+const dropzone = document.getElementById('dropzone');
+asset.data = { id: 'ocean', name: '海面材质' };
+asset.preview = 'move'; // 移动真实组件，原位保留半透明占位
+asset.preview = 'custom'; // 使用 preview 插槽，也可以使用渲染函数
+asset.renderPreview = ({ data }) =&gt; {
+  const card = document.createElement('hy-card');
+  card.heading = '正在拖拽';
+  card.textContent = data.name;
+  return card;
+};
+dropzone.addEventListener('data-drop', event =&gt; {
+  addAsset(event.detail.data);
+});</code></pre></details>
+    </section>
+
     <section class="component-section" id="draggable" data-title="Draggable">
       <div class="section-heading"><div><h2>Draggable</h2><code>&lt;hy-draggable&gt;</code></div><p>让任意内容通过指针或键盘移动；支持拖拽手柄、排除区域、轴向限制、边界约束与网格吸附。</p></div>
       <div class="demo-card draggable-card">
@@ -1395,6 +1449,19 @@ panel.grid = 8;
 panel.moveTo(24, 24);
 panel.addEventListener('drag-move', event =&gt; console.log(event.detail));</code></pre></details>
       <div class="parameter-strip"><code>x</code><code>y</code><code>axis</code><code>bounds</code><code>grid</code><code>handle</code><code>cancel</code><code>disabled</code><code>keyboard</code><code>moveTo()</code><code>moveBy()</code><code>reset()</code><code>refresh()</code></div>
+    </section>
+
+    <section class="component-section" id="dropzone" data-title="Dropzone">
+      <div class="section-heading"><div><h2>Dropzone</h2><code>&lt;hy-dropzone&gt;</code></div><p>接收 Drag Source 的数据或从系统拖入的文件。通过 accept 限定数据类型，应用在 data-drop 中处理放置结果。</p></div>
+      <div class="demo-card two-column overflow-visible dnd-demo">
+        <div class="preview dnd-drop-stage"><hy-drag-source type="asset" value="海面材质" aria-label="可放置的海面材质"><article class="dnd-asset">海面材质 · 拖到接收区</article></hy-drag-source><hy-dropzone id="dropzone-live" accept="asset,Files" aria-label="素材接收区"><strong>将素材或本地文件拖到这里</strong><p id="dropzone-result">等待接收内容</p></hy-dropzone></div>
+        <div class="controls stacked"><label>accept<select id="dropzone-accept"><option value="asset,Files">asset,Files</option><option value="asset">仅应用素材</option><option value="Files">仅本地文件</option></select></label><label class="toggle"><input type="checkbox" id="dropzone-disabled" /><span></span>disabled</label><output id="dropzone-event">等待 data-drop</output><p class="control-note">文件上传和校验可使用 <a href="#upload">Upload</a>。</p></div>
+      </div>
+      <details class="code"><summary>查看接收用法 <span>JavaScript</span></summary><pre><code>dropzone.addEventListener('data-drop', event =&gt; {
+  const { data, files } = event.detail;
+  if (!canPlace(data, files)) event.preventDefault();
+  else handleDrop(data, files);
+});</code></pre></details>
     </section>
 
     <section class="component-section" id="expandable" data-title="Expandable">
@@ -1475,12 +1542,49 @@ frame.addEventListener('resize', event =&gt; console.log(event.detail));</code><
       <div class="parameter-strip"><code>x</code><code>y</code><code>width</code><code>height</code><code>min-width</code><code>min-height</code><code>max-width</code><code>max-height</code><code>bounds</code><code>grid</code><code>aspect-ratio</code><code>movable</code><code>keyboard</code><code>disabled</code><code>setRect()</code><code>moveTo()</code><code>resizeTo()</code><code>reset()</code></div>
     </section>
 
-    <section class="component-section" id="split" data-title="Split">
-      <div class="section-heading"><div><span class="index">42</span><h2>Split</h2><code>&lt;hy-split&gt;</code></div><p>可拖拽、可键盘调整的双面板布局，支持方向、比例、最小尺寸和分隔条宽度。</p></div>
-      <div class="demo-card">
-        <div class="preview split-stage"><hy-split id="split-live" direction="horizontal" ratio="0.34" min-first="100" min-second="140" bar-size="6"><div class="split-pane pane-a" slot="first"><span>01</span><b>Hierarchy</b><small>First pane</small></div><div class="split-pane pane-b" slot="second"><span>02</span><b>Viewport</b><small>Second pane</small></div></hy-split></div>
-        <div class="controls split-controls"><label>direction<select id="split-direction"><option>horizontal</option><option>vertical</option></select></label><label>ratio <span id="split-ratio-value">0.34</span><input id="split-ratio" type="range" min="0" max="1" step="0.01" value="0.34" /></label><label>bar-size <span id="split-bar-value">6 px</span><input id="split-bar" type="range" min="1" max="18" value="6" /></label><output id="split-event">拖动分隔条或使用方向键</output></div>
+    <section class="component-section" id="sortable" data-title="Sortable">
+      <div class="section-heading"><div><h2>Sortable</h2><code>&lt;hy-sortable&gt;</code></div><p>拖动原组件排序，半透明占位随候选位置移动，其他项目平滑让位。同组列表可转移，支持横向、网格、键盘和 Escape 取消。</p></div>
+      <div class="demo-card overflow-visible dnd-demo">
+        <div class="preview sortable-stage">
+          <div><h3>待处理</h3><hy-sortable id="sortable-backlog" group="assets" animation="250" preview="move" source-opacity="0.4" aria-label="待处理"><article class="sortable-item" data-id="ocean">海面材质</article><article class="sortable-item" data-id="moon">月光环境</article><article class="sortable-item" data-id="mountain">远山模型</article></hy-sortable></div>
+          <div><h3>已就绪</h3><hy-sortable id="sortable-ready" group="assets" animation="250" preview="move" source-opacity="0.4" aria-label="已就绪"><article class="sortable-item" data-id="sky">天空贴图</article></hy-sortable></div>
+        </div>
+        <div class="controls"><label>direction<select id="sortable-direction"><option value="vertical">vertical</option><option value="horizontal">horizontal</option><option value="grid">grid</option></select></label><label>preview<select id="sortable-preview"><option value="move">move · 移动原组件</option><option value="clone">clone · 半透明原样</option><option value="text">text · 文本预览</option></select></label><label>animation <span id="sortable-animation-value">250 ms</span><input id="sortable-animation" type="range" min="0" max="600" step="50" value="250" /></label><label>preview-opacity <span id="sortable-preview-opacity-value">1</span><input id="sortable-preview-opacity" type="range" min="0" max="1" step="0.05" value="1" /></label><label>source-opacity <span id="sortable-source-opacity-value">0.4</span><input id="sortable-source-opacity" type="range" min="0" max="1" step="0.05" value="0.4" /></label><label class="toggle"><input type="checkbox" id="sortable-disabled" /><span></span>disabled</label><hy-button id="sortable-api">将第一项移到末尾</hy-button><output id="sortable-order"></output><output id="sortable-event">聚焦项目后按 Space 拿起、方向键定位、Enter 放下</output></div>
       </div>
+      <details class="code"><summary>查看排序用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-sortable group="tasks" animation="250" preview="move"
+  preview-opacity="1" source-opacity="0.4" aria-label="待处理"&gt;
+  &lt;article data-id="a"&gt;任务 A&lt;/article&gt;
+  &lt;article data-id="b"&gt;任务 B&lt;/article&gt;
+&lt;/hy-sortable&gt;
+const sortable = document.querySelector('hy-sortable');
+sortable.addEventListener('sort-change', event =&gt; {
+  const { fromOrder, toOrder, from, to } = event.detail;
+  saveOrder(fromOrder, toOrder);
+});
+sortable.move(0, 1);</code></pre></details>
+      <div class="parameter-strip"><code>animation</code><code>preview="text|clone|move"</code><code>preview-opacity</code><code>source-opacity</code><code>direction</code><code>group</code><code>handle</code><code>columns</code><code>keyboard</code><code>disabled</code><code>move()</code></div>
+    </section>
+
+    <section class="component-section" id="split" data-title="Split">
+      <div class="section-heading"><div><span class="index">42</span><h2>Split</h2><code>&lt;hy-split&gt;</code></div><p>可拖拽、可键盘调整的双面板布局。支持禁用调整，并通过 CSS parts、主题参数和 handle 插槽自定义分隔条。</p></div>
+      <div class="demo-card">
+        <div class="preview split-stage"><hy-split id="split-live" direction="horizontal" ratio="0.34" min-first="100" min-second="140" bar-size="6"><div class="split-pane pane-a" slot="first"><span>01</span><b>Hierarchy</b><small>First pane</small></div><span id="split-custom-handle" class="split-grip" slot="handle" hidden>⋮</span><div class="split-pane pane-b" slot="second"><span>02</span><b>Viewport</b><small>Second pane</small></div></hy-split></div>
+        <div class="controls split-controls"><label>direction<select id="split-direction"><option>horizontal</option><option>vertical</option></select></label><label>ratio <span id="split-ratio-value">0.34</span><input id="split-ratio" type="range" min="0" max="1" step="0.01" value="0.34" /></label><label>bar-size <span id="split-bar-value">6 px</span><input id="split-bar" type="range" min="1" max="18" value="6" /></label><label>拖拽条样式<select id="split-bar-style"><option value="default">默认</option><option value="rounded">圆角 · tokens</option><option value="grip">手柄 · parts / slot</option></select></label><label class="toggle"><input id="split-disabled" type="checkbox" /><span></span>disabled</label><output id="split-event">拖动分隔条或使用方向键</output></div>
+      </div>
+      <details class="code"><summary>查看禁用与自定义拖拽条 <span>HTML + CSS</span></summary><pre><code>&lt;hy-split id="layout" bar-size="12" disabled&gt;
+  &lt;section slot="first"&gt;左侧面板&lt;/section&gt;
+  &lt;span slot="handle"&gt;⋮&lt;/span&gt;
+  &lt;section slot="second"&gt;右侧面板&lt;/section&gt;
+&lt;/hy-split&gt;
+&lt;style&gt;
+  #layout { --hy-split-bar-active-color: var(--hy-accent-color); }
+  #layout::part(bar) {
+    border: 1px solid var(--hy-border-color);
+    border-radius: var(--hy-radius-md);
+  }
+  #layout::part(handle) { color: var(--hy-muted-color); }
+&lt;/style&gt;</code></pre></details>
+      <div class="parameter-strip"><code>disabled</code><code>bar-size</code><code>::part(bar)</code><code>::part(bar-active)</code><code>::part(handle)</code><code>slot="handle"</code><code>direction</code><code>ratio</code><code>min-first</code><code>min-second</code></div>
     </section>
 
     <section class="component-section" id="table" data-title="Table">
@@ -1510,11 +1614,22 @@ table.pageSize = 10;</code></pre></details>
     </section>
 
     <section class="component-section" id="tree" data-title="Tree">
-      <div class="section-heading"><div><span class="index">44</span><h2>Tree</h2><code>&lt;hy-tree&gt;</code></div><p>层级数据、展开、范围多选、键盘导航、剪贴板操作和拖放排序。</p></div>
+      <div class="section-heading"><div><span class="index">44</span><h2>Tree</h2><code>&lt;hy-tree&gt;</code></div><p>层级数据、范围多选、键盘导航和拖放排序。分支展开／收拢与箭头旋转可分别启用并配置时长。</p></div>
       <div class="demo-card tree-card">
-        <div class="preview tree-stage"><hy-tree id="tree-live" allow-drag></hy-tree></div>
-        <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-drag" type="checkbox" checked /><span></span>allow-drag</label></div><hy-button id="tree-select-lights" class="native-trigger" label="Select lights"></hy-button><hy-button id="tree-reset" class="native-trigger secondary" label="Reset data"></hy-button><output id="tree-event">选择节点；Ctrl/⌘ 与 Shift 支持多选</output></div>
+        <div class="preview tree-stage"><hy-tree id="tree-live" allow-drag animated animation-duration="220" arrow-animation-duration="160"></hy-tree></div>
+        <div class="controls stacked"><div class="toggle-row"><label class="toggle"><input id="tree-drag" type="checkbox" checked /><span></span>allow-drag</label><label class="toggle"><input id="tree-animated" type="checkbox" checked /><span></span>animated</label><label class="toggle"><input id="tree-arrow-animated" type="checkbox" checked /><span></span>arrow-animated</label></div><label>animation-duration <span id="tree-animation-duration-value">220 ms</span><input id="tree-animation-duration" type="range" min="0" max="1000" step="20" value="220" /></label><label>arrow-animation-duration <span id="tree-arrow-animation-duration-value">160 ms</span><input id="tree-arrow-animation-duration" type="range" min="0" max="1000" step="20" value="160" /></label><hy-button id="tree-select-lights" class="native-trigger" label="Select lights"></hy-button><hy-button id="tree-reset" class="native-trigger secondary" label="Reset data"></hy-button><output id="tree-event">选择节点；Ctrl/⌘ 与 Shift 支持多选</output></div>
       </div>
+      <details class="code"><summary>查看树动效用法 <span>HTML + JavaScript</span></summary><pre><code>&lt;hy-tree animated animation-duration="220"
+  arrow-animated="true" arrow-animation-duration="160"&gt;&lt;/hy-tree&gt;
+const tree = document.querySelector('hy-tree');
+tree.data = [{ id: 'scene', label: 'Scene', children: [
+  { id: 'camera', label: 'Main Camera' }
+] }];
+tree.expand('scene');
+tree.collapse('scene');
+tree.arrowAnimated = false; // 箭头立即切换方向
+tree.animated = false; // 分支立即展开或收拢</code></pre></details>
+      <div class="parameter-strip"><code>animated</code><code>animation-duration</code><code>arrow-animated</code><code>arrow-animation-duration</code><code>expand()</code><code>collapse()</code><code>toggle()</code></div>
     </section>
 
     <section class="component-section" id="virtual-list" data-title="Virtual List">

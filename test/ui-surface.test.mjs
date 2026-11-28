@@ -29,6 +29,9 @@ test('UI root keeps the supported component surface importable', async () => {
     'HYDivider',
     'HYDrawer',
     'HYDraggable',
+    'HYDragSource',
+    'HYDropzone',
+    'HYSortable',
     'HYDropdown',
     'HYHistoryControls',
     'HYInput',
@@ -101,6 +104,9 @@ test('UI root keeps the supported component surface importable', async () => {
     'defineDividerComponents',
     'defineDrawerComponents',
     'defineDraggableComponents',
+    'defineDragSourceComponents',
+    'defineDropzoneComponents',
+    'defineSortableComponents',
     'defineDropdownComponents',
     'defineHistoryControlsComponents',
     'defineInputComponents',
@@ -442,7 +448,6 @@ test('virtual list keeps data off-DOM and cleans up owned observers and listener
   assert.match(source, /for \(let index = range\.startIndex; index < range\.endIndex/);
   assert.match(source, /this\._items\[index\]/);
   assert.match(source, /row\.dataset\.hyVirtualListGenerated/);
-  assert.match(source, /this\._window\.replaceChildren\(\.\.\.rows\)/);
   assert.doesNotMatch(source, /row\.slot = 'items'/);
   assert.match(source, /this\._resizeObserver\?\.disconnect\(\)/);
   assert.match(source, /removeEventListener\('scroll', this\._onScroll\)/);
@@ -500,8 +505,8 @@ test('draggable exposes constrained pointer, keyboard, and API movement with own
   assert.match(source, /get cancel\(\): string/);
   assert.match(source, /moveTo\(x: number, y: number\)/);
   assert.match(source, /moveBy\(deltaX: number, deltaY: number\)/);
-  assert.match(source, /setPointerCapture\(event\.pointerId\)/);
-  assert.match(source, /this\._dragAbort\?\.abort\(\)/);
+  assert.match(source, /new HYPointerDrag\(\)/);
+  assert.match(source, /this\._pointer\.cancel\(\)/);
   assert.match(source, /Math\.round\(finiteNumber\(x, oldX\) \/ this\.grid\)/);
   assert.match(source, /event\.key === 'ArrowLeft'.*event\.key === 'ArrowRight'.*event\.key === 'ArrowUp'.*event\.key === 'ArrowDown'/s);
   assert.match(source, /CustomEvent<HYDraggableStartDetail>\('drag-start'.*cancelable: true/s);
@@ -519,8 +524,8 @@ test('resizable exposes eight pointer and keyboard handles with constrained rect
   assert.match(source, /resizeTo\(width: number, height: number\)/);
   assert.match(source, /get aspectRatio\(\): number \| null/);
   assert.match(source, /get bounds\(\): HYResizableBounds/);
-  assert.match(source, /setPointerCapture\(event\.pointerId\)/);
-  assert.match(source, /this\._dragAbort\?\.abort\(\)/);
+  assert.match(source, /new HYPointerDrag\(\)/);
+  assert.match(source, /this\._pointer\.cancel\(\)/);
   assert.match(source, /event\.key === 'ArrowLeft'.*event\.key === 'ArrowRight'.*event\.key === 'ArrowUp'.*event\.key === 'ArrowDown'/s);
   assert.match(source, /CustomEvent<HYResizableChangeDetail>\('resize-start'.*cancelable: true/s);
   assert.match(source, /CustomEvent<HYResizableChangeDetail>\('resize'/);

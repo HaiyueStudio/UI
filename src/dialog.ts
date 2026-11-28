@@ -1,3 +1,5 @@
+import { focusedElement } from './internal/focus.js';
+
 export type HYDialogCloseReason = 'action' | 'backdrop' | 'escape' | 'programmatic';
 
 export interface HYDialogCloseDetail {
@@ -11,6 +13,8 @@ export class HYDialog extends HTMLElement {
   private readonly _closeButton = document.createElement('button');
   private _returnFocus: HTMLElement | null = null;
   private _closeReason: HYDialogCloseDetail['reason'] = 'programmatic';
+  private _shown = false;
+  private _session = 0;
 
   static get observedAttributes(): string[] {
     return ['open', 'heading', 'dismissible', 'controlled'];
@@ -121,6 +125,11 @@ export class HYDialog extends HTMLElement {
     this._syncOpen();
   }
 
+  disconnectedCallback(): void {
+    this._shown = false; this._session++; this._returnFocus = null; this._closeReason = 'programmatic';
+    if (this._dialog.open) this._dialog.close();
+  }
+
   attributeChangedCallback(name: string): void {
     if (name === 'heading') this._syncHeading();
     if (name === 'open' && this.isConnected) this._syncOpen();
@@ -141,7 +150,7 @@ export class HYDialog extends HTMLElement {
 
   showModal(): void {
     if (this.open && this._dialog.open) return;
-    this._returnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    this._returnFocus = focusedElement(this.ownerDocument);
     this._closeReason = 'programmatic';
     this.open = true;
   }
@@ -158,11 +167,21 @@ export class HYDialog extends HTMLElement {
 
   private _syncOpen(): void {
     if (this.open && !this._dialog.open) {
-      this._returnFocus ??= document.activeElement instanceof HTMLElement ? document.activeElement : null;
-      this._dialog.showModal();
+      this._returnFocus ??= focusedElement(this.ownerDocument);
+      this._shown = true; this._session++;
+      try { this._dialog.showModal(); } catch (error) { this._shown = false; throw error; }
       return;
     }
-    if (!this.open && this._dialog.open) this._dialog.close();
+    if (!this.open && this._shown) this._finishClose();
+  }
+
+  private _finishClose(): void {
+    const session = this._session, reason = this._closeReason, returnFocus = this._returnFocus, controlled = this.controlled;
+    this._shown = false; this._returnFocus = null; this._closeReason = 'programmatic';
+    this.removeAttribute('open');
+    if (this._dialog.open) this._dialog.close();
+    this.dispatchEvent(new CustomEvent<HYDialogCloseDetail>('dialog-close', { detail: { reason }, bubbles: true, composed: true }));
+    if (session === this._session && !this.open && this.isConnected && !controlled && returnFocus?.isConnected) returnFocus.focus();
   }
 
   private _onCancel = (event: Event): void => {
@@ -187,17 +206,8 @@ export class HYDialog extends HTMLElement {
 
   private _onNativeClose = (): void => {
     // Native close is queued. A subsequent showModal must not be undone by that old event.
-    if (this._dialog.open) return;
-    this.removeAttribute('open');
-    const reason = this._closeReason;
-    this._closeReason = 'programmatic';
-    this.dispatchEvent(new CustomEvent<HYDialogCloseDetail>('dialog-close', {
-      detail: { reason },
-      bubbles: true,
-      composed: true,
-    }));
-    if (!this.controlled) this._returnFocus?.focus();
-    this._returnFocus = null;
+    if (!this.isConnected || this._dialog.open || !this._shown) return;
+    this._finishClose();
   };
 }
 

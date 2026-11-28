@@ -1,6 +1,6 @@
 import type { HYReason, HYTextProps, HYUIEvent } from './types.js';
 import { equalData, snapshot } from './data.js';
-import { HYUIError, hyKey, hyValidateProps } from './validation.js';
+import { HYUIError, hyKey, snapshotValidatedProps } from './validation.js';
 
 export interface HYTextViewState { readonly props: HYTextProps; readonly value: string; readonly composing: boolean; }
 export interface HYTextView { apply(state: HYTextViewState): void; }
@@ -16,12 +16,12 @@ export class HYTextController {
   get composing(): boolean { return this.#composing; }
   update(props: HYTextProps, revision = this.#revision): void {
     if (this.#disposed) return;
-    hyValidateProps(this.multiline ? 'TextArea' : 'TextInput', props, { key: this.key });
+    props = snapshotValidatedProps(this.multiline ? 'TextArea' : 'TextInput', props, { key: this.key });
     if (!Number.isSafeInteger(revision) || revision < 0) throw new HYUIError('invalid-props', 'Invalid application revision', { key: this.key });
     if (revision < this.#revision) return;
     const changed = !this.#props || props.value !== this.#props.value;
     if (this.#props && changed && revision === this.#revision) throw new HYUIError('invalid-props', 'Changed accepted value requires a newer revision', { key: this.key });
-    this.#props = snapshot(props); this.#revision = revision;
+    this.#props = props; this.#revision = revision;
     if (changed) {
       if (this.#composing) this.#pending = { value: props.value, revision };
       else { this.#draft = props.value; this.#active = 0; this.#pending = undefined; }

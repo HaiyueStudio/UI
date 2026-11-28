@@ -1,3 +1,5 @@
+import { HYNativeDrop, hasFiles } from './internal/native-drop.js';
+
 export type HYUploadStatus = 'ready' | 'uploading' | 'done' | 'error';
 export type HYUploadChangeReason = 'select' | 'remove' | 'start' | 'progress' | 'success' | 'error' | 'abort';
 export type HYUploadRejectReason = 'type' | 'size' | 'count' | 'before-upload' | 'error';
@@ -38,7 +40,12 @@ export class HYUpload extends HTMLElement {
   private _listeners: AbortController | null = null;
   private _formDisabled = false;
   private _selection = 0;
-  private _dragDepth = 0;
+  private readonly _drop = new HYNativeDrop(this._zone, {
+    enabled: () => this.drag,
+    accepts: transfer => !this.disabled && !this._formDisabled && hasFiles(transfer),
+    active: value => this._zone.classList.toggle('dragover', value),
+    drop: event => { if (event.dataTransfer) void this.selectFiles(event.dataTransfer.files); },
+  });
   static get observedAttributes(): string[] { return ['name', 'accept', 'multiple', 'disabled', 'drag', 'required', 'max-count', 'max-size', 'auto-upload', 'label', 'aria-label', 'show-file-list']; }
 
   constructor() {
@@ -66,14 +73,16 @@ export class HYUpload extends HTMLElement {
     this._initialFiles ??= this.fileList;
     this._listeners?.abort(); this._listeners = new AbortController(); const { signal } = this._listeners;
     this._button.addEventListener('click', () => this.openFileDialog(), { signal });
-    this._input.addEventListener('change', () => { const files = [...(this._input.files ?? [])]; this._input.value = ''; void this.selectFiles(files); }, { signal });
-    this._zone.addEventListener('dragenter', this._onDragEnter, { signal }); this._zone.addEventListener('dragleave', this._onDragLeave, { signal });
-    this._zone.addEventListener('dragover', this._onDragOver, { signal }); this._zone.addEventListener('drop', this._onDrop, { signal });
+    // Native picker input precedes asynchronous acceptance; notify only after committing files.
+    this._input.addEventListener('input', event => event.stopPropagation(), { signal });
+    this._input.addEventListener('change', event => { event.stopPropagation(); const files = [...(this._input.files ?? [])]; this._input.value = ''; void this.selectFiles(files); }, { signal });
+    this._drop.connect(signal);
     this._list.addEventListener('click', this._onListClick, { signal }); this._sync();
   }
-  disconnectedCallback(): void { this._listeners?.abort(); this._listeners = null; this._selection++; this.abort(); this._dragDepth = 0; this._zone.classList.remove('dragover'); }
+  disconnectedCallback(): void { this._listeners?.abort(); this._listeners = null; this._selection++; this.abort(); this._drop.reset(); }
   attributeChangedCallback(name: string, previous: string | null, next: string | null): void {
     if (previous === next) return;
+    if (name === 'disabled' || name === 'drag') this._drop.reset();
     if (name === 'disabled' && this.disabled) { this._selection++; this.abort(); }
     this._sync();
   }
@@ -112,7 +121,7 @@ export class HYUpload extends HTMLElement {
   get validationMessage(): string { return this._internals.validationMessage; }
   checkValidity(): boolean { return this._internals.checkValidity(); }
   reportValidity(): boolean { return this._internals.reportValidity(); }
-  formDisabledCallback(disabled: boolean): void { this._formDisabled = disabled; if (disabled) { this._selection++; this.abort(); } this._sync(); }
+  formDisabledCallback(disabled: boolean): void { this._formDisabled = disabled; if (disabled) { this._selection++; this.abort(); this._drop.reset(); } this._sync(); }
   formResetCallback(): void { this.fileList = this._initialFiles ?? []; this._message.textContent = ''; }
   override focus(options?: FocusOptions): void { this._button.focus(options); }
   openFileDialog(): void { if (!this.disabled && !this._formDisabled) this._input.click(); }
@@ -135,6 +144,7 @@ export class HYUpload extends HTMLElement {
     if (selection !== this._selection || !this.isConnected || !accepted.length) return;
     if (!this.multiple) { this.abort(); this._files = []; }
     this._files.push(...accepted); this._sync();
+    this._notifyValueChange();
     for (const file of accepted) this._emit(file, 'select');
     if (this.autoUpload && this._request) await Promise.all(accepted.map(file => this._upload(file.uid)));
   }
@@ -156,7 +166,7 @@ export class HYUpload extends HTMLElement {
     if (this.disabled || this._formDisabled) return false;
     const file = this._files.find(file => file.uid === uid); if (!file) return false;
     if (!this.dispatchEvent(new CustomEvent<HYUploadRemoveDetail>('file-remove', { detail: { file: { ...file } }, bubbles: true, composed: true, cancelable: true }))) return false;
-    this.abort(uid); this._files = this._files.filter(file => file.uid !== uid); this._sync(); this._emit(file, 'remove'); return true;
+    this.abort(uid); this._files = this._files.filter(file => file.uid !== uid); this._sync(); this._notifyValueChange(); this._emit(file, 'remove'); return true;
   }
   private async _upload(uid: string): Promise<void> {
     const request = this._request; const file = this._files.find(file => file.uid === uid);
@@ -175,6 +185,7 @@ export class HYUpload extends HTMLElement {
       file.status = 'error'; file.error = cause instanceof Error ? cause.message : 'Upload failed'; this._sync(); this._emit(file, 'error');
     } finally { if (this._requests.get(uid) === controller) this._requests.delete(uid); }
   }
+  private _notifyValueChange(): void { this.dispatchEvent(new Event('change', { bubbles: true, composed: true })); }
   private _emit(file: HYUploadFile, reason: HYUploadChangeReason): void { this.dispatchEvent(new CustomEvent<HYUploadChangeDetail>('upload-change', { detail: { file: { ...file }, fileList: this.fileList, reason }, bubbles: true, composed: true })); }
   private _reject(file: File, reason: HYUploadRejectReason, message: string): void { this._message.textContent = `${file.name}: ${message}`; this.dispatchEvent(new CustomEvent<HYUploadRejectDetail>('file-reject', { detail: { file, reason, message }, bubbles: true, composed: true })); }
   private _sync(): void {
@@ -209,10 +220,6 @@ export class HYUpload extends HTMLElement {
     const button = event.target instanceof Element ? event.target.closest<HTMLButtonElement>('button') : null;
     if (button?.dataset.remove) this.removeFile(button.dataset.remove); else if (button?.dataset.retry) void this.upload(button.dataset.retry);
   };
-  private _onDragEnter = (event: DragEvent): void => { if (!this.drag) return; event.preventDefault(); if (!this.disabled && !this._formDisabled) { this._dragDepth++; this._zone.classList.add('dragover'); } };
-  private _onDragLeave = (event: DragEvent): void => { if (!this.drag) return; event.preventDefault(); if (--this._dragDepth <= 0) { this._dragDepth = 0; this._zone.classList.remove('dragover'); } };
-  private _onDragOver = (event: DragEvent): void => { if (this.drag) { event.preventDefault(); if (event.dataTransfer) event.dataTransfer.dropEffect = this.disabled || this._formDisabled ? 'none' : 'copy'; } };
-  private _onDrop = (event: DragEvent): void => { if (!this.drag) return; event.preventDefault(); this._dragDepth = 0; this._zone.classList.remove('dragover'); if (event.dataTransfer) void this.selectFiles(event.dataTransfer.files); };
 }
 
 function nonnegative(value: string | null): number { const number = Number(value); return Number.isFinite(number) ? Math.max(0, number) : 0; }

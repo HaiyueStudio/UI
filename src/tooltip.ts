@@ -1,3 +1,5 @@
+import { finiteNumber } from './internal/numbers.js';
+
 export type HYTooltipPlacement =
   | 'top'
   | 'topLeft'
@@ -33,6 +35,7 @@ const TOOLTIP_PLACEMENTS = new Set<HYTooltipPlacement>([
 ]);
 
 export class HYTooltip extends HTMLElement {
+  private static _descriptionSequence = 0;
   private readonly _root: ShadowRoot;
   private readonly _style = document.createElement('style');
   private readonly _slot = document.createElement('slot');
@@ -41,6 +44,8 @@ export class HYTooltip extends HTMLElement {
   private readonly _arrow = document.createElement('span');
   private _showTimer: number | null = null;
   private _visible = false;
+  private readonly _descriptions = new Map<HTMLElement, { node: HTMLElement; id: string }>();
+  private readonly _observer = new MutationObserver(() => this._syncDescriptions());
 
   static get observedAttributes(): string[] {
     return ['label', 'placement', 'delay', 'disabled', 'arrow', 'no-arrow'];
@@ -73,6 +78,7 @@ export class HYTooltip extends HTMLElement {
         overflow-wrap: anywhere;
         pointer-events: none;
         opacity: 0;
+        visibility: hidden;
         transform: translate3d(0, -2px, 0);
         transition: opacity 0.12s ease, transform 0.12s ease;
       }
@@ -90,15 +96,18 @@ export class HYTooltip extends HTMLElement {
       }
       .tooltip.visible {
         opacity: 1;
+        visibility: visible;
         transform: translate3d(0, 0, 0);
       }
     `;
     this._tooltip.className = 'tooltip';
     this._tooltip.setAttribute('role', 'tooltip');
+    this._tooltip.setAttribute('aria-hidden', 'true');
     this._content.className = 'content';
     this._arrow.className = 'arrow';
     this._tooltip.append(this._content, this._arrow);
     this._root.append(this._style, this._slot, this._tooltip);
+    this._slot.addEventListener('slotchange', () => this._syncDescriptions());
   }
 
   connectedCallback(): void {
@@ -107,6 +116,7 @@ export class HYTooltip extends HTMLElement {
     this.addEventListener('focusin', this._onEnter);
     this.addEventListener('focusout', this._onLeave);
     this.addEventListener('keydown', this._onKeyDown);
+    this._observer.observe(this, { childList: true, subtree: true });
     this._syncLabel();
   }
 
@@ -118,10 +128,13 @@ export class HYTooltip extends HTMLElement {
     this.removeEventListener('keydown', this._onKeyDown);
     this._clearShowTimer();
     this._hide();
+    this._observer.disconnect();
+    this._clearDescriptions();
   }
 
   attributeChangedCallback(name: string): void {
     if (name === 'label') this._syncLabel();
+    if (name === 'disabled') { this._clearShowTimer(); this._hide(); this._syncDescriptions(); }
     if (name === 'arrow' || name === 'no-arrow') this._syncArrow();
     if ((name === 'placement' || name === 'disabled' || name === 'arrow' || name === 'no-arrow') && this._visible) {
       this._syncPosition();
@@ -146,7 +159,7 @@ export class HYTooltip extends HTMLElement {
   }
 
   get delay(): number {
-    const value = Number(this.getAttribute('delay'));
+    const value = finiteNumber(this.getAttribute('delay'), DEFAULT_DELAY);
     return Number.isFinite(value) && value >= 0 ? value : DEFAULT_DELAY;
   }
 
@@ -171,6 +184,7 @@ export class HYTooltip extends HTMLElement {
 
   private _onEnter = (): void => {
     if (this.hasAttribute('disabled') || !this.label) return;
+    this._syncDescriptions();
     this._clearShowTimer();
     this._showTimer = window.setTimeout(() => this._show(), this.delay);
   };
@@ -181,13 +195,14 @@ export class HYTooltip extends HTMLElement {
   };
 
   private _onKeyDown = (event: KeyboardEvent): void => {
-    if (event.key === 'Escape') this._hide();
+    if (event.key === 'Escape') { this._clearShowTimer(); this._hide(); }
   };
 
   private _show(): void {
     this._showTimer = null;
     if (!this.isConnected || this.hasAttribute('disabled') || !this.label) return;
     this._visible = true;
+    this._tooltip.setAttribute('aria-hidden', 'false');
     this._syncArrow();
     this._syncPosition();
     this._tooltip.classList.add('visible');
@@ -196,6 +211,7 @@ export class HYTooltip extends HTMLElement {
   }
 
   private _hide(): void {
+    this._tooltip.setAttribute('aria-hidden', 'true');
     if (!this._visible) return;
     this._visible = false;
     this._tooltip.classList.remove('visible');
@@ -209,6 +225,57 @@ export class HYTooltip extends HTMLElement {
 
   private _syncLabel(): void {
     this._content.textContent = this.label;
+    if (!this.label) { this._clearShowTimer(); this._hide(); }
+    this._syncDescriptions();
+  }
+
+  private _removeDescription(target: HTMLElement): void {
+    const record = this._descriptions.get(target); if (!record) return;
+    const ids = (target.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(id => id && id !== record.id);
+    if (ids.length) target.setAttribute('aria-describedby', ids.join(' ')); else target.removeAttribute('aria-describedby');
+    record.node.remove(); this._descriptions.delete(target);
+  }
+
+  private _clearDescriptions(): void {
+    for (const target of [...this._descriptions.keys()]) this._removeDescription(target);
+  }
+
+  private _syncDescriptions(): void {
+    if (!this.isConnected || this.hasAttribute('disabled') || !this.label) { this._clearDescriptions(); return; }
+    const targets = new Set<HTMLElement>();
+    const visit = (element: Element): void => {
+      if (element instanceof HTMLElement && (element.hidden || element.inert || element.getAttribute('aria-hidden') === 'true')) return;
+      if (element instanceof HTMLSlotElement) {
+        for (const child of element.assignedElements({ flatten: true })) visit(child);
+      } else if (element.shadowRoot) {
+        for (const child of element.shadowRoot.children) visit(child);
+      } else {
+        if (element instanceof HTMLElement && (element.isContentEditable || element.matches('button,input,select,textarea,a[href],[tabindex],[role="button"],[role="textbox"],[role="slider"]'))) targets.add(element);
+        for (const child of element.children) visit(child);
+      }
+    };
+    for (const element of this._slot.assignedElements({ flatten: true })) {
+      const before = targets.size; visit(element);
+      if (targets.size === before && element instanceof HTMLElement && !element.hidden && !element.inert) targets.add(element);
+    }
+    for (const target of [...this._descriptions.keys()]) {
+      const record = this._descriptions.get(target)!;
+      if (!targets.has(target) || record.node.getRootNode() !== target.getRootNode()) this._removeDescription(target);
+    }
+    for (const target of targets) {
+      let record = this._descriptions.get(target);
+      if (!record) {
+        const node = document.createElement('span'); node.hidden = true;
+        const id = `hy-tooltip-description-${++HYTooltip._descriptionSequence}`; node.id = id;
+        const scope = target.getRootNode();
+        if (scope instanceof ShadowRoot) scope.append(node); else (target.ownerDocument.body ?? target.ownerDocument.documentElement).append(node);
+        record = { node, id }; this._descriptions.set(target, record);
+      }
+      if (record.node.textContent !== this.label) record.node.textContent = this.label;
+      const ids = new Set((target.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean)); ids.add(record.id);
+      const description = [...ids].join(' ');
+      if (target.getAttribute('aria-describedby') !== description) target.setAttribute('aria-describedby', description);
+    }
   }
 
   private _syncArrow(): void {

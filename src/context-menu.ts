@@ -56,7 +56,6 @@ ${GE_MENU_ITEM_STYLES}
   }
 
   connectedCallback(): void {
-    this._readItemsAttribute();
     this._render();
     this._syncDocumentListeners();
   }

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" data-hy-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tree motion contracts</title>
+  <link rel="stylesheet" href="../../themes/haiyue-light.css" />
+  <style>body { margin:24px; font:14px system-ui; } hy-tree { width:480px; height:320px; border:1px solid #aaa; } input { width:90px; }</style>
+</head>
+<body>
+  <hy-tree id="tree" aria-label="Project tree"></hy-tree>
+  <script type="module">
+    import { HYTree, defineTreeComponents } from '../../dist/tree.js';
+    window.explicitTree = !customElements.get('hy-tree'); defineTreeComponents(); defineTreeComponents();
+    window.cleanTreeConstructor = new HYTree().getAttributeNames().length === 0;
+    window.probeConnections = 0; window.probeDisconnections = 0;
+    customElements.define('tree-motion-probe', class extends HTMLElement {
+      constructor() { super(); this.attachShadow({mode:'open'}).innerHTML = '<input value="Original" aria-label="Node value"><button>Action</button>'; }
+      connectedCallback() { window.probeConnections++; }
+      disconnectedCallback() { window.probeDisconnections++; }
+    });
+    document.querySelector('#tree').data = [
+      { id:'root', label:'Scene', children:[
+        { id:'editor', label:'Editor', renderer:'tree-motion-probe' },
+        { id:'nested', label:'Lights', expanded:true, children:[{id:'sun',label:'Sun'}, {id:'fill',label:'Fill'}] }
+      ] },
+      { id:'after', label:'After', renderer:'tree-motion-probe' },
+      { id:'other', label:'Other branch', children:[{id:'last',label:'Last'}] }
+    ];
+    window.treeEvents = [];
+    for (const name of ['selection-change','data-change']) document.querySelector('#tree').addEventListener(name,event=>window.treeEvents.push([name,event.detail.selectedIds]));
+    window.treeMotionReady = true;
+  </script>
+</body>
+</html>

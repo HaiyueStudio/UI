@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" data-hy-theme="light">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Split interaction and styling</title>
+  <link rel="stylesheet" href="../../themes/haiyue-light.css" />
+  <style>
+    body { margin:24px; font:14px system-ui; } hy-split { width:600px; height:300px; border:1px solid #aaa; }
+    input { width:100px; } section { padding:12px; } [slot="handle"] { font:16px/1 system-ui; }
+  </style>
+</head>
+<body>
+  <button id="before">Before</button>
+  <hy-split id="split" bar-size="10" ratio="0.5">
+    <section slot="first"><input id="field" aria-label="Pane value" value="Original" /></section>
+    <span slot="handle" id="custom-handle">⋮</span>
+    <section slot="second"><button id="pane-button">Pane action</button></section>
+  </hy-split>
+  <button id="after">After</button>
+  <script type="module">
+    import { HYSplit, defineSplitComponents } from '../../dist/split.js';
+    window.explicitSplit = !customElements.get('hy-split'); defineSplitComponents(); defineSplitComponents();
+    window.cleanSplitConstructor = new HYSplit().getAttributeNames().length === 0;
+    window.splitChanges = []; window.paneClicks = 0;
+    const split = document.querySelector('#split');
+    split.addEventListener('ratio-change', event => window.splitChanges.push({ ...event.detail, composed:event.composed }));
+    split.addEventListener('pointerdown', event => { window.splitPointerId = event.pointerId; }, {capture:true});
+    window.addEventListener('pointermove', event => { window.lastSplitPoint = { x:event.clientX, y:event.clientY }; }, {capture:true});
+    document.querySelector('#pane-button').addEventListener('click', () => window.paneClicks++);
+    window.splitReady = true;
+  </script>
+</body>
+</html>

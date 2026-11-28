@@ -1,3 +1,5 @@
+import { finiteNumber as readFiniteNumber } from './internal/numbers.js';
+
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 const DEFAULT_THICKNESS = 2;
 const DEFAULT_SPEED = 1;
@@ -5,7 +7,7 @@ const DEFAULT_COUNT = 1;
 const BASE_DURATION_SECONDS = 6;
 
 function finiteNumber(value: unknown, fallback: number): number {
-  const number = Number(value);
+  const number = readFiniteNumber(value, fallback);
   return Number.isFinite(number) ? number : fallback;
 }
 

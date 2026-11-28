@@ -215,9 +215,9 @@ export class HYInput extends HTMLElement {
     if (this._input.readOnly !== this.readOnly) this._input.readOnly = this.readOnly;
     if (this._input.required !== this.hasAttribute('required')) this._input.required = this.hasAttribute('required');
     this._searchButton.hidden = type !== 'search';
-    this._searchButton.disabled = this.disabled;
+    this._searchButton.disabled = disabled;
     this._searchButton.setAttribute('aria-label', this.searchLabel);
-    this._control.classList.toggle('disabled', this.disabled);
+    this._control.classList.toggle('disabled', disabled);
     this._control.classList.toggle('readonly', this.readOnly);
     this._syncAffixes();
     this._syncValidity();
@@ -267,7 +267,7 @@ export class HYInput extends HTMLElement {
   private _onSearchClick = (): void => { this._emitSearch('button'); };
 
   private _emitSearch(source: HYInputSearchSource): boolean {
-    if (this.disabled || this.type !== 'search') return false;
+    if (this.disabled || this._formControl.disabled || this.type !== 'search') return false;
     return this.dispatchEvent(new CustomEvent<HYInputSearchDetail>('search', {
       detail: { value: this._input.value, valid: this.valid, source },
       bubbles: true,

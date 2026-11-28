@@ -1,4 +1,4 @@
-import type { HYCapabilities, HYMutation, HYNode, HYRenderer, HYUIEvent } from '../../core/types.js';
+import type { HYCapabilities, HYComponentKind, HYMutation, HYNode, HYRenderer, HYUIEvent } from '../../core/types.js';
 import { HY_COMPONENTS, HYUIError, hyValidateProps } from '../../core/validation.js';
 import { HYPlatformViewController } from '../../core/platform-view.js';
 import { equalData } from '../../core/data.js';
@@ -17,6 +17,10 @@ interface Entry {
   label?: HTMLElement; help?: HTMLElement; error?: HTMLElement; readonly id: string;
 }
 const tags: Record<string,string> = {Row:'div',Column:'div',Grid:'div',Overlay:'div',Scroll:'div',Text:'span',Image:'img',Icon:'img',TextArea:'textarea',FormGroup:'fieldset',PlatformView:'div',...componentTags};
+const a11ySelectors = {
+  Row:null,Column:null,Grid:null,Overlay:null,Scroll:null,Text:null,Image:null,Icon:null,TextArea:null,FormGroup:null,PlatformView:null,Badge:null,Divider:null,
+  Button:'button',Checkbox:'input',Toggle:'input',RadioGroup:'input',Rate:'[role="slider"]',Select:'select',Tabs:'[role="tablist"],button',TextInput:'input',Slider:'button.upper',Dialog:'dialog',
+} satisfies Record<HYComponentKind,string|null>;
 let rendererSequence=0;
 
 /** Browser-only adapter. Explicit registration and an attached, same-realm mount point are required. */
@@ -220,11 +224,12 @@ export class HYWebRenderer implements HYRenderer {
     const description=[node.props.a11y?.description,groupProps?.description,node.props.a11y?.error??groupProps?.error].filter(Boolean).join('. ');
     const a11y=label===undefined?undefined:{...node.props.a11y,label,...(groupProps?.error&&!node.props.a11y?.error?{error:groupProps.error}:{})};
     applyAccessibility(element,a11y);
-    const targets=element instanceof HYTabs?[...element.shadowRoot!.querySelectorAll<HTMLElement>('[role=tablist],button')]
-      :element.shadowRoot?[element.shadowRoot.querySelector<HTMLElement>(node.kind==='Slider'?'button.upper':'input:not([type=search]),select,button,dialog')].filter((el):el is HTMLElement=>!!el):[element];
+    const selector=a11ySelectors[node.kind];
+    const targets=node.kind==='RadioGroup'?[...element.querySelectorAll('hy-radio')].flatMap(radio=>[...radio.shadowRoot!.querySelectorAll<HTMLElement>('input')])
+      :selector&&element.shadowRoot?[...element.shadowRoot.querySelectorAll<HTMLElement>(selector)]:[element];
     for(const target of targets){
       // Tabs label belongs to the tablist; each tab keeps its option name.
-      if(!(element instanceof HYTabs)||target.getAttribute('role')==='tablist')applyAccessibility(target,a11y);
+      if(node.kind!=='RadioGroup'&&(!(element instanceof HYTabs)||target.getAttribute('role')==='tablist'))applyAccessibility(target,a11y);
       attribute(target,'aria-description',description||undefined);
       attribute(target,'aria-invalid',(node.props.a11y?.error??groupProps?.error)?'true':undefined);
       if(description){
