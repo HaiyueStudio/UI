@@ -1411,7 +1411,7 @@ npm run release:check
 ```
 
 Candidates: `.artifacts/packages/`. Review API changes before `npm run api:update`.
-See [release review](review/release-0.3.1.md).
+See [release history](CHANGELOG.md).
 
 ### 共享组件目录（开发中）
 
